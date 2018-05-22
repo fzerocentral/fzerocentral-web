@@ -2,7 +2,7 @@
 
 module.exports = function(environment) {
   let ENV = {
-    modulePrefix: 'super-rentals',
+    modulePrefix: 'fzerocentral-web',
     environment,
     rootURL: '/',
     locationType: 'auto',

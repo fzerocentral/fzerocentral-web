@@ -1,8 +1,8 @@
 {
-  "name": "super-rentals",
+  "name": "fzerocentral-web",
   "version": "0.0.0",
   "private": true,
-  "description": "Small description for super-rentals goes here",
+  "description": "F-Zero Central website frontend",
   "license": "MIT",
   "author": "",
   "directories": {
