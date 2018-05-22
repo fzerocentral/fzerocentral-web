@@ -1,9 +1,6 @@
-# Super Rentals
+# F-Zero Central website frontend
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
-
-This is a working repository for the Super Rentals tutorial,
-which you can check out at https://guides.emberjs.com/current/tutorial/ember-cli/.
+This is a test using the [ember-cli 3.1.0 tutorial](https://guides.emberjs.com/v3.1.0/tutorial/ember-cli/) as a starting point.
 
 ## Prerequisites
 
@@ -18,14 +15,14 @@ You will need the following things properly installed on your computer.
 ## Installation
 
 * `git clone <repository-url>` this repository
-* `cd super-rentals`
+* `cd fzerocentral-web`
 * `yarn install`
 
 ## Running / Development
 
 * `ember serve`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
-* Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
+* Visit the app at [http://localhost:4200](http://localhost:4200).
+* Visit the tests at [http://localhost:4200/tests](http://localhost:4200/tests).
 
 ### Code Generators
 
