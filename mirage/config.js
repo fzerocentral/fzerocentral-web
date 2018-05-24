@@ -9,10 +9,6 @@ export default function() {
    */
 
   this.namespace = '/api';
-  let games = [
-    {type: 'games', id: 'mv', attributes: {name: "F-Zero: Maximum Velocity"}},
-    {type: 'games', id: 'gx', attributes: {name: "F-Zero GX"}}
-  ];
   let rentals = [
     {
       type: 'rentals',
@@ -54,16 +50,6 @@ export default function() {
       }
     }
   ];
-
-  /*eslint-disable no-unused-vars*/
-  this.get('/games', function(db, request) {
-  /*eslint-enable no-unused-vars*/
-    return { data: games };
-  });
-
-  this.get('/games/:id', function (db, request) {
-    return { data: games.find((game) => request.params.id === game.id) };
-  });
 
   this.get('/rentals', function(db, request) {
     if (request.queryParams.city !== undefined) {
