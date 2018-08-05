@@ -13,6 +13,8 @@ Router.map(function() {
   this.route('rentals', function() {
     this.route('show', { path: '/:rental_id' });
   });
+  this.route('charts', { path: '/charts/:chart_id' });
+  this.route('chart-groups', { path: '/chart-groups/:chart_group_id' });
 });
 
 export default Router;
