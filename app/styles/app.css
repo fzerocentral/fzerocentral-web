@@ -1,3 +1,11 @@
+table.records-table {
+  border-collapse: collapse;
+}
+table.records-table td {
+  border: 1px solid black;
+  padding: 2px;
+}
+
 ul.chart-group-listing {
   margin-left: 10px;
 }

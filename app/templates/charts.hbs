@@ -1,0 +1,11 @@
+<h1>{{model.chart.chartGroup.name}} - {{model.chart.name}}</h1>
+
+<table class="records-table">
+  {{#each model.records as |record|}}
+  <tr>
+    <td>{{record.rank}}</td>
+    <td>{{record.user.username}}</td>
+    <td>{{record.value_display}}</td>
+  </tr>
+  {{/each}}
+</table>
