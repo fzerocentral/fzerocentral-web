@@ -1,6 +1,6 @@
 # F-Zero Central website frontend
 
-This is a test using the [ember-cli 3.1.0 tutorial](https://guides.emberjs.com/v3.1.0/tutorial/ember-cli/) as a starting point.
+This is a new FZC Ember project using the [ember-cli 3.1.0 tutorial](https://guides.emberjs.com/v3.1.0/tutorial/ember-cli/) as a starting point. The previous FZC Ember project used pods for file organization, and this project doesn't.
 
 ## Prerequisites
 
@@ -10,7 +10,7 @@ You will need the following things properly installed on your computer.
 * [Node.js](https://nodejs.org/)
 * [Yarn](https://yarnpkg.com/)
 * [Ember CLI](https://ember-cli.com/)
-* [Google Chrome](https://google.com/chrome/)
+* [Google Chrome](https://google.com/chrome/) or [Mozilla Firefox](https://www.mozilla.org/)
 
 ## Installation
 
