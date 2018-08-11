@@ -10,7 +10,7 @@ You will need the following things properly installed on your computer.
 * [Node.js](https://nodejs.org/)
 * [Yarn](https://yarnpkg.com/)
 * [Ember CLI](https://ember-cli.com/)
-* [Google Chrome](https://google.com/chrome/) or [Mozilla Firefox](https://www.mozilla.org/)
+* [Google Chrome](https://google.com/chrome/) (to run automated tests in Chrome's headless mode)
 
 ## Installation
 
