@@ -1,5 +1,5 @@
 {{#if (not root)}}
-  {{#link-to 'chart-groups' cg.id}}{{cg.name}}{{/link-to}}
+  {{#link-to 'chart-groups.show' cg.id}}{{cg.name}}{{/link-to}}
 {{/if}}
 
 <ul class="chart-group-listing">
@@ -13,7 +13,7 @@
 <ul class="chart-group-listing">
   {{#each cg.charts as |chart|}}
   <li>
-    {{#link-to 'charts' chart.id}}{{chart.name}}{{/link-to}}
+    {{#link-to 'charts.show' chart.id}}{{chart.name}}{{/link-to}}
   </li>
   {{/each}}
 </ul>
