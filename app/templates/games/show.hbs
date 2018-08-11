@@ -1,0 +1,7 @@
+<h1>{{model.game.name}}</h1>
+
+<ul class="chart-group-listing">
+  {{#each model.topLevelChartGroups as |chartGroup|}}
+    <li>{{chart-group-contents cg=chartGroup root=false}}</li>
+  {{/each}}
+</ul>

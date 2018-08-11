@@ -2,6 +2,6 @@
 
 <ul class="results">
   {{#each model as |game|}}
-    <li>{{game.name}}</li>
+    <li>{{#link-to 'games.show' game.id}}{{game.name}}{{/link-to}}</li>
   {{/each}}
 </ul>

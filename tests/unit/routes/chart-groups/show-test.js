@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
-module('Unit | Route | chart-groups/index', function(hooks) {
+module('Unit | Route | chart-groups/show', function(hooks) {
   setupTest(hooks);
 
   test('it exists', function(assert) {
