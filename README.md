@@ -1,6 +1,8 @@
-# F-Zero Central website frontend
+# fzerocentral-web
 
-This is a new FZC Ember project using the [ember-cli 3.1.0 tutorial](https://guides.emberjs.com/v3.1.0/tutorial/ember-cli/) as a starting point. The previous FZC Ember project used pods for file organization, and this project doesn't.
+Website frontend for the (upcoming) F-Zero Central website. Uses Ember.js.
+
+This project used the [ember-cli 3.1.0 tutorial](https://guides.emberjs.com/v3.1.0/tutorial/ember-cli/) as a starting point.
 
 ## Prerequisites
 
@@ -20,7 +22,8 @@ You will need the following things properly installed on your computer.
 
 ## Running / Development
 
-* `ember serve`
+* Get an instance of the [F-Zero Central API](https://github.com/fzerocentral/fzerocentral-api) up and running at [http://localhost:3000](http://localhost:3000).
+* Run this ember app: `yarn run start`
 * Visit the app at [http://localhost:4200](http://localhost:4200).
 * Visit the tests at [http://localhost:4200/tests](http://localhost:4200/tests).
 
@@ -45,7 +48,7 @@ Make use of the many generators for code, try `ember help generate` for more det
 
 ### Deploying
 
-Specify what it takes to deploy your app.
+(TODO: Deployment instructions go here)
 
 ## Further Reading / Useful Links
 
