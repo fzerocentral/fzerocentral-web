@@ -8,6 +8,8 @@ export default Component.extend({
     this._super(...arguments);
 
     // All charts in this chart group
+    // TODO: During testing only, this gets only one chart in cases when it
+    // should get multiple. Don't know why.
     let groupCharts = this.mainChart.get('chartGroup').get('charts');
     // groupCharts other than mainChart (mainChart is the chart we're ranking
     // records by)
@@ -23,7 +25,7 @@ export default Component.extend({
       // Call API to get this chart's records
       let recordFetchPromise = this.get('store').query('record', {chart_id: chart.id});
 
-      if (chart.id === this.mainChart.id) {
+      if (chart.id === this.mainChart.get('id')) {
         recordFetchHandlerPromises.push(
           recordFetchPromise.then((chartRecords) => {
             // mainChartRecords is essentially just an array of records,
