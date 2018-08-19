@@ -1,0 +1,22 @@
+<table class="records-table">
+  <tr>
+    <th>Rank</th>
+    <th>Player</th>
+    <th>{{mainChart.name}}</th>
+    {{#each otherCharts as |chart|}}
+      <th>{{chart.name}}</th>
+    {{/each}}
+  </tr>
+  
+  {{#each recordRows as |recordRow|}}
+  <tr>
+    <td>{{recordRow.mainRecord.rank}}</td>
+    <td>{{recordRow.mainRecord.user.username}}</td>
+    <td>{{recordRow.mainRecord.value_display}}</td>
+
+    {{#each recordRow.otherRecords as |otherRecord|}}
+      <td>{{otherRecord.value_display}}</td>
+    {{/each}}
+  </tr>
+  {{/each}}
+</table>

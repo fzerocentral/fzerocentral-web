@@ -1,3 +1,7 @@
 <h1>{{model.game.name}} - {{model.name}}</h1>
 
-{{chart-group-contents cg=model root=true}}
+{{#if model.show_charts_together}}
+  {{chart-ranking-group mainChart=model.charts.firstObject}}
+{{else}}
+  {{chart-group-contents cg=model root=true}}
+{{/if}}
