@@ -79,9 +79,6 @@ export default Component.extend({
         });
       });
 
-      // Ember beginner note: If `recordRows` is in the template, don't use
-      // `this.recordRows` in this JS hook in any way. Otherwise the behavior
-      // may be confusing.
       this.set('recordRows', recordRows);
     });
   },
