@@ -7,6 +7,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    this.records = this.get('store').query('record', {chart_id: this.chart.id});
+    let args = {chart_id: this.chart.id, sort: 'value', ranked_entity: 'user'};
+    this.set('records', this.get('store').query('record', args));
   },
 });

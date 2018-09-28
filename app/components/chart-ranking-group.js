@@ -23,7 +23,8 @@ export default Component.extend({
 
     groupCharts.forEach((chart) => {
       // Call API to get this chart's records
-      let recordFetchPromise = this.get('store').query('record', {chart_id: chart.id});
+      let args = {chart_id: chart.id, sort: 'value', ranked_entity: 'user'};
+      let recordFetchPromise = this.get('store').query('record', args);
 
       if (chart.id === this.mainChart.get('id')) {
         recordFetchHandlerPromises.push(
