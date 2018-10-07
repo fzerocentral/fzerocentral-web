@@ -5,6 +5,9 @@ table.records-table td, table.records-table th {
   border: 1px solid black;
   padding: 2px;
 }
+table.records-table tr.non-personal-best {
+  color: #888888;
+}
 
 ul.chart-group-listing {
   margin-left: 10px;

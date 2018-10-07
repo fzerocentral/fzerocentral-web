@@ -3,7 +3,9 @@
   <tr>
     <td>{{record.rank}}</td>
     <td>{{record.user.username}}</td>
-    <td>{{record.value_display}}</td>
+    <td>{{#link-to 'charts.user-history' chart.id record.user.id}}
+      {{record.value_display}}
+    {{/link-to}}</td>
   </tr>
   {{/each}}
 </table>

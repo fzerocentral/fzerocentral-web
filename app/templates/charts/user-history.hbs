@@ -1,0 +1,11 @@
+<h1>{{model.user.username}}'s history for {{model.chart.chartGroup.name}} - {{model.chart.name}}</h1>
+
+<table class="records-table">
+  <tr><th>Record</th><th>Date</th></tr>
+  {{#each model.records as |record|}}
+  <tr class="{{if record.is_improvement '' 'non-personal-best'}}">
+    <td>{{record.value_display}}</td>
+    <td>{{moment-format record.achieved_at 'YYYY-MM-DD HH:mm'}}</td>
+  </tr>
+  {{/each}}
+</table>

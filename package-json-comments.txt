@@ -1,5 +1,10 @@
 This file contains comments about package.json, since there's no particularly clean way to add comments directly in JSON files.
 
 
+ember-moment
+ember-cli-moment-shim
+moment
+Date/time library.
+
 ember-truth-helpers
 Without this, Handlebars doesn't give a way to use boolean logic in templates. In order words, you'd better hope "if x" is the only thing you ever need. Even "if !x" needs a package like this.
