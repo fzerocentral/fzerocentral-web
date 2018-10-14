@@ -32,23 +32,54 @@ export default function() {
   });
 
   this.get('/records', (schema, request) => {
-    let chart = schema.charts.find(request.queryParams.chart_id);
-    let sortFunc = null;
-    if (chart.chartType.order_ascending === true) {
-      sortFunc = ((a, b) => { return b.value < a.value; });
+    let records = null;
+    if (request.queryParams.chart_id) {
+      let chart = schema.charts.find(request.queryParams.chart_id);
+      let sortFunc = null;
+      if (chart.chartType.order_ascending === true) {
+        sortFunc = ((a, b) => { return b.value < a.value; });
+      }
+      else {
+        sortFunc = ((a, b) => { return a.value < b.value; });
+      }
+      records = chart.records.sort(sortFunc);
+
+      records.models.forEach((record, index) => {
+        record.attrs.rank = index + 1;
+      });
     }
     else {
-      sortFunc = ((a, b) => { return a.value < b.value; });
+      records = schema.records.all();
     }
-    let records = chart.records.sort(sortFunc);
-    
-    records.models.forEach((record, index) => {
-      record.attrs.rank = index + 1;
-      // Can't be bothered to implement value_display properly in JS, and it
-      // doesn't seem to matter for testing purposes anyway
-      record.attrs.value_display = record.attrs.value;
+
+    records.models.forEach((record) => {
+      // Can't be bothered to implement valueDisplay properly in JS (e.g.
+      // 1'23"456, not 123456), and it doesn't seem to matter for our testing
+      // purposes anyway
+      record.attrs.valueDisplay = record.attrs.value;
     });
+
     return records;
+  });
+
+  this.post('/records', (schema, request) => {
+    let requestJSON = JSON.parse(request.requestBody);
+    let data = requestJSON.data;
+    let value = data.attributes.value;
+    let achievedAt = data.attributes['achieved-at'];
+    let chart = schema.charts.find(data.relationships.chart.data.id);
+    let user = schema.users.find(data.relationships.user.data.id);
+    let record = schema.records.create({
+      value: value, achievedAt: achievedAt, chart: chart, user: user});
+    return record;
+  });
+
+  this.get('/records/:id', (schema, request) => {
+    return schema.records.find(request.params.id);
+  });
+
+  this.get('/users', (schema) => {
+    return schema.users.all();
   });
 
   this.get('/users/:id', (schema, request) => {
