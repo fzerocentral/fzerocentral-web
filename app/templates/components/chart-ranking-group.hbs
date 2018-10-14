@@ -13,12 +13,12 @@
     <td>{{recordRow.mainRecord.rank}}</td>
     <td>{{recordRow.mainRecord.user.username}}</td>
     <td>{{#link-to 'charts.user-history' mainChart.id recordRow.mainRecord.user.id}}
-      {{recordRow.mainRecord.value_display}}
+      {{recordRow.mainRecord.valueDisplay}}
     {{/link-to}}</td>
 
     {{#each recordRow.otherRecords as |otherRecord|}}
       <td>{{#link-to 'charts.user-history' otherRecord.chart.id otherRecord.user.id}}
-        {{otherRecord.value_display}}
+        {{otherRecord.valueDisplay}}
       {{/link-to}}</td>
     {{/each}}
   </tr>

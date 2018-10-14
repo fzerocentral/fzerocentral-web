@@ -3,9 +3,9 @@
 <table class="records-table">
   <tr><th>Record</th><th>Date</th></tr>
   {{#each model.records as |record|}}
-  <tr class="{{if record.is_improvement '' 'non-personal-best'}}">
-    <td>{{record.value_display}}</td>
-    <td>{{moment-format record.achieved_at 'YYYY-MM-DD HH:mm'}}</td>
+  <tr class="{{if record.isImprovement '' 'non-personal-best'}}">
+    <td>{{record.valueDisplay}}</td>
+    <td>{{moment-format record.achievedAt 'YYYY-MM-DD HH:mm'}}</td>
   </tr>
   {{/each}}
 </table>
