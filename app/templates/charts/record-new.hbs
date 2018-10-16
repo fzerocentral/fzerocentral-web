@@ -1,17 +1,20 @@
 <h1>Submit record for: {{model.chart.chartGroup.name}} - {{model.chart.name}}</h1>
 
 <label>User</label>
-{{#power-select
-  options=model.users
-  selected=model.record.user
-  onchange=(action (mut model.record.user))
-  class=user-selector
-  as |user|}}
-  {{user.username}}
-{{/power-select}}
+<div class="user-select">
+  {{#power-select
+    options=model.users
+    selected=model.record.user
+    onchange=(action (mut model.record.user))
+    as |user|}}
+    {{user.username}}
+  {{/power-select}}
+</div>
 
 <label>Value</label>
 {{!-- For now, this is just a simple integer field which doesn't take the chart type's record format into account. --}}
 {{input type="text" class="value-input" value=model.record.value placeholder="Example: 123"}}
+
+{{record-filters-edit filterGroups=model.filterGroups filterGroupHashes=model.filterGroupHashes}}
 
 <div><button type="submit" {{action 'saveRecord'}}>Submit record</button></div>

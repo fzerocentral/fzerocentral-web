@@ -31,6 +31,24 @@ export default function() {
     return schema.charts.find(request.params.id);
   });
 
+  this.get('/filter_groups', (schema) => {
+    return schema.filterGroups.all();
+  });
+
+  this.get('/filters', (schema, request) => {
+    let filters = null;
+    if (request.queryParams.filter_group_id) {
+      let filterGroup = schema.filterGroups.find(
+        request.queryParams.filter_group_id);
+      filters = filterGroup.filters;
+    }
+    else {
+      filters = schema.filters.all();
+    }
+
+    return filters;
+  });
+
   this.get('/records', (schema, request) => {
     let records = null;
     if (request.queryParams.chart_id) {

@@ -9,4 +9,5 @@ export default DS.Model.extend({
 
   chart: DS.belongsTo('chart'),
   user: DS.belongsTo('user'),
+  filters: DS.hasMany('filter'),
 });
