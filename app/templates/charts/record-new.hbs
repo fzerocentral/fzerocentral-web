@@ -1,7 +1,7 @@
-<h1>Submit record for: {{model.chart.chartGroup.name}} - {{model.chart.name}}</h1>
+<h1>Submit record for: {{#link-to 'charts.show' model.chart.id}} {{model.chart.chartGroup.name}} - {{model.chart.name}}{{/link-to}}</h1>
 
-<label>User</label>
 <div class="user-select">
+  <label>User</label>
   {{#power-select
     options=model.users
     selected=model.record.user
@@ -11,9 +11,16 @@
   {{/power-select}}
 </div>
 
-<label>Value</label>
-{{!-- For now, this is just a simple integer field which doesn't take the chart type's record format into account. --}}
-{{input type="text" class="value-input" value=model.record.value placeholder="Example: 123"}}
+<div>
+  <label>Value</label>
+  {{!-- For now, this is just a simple integer field which doesn't take the chart type's record format into account. --}}
+  {{input type="text" class="value-input" value=model.record.value placeholder="Example: 123"}}
+</div>
+
+<div>
+  <label>Date achieved</label>
+  {{date-field dateValue=model.record.achievedAt}}
+</div>
 
 {{record-filters-edit filterGroups=model.filterGroups filterGroupHashes=model.filterGroupHashes}}
 

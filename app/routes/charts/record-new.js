@@ -24,9 +24,11 @@ export default Route.extend({
       let newRecord = this.modelFor(this.routeName).record;
 
       newRecord.set('chart', chart);
-      // Current date. Later we'd probably add a date field and make this the
-      // default.
-      newRecord.set('achievedAt', new Date());
+
+      if (!newRecord.get('achievedAt')) {
+        // If no date entered, use the current date.
+        newRecord.set('achievedAt', new Date());
+      }
 
       let filters = [];
       let filterGroupHashes = this.modelFor(this.routeName).filterGroupHashes;
