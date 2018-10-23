@@ -1,0 +1,9 @@
+{{#power-select
+  options=filterOptions
+  selected=current
+  onchange=(action 'onFilterChange' parentOnFilterChange)
+  placeholder="Not selected"
+  allowClear=true
+  as |filter|}}
+  {{filter.name}}
+{{/power-select}}

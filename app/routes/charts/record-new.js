@@ -1,4 +1,4 @@
-import { A } from '@ember/array'
+import { A } from '@ember/array';
 import Route from '@ember/routing/route';
 import RSVP from 'rsvp';
 
@@ -10,11 +10,10 @@ export default Route.extend({
       users: this.get('store').findAll('user'),
       filterGroups: this.get('store').query(
         'filterGroup', {chart_id: params.chart_id}),
-      // Mutable array which works with Ember bindings, as long as we use
-      // certain functions like pushObject() and replace().
-      // This isn't exactly a model; it's just to give the route more state to
-      // work with.
-      filterGroupHashes: A([]),
+      // This will be filled in later, with the filters to save to the record.
+      // We initialize it as a mutable array which works with Ember bindings.
+      // Fill it with functions like pushObject() and replace().
+      filters: A([]),
     });
   },
 
@@ -30,15 +29,7 @@ export default Route.extend({
         newRecord.set('achievedAt', new Date());
       }
 
-      let filters = [];
-      let filterGroupHashes = this.modelFor(this.routeName).filterGroupHashes;
-      filterGroupHashes.forEach((filterGroupHash) => {
-        // If the filter is not 'unspecified', then add it
-        if (filterGroupHash.currentFilter.model !== null) {
-          filters.push(filterGroupHash.currentFilter.model);
-        }
-      });
-      newRecord.set('filters', filters);
+      newRecord.set('filters', this.modelFor(this.routeName).filters);
 
       newRecord.save().then(() => this.transitionTo('charts.show', chart));
     },

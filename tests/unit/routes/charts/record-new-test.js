@@ -50,8 +50,8 @@ module('Unit | Route | charts/record-new', function(hooks) {
     // Fill fields.
     await selectChoose('div.user-select > .ember-power-select-trigger', 'User A');
     fillIn('.value-input', '123');
-    await selectChoose(`div.filter-group-${filterGroupA.id}-select > .ember-power-select-trigger`, 'Filter A1');
-    await selectChoose(`div.filter-group-${filterGroupB.id}-select > .ember-power-select-trigger`, 'Filter B2');
+    await selectChoose(`div.filter-group-${filterGroupA.id}-select .ember-power-select-trigger`, 'Filter A1');
+    await selectChoose(`div.filter-group-${filterGroupB.id}-select .ember-power-select-trigger`, 'Filter B2');
 
     await click('button[type=submit]');
 

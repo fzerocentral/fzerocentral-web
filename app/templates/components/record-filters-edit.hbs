@@ -1,12 +1,8 @@
-{{#each filterGroupHashes as |filterGroupHash|}}
-  <div class="filter-group-{{filterGroupHash.groupId}}-select">
-    <label>{{filterGroupHash.name}}</label>
-    {{#power-select
-      options=filterGroupHash.filters
-      selected=filterGroupHash.currentFilter
-      onchange=(action (mut filterGroupHash.currentFilter))
-      as |filter|}}
-      {{filter.name}}
-    {{/power-select}}
+{{#each filterGroups as |filterGroup|}}
+  <div class="filter-group-{{filterGroup.id}}-select">
+    <label>{{filterGroup.name}}</label>
+    {{filter-select
+      filterGroup=filterGroup
+      parentOnFilterChange=(action 'onAnyFilterChange' filterGroup.id)}}
   </div>
 {{/each}}

@@ -1,61 +1,33 @@
 import Component from '@ember/component';
-import { inject as service } from '@ember/service';
 
 export default Component.extend({
-  store: service('store'),
-
   init() {
     this._super(...arguments);
 
-    let filterGroups = this.get('filterGroups');
-
-    filterGroups.forEach((filterGroup) => {
-      // Push the filterGroupHash now, not later, to ensure correct order of
-      // the filterGroupHashes.
-      let notSpecifiedFilter = {model: null, name: "(Not specified)"};
-      this.get('filterGroupHashes').pushObject({
-        groupId: filterGroup.get('id'),
-        name: filterGroup.get('name'),
-        filters: [],
-        currentFilter: notSpecifiedFilter});
-
-      // This'll help retrieve the hash later.
-      let filterGroupHashIndex = this.get('filterGroupHashes').length - 1;
-      let updateCallback = this.updateFilterGroupHash.bind(
-        this, filterGroupHashIndex);
-
-      let filtersPromise = this.get('store').query(
-        'filter', {filter_group_id: filterGroup.id});
-      filtersPromise.then(updateCallback);
-
-      return true;
+    // Set `filtersPerGroup` to have one null object per filter group.
+    // TODO: filters -> filtersPerGroup, once we extend this component to
+    // editing records as well as creating them
+    this.set('filtersPerGroup', {});
+    this.get('filterGroups').forEach((filterGroup) => {
+      this.get('filtersPerGroup')[filterGroup.id] = null;
     });
   },
 
-  updateFilterGroupHash(filterGroupHashIndex, filters) {
-    // filters consists of the filter choices for this filter group.
-    // We'll add the not-specified choice alongside those.
-    // We can't add directly to a collection of filters, so we create a
-    // new structure, filterHashes.
-    let notSpecifiedFilter = {model: null, name: "(Not specified)"};
-    let filterHashes = [];
-    filters.forEach((filter) => {
-      filterHashes.push({model: filter, name: filter.get('name')});
-    });
-    filterHashes.push(notSpecifiedFilter);
+  actions: {
+    onAnyFilterChange(groupId, filter) {
+      // filtersPerGroup -> filters
+      // `filtersPerGroup` always has one element per filter group; if no
+      // filter was picked for a particular group, it's null.
+      // `filters` is what we send to the API and shouldn't include nulls.
+      this.get('filtersPerGroup')[groupId] = filter;
 
-    let existingFilterGroupHash =
-      this.get('filterGroupHashes').objectAt(filterGroupHashIndex);
-    // Make an object copy, because directly modifying an Ember array
-    // property's element is not allowed
-    let newFilterGroupHash = Object.assign({}, existingFilterGroupHash);
-    newFilterGroupHash.filters = filterHashes;
-
-    // TODO: When editing an existing record, this should be initialized
-    // to the previously-chosen filter if there is one.
-    //newFilterGroupHash.currentFilter = record.filter;
-
-    this.get('filterGroupHashes').replace(
-      filterGroupHashIndex, 1, [newFilterGroupHash]);
-  },
+      this.get('filters').clear();
+      Object.keys(this.get('filtersPerGroup')).forEach((key) => {
+        let thisGroupFilter = this.get('filtersPerGroup')[key];
+        if (thisGroupFilter) {
+          this.get('filters').pushObject(thisGroupFilter);
+        }
+      });
+    }
+  }
 });

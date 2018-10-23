@@ -35,6 +35,10 @@ export default function() {
     return schema.filterGroups.all();
   });
 
+  this.get('/filter_groups/:id', (schema, request) => {
+    return schema.filterGroups.find(request.params.id);
+  });
+
   this.get('/filters', (schema, request) => {
     let filters = null;
     if (request.queryParams.filter_group_id) {
