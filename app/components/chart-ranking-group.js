@@ -8,8 +8,6 @@ export default Component.extend({
     this._super(...arguments);
 
     // All charts in this chart group
-    // TODO: During testing only, this gets only one chart in cases when it
-    // should get multiple. Don't know why.
     let groupCharts = this.mainChart.get('chartGroup').get('charts');
     // groupCharts other than mainChart (mainChart is the chart we're ranking
     // records by)

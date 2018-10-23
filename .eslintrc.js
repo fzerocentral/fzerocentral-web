@@ -36,6 +36,15 @@ module.exports = {
         browser: false,
         node: true
       }
+    },
+
+    // mirage files
+    // https://github.com/ember-cli/eslint-plugin-ember/issues/202
+    {
+      files: ['mirage/**'],
+      rules: {
+        'ember/avoid-leaking-state-in-ember-objects': 'off'
+      }
     }
   ]
 };
