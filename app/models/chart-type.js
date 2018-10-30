@@ -6,4 +6,5 @@ export default DS.Model.extend({
   order_ascending: DS.attr('boolean'),
 
   game: DS.belongsTo('game'),
+  filterGroups: DS.hasMany('filter-group'),
 });

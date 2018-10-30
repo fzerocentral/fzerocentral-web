@@ -9,7 +9,6 @@ export default Component.extend({
     this._super(...arguments);
 
     let filterGroup = this.get('filterGroup');
-    this.set('current', null);
 
     // Get filters of this filter group
     let filtersPromise = this.get('store').query(
@@ -26,12 +25,11 @@ export default Component.extend({
   },
 
   actions: {
-    onFilterChange(parentOnFilterChange, filter) {
-      // Set the filter state of the parent (this function was passed
-      // here by the parent)
-      parentOnFilterChange(filter);
-      // Set this component's select-box state
-      this.set('current', filter);
-    }
-  }
+    onFilterChange() {
+      this.onFilterChange(...arguments);
+    },
+  },
+  onFilterChange() {
+    throw new Error('onFilterChange must be provided');
+  },
 });

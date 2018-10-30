@@ -22,6 +22,6 @@
   {{date-field dateValue=model.record.achievedAt}}
 </div>
 
-{{record-filters-edit filterGroups=model.filterGroups filters=model.filters}}
+{{record-filters-edit filterGroups=model.filterGroups filters=model.record.filters}}
 
 <div><button type="submit" {{action 'saveRecord'}}>Submit record</button></div>

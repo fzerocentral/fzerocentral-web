@@ -1,8 +1,10 @@
 {{#each filterGroups as |filterGroup|}}
   <div class="filter-group-{{filterGroup.id}}-select">
     <label>{{filterGroup.name}}</label>
+
     {{filter-select
       filterGroup=filterGroup
-      parentOnFilterChange=(action 'onAnyFilterChange' filterGroup.id)}}
+      selected=(get filtersPerGroup filterGroup.id)
+      onFilterChange=(action 'onAnyFilterChange' filterGroup.id)}}
   </div>
 {{/each}}

@@ -4,6 +4,6 @@ export default DS.Model.extend({
   name: DS.attr(),
   numericValue: DS.attr(),
 
-  filterGroups: DS.hasMany('filter-group'),
+  filterGroup: DS.belongsTo('filter-group'),
   records: DS.hasMany('record'),
 });

@@ -16,11 +16,11 @@ module('Integration | Component | record-filters-edit', function(hooks) {
     let store = this.owner.lookup('service:store');
 
     this.groupA = server.create('filterGroup', {name: 'Group A'});
-    this.filterA1 = server.create('filter', {name: 'Filter A1', filterGroups: [this.groupA]});
-    server.create('filter', {name: 'Filter A2', filterGroups: [this.groupA]});
+    this.filterA1 = server.create('filter', {name: 'Filter A1', filterGroup: this.groupA});
+    server.create('filter', {name: 'Filter A2', filterGroup: this.groupA});
     this.groupB = server.create('filterGroup', {name: 'Group B'});
-    server.create('filter', {name: 'Filter B1', filterGroups: [this.groupB]});
-    this.filterB2 = server.create('filter', {name: 'Filter B2', filterGroups: [this.groupB]});
+    server.create('filter', {name: 'Filter B1', filterGroup: this.groupB});
+    this.filterB2 = server.create('filter', {name: 'Filter B2', filterGroup: this.groupB});
 
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });

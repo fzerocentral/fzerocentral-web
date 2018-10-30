@@ -1,33 +1,50 @@
 import Component from '@ember/component';
+import EmberObject, { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
-  init() {
-    this._super(...arguments);
+  filters: null,
+  filterGroups: null,
+  store: service('store'),
 
-    // Set `filtersPerGroup` to have one null object per filter group.
-    // TODO: filters -> filtersPerGroup, once we extend this component to
-    // editing records as well as creating them
-    this.set('filtersPerGroup', {});
+  // This updates when filterGroups is set, or filters gets elements added,
+  // removed, or replaced.
+  filtersPerGroup: computed('filterGroups', 'filters.[]', function() {
+    let obj = new EmberObject();
+    // One object entry per filter group. Default to null.
     this.get('filterGroups').forEach((filterGroup) => {
-      this.get('filtersPerGroup')[filterGroup.id] = null;
+      obj.set(filterGroup.id, null);
     });
-  },
+    // Fill in entries based on contents of `filters`. There should be at most
+    // one filter per filter group.
+    this.get('filters').forEach((filter) => {
+      // TODO: This only works if the Rails records controller includes
+      // related-objects `filters`. We need to actually specify those related
+      // objects via an `include` parameter, which should be recognized
+      // on the Rails side.
+      obj.set(filter.get('filterGroup').get('id'), filter);
+    });
+    return obj;
+  }),
 
   actions: {
     onAnyFilterChange(groupId, filter) {
-      // filtersPerGroup -> filters
-      // `filtersPerGroup` always has one element per filter group; if no
-      // filter was picked for a particular group, it's null.
-      // `filters` is what we send to the API and shouldn't include nulls.
-      this.get('filtersPerGroup')[groupId] = filter;
+      // Update `filters`.
+      // First remove any existing filter of this group.
+      let inThisGroup = (f) => {
+        return f.get('filterGroup').get('id') === groupId;
+      };
+      let indexInFilters = this.get('filters').indexOf(
+        this.get('filters').find(inThisGroup));
+      if (indexInFilters !== -1) {
+        this.get('filters').removeAt(indexInFilters);
+      }
 
-      this.get('filters').clear();
-      Object.keys(this.get('filtersPerGroup')).forEach((key) => {
-        let thisGroupFilter = this.get('filtersPerGroup')[key];
-        if (thisGroupFilter) {
-          this.get('filters').pushObject(thisGroupFilter);
-        }
-      });
-    }
-  }
+      // Then add the passed filter, if it's not null/undefined/etc. (it could
+      // be, if we cleared a selection).
+      if (filter) {
+        this.get('filters').pushObject(filter);
+      }
+    },
+  },
 });

@@ -39,11 +39,11 @@ module('Unit | Route | charts/record-new', function(hooks) {
     let chart = server.create('chart', {name: 'Chart 1', chartType: chartType, chartGroup: chartGroup});
 
     let filterGroupA = server.create('filterGroup', {name: 'FGroup A'});
-    let filterA1 = server.create('filter', {name: 'Filter A1', filterGroups: [filterGroupA]});
-    server.create('filter', {name: 'Filter A2', filterGroups: [filterGroupA]});
+    let filterA1 = server.create('filter', {name: 'Filter A1', filterGroup: filterGroupA});
+    server.create('filter', {name: 'Filter A2', filterGroup: filterGroupA});
     let filterGroupB = server.create('filterGroup', {name: 'FGroup B'});
-    server.create('filter', {name: 'Filter B1', filterGroups: [filterGroupB]});
-    let filterB2 = server.create('filter', {name: 'Filter B2', filterGroups: [filterGroupB]});
+    server.create('filter', {name: 'Filter B1', filterGroup: filterGroupB});
+    let filterB2 = server.create('filter', {name: 'Filter B2', filterGroup: filterGroupB});
 
     await visit(`/charts/${chart.id}/record-new`);
 

@@ -55,16 +55,32 @@ export default function() {
 
   this.get('/records', (schema, request) => {
     let records = null;
+
     if (request.queryParams.chart_id) {
       let chart = schema.charts.find(request.queryParams.chart_id);
+      records = chart.records;
+
+      // Handle sort params
+      let orderAscending = chart.chartType.order_ascending;
+      let sortMethod = request.queryParams.sort || 'value';
       let sortFunc = null;
-      if (chart.chartType.order_ascending === true) {
-        sortFunc = ((a, b) => { return b.value < a.value; });
+      if (sortMethod === 'value') {
+        if (orderAscending === true) {
+          sortFunc = ((a, b) => { return b.value < a.value; });
+        }
+        else {
+          sortFunc = ((a, b) => { return a.value < b.value; });
+        }
       }
-      else {
-        sortFunc = ((a, b) => { return a.value < b.value; });
+      else if (sortMethod === 'date_achieved') {
+        if (orderAscending === true) {
+          sortFunc = ((a, b) => { return b.achievedAt < a.achievedAt; });
+        }
+        else {
+          sortFunc = ((a, b) => { return a.achievedAt < b.achievedAt; });
+        }
       }
-      records = chart.records.sort(sortFunc);
+      records = records.sort(sortFunc);
 
       records.models.forEach((record, index) => {
         record.attrs.rank = index + 1;

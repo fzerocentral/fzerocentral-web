@@ -15,12 +15,14 @@ module('Integration | Component | filter-select', function(hooks) {
     let store = this.owner.lookup('service:store');
 
     this.groupA = server.create('filterGroup', {name: 'Group A'});
-    this.filterA1 = server.create('filter', {name: 'Filter A1', filterGroups: [this.groupA]});
-    server.create('filter', {name: 'Filter A2', filterGroups: [this.groupA]});
+    this.filterA1 = server.create('filter', {name: 'Filter A1', filterGroup: this.groupA});
+    server.create('filter', {name: 'Filter A2', filterGroup: this.groupA});
 
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
-    this.set('filterGroup', run(() => store.findRecord('filterGroup', this.groupA.id)));
+    this.set('filterGroup', run(
+      () => store.findRecord('filterGroup', this.groupA.id)));
+    this.set('filter', null);
     this.set('onAnyFilterChange', (filter) => {
       this.set('filter', filter);
     });
@@ -38,7 +40,8 @@ module('Integration | Component | filter-select', function(hooks) {
     await render(hbs`
       {{filter-select
         filterGroup=filterGroup
-        parentOnFilterChange=(action onAnyFilterChange)}}
+        selected=filter
+        onFilterChange=(action onAnyFilterChange)}}
     `);
 
     // The first span within `.ember-power-select-trigger` should contain
@@ -52,7 +55,8 @@ module('Integration | Component | filter-select', function(hooks) {
     await render(hbs`
       {{filter-select
         filterGroup=filterGroup
-        parentOnFilterChange=(action onAnyFilterChange)}}
+        selected=filter
+        onFilterChange=(action onAnyFilterChange)}}
     `);
 
     await selectChoose(`.ember-power-select-trigger`, "Filter A1");
@@ -69,7 +73,8 @@ module('Integration | Component | filter-select', function(hooks) {
     await render(hbs`
       {{filter-select
         filterGroup=filterGroup
-        parentOnFilterChange=(action onAnyFilterChange)}}
+        selected=filter
+        onFilterChange=(action onAnyFilterChange)}}
     `);
 
     await selectChoose(`.ember-power-select-trigger`, "Filter A1");

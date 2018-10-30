@@ -21,6 +21,10 @@ Router.map(function() {
   this.route('chart-groups', { path: '/chart-groups' }, function() {
     this.route('show', { path: '/:chart_group_id' });
   });
+
+  this.route('records', { path: '/records' }, function() {
+    this.route('show', { path: '/:record_id' });
+  });
 });
 
 export default Router;

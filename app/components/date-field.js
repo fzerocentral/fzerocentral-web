@@ -1,22 +1,38 @@
 import Component from '@ember/component';
+import { computed } from '@ember/object';
 import moment from 'moment';
 
 export default Component.extend({
-  init() {
-    this._super(...arguments);
+  dateInput: "",
+  dateValue: null,
 
-    let dateValue = this.get('dateValue');
-    if (dateValue !== null && dateValue !== undefined) {
-      // Date to string
-      this.set('strValue', moment(dateValue).format());
+  // Date -> String
+  dateStr: computed('dateValue', function() {
+    let value = this.get('dateValue');
+    if (value === null || value === undefined) {
+      return "";
     }
-  },
+    return moment(value).format();
+  }),
 
   actions: {
     onchange() {
-      // String to date
-      // TODO: Have error checking here
-      this.set('dateValue', moment(this.get('strValue')).toDate());
+      // String -> Date
+      let momentDate = moment(
+        this.get('dateInput'),
+        ['YYYY-MM-DD', 'YYYY-MM-DDTHH:mm', 'YYYY-MM-DDTHH:mm:ssZ']);
+      if (momentDate.isValid()) {
+        this.set('dateValue', momentDate.toDate());
+      }
+      else {
+        // If not valid, trigger a reset of dateStr
+        this.set('dateValue', this.get('dateValue'));
+      }
+
+      // Reset dateInput. It's not used for displaying the date after it's
+      // entered. That is, we treat dateInput kind of as if it were part of a
+      // pop-up prompt.
+      this.set('dateInput', "");
     },
   }
 });
