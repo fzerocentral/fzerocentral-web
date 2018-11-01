@@ -1,4 +1,13 @@
 <table class="records-table">
+  <tr>
+    <th>Rank</th>
+    <th>Player</th>
+    <th>Record</th>
+    {{#each filterGroups as |filterGroup|}}
+      <th>{{filterGroup.name}}</th>
+    {{/each}}
+  </tr>
+
   {{#each records as |record|}}
   <tr>
     <td>{{record.rank}}</td>
@@ -6,6 +15,10 @@
     <td>{{#link-to 'charts.user-history' chart.id record.user.id}}
       {{record.valueDisplay}}
     {{/link-to}}</td>
+
+    {{#each filterGroups as |filterGroup|}}
+      <td>{{get (find-filter-of-group record.filters filterGroup.id) 'name'}}</td>
+    {{/each}}
   </tr>
   {{/each}}
 </table>

@@ -82,6 +82,8 @@ export default function() {
       }
       records = records.sort(sortFunc);
 
+      // Really naive way of adding ranks. In reality, should be taking
+      // ranked_entity param into account, as well as accounting for ties.
       records.models.forEach((record, index) => {
         record.attrs.rank = index + 1;
       });
