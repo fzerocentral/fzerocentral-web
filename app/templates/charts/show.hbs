@@ -1,9 +1,10 @@
-{{#link-to 'charts.record-new' model.id}}Submit a record{{/link-to}}
+<div>{{#link-to 'charts.record-new' model.id}}Submit a record{{/link-to}}</div>
 
-{{#if model.chartGroup.show_charts_together}}
-  <h1>{{model.chartGroup.name}}</h1>
-  {{chart-ranking-group mainChart=model}}
-{{else}}
-  <h1>{{model.chartGroup.name}} - {{model.name}}</h1>
-  {{chart-ranking-single chart=model}}
+{{#if model.chartGroup.showChartsTogether}}
+  <div>{{#link-to 'chart-groups.show' model.chartGroup.id (query-params mainChartId=model.id)}}
+    View all charts for {{model.chartGroup.name}}
+  {{/link-to}}</div>
 {{/if}}
+
+<h1>{{model.chartGroup.name}} - {{model.name}}</h1>
+{{chart-ranking-single chart=model}}

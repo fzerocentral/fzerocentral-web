@@ -34,9 +34,10 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
 
     // Getting from the store, instead of using our local var above, avoids
     // `TypeError: this.mainChart.get is not a function`
-    this.set('chart', run(() => store.findRecord('chart', chart1.id)))
+    this.set('chartGroup', run(() => store.findRecord('chart-group', chartGroup.id)))
+    this.set('mainChart', run(() => store.findRecord('chart', chart1.id)))
 
-    await render(hbs`{{chart-ranking-group mainChart=chart}}`);
+    await render(hbs`{{chart-ranking-group chartGroup=chartGroup mainChart=mainChart}}`);
 
     // textContent has a lot of newlines and extra spaces on either side of
     // them. We'll get rid of those before comparing.

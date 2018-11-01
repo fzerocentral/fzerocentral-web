@@ -2,9 +2,13 @@
   <tr>
     <th>Rank</th>
     <th>Player</th>
-    <th>{{mainChart.name}}</th>
+    <th>{{#link-to 'chart-groups.show' chartGroup.id (query-params mainChartId=mainChart.id)}}
+      {{mainChart.name}}
+    {{/link-to}}</th>
     {{#each otherCharts as |chart|}}
-      <th>{{chart.name}}</th>
+      <th>{{#link-to 'chart-groups.show' chartGroup.id (query-params mainChartId=chart.id)}}
+        {{chart.name}}
+      {{/link-to}}</th>
     {{/each}}
   </tr>
 
