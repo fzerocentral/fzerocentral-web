@@ -9,16 +9,18 @@
   </tr>
 
   {{#each records as |record|}}
-  <tr>
-    <td>{{record.rank}}</td>
-    <td>{{record.user.username}}</td>
-    <td>{{#link-to 'charts.user-history' chart.id record.user.id}}
-      {{record.valueDisplay}}
-    {{/link-to}}</td>
+    <tr>
+      <td>{{record.rank}}</td>
+      <td>{{record.user.username}}</td>
+      <td>{{#link-to 'charts.user-history' chart.id record.user.id}}
+        {{record.valueDisplay}}
+      {{/link-to}}</td>
 
-    {{#each filterGroups as |filterGroup|}}
-      <td>{{get (find-filter-of-group record.filters filterGroup.id) 'name'}}</td>
-    {{/each}}
-  </tr>
+      {{#each filterGroups as |filterGroup|}}
+        <td>
+          {{get (find-filter-of-group record.filters filterGroup.id) 'name'}}
+        </td>
+      {{/each}}
+    </tr>
   {{/each}}
 </table>

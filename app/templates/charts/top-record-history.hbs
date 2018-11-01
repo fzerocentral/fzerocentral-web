@@ -1,12 +1,26 @@
 <h1>Top record history for {{model.chart.chartGroup.name}} - {{model.chart.name}}</h1>
 
 <table class="records-table">
-  <tr><th>Player</th><th>Record</th><th>Date</th></tr>
-  {{#each model.records as |record|}}
   <tr>
-    <td>{{record.user.username}}</td>
-    <td>{{record.valueDisplay}}</td>
-    <td>{{moment-format record.achievedAt 'YYYY-MM-DD HH:mm'}}</td>
+    <th>Player</th>
+    <th>Record</th>
+    <th>Date</th>
+    {{#each model.filterGroups as |filterGroup|}}
+      <th>{{filterGroup.name}}</th>
+    {{/each}}
   </tr>
+
+  {{#each model.records as |record|}}
+    <tr>
+      <td>{{record.user.username}}</td>
+      <td>{{record.valueDisplay}}</td>
+      <td>{{moment-format record.achievedAt 'YYYY-MM-DD HH:mm'}}</td>
+
+      {{#each model.filterGroups as |filterGroup|}}
+        <td>
+          {{get (find-filter-of-group record.filters filterGroup.id) 'name'}}
+        </td>
+      {{/each}}
+    </tr>
   {{/each}}
 </table>

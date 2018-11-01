@@ -9,7 +9,9 @@ export default Route.extend({
       records: this.store.query('record', {
         chart_id: params.chart_id, user_id: params.user_id,
         sort: 'date_achieved', improvements: 'flag',
-      })
+      }),
+      filterGroups: this.get('store').query(
+        'filterGroup', {chart_id: params.chart_id}),
     });
   }
 });
