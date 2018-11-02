@@ -1,9 +1,11 @@
+{{filter-groups-toggle filterGroups=filterGroups onToggleUpdate=(action 'onToggleUpdate')}}
+
 <table class="records-table">
   <tr>
     <th>Rank</th>
     <th>Player</th>
     <th>Record</th>
-    {{#each filterGroups as |filterGroup|}}
+    {{#each shownFilterGroups as |filterGroup|}}
       <th>{{filterGroup.name}}</th>
     {{/each}}
   </tr>
@@ -16,7 +18,7 @@
         {{record.valueDisplay}}
       {{/link-to}}</td>
 
-      {{#each filterGroups as |filterGroup|}}
+      {{#each shownFilterGroups as |filterGroup|}}
         <td>
           {{get (find-filter-of-group record.filters filterGroup.id) 'name'}}
         </td>

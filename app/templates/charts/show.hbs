@@ -1,3 +1,5 @@
+<h1>{{model.chart.chartGroup.name}} - {{model.chart.name}}</h1>
+
 <div>{{#link-to 'charts.record-new' model.chart.id}}Submit a record{{/link-to}}</div>
 
 {{#if model.chart.chartGroup.showChartsTogether}}
@@ -10,5 +12,4 @@
   View top record history
 {{/link-to}}</div>
 
-<h1>{{model.chart.chartGroup.name}} - {{model.chart.name}}</h1>
 {{chart-ranking-single chart=model.chart records=model.records filterGroups=model.filterGroups}}

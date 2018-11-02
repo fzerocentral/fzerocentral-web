@@ -1,10 +1,12 @@
 <h1>{{model.user.username}}'s history for {{model.chart.chartGroup.name}} - {{model.chart.name}}</h1>
 
+{{filter-groups-toggle filterGroups=model.filterGroups onToggleUpdate=(action 'onToggleUpdate')}}
+
 <table class="records-table">
   <tr>
     <th>Record</th>
     <th>Date</th>
-    {{#each model.filterGroups as |filterGroup|}}
+    {{#each shownFilterGroups as |filterGroup|}}
       <th>{{filterGroup.name}}</th>
     {{/each}}
   </tr>
@@ -16,7 +18,7 @@
       </td>
       <td>{{moment-format record.achievedAt 'YYYY-MM-DD HH:mm'}}</td>
 
-      {{#each model.filterGroups as |filterGroup|}}
+      {{#each shownFilterGroups as |filterGroup|}}
         <td>
           {{get (find-filter-of-group record.filters filterGroup.id) 'name'}}
         </td>

@@ -1,10 +1,7 @@
 import { A } from '@ember/array';
-import Component from '@ember/component';
+import Controller from '@ember/controller';
 
-export default Component.extend({
-  chart: null,
-  filterGroups: null,
-  records: null,
+export default Controller.extend({
   shownFilterGroups: A([]),
 
   actions: {

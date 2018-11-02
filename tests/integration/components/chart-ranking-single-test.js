@@ -45,6 +45,7 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
       }
     })
     assert.deepEqual(textContentLines, [
+      "Show all filter groups",
       "Rank", "Player", "Record",
       "1", "User A", "20",
       "2", "User B", "25"]);
