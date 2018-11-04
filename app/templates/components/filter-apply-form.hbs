@@ -1,0 +1,6 @@
+{{!-- TODO: Implement an add-filter button, so that we don't have to specify filters by URL typing. --}}
+
+Filters:
+{{#each appliedFilters as |appliedFilter|}}
+  <span class="applied-filter">{{appliedFilter.display}}</span>
+{{/each}}

@@ -32,8 +32,9 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     this.set('chart', chart);
     this.set('filterGroups', A([]));
     this.set('records', run(() => store.query('record', {
-        chart_id: chart.id, sort: 'value', ranked_entity: 'user'})));
-    await render(hbs`{{chart-ranking-single chart=chart filterGroups=filterGroups records=records}}`);
+      chart_id: chart.id, sort: 'value', ranked_entity: 'user'})));
+    this.set('appliedFiltersString', null);
+    await render(hbs`{{chart-ranking-single chart=chart filterGroups=filterGroups records=records appliedFiltersString=appliedFiltersString}}`);
 
     // textContent has a lot of newlines and extra spaces on either side of
     // them. We'll get rid of those before comparing.
@@ -45,7 +46,7 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
       }
     })
     assert.deepEqual(textContentLines, [
-      "Show all filter groups",
+      "Show all filter groups", "Filters:",
       "Rank", "Player", "Record",
       "1", "User A", "20",
       "2", "User B", "25"]);
