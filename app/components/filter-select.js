@@ -10,9 +10,12 @@ export default Component.extend({
 
     let filterGroup = this.get('filterGroup');
 
-    // Get filters of this filter group
-    let filtersPromise = this.get('store').query(
-      'filter', {filter_group_id: filterGroup.id});
+    // Get chosen filters of this filter group
+    let args = {filter_group_id: filterGroup.id};
+    if (this.get('chosenOnly')) {
+      args.chosen_only = true;
+    }
+    let filtersPromise = this.get('store').query('filter', args);
 
     filtersPromise.then((filters) => {
       this.set('filterOptions', A([]));
