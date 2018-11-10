@@ -132,6 +132,21 @@ export default Component.extend({
         this.set('selectedFilter', filterOptions.objectAt(0));
       });
     },
+    removeFilter(index) {
+      // We're assuming this'll only ever be called with a valid index.
+      let filtersString = this.get('appliedFiltersString');
+      let filterStrings = filtersString.split(',');
+      // Remove 1 element at the specified index.
+      filterStrings.splice(index, 1);
+
+      if (filterStrings.length === 0) {
+        // We expect null, not '', if there's 0 filters applied.
+        this.set('appliedFiltersString', null);
+      }
+      else {
+        this.set('appliedFiltersString', filterStrings.join(','));
+      }
+    },
     updateAppliedFiltersString() {
       this.updateAppliedFiltersString(...arguments);
     },

@@ -39,7 +39,10 @@
 
 <div>
   Applied filters:
-  {{#each appliedFilters as |appliedFilter|}}
+  {{#each appliedFilters as |appliedFilter index|}}
     <span class="applied-filter">{{appliedFilter.display}}</span>
+    {{!-- TODO: This remove button should be an image button or CSS-drawn button, not a text button. Also, ideally the button would only show when hovering over the applied filter. --}}
+    <button type="button" class="applied-filter-remove-button"
+    {{action 'removeFilter' index}}>x</button>
   {{/each}}
 </div>
