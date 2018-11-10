@@ -20,7 +20,7 @@ export default Component.extend({
       return A([]);
     }
 
-    let appliedFilterStrings = appliedFiltersString.split(',');
+    let appliedFilterStrings = appliedFiltersString.split('-');
     let appliedFilterSpecs = A([]);
     appliedFilterStrings.forEach((afString) => {
       let regexMatch = /([0-9]+)([a-zA-Z]*)/.exec(afString);
@@ -92,7 +92,7 @@ export default Component.extend({
       let filtersString = this.get('appliedFiltersString');
       let filterStrings = [];
       if (filtersString !== null) {
-        filterStrings = filtersString.split(',');
+        filterStrings = filtersString.split('-');
       }
 
       // Make a string for the newly added filter
@@ -103,7 +103,7 @@ export default Component.extend({
 
       // Add the new string
       filterStrings.push(newFilterString);
-      let newAppliedFiltersString = filterStrings.join(',');
+      let newAppliedFiltersString = filterStrings.join('-');
       this.send('updateAppliedFiltersString', newAppliedFiltersString);
     },
     onFilterGroupChange(filterGroup) {
@@ -135,7 +135,7 @@ export default Component.extend({
     removeFilter(index) {
       // We're assuming this'll only ever be called with a valid index.
       let filtersString = this.get('appliedFiltersString');
-      let filterStrings = filtersString.split(',');
+      let filterStrings = filtersString.split('-');
       // Remove 1 element at the specified index.
       filterStrings.splice(index, 1);
 
@@ -144,7 +144,7 @@ export default Component.extend({
         this.set('appliedFiltersString', null);
       }
       else {
-        this.set('appliedFiltersString', filterStrings.join(','));
+        this.set('appliedFiltersString', filterStrings.join('-'));
       }
     },
     updateAppliedFiltersString() {
