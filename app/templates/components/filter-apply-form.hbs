@@ -1,6 +1,45 @@
-{{!-- TODO: Implement an add-filter button, so that we don't have to specify filters by URL typing. --}}
+<div class="filter-apply-form">
+  Add filter:
 
-Filters:
-{{#each appliedFilters as |appliedFilter|}}
-  <span class="applied-filter">{{appliedFilter.display}}</span>
-{{/each}}
+  {{!-- Choice of filter group --}}
+  {{#power-select
+    options=filterGroups
+    selected=selectedFilterGroup
+    onchange=(action 'onFilterGroupChange')
+    placeholder="Not selected"
+    matchTriggerWidth=false
+    as |filterGroup|}}
+    {{filterGroup.name}}
+  {{/power-select}}
+
+  {{!-- Choice of is, is not, <=, >= --}}
+  {{#power-select
+    options=compareOptions
+    selected=selectedCompareOption
+    onchange=(action (mut selectedCompareOption))
+    placeholder="Not selected"
+    matchTriggerWidth=false
+    as |compareOption|}}
+    {{compareOption.text}}
+  {{/power-select}}
+
+  {{!-- Choice of filter from the filter group --}}
+  {{#power-select
+    options=filterOptions
+    selected=selectedFilter
+    onchange=(action (mut selectedFilter))
+    placeholder="Not selected"
+    matchTriggerWidth=false
+    as |filter|}}
+    {{filter.name}}
+  {{/power-select}}
+
+  <button type="submit" {{action 'addFilter'}}>Add</button>
+</div>
+
+<div>
+  Applied filters:
+  {{#each appliedFilters as |appliedFilter|}}
+    <span class="applied-filter">{{appliedFilter.display}}</span>
+  {{/each}}
+</div>

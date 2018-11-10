@@ -32,6 +32,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
       }
     })
     assert.deepEqual(textContentLines, [
-      "Filters:", "Group A: Filter A1"]);
+      "Add filter:", "Not selected", "Not selected", "Not selected", "Add",
+      "Applied filters:", "Group A: Filter A1"]);
   });
 });

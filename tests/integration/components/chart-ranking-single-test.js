@@ -46,8 +46,9 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
       }
     })
     assert.deepEqual(textContentLines, [
-      "Show all filter groups", "Filters:",
-      "Rank", "Player", "Record",
+      "Show all filter groups",
+      "Add filter:", "Not selected", "Not selected", "Not selected", "Add",
+      "Applied filters:", "Rank", "Player", "Record",
       "1", "User A", "20",
       "2", "User B", "25"]);
   });

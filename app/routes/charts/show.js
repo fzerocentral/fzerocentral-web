@@ -3,10 +3,9 @@ import RSVP from 'rsvp';
 
 export default Route.extend({
   queryParams: {
-    // TODO: Is this right, or should it be filters? (We can test this once we
-    // implement an add-filter button.)
     appliedFiltersString: {
       // Re-run the model hook if this query param changes.
+      // In particular, we need the records to refresh when the filters change.
       refreshModel: true
     }
   },

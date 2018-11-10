@@ -1,3 +1,7 @@
+div.filter-apply-form {
+  /* Contents can go on one line and wrap to mutiple lines as needed. */
+  display: flex;
+}
 span.applied-filter {
   background-color: #bbbbee;
   border-radius: 3px;
