@@ -1,0 +1,101 @@
+<h1>{{model.game.name}} - {{model.chartType.name}} (Chart type) - Filter groups</h1>
+
+{{#if model.chartTypeFilterGroups}}
+
+  <table>
+    <tr>
+      <th></th>
+      <th>Order</th>
+      <th>Name</th>
+      <th>Show by default on rankings?</th>
+    </tr>
+
+    {{#each model.chartTypeFilterGroups as |ctfg|}}
+      <tr>
+        <td>
+          <button type="button" {{action 'unlinkFilterGroup' ctfg}}>
+            - </button>
+        </td>
+        <td>
+          {{input type="text" size="2" class="order-input" value=ctfg.orderInChartType change=(action 'onOrderChange' ctfg)}}
+        </td>
+        <td>
+          {{#link-to 'filter-groups.show' ctfg.filterGroup.id}}
+            {{ctfg.filterGroup.name}}
+          {{/link-to}}
+        </td>
+        <td>
+          {{input type="checkbox" class="show-input" checked=ctfg.showByDefault click=(action (action 'onShowChange' ctfg) value='target.checked')}}
+        </td>
+      </tr>
+    {{/each}}
+  </table>
+
+{{else}}
+
+  (No filter groups yet)
+
+{{/if}}
+
+
+{{#if otherFilterGroups}}
+  <h2>Other filter groups in this game</h2>
+
+  <ul>
+    {{#each otherFilterGroups as |filterGroup|}}
+      <li>
+        {{#link-to 'filter-groups.show' filterGroup.id}}
+          {{filterGroup.name}}
+        {{/link-to}}
+        <button type="button" {{action 'linkFilterGroup' filterGroup}}>
+          + </button>
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+
+{{#if model.orphanedFilterGroups}}
+  <h2>Orphaned filter groups</h2>
+
+  <ul>
+    {{#each model.orphanedFilterGroups as |filterGroup|}}
+      <li>
+        {{#link-to 'filter-groups.show' filterGroup.id}}
+          {{filterGroup.name}}
+        {{/link-to}}
+        <button type="button" {{action 'linkFilterGroup' filterGroup}}>
+          + </button>
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+
+<h2>Create new filter group</h2>
+
+<div>
+  <label>Name</label>
+  {{input type="text" class="name-input" value=model.newFilterGroup.name}}
+</div>
+
+<div>
+  <label>Kind</label>
+  {{#power-select
+    options=kindOptions
+    selected=model.newFilterGroup.kind
+    onchange=(action (mut model.newFilterGroup.kind))
+    placeholder="Not selected"
+    as |option|}}
+    {{option}}
+  {{/power-select}}
+</div>
+
+<div>
+  <label>Description</label>
+  {{input type="text" class="name-input" value=model.newFilterGroup.description}}
+</div>
+
+<div><button type="button" {{action 'createFilterGroup'}}>
+  Create
+</button></div>

@@ -22,6 +22,14 @@ Router.map(function() {
     this.route('show', { path: '/:chart_group_id' });
   });
 
+  this.route('chart-types', { path: '/chart-types' }, function() {
+    this.route('filter-groups', { path: '/:chart_type_id/filter-groups' });
+  });
+
+  this.route('filter-groups', { path: '/filter-groups' }, function() {
+    this.route('show', { path: '/:filter_group_id' });
+  });
+
   this.route('records', { path: '/records' }, function() {
     this.route('show', { path: '/:record_id' });
   });

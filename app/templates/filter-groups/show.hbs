@@ -1,0 +1,25 @@
+<h1>{{model.filterGroup.name}}</h1>
+
+<div>Kind: {{model.filterGroup.kind}}</div>
+
+<div>Description: {{model.filterGroup.description}}</div>
+
+<div>
+  Used by these chart types:
+  <ul>
+    {{#each chartTypes as |chartType|}}
+      <li>{{#link-to 'chart-types.filter-groups' chartType.id}}
+        {{chartType.name}}
+      {{/link-to}}</li>
+    {{/each}}
+  </ul>
+</div>
+
+<div>
+  Filters:
+  <ul>
+    {{#each model.filters as |filter|}}
+      <li>{{filter.name}}</li>
+    {{/each}}
+  </ul>
+</div>
