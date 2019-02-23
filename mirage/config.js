@@ -27,6 +27,10 @@ export default function() {
     return schema.chartGroups.find(request.params.id);
   });
 
+  this.get('/chart_types/:id', (schema, request) => {
+    return schema.chartTypes.find(request.params.id);
+  });
+
   this.get('/charts/:id', (schema, request) => {
     return schema.charts.find(request.params.id);
   });
