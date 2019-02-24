@@ -2,10 +2,11 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { A } from '@ember/array';
 import { click, render } from '@ember/test-helpers';
-import { run } from "@ember/runloop";
 import hbs from 'htmlbars-inline-precompile';
 import { selectChoose } from 'ember-power-select/test-support';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
+import { createModelInstance, modelAsProperty }
+  from 'fzerocentral-web/tests/helpers/model-helpers';
 import { assertPowerSelectOptionsEqual, assertPowerSelectCurrentTextEqual }
   from 'fzerocentral-web/tests/helpers/power-select-helpers';
 
@@ -19,22 +20,6 @@ function getCompareMethodSelect(testModule) {
 
 function getFilterSelect(testModule) {
   return testModule.element.querySelectorAll(`.ember-power-select-trigger`)[2];
-}
-
-function createModelInstance(server, modelName, args) {
-  return server.create(modelName, args);
-}
-
-function modelAsProperty(store, modelName, modelRecord) {
-  // The result of server.create() is good for passing into another create()
-  // call to specify a model relationship.
-  // However, the result of server.create() doesn't have a function get(), so
-  // it can't be passed as a component property. Need to call findRecord() to
-  // get our hands on an object with get() available.
-  //
-  // Pass a server.create() result to this function as modelRecord, and this
-  // function will return an object with get().
-  return run(() => store.findRecord(modelName, modelRecord.id));
 }
 
 module('Integration | Component | filter-apply-form', function(hooks) {
