@@ -57,6 +57,10 @@ export default function() {
     return filters;
   });
 
+  this.get('/filters/:id', (schema, request) => {
+    return schema.filters.find(request.params.id);
+  });
+
   this.get('/records', (schema, request) => {
     let records = null;
 
@@ -97,10 +101,15 @@ export default function() {
     }
 
     records.models.forEach((record) => {
-      // Can't be bothered to implement valueDisplay properly in JS (e.g.
-      // 1'23"456, not 123456), and it doesn't seem to matter for our testing
-      // purposes anyway
-      record.attrs.valueDisplay = record.attrs.value;
+      // We'll implement a very limited number of format specs so we can
+      // at least test when valueDisplay differs from value.
+      let formatSpec = record.chart.chartType.format_spec;
+      if (formatSpec === '[{"suffix": "m"}]') {
+        record.attrs.valueDisplay = record.attrs.value + 'm';
+      }
+      else {
+        record.attrs.valueDisplay = record.attrs.value;
+      }
     });
 
     return records;
