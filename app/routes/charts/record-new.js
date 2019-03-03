@@ -24,7 +24,7 @@ export default Route.extend({
         newRecord.set('achievedAt', new Date());
       }
 
-      newRecord.save().then(() => this.transitionTo('charts.show', chart));
+      newRecord.save().then(() => this.transitionTo('charts.show', chart.id));
     },
 
     willTransition() {
