@@ -2,7 +2,7 @@
 
 {{#if model.chartTypeFilterGroups}}
 
-  <table>
+  <table class='chart-type-fgs'>
     <tr>
       <th></th>
       <th>Order</th>
@@ -13,7 +13,7 @@
     {{#each model.chartTypeFilterGroups as |ctfg|}}
       <tr>
         <td>
-          <button type="button" {{action 'unlinkFilterGroup' ctfg}}>
+          <button type="button" class="unlink-fg-button" {{action 'unlinkFilterGroup' ctfg}}>
             - </button>
         </td>
         <td>
@@ -41,13 +41,13 @@
 {{#if otherFilterGroups}}
   <h2>Other filter groups in this game</h2>
 
-  <ul>
+  <ul class='game-fgs'>
     {{#each otherFilterGroups as |filterGroup|}}
       <li>
         {{#link-to 'filter-groups.show' filterGroup.id}}
           {{filterGroup.name}}
         {{/link-to}}
-        <button type="button" {{action 'linkFilterGroup' filterGroup}}>
+        <button type="button" class="link-fg-button" {{action 'linkFilterGroup' filterGroup}}>
           + </button>
       </li>
     {{/each}}
@@ -58,13 +58,13 @@
 {{#if model.orphanedFilterGroups}}
   <h2>Orphaned filter groups</h2>
 
-  <ul>
+  <ul class='orphaned-fgs'>
     {{#each model.orphanedFilterGroups as |filterGroup|}}
       <li>
         {{#link-to 'filter-groups.show' filterGroup.id}}
           {{filterGroup.name}}
         {{/link-to}}
-        <button type="button" {{action 'linkFilterGroup' filterGroup}}>
+        <button type="button" class="link-fg-button" {{action 'linkFilterGroup' filterGroup}}>
           + </button>
       </li>
     {{/each}}
@@ -79,7 +79,7 @@
   {{input type="text" class="name-input" value=model.newFilterGroup.name}}
 </div>
 
-<div>
+<div class="kind-select">
   <label>Kind</label>
   {{#power-select
     options=kindOptions
@@ -93,9 +93,9 @@
 
 <div>
   <label>Description</label>
-  {{input type="text" class="name-input" value=model.newFilterGroup.description}}
+  {{input type="text" class="description-input" value=model.newFilterGroup.description}}
 </div>
 
-<div><button type="button" {{action 'createFilterGroup'}}>
+<div><button type="button" class="create-button" {{action 'createFilterGroup'}}>
   Create
 </button></div>

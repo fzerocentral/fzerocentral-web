@@ -5,6 +5,8 @@ import { selectChoose } from 'ember-power-select/test-support';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
 import { createModelInstance }
   from 'fzerocentral-web/tests/helpers/model-helpers';
+import { getURLSearchParamsHash }
+  from 'fzerocentral-web/tests/helpers/route-helpers';
 
 
 function getFilterGroupSelect(testModule) {
@@ -17,16 +19,6 @@ function getCompareMethodSelect(testModule) {
 
 function getFilterSelect(testModule) {
   return testModule.element.querySelectorAll(`.ember-power-select-trigger`)[2];
-}
-
-function getURLSearchParamsHash(url) {
-  let queryString = url.substring(url.indexOf('?'));
-  let usp = new URLSearchParams(queryString);
-  let paramsHash = {};
-  for (let pair of usp.entries()) {
-    paramsHash[pair[0]] = pair[1];
-  }
-  return paramsHash;
 }
 
 

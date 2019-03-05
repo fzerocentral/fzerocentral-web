@@ -1,5 +1,6 @@
 import Route from '@ember/routing/route';
 import RSVP from 'rsvp';
+import window from 'ember-window-mock';
 
 export default Route.extend({
   model(params) {
@@ -72,7 +73,7 @@ export default Route.extend({
           // when this link is deleted. We don't want orphan filter groups, so
           // we want to delete the filter group in this case. Make sure that's
           // OK with the user.
-          if (confirm(
+          if (window.confirm(
             "The filter group will be deleted since it's not linked to any"
             + " other chart types. OK?")) {
             shouldDeleteFilterGroup = true;
