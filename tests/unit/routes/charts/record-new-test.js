@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupTest } from 'ember-qunit';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
 import { run } from "@ember/runloop";
 import { click, currentURL, fillIn, visit } from '@ember/test-helpers';
@@ -8,7 +8,7 @@ import { createModelInstance }
   from 'fzerocentral-web/tests/helpers/model-helpers';
 
 module('Unit | Route | charts/record-new', function(hooks) {
-  setupRenderingTest(hooks);
+  setupTest(hooks);
 
   hooks.beforeEach( function() {
     this.server = startMirage();

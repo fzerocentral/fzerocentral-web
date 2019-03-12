@@ -1,10 +1,22 @@
 This file contains comments about package.json, since there's no particularly clean way to add comments directly in JSON files.
 
+The focus here is on packages that aren't in a default Ember-CLI app. Default packages can be seen here: https://github.com/ember-cli/ember-new-output/blob/master/package.json
+
+
+
+ember-cli-mirage
+Mock API server for testing.
+
+ember-cli-tutorial-style
+Styling for the official Ember-CLI tutorial.
 
 ember-moment
 ember-cli-moment-shim
 moment
 Date/time library.
+
+ember-power-select
+Ember-powered HTML select elements. Base Ember supports input elements, but not select.
 
 ember-sinon-qunit
 ember-window-mock
