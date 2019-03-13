@@ -10,7 +10,7 @@ export default Component.extend({
   // This updates when filterGroups is set, or filters gets elements added,
   // removed, or replaced.
   filtersPerGroup: computed('filterGroups', 'filters.[]', function() {
-    let obj = new EmberObject();
+    let obj = EmberObject.create();
     // One object entry per filter group. Default to null.
     this.get('filterGroups').forEach((filterGroup) => {
       obj.set(filterGroup.id, null);

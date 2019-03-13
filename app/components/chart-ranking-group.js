@@ -32,7 +32,7 @@ export default Component.extend({
 
     return DS.PromiseObject.create({
       promise: Promise.all(chartRecordsPromises).then((promiseResults) => {
-        let recordsByChartId = new EmberObject;
+        let recordsByChartId = EmberObject.create();
         promiseResults.forEach((chartRecordsPromiseResult) => {
           let chartId = chartRecordsPromiseResult[0];
           let chartRecords = chartRecordsPromiseResult[1];
