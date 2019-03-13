@@ -2,33 +2,36 @@
 
 {{#if model.chartTypeFilterGroups}}
 
-  <table class='chart-type-fgs'>
-    <tr>
-      <th></th>
-      <th>Order</th>
-      <th>Name</th>
-      <th>Show by default on rankings?</th>
-    </tr>
-
-    {{#each model.chartTypeFilterGroups as |ctfg|}}
+  <table class="chart-type-fgs">
+    <thead>
       <tr>
-        <td>
-          <button type="button" class="unlink-fg-button" {{action 'unlinkFilterGroup' ctfg}}>
-            - </button>
-        </td>
-        <td>
-          {{input type="text" size="2" class="order-input" value=ctfg.orderInChartType change=(action 'onOrderChange' ctfg)}}
-        </td>
-        <td>
-          {{#link-to 'filter-groups.show' ctfg.filterGroup.id}}
-            {{ctfg.filterGroup.name}}
-          {{/link-to}}
-        </td>
-        <td>
-          {{input type="checkbox" class="show-input" checked=ctfg.showByDefault click=(action (action 'onShowChange' ctfg) value='target.checked')}}
-        </td>
+        <th></th>
+        <th>Order</th>
+        <th>Name</th>
+        <th>Show by default on rankings?</th>
       </tr>
-    {{/each}}
+    </thead>
+
+    <tbody>
+      {{#each model.chartTypeFilterGroups as |ctfg|}}
+        <tr>
+          <td>
+            <button type="button" class="unlink-fg-button" {{action "unlinkFilterGroup" ctfg}}> - </button>
+          </td>
+          <td>
+            {{input type="text" size="2" class="order-input" value=ctfg.orderInChartType change=(action "onOrderChange" ctfg)}}
+          </td>
+          <td>
+            {{#link-to "filter-groups.show" ctfg.filterGroup.id}}
+              {{ctfg.filterGroup.name}}
+            {{/link-to}}
+          </td>
+          <td>
+            {{input type="checkbox" class="show-input" checked=ctfg.showByDefault click=(action (action "onShowChange" ctfg) value="target.checked")}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
   </table>
 
 {{else}}
@@ -41,14 +44,13 @@
 {{#if otherFilterGroups}}
   <h2>Other filter groups in this game</h2>
 
-  <ul class='game-fgs'>
+  <ul class="game-fgs">
     {{#each otherFilterGroups as |filterGroup|}}
       <li>
-        {{#link-to 'filter-groups.show' filterGroup.id}}
+        {{#link-to "filter-groups.show" filterGroup.id}}
           {{filterGroup.name}}
         {{/link-to}}
-        <button type="button" class="link-fg-button" {{action 'linkFilterGroup' filterGroup}}>
-          + </button>
+        <button type="button" class="link-fg-button" {{action "linkFilterGroup" filterGroup}}> + </button>
       </li>
     {{/each}}
   </ul>
@@ -58,14 +60,13 @@
 {{#if model.orphanedFilterGroups}}
   <h2>Orphaned filter groups</h2>
 
-  <ul class='orphaned-fgs'>
+  <ul class="orphaned-fgs">
     {{#each model.orphanedFilterGroups as |filterGroup|}}
       <li>
-        {{#link-to 'filter-groups.show' filterGroup.id}}
+        {{#link-to "filter-groups.show" filterGroup.id}}
           {{filterGroup.name}}
         {{/link-to}}
-        <button type="button" class="link-fg-button" {{action 'linkFilterGroup' filterGroup}}>
-          + </button>
+        <button type="button" class="link-fg-button" {{action "linkFilterGroup" filterGroup}}> + </button>
       </li>
     {{/each}}
   </ul>
@@ -96,6 +97,6 @@
   {{input type="text" class="description-input" value=model.newFilterGroup.description}}
 </div>
 
-<div><button type="button" class="create-button" {{action 'createFilterGroup'}}>
-  Create
-</button></div>
+<div>
+  <button type="button" class="create-button" {{action "createFilterGroup"}}> Create </button>
+</div>

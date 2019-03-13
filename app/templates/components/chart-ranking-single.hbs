@@ -1,32 +1,38 @@
-{{filter-groups-toggle filterGroups=filterGroups onToggleUpdate=(action 'onToggleUpdate')}}
+{{filter-groups-toggle filterGroups=filterGroups onToggleUpdate=(action "onToggleUpdate")}}
 
 {{filter-apply-form filterGroups=filterGroups
   appliedFiltersString=appliedFiltersString
   updateAppliedFiltersString=updateAppliedFiltersString}}
 
 <table class="records-table">
-  <tr>
-    <th>Rank</th>
-    <th>Player</th>
-    <th>Record</th>
-    {{#each shownFilterGroups as |filterGroup|}}
-      <th>{{filterGroup.name}}</th>
-    {{/each}}
-  </tr>
-
-  {{#each records as |record|}}
+  <thead>
     <tr>
-      <td>{{record.rank}}</td>
-      <td>{{record.user.username}}</td>
-      <td>{{#link-to 'charts.user-history' chart.id record.user.id}}
-        {{record.valueDisplay}}
-      {{/link-to}}</td>
-
+      <th>Rank</th>
+      <th>Player</th>
+      <th>Record</th>
       {{#each shownFilterGroups as |filterGroup|}}
-        <td>
-          {{get (find-filter-of-group record.filters filterGroup.id) 'name'}}
-        </td>
+        <th>{{filterGroup.name}}</th>
       {{/each}}
     </tr>
-  {{/each}}
+  </thead>
+
+  <tbody>
+    {{#each records as |record|}}
+      <tr>
+        <td>{{record.rank}}</td>
+        <td>{{record.user.username}}</td>
+        <td>
+          {{#link-to "charts.user-history" chart.id record.user.id}}
+            {{record.valueDisplay}}
+          {{/link-to}}
+        </td>
+
+        {{#each shownFilterGroups as |filterGroup|}}
+          <td>
+            {{get (find-filter-of-group record.filters filterGroup.id) "name"}}
+          </td>
+        {{/each}}
+      </tr>
+    {{/each}}
+  </tbody>
 </table>

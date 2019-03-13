@@ -1,19 +1,19 @@
 {{#if (not root)}}
-  {{#link-to 'chart-groups.show' cg.id}}{{cg.name}}{{/link-to}}
+  {{#link-to "chart-groups.show" cg.id}}{{cg.name}}{{/link-to}}
 {{/if}}
 
 <ul class="chart-group-listing">
-{{#each cg.childGroups as |cg2|}}
-  <li>
-    {{chart-group-contents cg=cg2 root=false}}
-  </li>
-{{/each}}
+  {{#each cg.childGroups as |cg2|}}
+    <li>
+      {{chart-group-contents cg=cg2 root=false}}
+    </li>
+  {{/each}}
 </ul>
 
 <ul class="chart-group-listing">
   {{#each cg.charts as |chart|}}
-  <li>
-    {{#link-to 'charts.show' chart.id}}{{chart.name}}{{/link-to}}
-  </li>
+    <li>
+      {{#link-to "charts.show" chart.id}}{{chart.name}}{{/link-to}}
+    </li>
   {{/each}}
 </ul>

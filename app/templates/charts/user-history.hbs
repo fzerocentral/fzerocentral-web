@@ -1,28 +1,32 @@
 <h1>{{model.user.username}}'s history for {{model.chart.chartGroup.name}} - {{model.chart.name}}</h1>
 
-{{filter-groups-toggle filterGroups=model.filterGroups onToggleUpdate=(action 'onToggleUpdate')}}
+{{filter-groups-toggle filterGroups=model.filterGroups onToggleUpdate=(action "onToggleUpdate")}}
 
 <table class="records-table">
-  <tr>
-    <th>Record</th>
-    <th>Date</th>
-    {{#each shownFilterGroups as |filterGroup|}}
-      <th>{{filterGroup.name}}</th>
-    {{/each}}
-  </tr>
-
-  {{#each model.records as |record|}}
-    <tr class="{{if record.isImprovement '' 'non-personal-best'}}">
-      <td>
-        {{#link-to 'records.show' record.id}}{{record.valueDisplay}}{{/link-to}}
-      </td>
-      <td>{{moment-format record.achievedAt 'YYYY-MM-DD HH:mm'}}</td>
-
+  <thead>
+    <tr>
+      <th>Record</th>
+      <th>Date</th>
       {{#each shownFilterGroups as |filterGroup|}}
-        <td>
-          {{get (find-filter-of-group record.filters filterGroup.id) 'name'}}
-        </td>
+        <th>{{filterGroup.name}}</th>
       {{/each}}
     </tr>
-  {{/each}}
+  </thead>
+
+  <tbody>
+    {{#each model.records as |record|}}
+      <tr class={{if record.isImprovement "" "non-personal-best"}}>
+        <td>
+          {{#link-to "records.show" record.id}}{{record.valueDisplay}}{{/link-to}}
+        </td>
+        <td>{{moment-format record.achievedAt "YYYY-MM-DD HH:mm"}}</td>
+
+        {{#each shownFilterGroups as |filterGroup|}}
+          <td>
+            {{get (find-filter-of-group record.filters filterGroup.id) "name"}}
+          </td>
+        {{/each}}
+      </tr>
+    {{/each}}
+  </tbody>
 </table>

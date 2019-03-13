@@ -5,7 +5,7 @@
   {{#power-select
     options=filterGroups
     selected=selectedFilterGroup
-    onchange=(action 'onFilterGroupChange')
+    onchange=(action "onFilterGroupChange")
     placeholder="Not selected"
     matchTriggerWidth=false
     as |filterGroup|}}
@@ -34,7 +34,7 @@
     {{filter.name}}
   {{/power-select}}
 
-  <button class="add-filter-button" type="submit" {{action 'addFilter'}}>Add</button>
+  <button class="add-filter-button" type="submit" {{action "addFilter"}}>Add</button>
 </div>
 
 <div>
@@ -42,7 +42,6 @@
   {{#each appliedFilters as |appliedFilter index|}}
     <span class="applied-filter">{{appliedFilter.display}}</span>
     {{!-- TODO: This remove button should be an image button or CSS-drawn button, not a text button. Also, ideally the button would only show when hovering over the applied filter. --}}
-    <button type="button" class="applied-filter-remove-button"
-    {{action 'removeFilter' index}}>x</button>
+    <button type="button" class="applied-filter-remove-button" {{action "removeFilter" index}}> x </button>
   {{/each}}
 </div>

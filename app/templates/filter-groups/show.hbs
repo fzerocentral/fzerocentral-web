@@ -8,9 +8,11 @@
   Used by these chart types:
   <ul>
     {{#each chartTypes as |chartType|}}
-      <li>{{#link-to 'chart-types.filter-groups' chartType.id}}
-        {{chartType.name}}
-      {{/link-to}}</li>
+      <li>
+        {{#link-to "chart-types.filter-groups" chartType.id}}
+          {{chartType.name}}
+        {{/link-to}}
+      </li>
     {{/each}}
   </ul>
 </div>

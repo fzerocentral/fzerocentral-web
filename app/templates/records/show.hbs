@@ -1,5 +1,6 @@
-<h1>Edit record for:
-  {{#link-to 'charts.show' model.record.chart.id}}
+<h1>
+  Edit record for:
+  {{#link-to "charts.show" model.record.chart.id}}
     {{model.record.chart.chartGroup.name}} - {{model.record.chart.name}}
   {{/link-to}}
 </h1>
@@ -16,4 +17,4 @@
   filterGroups=model.filterGroups
   filters=model.record.filters}}
 
-<div><button type="submit" {{action 'saveRecord'}}>Save edits</button></div>
+<div><button type="submit" {{action "saveRecord"}}>Save edits</button></div>

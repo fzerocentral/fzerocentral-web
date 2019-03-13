@@ -1,4 +1,4 @@
-<h1>Submit record for: {{#link-to 'charts.show' model.chart.id}} {{model.chart.chartGroup.name}} - {{model.chart.name}}{{/link-to}}</h1>
+<h1>Submit record for: {{#link-to "charts.show" model.chart.id}} {{model.chart.chartGroup.name}} - {{model.chart.name}}{{/link-to}}</h1>
 
 <div class="user-select">
   <label>User</label>
@@ -24,4 +24,4 @@
 
 {{record-filters-edit filterGroups=model.filterGroups filters=model.record.filters}}
 
-<div><button type="submit" {{action 'saveRecord'}}>Submit record</button></div>
+<div><button type="submit" {{action "saveRecord"}}>Submit record</button></div>

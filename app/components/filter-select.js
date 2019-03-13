@@ -11,7 +11,7 @@ export default Component.extend({
     let filterGroup = this.get('filterGroup');
 
     // Get chosen filters of this filter group
-    let args = {filter_group_id: filterGroup.id};
+    let args = {filter_group_id: filterGroup.get('id')};
     if (this.get('chosenOnly')) {
       args.chosen_only = true;
     }

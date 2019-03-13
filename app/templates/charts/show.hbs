@@ -1,20 +1,26 @@
 <h1>{{model.chart.chartGroup.name}} - {{model.chart.name}}</h1>
 
-<div>{{#link-to 'charts.record-new' model.chart.id}}Submit a record{{/link-to}}</div>
+<div>{{#link-to "charts.record-new" model.chart.id}}Submit a record{{/link-to}}</div>
 
 {{#if model.chart.chartGroup.showChartsTogether}}
-  <div>{{#link-to 'chart-groups.show' model.chart.chartGroup.id (query-params mainChartId=model.chart.id)}}
-    View all charts for {{model.chart.chartGroup.name}}
-  {{/link-to}}</div>
+  <div>
+    {{#link-to "chart-groups.show" model.chart.chartGroup.id (query-params mainChartId=model.chart.id)}}
+      View all charts for {{model.chart.chartGroup.name}}
+    {{/link-to}}
+  </div>
 {{/if}}
 
-<div>{{#link-to 'charts.top-record-history' model.chart.id}}
-  View top record history
-{{/link-to}}</div>
+<div>
+  {{#link-to "charts.top-record-history" model.chart.id}}
+    View top record history
+  {{/link-to}}
+</div>
 
-<div>{{#link-to 'chart-types.filter-groups' model.chart.chartType.id}}
-  Edit filter groups
-{{/link-to}}</div>
+<div>
+  {{#link-to "chart-types.filter-groups" model.chart.chartType.id}}
+    Edit filter groups
+  {{/link-to}}
+</div>
 
 
 {{chart-ranking-single chart=model.chart records=model.records
