@@ -6,8 +6,8 @@
 
 <div>
   Used by these chart types:
-  <ul>
-    {{#each chartTypes as |chartType|}}
+  <ul class="chart-type-list plain-bullet-list">
+    {{#each model.chartTypes as |chartType|}}
       <li>
         {{#link-to "chart-types.filter-groups" chartType.id}}
           {{chartType.name}}
@@ -17,11 +17,114 @@
   </ul>
 </div>
 
+<hr>
+
+<div class="filter-section">
+  <div>
+    Filters:
+    <ul class="filter-list plain-bullet-list">
+      {{#each model.filters as |filter|}}
+        <li>
+          <span>{{filter.name}}</span>
+          <button type="button" class="show-filter-detail-button" {{action "selectedFilterChange" filter}}> Detail </button>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+
+  <div class="filter-detail-section">
+    {{#if selectedFilter}}
+      <h2>{{selectedFilter.name}}</h2>
+
+      <div>
+        Name {{input type="text" name="name" value=selectedFilterEditableParams.name}}
+      </div>
+
+      {{#if (eq model.filterGroup.kind "numeric")}}
+        <div>
+          Numeric value {{input type="number" name="numeric-value" value=selectedFilterEditableParams.numericValue}}
+        </div>
+      {{/if}}
+
+      <div>
+        <button type="button" class="save-button" {{action "selectedFilterSaveEdits"}}> Save edits </button>
+      </div>
+
+      <div>
+        <button type="button" class="delete-button" {{action "selectedFilterDelete"}}> Delete this filter </button>
+      </div>
+    {{/if}}
+  </div>
+</div>
+
+<div class="filter-create-form">
+  <div>
+    <label>Name</label>
+    {{input type="text" name="name" value=model.newFilter.name}}
+  </div>
+
+  {{#if (eq model.filterGroup.kind "numeric")}}
+    <div>
+      <label>Numeric value</label>
+      {{input type="number" name="numeric-value" value=model.newFilter.numericValue}}
+    </div>
+  {{/if}}
+
+  <div>
+    <button type="button" class="create-button" {{action "createFilter"}}> Create filter </button>
+  </div>
+</div>
+
+<hr>
+
 <div>
-  Filters:
-  <ul>
-    {{#each model.filters as |filter|}}
-      <li>{{filter.name}}</li>
-    {{/each}}
-  </ul>
+  Filter implication links:
+  <table class="filter-implication-links-table plain-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Source</th>
+        <th>Target</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each model.filterImplicationLinks as |fil|}}
+        <tr>
+          <td><button type="button" class="delete-button" {{action "deleteFilterImplicationLink" fil}}> - </button></td>
+          <td>{{fil.implyingFilter.name}}</td>
+          <td>{{fil.impliedFilter.name}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+<div class="filter-implication-link-create-form">
+  <div class="implying-filter-select">
+    <label>Source</label>
+    {{#power-select
+      options=model.filters
+      selected=model.newFilterImplicationLink.implyingFilter
+      onchange=(action (mut model.newFilterImplicationLink.implyingFilter))
+      placeholder="Not selected"
+      as |option|}}
+      {{option.name}}
+    {{/power-select}}
+  </div>
+
+  <div class="implied-filter-select">
+    <label>Target</label>
+    {{#power-select
+      options=model.filters
+      selected=model.newFilterImplicationLink.impliedFilter
+      onchange=(action (mut model.newFilterImplicationLink.impliedFilter))
+      placeholder="Not selected"
+      as |option|}}
+      {{option.name}}
+    {{/power-select}}
+  </div>
+
+  <div>
+    <button type="button" class="create-button" {{action "createFilterImplicationLink"}}> Create link </button>
+  </div>
 </div>

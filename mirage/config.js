@@ -178,18 +178,79 @@ export default function() {
     filterGroup.destroy();
   });
 
+  this.get('/filter_implication_links', (schema, request) => {
+    if (request.queryParams.hasOwnProperty('filter_group_id')) {
+      // FILs of a particular FG
+      let allLinks = schema.filterImplicationLinks.all();
+      let links = schema.filterImplicationLinks.none();
+      allLinks.models.forEach((link) => {
+        let filterGroupId = link.implyingFilter.filterGroup.id;
+        if (filterGroupId === request.queryParams.filter_group_id) {
+          links.add(link);
+        }
+      });
+      return links;
+    }
+    else {
+      // All objects
+      return schema.filterImplicationLinks.all();
+    }
+  });
+
+  this.post('/filter_implication_links', (schema, request) => {
+    let requestJSON = JSON.parse(request.requestBody);
+    let data = requestJSON.data;
+    let implyingFilterId = data.relationships['implying-filter'].data.id;
+    let impliedFilterId = data.relationships['implied-filter'].data.id;
+    let link = schema.filterImplicationLinks.create({
+      implyingFilterId: implyingFilterId, impliedFilterId: impliedFilterId});
+    return link;
+  });
+
+  this.delete('/filter_implication_links/:id', (schema, request) => {
+    let link = schema.filterImplicationLinks.find(request.params.id);
+    link.destroy();
+  });
+
   this.get('/filters', (schema, request) => {
     let filters = null;
     if (request.queryParams.filter_group_id) {
       let filterGroup = schema.filterGroups.find(
         request.queryParams.filter_group_id);
+
       filters = filterGroup.filters;
+      // Sort by filter name, ascending
+      filters = filters.sort((a, b) => { return b.name < a.name; });
     }
     else {
       filters = schema.filters.all();
     }
 
     return filters;
+  });
+
+  this.post('/filters', (schema, request) => {
+    let requestJSON = JSON.parse(request.requestBody);
+    let data = requestJSON.data;
+    let name = data.attributes.name;
+    let filterGroupId = data.relationships['filter-group'].data.id;
+    let filter = schema.filters.create({
+      name: name, filterGroupId: filterGroupId});
+    return filter;
+  });
+
+  this.patch('/filters/:id', (schema, request) => {
+    let requestJSON = JSON.parse(request.requestBody);
+    let data = requestJSON.data;
+    let name = data.attributes.name;
+    let filter = schema.filters.find(request.params.id);
+    filter.update({name: name});
+    return filter;
+  });
+
+  this.delete('/filters/:id', (schema, request) => {
+    let filter = schema.filters.find(request.params.id);
+    filter.destroy();
   });
 
   this.get('/filters/:id', (schema, request) => {

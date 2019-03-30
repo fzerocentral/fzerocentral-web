@@ -20,6 +20,25 @@ table.records-table tr.non-personal-best {
   color: #888888;
 }
 
+table.plain-table {
+  border-collapse: collapse;
+}
+table.plain-table td, table.plain-table th {
+  border: 1px solid black;
+  padding: 2px;
+}
+
 ul.chart-group-listing {
   margin-left: 10px;
+}
+
+ul.plain-bullet-list {
+  margin-left: 30px;
+}
+
+div.filter-section {
+  display: flex;
+}
+div.filter-section > div {
+  margin: 0 3px;
 }

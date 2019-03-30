@@ -1,13 +1,34 @@
 import Controller from '@ember/controller';
-import DS from 'ember-data';
-import { computed } from '@ember/object';
+import EmberObject from '@ember/object';
 
 export default Controller.extend({
-  chartTypes: computed('model', function() {
-    let filterGroup = this.model.filterGroup;
-    return DS.PromiseArray.create({
-      promise: this.get('store').query(
-        'chart-type', {filter_group_id: filterGroup.id})
-    });
-  })
+  selectedFilter: null,
+  selectedFilterEditableParams: EmberObject.create(),
+
+  actions: {
+    selectedFilterChange(filter) {
+      this.set('selectedFilter', filter);
+      if (filter === null) { return; }
+
+      let params = this.get('selectedFilterEditableParams');
+      params.set('name', filter.name);
+      params.set('numericValue', filter.numericValue);
+    },
+
+    selectedFilterSaveEdits() {
+      let params = this.get('selectedFilterEditableParams');
+      let filter = this.get('selectedFilter');
+      filter.set('name', params.name);
+      filter.set('numericValue', params.numericValue);
+      filter.save();
+    },
+
+    selectedFilterDelete() {
+      this.get('selectedFilter').destroyRecord().then(() => {
+        this.send('selectedFilterChange', null);
+        // Refresh the model (including the group's list of filters)
+        this.send('refreshRoute');
+      });
+    },
+  },
 });
