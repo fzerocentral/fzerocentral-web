@@ -1,4 +1,4 @@
-<h1>{{model.filterGroup.name}}</h1>
+<h1>{{model.filterGroup.name}} (filter group)</h1>
 
 <div>Kind: {{model.filterGroup.kind}}</div>
 
@@ -21,12 +21,22 @@
 
 <div class="filter-section">
   <div>
-    Filters:
+    Chosen Filters:
     <ul class="filter-list plain-bullet-list">
-      {{#each model.filters as |filter|}}
+      {{#each model.chosenFilters as |filter|}}
         <li>
-          <span>{{filter.name}}</span>
-          <button type="button" class="show-filter-detail-button" {{action "selectedFilterChange" filter}}> Detail </button>
+          <button type="button" class="show-filter-detail-button" {{action "selectedFilterChange" filter}}> {{filter.name}} </button>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+
+  <div>
+    Implied Filters:
+    <ul class="filter-list plain-bullet-list">
+      {{#each model.impliedFilters as |filter|}}
+        <li>
+          <button type="button" class="show-filter-detail-button" {{action "selectedFilterChange" filter}}> {{filter.name}} </button>
         </li>
       {{/each}}
     </ul>
@@ -58,6 +68,8 @@
 </div>
 
 <div class="filter-create-form">
+  New filter:
+
   <div>
     <label>Name</label>
     {{input type="text" name="name" value=model.newFilter.name}}

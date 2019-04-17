@@ -10,6 +10,10 @@ export default Route.extend({
         'filter-group', params.filter_group_id),
       filters: this.get('store').query(
         'filter', {filter_group_id: params.filter_group_id}),
+      chosenFilters: this.get('store').query(
+        'filter', {filter_group_id: params.filter_group_id, is_implied: false}),
+      impliedFilters: this.get('store').query(
+        'filter', {filter_group_id: params.filter_group_id, is_implied: true}),
       filterImplicationLinks: this.get('store').query(
         'filter-implication-link', {filter_group_id: params.filter_group_id}),
       newFilter: this.get('store').createRecord('filter'),

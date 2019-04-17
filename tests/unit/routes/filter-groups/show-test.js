@@ -13,7 +13,7 @@ function getFiltersListItemByName(rootElement, name) {
   let listItems = filtersList.querySelectorAll('li');
   // Return the first row which has this name; if no match, undefined
   return Array.from(listItems).find((listItem) => {
-    return listItem.querySelector('span').textContent.trim() === name;
+    return listItem.querySelector('button').textContent.trim() === name;
   });
 }
 

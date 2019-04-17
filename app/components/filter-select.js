@@ -13,7 +13,7 @@ export default Component.extend({
     // Get chosen filters of this filter group
     let args = {filter_group_id: filterGroup.get('id')};
     if (this.get('chosenOnly')) {
-      args.chosen_only = true;
+      args.is_implied = false;
     }
     let filtersPromise = this.get('store').query('filter', args);
 
