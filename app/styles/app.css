@@ -1,3 +1,10 @@
+div.hidden {
+  display: none;
+}
+div.error-message {
+  color: red;
+}
+
 div.filter-apply-form {
   /* Contents can go on one line and wrap to multiple lines as needed. */
   display: flex;
@@ -41,4 +48,14 @@ div.filter-section {
 }
 div.filter-section > div {
   margin: 0 3px;
+}
+div.filter-create-form > div.type-field {
+  display: flex;
+}
+div.implication-links-display {
+  display: flex;
+  align-items: center;
+}
+ul.incoming-implication-links-list, ul.outgoing-implication-links-list {
+  list-style: none;
 }

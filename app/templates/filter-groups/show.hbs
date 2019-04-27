@@ -23,9 +23,9 @@
   <div>
     Chosen Filters:
     <ul class="filter-list plain-bullet-list">
-      {{#each model.chosenFilters as |filter|}}
+      {{#each model.choosableFilters as |filter|}}
         <li>
-          <button type="button" class="show-filter-detail-button" {{action "selectedFilterChange" filter}}> {{filter.name}} </button>
+          <button type="button" class="show-filter-detail-button" {{action (mut selectedFilterId) filter.id}}> {{filter.name}} </button>
         </li>
       {{/each}}
     </ul>
@@ -36,43 +36,39 @@
     <ul class="filter-list plain-bullet-list">
       {{#each model.impliedFilters as |filter|}}
         <li>
-          <button type="button" class="show-filter-detail-button" {{action "selectedFilterChange" filter}}> {{filter.name}} </button>
+          <button type="button" class="show-filter-detail-button" {{action (mut selectedFilterId) filter.id}}> {{filter.name}} </button>
         </li>
       {{/each}}
     </ul>
   </div>
 
   <div class="filter-detail-section">
-    {{#if selectedFilter}}
-      <h2>{{selectedFilter.name}}</h2>
-
-      <div>
-        Name {{input type="text" name="name" value=selectedFilterEditableParams.name}}
-      </div>
-
-      {{#if (eq model.filterGroup.kind "numeric")}}
-        <div>
-          Numeric value {{input type="number" name="numeric-value" value=selectedFilterEditableParams.numericValue}}
-        </div>
-      {{/if}}
-
-      <div>
-        <button type="button" class="save-button" {{action "selectedFilterSaveEdits"}}> Save edits </button>
-      </div>
-
-      <div>
-        <button type="button" class="delete-button" {{action "selectedFilterDelete"}}> Delete this filter </button>
-      </div>
+    {{#if selectedFilterId}}
+      {{filter-detail
+        filterId=selectedFilterId
+        allFilters=model.filters}}
     {{/if}}
   </div>
 </div>
 
 <div class="filter-create-form">
-  New filter:
+  <h3>New filter</h3>
 
   <div>
     <label>Name</label>
     {{input type="text" name="name" value=model.newFilter.name}}
+  </div>
+
+  <div class="type-field">
+    <label>Type</label>
+    {{#power-select
+      options=usageTypeOptions
+      selected=model.newFilter.usageType
+      onchange=(action (mut model.newFilter.usageType))
+      placeholder="Not selected"
+      as |option|}}
+      {{option}}
+    {{/power-select}}
   </div>
 
   {{#if (eq model.filterGroup.kind "numeric")}}
@@ -84,59 +80,5 @@
 
   <div>
     <button type="button" class="create-button" {{action "createFilter"}}> Create filter </button>
-  </div>
-</div>
-
-<hr>
-
-<div>
-  Filter implication links:
-  <table class="filter-implication-links-table plain-table">
-    <thead>
-      <tr>
-        <th></th>
-        <th>Source</th>
-        <th>Target</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each model.filterImplicationLinks as |fil|}}
-        <tr>
-          <td><button type="button" class="delete-button" {{action "deleteFilterImplicationLink" fil}}> - </button></td>
-          <td>{{fil.implyingFilter.name}}</td>
-          <td>{{fil.impliedFilter.name}}</td>
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
-</div>
-
-<div class="filter-implication-link-create-form">
-  <div class="implying-filter-select">
-    <label>Source</label>
-    {{#power-select
-      options=model.filters
-      selected=model.newFilterImplicationLink.implyingFilter
-      onchange=(action (mut model.newFilterImplicationLink.implyingFilter))
-      placeholder="Not selected"
-      as |option|}}
-      {{option.name}}
-    {{/power-select}}
-  </div>
-
-  <div class="implied-filter-select">
-    <label>Target</label>
-    {{#power-select
-      options=model.filters
-      selected=model.newFilterImplicationLink.impliedFilter
-      onchange=(action (mut model.newFilterImplicationLink.impliedFilter))
-      placeholder="Not selected"
-      as |option|}}
-      {{option.name}}
-    {{/power-select}}
-  </div>
-
-  <div>
-    <button type="button" class="create-button" {{action "createFilterImplicationLink"}}> Create link </button>
   </div>
 </div>

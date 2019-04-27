@@ -1,0 +1,140 @@
+<div class="filter-basic-fields">
+  <h2>{{filter.name}}</h2>
+  <div>
+    Type: {{filter.usageType}}
+  </div>
+  {{#if (eq filter.filterGroup.kind "numeric")}}
+    <div>
+      Numeric value: {{filter.numericValue}}
+    </div>
+  {{/if}}
+
+  <div>
+    <button type="button" class="start-editing-filter-button" {{action "startEditing"}}> Edit details </button>
+  </div>
+</div>
+
+<div class="filter-edit-form hidden">
+  <div>
+    Name {{input type="text" name="name" value=editableParams.name}}
+  </div>
+  {{#if (eq filter.filterGroup.kind "numeric")}}
+    <div>
+      Numeric value {{input type="number" name="numeric-value" value=editableParams.numericValue}}
+    </div>
+  {{/if}}
+
+  <div>
+    <button type="button" class="save-button" {{action "saveEdits"}}> Save edits </button>
+    <button type="button" class="cancel-button" {{action "stopEditing"}}> Cancel </button>
+  </div>
+</div>
+
+<div>
+  <button type="button" class="delete-button" {{action "deleteFilter"}}> Delete this filter </button>
+</div>
+
+
+{{#if (eq filter.filterGroup.kind "select")}}
+  <hr>
+
+  {{#if (eq filter.usageType "implied")}}
+    <div>
+      <h3>Implied by</h3>
+      {{#each incomingImplications as |implication|}}
+        <button type="button" class="show-filter-detail-button" {{action (mut filterId) implication.implyingFilter.id}}>
+          {{implication.implyingFilter.name}}
+        </button>
+      {{/each}}
+    </div>
+  {{/if}}
+
+  {{#if (eq filter.usageType "choosable")}}
+    <div>
+      <h3>Implies</h3>
+      {{#each outgoingImplications as |implication|}}
+        <button type="button" class="show-filter-detail-button" {{action (mut filterId) implication.impliedFilter.id}}>
+          {{implication.impliedFilter.name}}
+        </button>
+      {{/each}}
+    </div>
+  {{/if}}
+
+  <h3>Links</h3>
+  <div class="implication-links-display">
+    <ul class="incoming-implication-links-list">
+      {{#each incomingLinks as |link|}}
+        <li>
+          <button type="button" class="show-filter-detail-button" {{action (mut filterId) link.implyingFilter.id}}>
+            {{link.implyingFilter.name}}
+          </button>
+        </li>
+      {{/each}}
+    </ul>
+
+    <span>-&gt; {{filter.name}} -&gt;</span>
+
+    <ul class="outgoing-implication-links-list">
+      {{#each outgoingLinks as |link|}}
+        <li>
+          <button type="button" class="show-filter-detail-button" {{action (mut filterId) link.impliedFilter.id}}>
+            {{link.impliedFilter.name}}
+          </button>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+
+  <div class="filter-implication-link-create-form">
+    <h3>Create an implication link</h3>
+
+    <div class="link-direction-select">
+      {{#power-select
+        options=linkDirectionOptions
+        selected=newLinkDirection
+        onchange=(action (mut newLinkDirection))
+        placeholder="Not selected"
+        as |option|}}
+        {{option}}
+      {{/power-select}}
+    </div>
+
+    <div class="linked-filter-select">
+      {{#power-select
+        options=allFilters
+        selected=newLinkOtherFilter
+        onchange=(action (mut newLinkOtherFilter))
+        placeholder="Not selected"
+        as |option|}}
+        {{option.name}}
+      {{/power-select}}
+    </div>
+
+    <div class="error-message">{{linkCreateError}}</div>
+
+    <div>
+      <button type="button" class="create-button" {{action "createLink"}}> Create link </button>
+    </div>
+  </div>
+
+  <div class="filter-implication-link-delete-form">
+    <h3>Delete an implication link</h3>
+
+    <div class="link-select">
+      {{#power-select
+        options=linkDeletionOptions
+        selected=selectedLinkDeletionOption
+        onchange=(action (mut selectedLinkDeletionOption))
+        placeholder="Not selected"
+        as |option|}}
+        {{option.display}}
+      {{/power-select}}
+    </div>
+
+    <div class="error-message">{{linkDeleteError}}</div>
+
+    <div>
+      <button type="button" class="delete-button" {{action "deleteLink"}}> Delete link </button>
+    </div>
+  </div>
+{{/if}}
