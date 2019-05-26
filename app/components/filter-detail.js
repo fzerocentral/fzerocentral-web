@@ -92,19 +92,16 @@ export default Component.extend({
     return options;
   }),
 
-  onFilterChange: computed('filter', function() {
-    // Abusing the computed property mechanism to implement a 'callback' when
-    // the filter changes. Mainly re-initializing the component state.
-    // TODO: Computed properties with side effects aren't good. If you think of
-    // a better way to do this, please do change this.
 
+  didUpdateAttrs() {
+    // Re-initialize the component state when the filter selection changes.
     this.set('linkCreateError', "");
     this.set('linkDeleteError', "");
     this.set('newLinkDirection', null);
     this.set('newLinkOtherFilter', null);
     this.set('selectedLinkDeletionOption', null);
     this.send('stopEditing');
-  }),
+  },
 
 
   actions: {
