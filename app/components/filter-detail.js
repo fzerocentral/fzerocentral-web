@@ -6,9 +6,10 @@ import { inject as service } from '@ember/service';
 
 export default Component.extend({
   editableParams: EmberObject.create(),
+  filterDeleteError: null,
   filterId: null,
-  linkCreateError: "",
-  linkDeleteError: "",
+  linkCreateError: null,
+  linkDeleteError: null,
   linksLastUpdated: null,
   linkDirectionOptions: A(["from", "to"]),
   newLinkDirection: null,
@@ -95,8 +96,9 @@ export default Component.extend({
 
   didUpdateAttrs() {
     // Re-initialize the component state when the filter selection changes.
-    this.set('linkCreateError', "");
-    this.set('linkDeleteError', "");
+    this.set('filterDeleteError', null);
+    this.set('linkCreateError', null);
+    this.set('linkDeleteError', null);
     this.set('newLinkDirection', null);
     this.set('newLinkOtherFilter', null);
     this.set('selectedLinkDeletionOption', null);
@@ -134,6 +136,7 @@ export default Component.extend({
       // Save the link
       newLink.save().then(() => {
         // Success callback
+        this.set('linkCreateError', null);
 
         // Reset the other-filter field. We won't reset the link-direction
         // field, because the user might want to add several "From" links in
@@ -143,7 +146,7 @@ export default Component.extend({
         this.set('linksLastUpdated', new Date());
       }, (response) => {
         // Error callback
-        this.set('linkCreateError', response.errors[0].detail);
+        this.set('linkCreateError', response.errors[0]);
       });
     },
 
@@ -158,6 +161,7 @@ export default Component.extend({
 
       link.destroyRecord().then(() => {
         // Success callback
+        this.set('linkDeleteError', null);
 
         // Reset the link field.
         this.set('selectedLinkDeletionOption', null);
@@ -165,7 +169,7 @@ export default Component.extend({
         this.set('linksLastUpdated', new Date());
       }, (response) => {
         // Error callback
-        this.set('linkDeleteError', response.errors[0].detail);
+        this.set('linkDeleteError', response.errors[0]);
       });
     },
 
@@ -175,8 +179,13 @@ export default Component.extend({
       this.get('filter').then((filter) => {
         return filter.destroyRecord();
       }).then(() => {
+        // Success callback
+        this.set('filterDeleteError', null);
         // When done destroying, clear the active filter ID.
         this.set('filterId', null);
+      }, (response) => {
+        // Error callback
+        this.set('filterDeleteError', response.errors[0]);
       });
     },
 

@@ -30,6 +30,8 @@
   </div>
 </div>
 
+
+<div class="error-message">{{error-display filterDeleteError}}</div>
 <div>
   <button type="button" class="delete-button" {{action "deleteFilter"}}> Delete this filter </button>
 </div>
@@ -110,7 +112,7 @@
       {{/power-select}}
     </div>
 
-    <div class="error-message">{{linkCreateError}}</div>
+    <div class="error-message">{{error-display linkCreateError}}</div>
 
     <div>
       <button type="button" class="create-button" {{action "createLink"}}> Create link </button>
@@ -131,7 +133,7 @@
       {{/power-select}}
     </div>
 
-    <div class="error-message">{{linkDeleteError}}</div>
+    <div class="error-message">{{error-display linkDeleteError}}</div>
 
     <div>
       <button type="button" class="delete-button" {{action "deleteLink"}}> Delete link </button>

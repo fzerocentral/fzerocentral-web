@@ -27,9 +27,16 @@ export default Route.extend({
 
       // Save the filter
       newFilter.save().then(() => {
+        // Success callback
+        this.controllerFor(this.routeName).set('filterCreateError', null);
+
         // Refresh the model (including the group's list of filters + the
         // new filter tied to the UI fields)
         this.refresh();
+      }, (response) => {
+        // Error callback
+        this.controllerFor(this.routeName).set(
+          'filterCreateError', response.errors[0]);
       });
     },
 
@@ -37,8 +44,9 @@ export default Route.extend({
       // rollbackAttributes() removes the record from the store
       // if the model 'isNew'
       this.modelFor(this.routeName).newFilter.rollbackAttributes();
-      // Reset selected filter, else it will persist until the next time we go
+      // Reset state, else it will persist until the next time we go
       // to this route
+      this.controllerFor(this.routeName).set('filterCreateError', null);
       this.controllerFor(this.routeName).set('selectedFilterId', null);
     },
   },
