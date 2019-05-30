@@ -1,4 +1,4 @@
-<div class="filter-basic-fields">
+<div class="filter-basic-fields {{if isEditing "hidden"}}">
   <h2>{{filter.name}}</h2>
   <div>
     Type: {{filter.usageType}}
@@ -14,7 +14,7 @@
   </div>
 </div>
 
-<div class="filter-edit-form hidden">
+<div class="filter-edit-form {{if (not isEditing) "hidden"}}">
   <div>
     Name {{input type="text" name="name" value=editableParams.name}}
   </div>

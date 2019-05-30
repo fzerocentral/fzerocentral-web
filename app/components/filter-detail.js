@@ -16,7 +16,7 @@ export default Component.extend({
   newLinkOtherFilter: null,
   selectedLinkDeletionOption: null,
   store: service('store'),
-
+  isEditing: false,
 
   filter: computed('filterId', function() {
     let filterId = this.get('filterId');
@@ -204,8 +204,7 @@ export default Component.extend({
     },
 
     startEditing() {
-      document.querySelector('div.filter-edit-form').classList.remove('hidden');
-      document.querySelector('div.filter-basic-fields').classList.add('hidden');
+      this.set('isEditing', true);
 
       // Populate fields
       let params = this.get('editableParams');
@@ -215,9 +214,7 @@ export default Component.extend({
     },
 
     stopEditing() {
-      document.querySelector('div.filter-basic-fields')
-        .classList.remove('hidden');
-      document.querySelector('div.filter-edit-form').classList.add('hidden');
+      this.set('isEditing', false);
     },
   },
 });
