@@ -8,26 +8,19 @@ import { createModelInstance }
   from 'fzerocentral-web/tests/helpers/model-helpers';
 
 
-function getFiltersListItemByName(rootElement, name) {
-  let filtersList = rootElement.querySelector('ul.filter-list');
+function getFiltersListItemByName(rootElement, name, type='choosable') {
+  let filtersList = null;
+  if (type === 'choosable') {
+    filtersList = rootElement.querySelector('ul.choosable-filter-list');
+  }
+  else {
+    filtersList = rootElement.querySelector('ul.implied-filter-list');
+  }
+
   let listItems = filtersList.querySelectorAll('li');
   // Return the first row which has this name; if no match, undefined
   return Array.from(listItems).find((listItem) => {
     return listItem.querySelector('button').textContent.trim() === name;
-  });
-}
-
-function getLinkTableRowByFilterNames(rootElement, implyingName, impliedName) {
-  let tableBody =
-    rootElement.querySelector('table.filter-implication-links-table tbody');
-  let rows = tableBody.querySelectorAll('tr');
-  // Return the first row which has these names; if no match, undefined
-  return Array.from(rows).find((row) => {
-    let implyingNameCell = row.querySelectorAll('td')[1];
-    let impliedNameCell = row.querySelectorAll('td')[2];
-    return (
-      implyingNameCell.textContent.trim() === implyingName
-      && impliedNameCell.textContent.trim() === impliedName);
   });
 }
 
@@ -107,25 +100,42 @@ module('Unit | Route | filter-groups/show', function(hooks) {
     // 2 filters in the filter group we'll check, 1 filter in another group
     createModelInstance(
       this.server, 'filter',
-      {name: "White Cat", filterGroup: this.filterGroup});
+      {name: "White Cat", filterGroup: this.filterGroup,
+       usageType: 'choosable'});
     createModelInstance(
       this.server, 'filter',
-      {name: "Blue Falcon", filterGroup: this.filterGroup});
+      {name: "Blue Falcon", filterGroup: this.filterGroup,
+       usageType: 'choosable'});
     createModelInstance(
       this.server, 'filter',
-      {name: "30%", numericValue: 30, filterGroup: this.numericFilterGroup});
+      {name: "Custom", filterGroup: this.filterGroup,
+       usageType: 'implied'});
+    createModelInstance(
+      this.server, 'filter',
+      {name: "Non-Custom", filterGroup: this.filterGroup,
+       usageType: 'implied'});
+    createModelInstance(
+      this.server, 'filter',
+      {name: "30%", numericValue: 30, filterGroup: this.numericFilterGroup,
+       usageType: 'choosable'});
 
     await visit(`/filter-groups/${this.filterGroup.id}`);
 
     assert.ok(
-      getFiltersListItemByName(this.element, "Blue Falcon"),
-      "Blue Falcon is on the list");
+      getFiltersListItemByName(this.element, "Blue Falcon", 'choosable'),
+      "Blue Falcon is on the choosable list");
     assert.ok(
-      getFiltersListItemByName(this.element, "White Cat"),
-      "White Cat is on the list");
+      getFiltersListItemByName(this.element, "White Cat", 'choosable'),
+      "White Cat is on the choosable list");
+    assert.ok(
+      getFiltersListItemByName(this.element, "Custom", 'implied'),
+      "Custom is on the implied list");
+    assert.ok(
+      getFiltersListItemByName(this.element, "Non-Custom", 'implied'),
+      "Non-Custom is on the implied list");
     assert.notOk(
-      getFiltersListItemByName(this.element, "30%"),
-      "30% is not on the list");
+      getFiltersListItemByName(this.element, "30%", 'choosable'),
+      "30% is not on the choosable list");
   });
 
   test("can create a new filter", async function(assert) {
@@ -134,6 +144,11 @@ module('Unit | Route | filter-groups/show', function(hooks) {
     let form = this.element.querySelector('.filter-create-form');
     let nameInput = form.querySelector('input[name="name"]');
     fillIn(nameInput, "Golden Fox");
+    // We won't test the usage type's default value, since that's API logic,
+    // not Ember logic.
+    let typeSelect = form.querySelector(
+      'div.type-field > .ember-power-select-trigger');
+    await selectChoose(typeSelect, "implied");
     let createButton = form.querySelector('.create-button');
     await click(createButton);
 
@@ -146,6 +161,9 @@ module('Unit | Route | filter-groups/show', function(hooks) {
     assert.equal(
       newFilter.get('filterGroup').get('id'), this.filterGroup.id,
       "New filter has the correct filter group")
+    assert.equal(
+      newFilter.get('usageType'), 'implied',
+      "New filter has the correct usage type")
 
     // Filter should be on the list (list should have been refreshed)
     assert.ok(
@@ -153,189 +171,57 @@ module('Unit | Route | filter-groups/show', function(hooks) {
       "New filter is on the list");
   });
 
-  test("lists the filter implication links in the filter group", async function(assert) {
-    // Add some filters
-    let gallantStarG4Filter = createModelInstance(
-      this.server, 'filter',
-      {name: "Gallant Star-G4", filterGroup: this.filterGroup});
-    let dreadHammerFilter = createModelInstance(
-      this.server, 'filter',
-      {name: "Dread Hammer body", filterGroup: this.filterGroup});
-    let titanG4Filter = createModelInstance(
-      this.server, 'filter',
-      {name: "Titan-G4 booster", filterGroup: this.filterGroup});
-    let aCustomBodyFilter = createModelInstance(
-      this.server, 'filter',
-      {name: "A custom body", filterGroup: this.filterGroup});
+  test("can create a new numeric filter", async function(assert) {
+    await visit(`/filter-groups/${this.numericFilterGroup.id}`);
 
-    // Add some filter implication links
-    createModelInstance(
-      this.server, 'filter-implication-link',
-      {implyingFilter: gallantStarG4Filter, impliedFilter: dreadHammerFilter});
-    createModelInstance(
-      this.server, 'filter-implication-link',
-      {implyingFilter: gallantStarG4Filter, impliedFilter: titanG4Filter});
-    createModelInstance(
-      this.server, 'filter-implication-link',
-      {implyingFilter: dreadHammerFilter, impliedFilter: aCustomBodyFilter});
-
-    await visit(`/filter-groups/${this.filterGroup.id}`);
-
-    assert.ok(
-      getLinkTableRowByFilterNames(
-        this.element, "Gallant Star-G4", "Dread Hammer body"),
-      "1st expected link is on the list");
-    assert.ok(
-      getLinkTableRowByFilterNames(
-        this.element, "Gallant Star-G4", "Titan-G4 booster"),
-      "1st expected link is on the list");
-    assert.ok(
-      getLinkTableRowByFilterNames(
-        this.element, "Dread Hammer body", "A custom body"),
-      "1st expected link is on the list");
-  });
-
-  test("can create a new filter implication link", async function(assert) {
-    createModelInstance(
-      this.server, 'filter',
-      {name: "Gallant Star-G4", filterGroup: this.filterGroup});
-    createModelInstance(
-      this.server, 'filter',
-      {name: "Dread Hammer body", filterGroup: this.filterGroup});
-
-    await visit(`/filter-groups/${this.filterGroup.id}`);
-
-    let form =
-      this.element.querySelector('.filter-implication-link-create-form');
-    let implyingSelect = form.querySelector(
-      'div.implying-filter-select > .ember-power-select-trigger');
-    await selectChoose(implyingSelect, "Gallant Star-G4");
-    let impliedSelect = form.querySelector(
-      'div.implied-filter-select > .ember-power-select-trigger');
-    await selectChoose(impliedSelect, "Dread Hammer body");
+    let form = this.element.querySelector('.filter-create-form');
+    let nameInput = form.querySelector('input[name="name"]');
+    fillIn(nameInput, "65%");
+    let valueInput = form.querySelector('input[name="numeric-value"]');
+    fillIn(valueInput, "65");
     let createButton = form.querySelector('.create-button');
     await click(createButton);
 
-    // Link should be created.
-    let links = run(() => this.store.findAll('filter-implication-link'));
-    let newLink = links.find((link) => {
-      return (
-        link.get('implyingFilter').get('name') === "Gallant Star-G4"
-        && link.get('impliedFilter').get('name') === "Dread Hammer body");
+    // Filter should be created.
+    let filters = run(() => this.store.findAll('filter'));
+    let newFilter = filters.find((filter) => {
+      return filter.get('name') === "65%";
     });
-    assert.ok(newLink, "Expected link was created");
+    assert.ok(newFilter, "Expected filter was created");
+    assert.equal(
+      newFilter.get('filterGroup').get('id'), this.numericFilterGroup.id,
+      "New filter has the correct filter group")
+    assert.equal(
+      newFilter.get('numericValue'), 65,
+      "New filter has the correct numeric value")
 
-    // Link should be on the list (list should have been refreshed)
+    // Filter should be on the list (list should have been refreshed)
     assert.ok(
-      getLinkTableRowByFilterNames(
-        this.element, "Gallant Star-G4", "Dread Hammer body"),
-      "New link is on the list");
+      getFiltersListItemByName(this.element, "65%"),
+      "New filter is on the list");
   });
 
-  test("can delete a filter implication link", async function(assert) {
-    // Create filters and a link
-    let gallantStarG4Filter = createModelInstance(
-      this.server, 'filter',
-      {name: "Gallant Star-G4", filterGroup: this.filterGroup});
-    let dreadHammerFilter = createModelInstance(
-      this.server, 'filter',
-      {name: "Dread Hammer body", filterGroup: this.filterGroup});
+  test("filter buttons change the selected filter", async function(assert) {
     createModelInstance(
-      this.server, 'filter-implication-link',
-      {implyingFilter: gallantStarG4Filter, impliedFilter: dreadHammerFilter});
+      this.server, 'filter',
+      {name: "Blue Falcon", filterGroup: this.filterGroup,
+       usageType: 'choosable'});
 
     await visit(`/filter-groups/${this.filterGroup.id}`);
 
-    let row = getLinkTableRowByFilterNames(
-      this.element, "Gallant Star-G4", "Dread Hammer body");
-    let deleteButton = row.querySelector('.delete-button');
-    await click(deleteButton);
+    let filterButton =
+      getFiltersListItemByName(this.element, "Blue Falcon", 'choosable')
+      .querySelector('button');
+    await click(filterButton);
 
-    // Link should be deleted.
-    let links = run(() => this.store.findAll('filter-implication-link'));
-    let formerLink = links.find((link) => {
-      return (
-        link.get('implyingFilter').get('name') === "Gallant Star-G4"
-        && link.get('impliedFilter').get('name') === "Dread Hammer body");
-    });
-    assert.notOk(formerLink, "Link does not exist anymore");
-
-    // Link should no longer be on the list (list should have been refreshed)
-    assert.notOk(
-      getLinkTableRowByFilterNames(
-        this.element, "Gallant Star-G4", "Dread Hammer body"),
-      "Link is no longer on the list");
-  });
-
-  test("can show a filter's details", async function(assert) {
-    createModelInstance(
-      this.server, 'filter',
-      {name: "Blue Falcon", filterGroup: this.filterGroup});
-
-    await visit(`/filter-groups/${this.filterGroup.id}`);
-
-    let listItem = getFiltersListItemByName(this.element, "Blue Falcon");
-    let detailButton = listItem.querySelector('.show-filter-detail-button');
-    await click(detailButton);
-
-    let detailSection = this.element.querySelector('.filter-detail-section');
-    let detailSectionName =
-      detailSection.querySelector('h2').textContent.trim();
+    // Check that the detail area shows the filter's details
+    let filterDetailNameElement = this.element.querySelector(
+      'div.filter-detail-section .filter-basic-fields > h2');
+    assert.ok(
+      filterDetailNameElement,
+      "Filter detail section is filled out after clicking the filter button");
+    let filterDetailName = filterDetailNameElement.textContent.trim();
     assert.equal(
-      detailSectionName, "Blue Falcon",
-      "Detail section shows the expected filter name");
-  });
-
-  test("can edit a filter using the detail area", async function(assert) {
-    let blueFalconFilter = createModelInstance(
-      this.server, 'filter',
-      {name: "Blue Falcon", filterGroup: this.filterGroup});
-
-    await visit(`/filter-groups/${this.filterGroup.id}`);
-
-    let listItem = getFiltersListItemByName(this.element, "Blue Falcon");
-    let detailButton = listItem.querySelector('.show-filter-detail-button');
-    await click(detailButton);
-
-    // Change filter name
-    let detailSection = this.element.querySelector('.filter-detail-section');
-    let nameInput = detailSection.querySelector('input[name="name"]');
-    fillIn(nameInput, "Golden Fox");
-    let saveButton = detailSection.querySelector('.save-button');
-    await click(saveButton);
-
-    let filters = run(() => this.store.findAll('filter'));
-    let changedFilter = filters.find((filter) => {
-      return filter.get('id') === blueFalconFilter.id;
-    });
-    assert.equal(
-      changedFilter.get('name'), "Golden Fox",
-      "Filter name was changed as expected");
-  });
-
-  test("can delete a filter using the detail area", async function(assert) {
-    createModelInstance(
-      this.server, 'filter',
-      {name: "Blue Falcon", filterGroup: this.filterGroup});
-
-    await visit(`/filter-groups/${this.filterGroup.id}`);
-
-    let listItem = getFiltersListItemByName(this.element, "Blue Falcon");
-    let detailButton = listItem.querySelector('.show-filter-detail-button');
-    await click(detailButton);
-
-    // Delete filter
-    let detailSection = this.element.querySelector('.filter-detail-section');
-    let deleteButton = detailSection.querySelector('.delete-button');
-    await click(deleteButton);
-
-    let filters = run(() => this.store.findAll('filter'));
-    let formerFilter = filters.find((filter) => {
-      return filter.get('name') === "Blue Falcon";
-    });
-    // Note: If this assertion fails, it might fail with a
-    // `this.get(...).internalModel is undefined` error instead of a regular
-    // assertion error. No idea why.
-    assert.notOk(formerFilter, "Filter was deleted")
+      filterDetailName, "Blue Falcon", "Filter name display is as expected");
   });
 });

@@ -22,7 +22,7 @@
 <div class="filter-section">
   <div>
     Chosen Filters:
-    <ul class="filter-list plain-bullet-list">
+    <ul class="choosable-filter-list plain-bullet-list">
       {{#each model.choosableFilters as |filter|}}
         <li>
           <button type="button" class="show-filter-detail-button" {{action (mut selectedFilterId) filter.id}}> {{filter.name}} </button>
@@ -33,7 +33,7 @@
 
   <div>
     Implied Filters:
-    <ul class="filter-list plain-bullet-list">
+    <ul class="implied-filter-list plain-bullet-list">
       {{#each model.impliedFilters as |filter|}}
         <li>
           <button type="button" class="show-filter-detail-button" {{action (mut selectedFilterId) filter.id}}> {{filter.name}} </button>

@@ -212,6 +212,25 @@ export default function() {
     link.destroy();
   });
 
+  this.get('/filter_implications', (schema, request) => {
+    if (request.queryParams.hasOwnProperty('implying_filter_id')) {
+      // FILs of a particular FG
+      let allImplications = schema.filterImplications.all();
+      let implications = schema.filterImplications.none();
+      allImplications.models.forEach((implication) => {
+        let implyingId = implication.implyingFilter.id;
+        if (implyingId === request.queryParams.implying_filter_id) {
+          implications.add(implication);
+        }
+      });
+      return implications;
+    }
+    else {
+      // All objects
+      return schema.filterImplications.all();
+    }
+  });
+
   this.get('/filters', (schema, request) => {
     let filters = null;
     if (request.queryParams.filter_group_id) {
@@ -232,19 +251,35 @@ export default function() {
   this.post('/filters', (schema, request) => {
     let requestJSON = JSON.parse(request.requestBody);
     let data = requestJSON.data;
-    let name = data.attributes.name;
-    let filterGroupId = data.relationships['filter-group'].data.id;
-    let filter = schema.filters.create({
-      name: name, filterGroupId: filterGroupId});
+    let args = {};
+
+    args.name = data.attributes.name;
+    args.filterGroupId = data.relationships['filter-group'].data.id;
+
+    if (data.attributes.hasOwnProperty('usage-type')) {
+      args.usageType = data.attributes['usage-type'];
+    }
+    else {
+      args.usageType = 'choosable';
+    }
+    if (data.attributes.hasOwnProperty('numeric-value')) {
+      args.numericValue = data.attributes['numeric-value'];
+    }
+
+    let filter = schema.filters.create(args);
     return filter;
   });
 
   this.patch('/filters/:id', (schema, request) => {
     let requestJSON = JSON.parse(request.requestBody);
     let data = requestJSON.data;
-    let name = data.attributes.name;
+    let args = {};
+    args.name = data.attributes.name;
+    if (data.attributes.hasOwnProperty('numeric-value')) {
+      args.numericValue = data.attributes['numeric-value'];
+    }
     let filter = schema.filters.find(request.params.id);
-    filter.update({name: name});
+    filter.update(args);
     return filter;
   });
 
