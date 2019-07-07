@@ -43,22 +43,32 @@
   {{#if (eq filter.usageType "implied")}}
     <div>
       <h3>Implied by</h3>
-      {{#each incomingImplications as |implication|}}
-        <button type="button" class="show-filter-detail-button" {{action (mut filterId) implication.implyingFilter.id}}>
-          {{implication.implyingFilter.name}}
-        </button>
-      {{/each}}
+
+      {{#if (eq incomingImplications.length 0)}}
+        (None)
+      {{else}}
+        {{#each incomingImplications as |implication|}}
+          <button type="button" class="show-filter-detail-button" {{action (mut filterId) implication.implyingFilter.id}}>
+            {{implication.implyingFilter.name}}
+          </button>
+        {{/each}}
+      {{/if}}
     </div>
   {{/if}}
 
   {{#if (eq filter.usageType "choosable")}}
     <div>
       <h3>Implies</h3>
-      {{#each outgoingImplications as |implication|}}
-        <button type="button" class="show-filter-detail-button" {{action (mut filterId) implication.impliedFilter.id}}>
-          {{implication.impliedFilter.name}}
-        </button>
-      {{/each}}
+
+      {{#if (eq outgoingImplications.length 0)}}
+        (None)
+      {{else}}
+        {{#each outgoingImplications as |implication|}}
+          <button type="button" class="show-filter-detail-button" {{action (mut filterId) implication.impliedFilter.id}}>
+            {{implication.impliedFilter.name}}
+          </button>
+        {{/each}}
+      {{/if}}
     </div>
   {{/if}}
 
