@@ -49,6 +49,14 @@ div.filter-section {
 div.filter-section > div {
   margin: 0 3px;
 }
+div.filter-section > div.filter-list {
+  flex-basis: 180px;
+  flex-grow: 1;
+}
+div.filter-section > div.filter-detail-section {
+  flex-basis: 540px;
+  flex-grow: 3;
+}
 div.filter-create-form > div.type-field {
   display: flex;
 }
