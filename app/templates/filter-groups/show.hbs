@@ -31,16 +31,18 @@
     </ul>
   </div>
 
-  <div class="filter-list">
-    Implied Filters:
-    <ul class="implied-filter-list plain-bullet-list">
-      {{#each model.impliedFilters as |filter|}}
-        <li>
-          <button type="button" class="show-filter-detail-button" {{action (mut selectedFilterId) filter.id}}> {{filter.name}} </button>
-        </li>
-      {{/each}}
-    </ul>
-  </div>
+  {{#if (eq model.filterGroup.kind "select")}}
+    <div class="filter-list">
+      Implied Filters:
+      <ul class="implied-filter-list plain-bullet-list">
+        {{#each model.impliedFilters as |filter|}}
+          <li>
+            <button type="button" class="show-filter-detail-button" {{action (mut selectedFilterId) filter.id}}> {{filter.name}} </button>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  {{/if}}
 
   <div class="filter-detail-section">
     {{#if selectedFilterId}}
@@ -59,17 +61,19 @@
     {{input type="text" name="name" value=model.newFilter.name}}
   </div>
 
-  <div class="type-field">
-    <label>Type</label>
-    {{#power-select
-      options=usageTypeOptions
-      selected=model.newFilter.usageType
-      onchange=(action (mut model.newFilter.usageType))
-      placeholder="Not selected"
-      as |option|}}
-      {{option}}
-    {{/power-select}}
-  </div>
+  {{#if (eq model.filterGroup.kind "select")}}
+    <div class="type-field">
+      <label>Type</label>
+      {{#power-select
+        options=usageTypeOptions
+        selected=model.newFilter.usageType
+        onchange=(action (mut model.newFilter.usageType))
+        placeholder="Not selected"
+        as |option|}}
+        {{option}}
+      {{/power-select}}
+    </div>
+  {{/if}}
 
   {{#if (eq model.filterGroup.kind "numeric")}}
     <div>

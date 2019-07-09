@@ -1,8 +1,10 @@
 <div class="filter-basic-fields {{if isEditing "hidden"}}">
   <h2>{{filter.name}}</h2>
-  <div>
-    Type: {{filter.usageType}}
-  </div>
+  {{#if (eq filter.filterGroup.kind "select")}}
+    <div>
+      Type: {{filter.usageType}}
+    </div>
+  {{/if}}
   {{#if (eq filter.filterGroup.kind "numeric")}}
     <div>
       Numeric value: {{filter.numericValue}}

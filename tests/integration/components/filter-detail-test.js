@@ -114,16 +114,11 @@ module('Integration | Component | filter-detail', function(hooks) {
     let detailSection = this.element.querySelector('.filter-basic-fields');
     let detailSectionName =
       detailSection.querySelector('h2').textContent.trim();
-    let detailSectionType =
-      detailSection.getElementsByTagName('div')[0].textContent.trim();
     let detailSectionValue =
-      detailSection.getElementsByTagName('div')[1].textContent.trim();
+      detailSection.getElementsByTagName('div')[0].textContent.trim();
     assert.equal(
       detailSectionName, "30%",
       "Detail section shows the expected name");
-    assert.equal(
-      detailSectionType, "Type: choosable",
-      "Detail section shows the expected type");
     assert.equal(
       detailSectionValue, "Numeric value: 30",
       "Detail section shows the expected value");
