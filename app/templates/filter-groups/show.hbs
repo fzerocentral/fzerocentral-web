@@ -22,25 +22,19 @@
 <div class="filter-section">
   <div class="filter-list">
     Choosable Filters:
-    <ul class="choosable-filter-list plain-bullet-list">
-      {{#each model.choosableFilters as |filter|}}
-        <li>
-          <button type="button" class="show-filter-detail-button" {{action (mut selectedFilterId) filter.id}}> {{filter.name}} </button>
-        </li>
-      {{/each}}
-    </ul>
+    {{filter-list
+      filterGroupId=model.filterGroup.id
+      selectedFilterId=selectedFilterId
+      usageType="choosable"}}
   </div>
 
   {{#if (eq model.filterGroup.kind "select")}}
     <div class="filter-list">
       Implied Filters:
-      <ul class="implied-filter-list plain-bullet-list">
-        {{#each model.impliedFilters as |filter|}}
-          <li>
-            <button type="button" class="show-filter-detail-button" {{action (mut selectedFilterId) filter.id}}> {{filter.name}} </button>
-          </li>
-        {{/each}}
-      </ul>
+      {{filter-list
+        filterGroupId=model.filterGroup.id
+        selectedFilterId=selectedFilterId
+        usageType="implied"}}
     </div>
   {{/if}}
 
@@ -52,6 +46,8 @@
     {{/if}}
   </div>
 </div>
+
+<hr>
 
 <div class="filter-create-form">
   <h3>New filter</h3>

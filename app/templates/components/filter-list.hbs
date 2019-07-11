@@ -1,0 +1,43 @@
+<ul class="choosable-filter-list plain-bullet-list">
+  {{#each filters as |filter|}}
+    <li>
+      <button type="button" class="show-filter-detail-button" {{action (mut selectedFilterId) filter.id}}> {{filter.name}} </button>
+    </li>
+  {{/each}}
+</ul>
+
+{{#if hasMultiplePages.value}}
+  <div>
+    Page
+
+    {{#if filters.meta.pagination.firstPage}}
+      <button type="button" {{action (mut pageNumber) filters.meta.pagination.firstPage}}> {{filters.meta.pagination.firstPage}} </button>
+    {{/if}}
+
+    {{#if hasGapBetweenFirstAndPrevPage.value}}
+      ...
+    {{/if}}
+
+    {{#if filters.meta.pagination.prevPage}}
+      <button type="button" {{action (mut pageNumber) filters.meta.pagination.prevPage}}> {{filters.meta.pagination.prevPage}} </button>
+    {{/if}}
+
+    {{pageNumber}}
+
+    {{#if filters.meta.pagination.nextPage}}
+      <button type="button" {{action (mut pageNumber) filters.meta.pagination.nextPage}}> {{filters.meta.pagination.nextPage}} </button>
+    {{/if}}
+
+    {{#if hasGapBetweenLastAndNextPage.value}}
+      ...
+    {{/if}}
+
+    {{#if filters.meta.pagination.lastPage}}
+      <button type="button" {{action (mut pageNumber) filters.meta.pagination.lastPage}}> {{filters.meta.pagination.lastPage}} </button>
+    {{/if}}
+  </div>
+
+  <div>
+    {{currentPageFirstResultNumber.value}}-{{currentPageLastResultNumber.value}} of {{filters.meta.pagination.totalResults}}
+  </div>
+{{/if}}

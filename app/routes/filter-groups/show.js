@@ -10,12 +10,6 @@ export default Route.extend({
         'filter-group', params.filter_group_id),
       filters: this.get('store').query(
         'filter', {filter_group_id: params.filter_group_id}),
-      choosableFilters: this.get('store').query(
-        'filter',
-        {filter_group_id: params.filter_group_id, usage_type: 'choosable'}),
-      impliedFilters: this.get('store').query(
-        'filter',
-        {filter_group_id: params.filter_group_id, usage_type: 'implied'}),
       newFilter: this.get('store').createRecord('filter'),
     });
   },
