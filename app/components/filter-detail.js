@@ -8,12 +8,16 @@ export default Component.extend({
   editableParams: EmberObject.create(),
   filterDeleteError: null,
   filterId: null,
+  incomingImplicationsPageNumber: 1,
+  incomingLinksPageNumber: 1,
   linkCreateError: null,
   linkDeleteError: null,
   linksLastUpdated: null,
   linkDirectionOptions: A(["from", "to"]),
   newLinkDirection: null,
   newLinkOtherFilter: null,
+  outgoingImplicationsPageNumber: 1,
+  outgoingLinksPageNumber: 1,
   selectedLinkDeletionOption: null,
   store: service('store'),
   isEditing: false,
@@ -25,45 +29,57 @@ export default Component.extend({
     return this.get('store').findRecord('filter', this.get('filterId'));
   }),
 
-  incomingImplications: computed('filter', 'linksLastUpdated', function() {
+  incomingImplications: computed('filter', 'incomingImplicationsPageNumber', 'linksLastUpdated', function() {
     return DS.PromiseArray.create({
       promise: this.get('filter').then((filter) => {
         if (filter === null) { return A([]); }
 
-        let args = {implied_filter_id: filter.get('id')};
+        let args = {
+          implied_filter_id: filter.get('id'),
+          page: this.get('incomingImplicationsPageNumber'),
+        };
         return this.get('store').query('filterImplication', args);
       })
     });
   }),
 
-  outgoingImplications: computed('filter', 'linksLastUpdated', function() {
+  outgoingImplications: computed('filter', 'linksLastUpdated', 'outgoingImplicationsPageNumber', function() {
     return DS.PromiseArray.create({
       promise: this.get('filter').then((filter) => {
         if (filter === null) { return A([]); }
 
-        let args = {implying_filter_id: filter.get('id')};
+        let args = {
+          implying_filter_id: filter.get('id'),
+          page: this.get('outgoingImplicationsPageNumber'),
+        };
         return this.get('store').query('filterImplication', args);
       })
     });
   }),
 
-  incomingLinks: computed('filter', 'linksLastUpdated', function() {
+  incomingLinks: computed('filter', 'incomingLinksPageNumber', 'linksLastUpdated', function() {
     return DS.PromiseArray.create({
       promise: this.get('filter').then((filter) => {
         if (filter === null) { return A([]); }
 
-        let args = {implied_filter_id: filter.get('id')};
+        let args = {
+          implied_filter_id: filter.get('id'),
+          page: this.get('incomingLinksPageNumber'),
+        };
         return this.get('store').query('filterImplicationLink', args);
       })
     });
   }),
 
-  outgoingLinks: computed('filter', 'linksLastUpdated', function() {
+  outgoingLinks: computed('filter', 'linksLastUpdated', 'outgoingLinksPageNumber', function() {
     return DS.PromiseArray.create({
       promise: this.get('filter').then((filter) => {
         if (filter === null) { return A([]); }
 
-        let args = {implying_filter_id: filter.get('id')};
+        let args = {
+          implying_filter_id: filter.get('id'),
+          page: this.get('outgoingLinksPageNumber'),
+        };
         return this.get('store').query('filterImplicationLink', args);
       })
     });
@@ -97,10 +113,14 @@ export default Component.extend({
   didUpdateAttrs() {
     // Re-initialize the component state when the filter selection changes.
     this.set('filterDeleteError', null);
+    this.set('incomingImplicationsPageNumber', 1);
+    this.set('incomingLinksPageNumber', 1);
     this.set('linkCreateError', null);
     this.set('linkDeleteError', null);
     this.set('newLinkDirection', null);
     this.set('newLinkOtherFilter', null);
+    this.set('outgoingImplicationsPageNumber', 1);
+    this.set('outgoingLinksPageNumber', 1);
     this.set('selectedLinkDeletionOption', null);
     this.send('stopEditing');
   },

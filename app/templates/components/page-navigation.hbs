@@ -1,0 +1,35 @@
+{{#if hasMultiplePages.value}}
+  <div>
+    Page
+
+    {{#if pageResults.meta.pagination.firstPage}}
+      <button type="button" {{action (mut pageNumber) pageResults.meta.pagination.firstPage}}> {{pageResults.meta.pagination.firstPage}} </button>
+    {{/if}}
+
+    {{#if hasGapBetweenFirstAndPrevPage.value}}
+      ...
+    {{/if}}
+
+    {{#if pageResults.meta.pagination.prevPage}}
+      <button type="button" {{action (mut pageNumber) pageResults.meta.pagination.prevPage}}> {{pageResults.meta.pagination.prevPage}} </button>
+    {{/if}}
+
+    {{pageNumber}}
+
+    {{#if pageResults.meta.pagination.nextPage}}
+      <button type="button" {{action (mut pageNumber) pageResults.meta.pagination.nextPage}}> {{pageResults.meta.pagination.nextPage}} </button>
+    {{/if}}
+
+    {{#if hasGapBetweenLastAndNextPage.value}}
+      ...
+    {{/if}}
+
+    {{#if pageResults.meta.pagination.lastPage}}
+      <button type="button" {{action (mut pageNumber) pageResults.meta.pagination.lastPage}}> {{pageResults.meta.pagination.lastPage}} </button>
+    {{/if}}
+  </div>
+
+  <div>
+    {{currentPageFirstResultNumber.value}}-{{currentPageLastResultNumber.value}} of {{pageResults.meta.pagination.totalResults}}
+  </div>
+{{/if}}

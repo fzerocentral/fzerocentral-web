@@ -54,6 +54,7 @@
             {{implication.implyingFilter.name}}
           </button>
         {{/each}}
+        {{page-navigation pageResults=incomingImplications pageNumber=incomingImplicationsPageNumber}}
       {{/if}}
     </div>
   {{/if}}
@@ -70,33 +71,40 @@
             {{implication.impliedFilter.name}}
           </button>
         {{/each}}
+        {{page-navigation pageResults=outgoingImplications pageNumber=outgoingImplicationsPageNumber}}
       {{/if}}
     </div>
   {{/if}}
 
   <h3>Links</h3>
   <div class="implication-links-display">
-    <ul class="incoming-implication-links-list">
-      {{#each incomingLinks as |link|}}
-        <li>
-          <button type="button" class="show-filter-detail-button" {{action (mut filterId) link.implyingFilter.id}}>
-            {{link.implyingFilter.name}}
-          </button>
-        </li>
-      {{/each}}
-    </ul>
+    <div>
+      <ul class="incoming-implication-links-list">
+        {{#each incomingLinks as |link|}}
+          <li>
+            <button type="button" class="show-filter-detail-button" {{action (mut filterId) link.implyingFilter.id}}>
+              {{link.implyingFilter.name}}
+            </button>
+          </li>
+        {{/each}}
+      </ul>
+      {{page-navigation pageResults=incomingLinks pageNumber=incomingLinksPageNumber}}
+    </div>
 
     <span>-&gt; {{filter.name}} -&gt;</span>
 
-    <ul class="outgoing-implication-links-list">
-      {{#each outgoingLinks as |link|}}
-        <li>
-          <button type="button" class="show-filter-detail-button" {{action (mut filterId) link.impliedFilter.id}}>
-            {{link.impliedFilter.name}}
-          </button>
-        </li>
-      {{/each}}
-    </ul>
+    <div>
+      <ul class="outgoing-implication-links-list">
+        {{#each outgoingLinks as |link|}}
+          <li>
+            <button type="button" class="show-filter-detail-button" {{action (mut filterId) link.impliedFilter.id}}>
+              {{link.impliedFilter.name}}
+            </button>
+          </li>
+        {{/each}}
+      </ul>
+      {{page-navigation pageResults=outgoingLinks pageNumber=outgoingLinksPageNumber}}
+    </div>
   </div>
 
   <div class="filter-implication-link-create-form">
