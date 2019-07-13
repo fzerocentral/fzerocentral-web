@@ -8,8 +8,6 @@ export default Route.extend({
         'chart-type', {filter_group_id: params.filter_group_id}),
       filterGroup: this.get('store').findRecord(
         'filter-group', params.filter_group_id),
-      filters: this.get('store').query(
-        'filter', {filter_group_id: params.filter_group_id}),
       newFilter: this.get('store').createRecord('filter'),
     });
   },

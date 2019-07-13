@@ -20,7 +20,7 @@ export default DS.JSONAPIAdapter.extend({
   // Then for example, in a template, we could access
   // `{{ myCollection.meta.myAttr }}`, or in JS we could use
   // `this.get('myCollection.meta.myAttr')`.
-  handleResponse(status, headers, payload, requestData) {
+  handleResponse(status, headers, payload) {
     let meta = {};
 
     // Links to other API endpoints.

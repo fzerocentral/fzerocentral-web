@@ -6,17 +6,6 @@ export default Component.extend({
   pageNumber: null,
   pageResults: null,
 
-  hasMultiplePages: computed('pageResults', function() {
-    return DS.PromiseObject.create({
-      promise: this.get('pageResults').then((pageResults) => {
-        let paginationMeta = pageResults.meta.pagination;
-        let totalResults = Number(paginationMeta.totalResults);
-        let resultsPerPage = Number(paginationMeta.resultsPerPage);
-        return {value: totalResults > resultsPerPage};
-      })
-    });
-  }),
-
   currentPageFirstResultNumber: computed('pageNumber', 'pageResults', function() {
     return DS.PromiseObject.create({
       promise: this.get('pageResults').then((pageResults) => {

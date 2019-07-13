@@ -122,14 +122,29 @@
     </div>
 
     <div class="linked-filter-select">
-      {{#power-select
-        options=allFilters
-        selected=newLinkOtherFilter
-        onchange=(action (mut newLinkOtherFilter))
-        placeholder="Not selected"
-        as |option|}}
-        {{option.name}}
-      {{/power-select}}
+      {{#if (get (has-multiple-pages allFilters) "value")}}
+        {{!-- Retrieves this group's filters from ember-data whose names match
+        the search box contents. --}}
+        {{#data-power-select
+          modelName="filter"
+          params=(hash filter_group_id=filter.filterGroup.id)
+          queryKey="name_search"
+          selected=newLinkOtherFilter
+          onchange=(action (mut newLinkOtherFilter))
+          placeholder="Not selected"
+          as |option|}}
+          {{option.name}}
+        {{/data-power-select}}
+      {{else}}
+        {{#power-select
+          options=allFilters
+          selected=newLinkOtherFilter
+          onchange=(action (mut newLinkOtherFilter))
+          placeholder="Not selected"
+          as |option|}}
+          {{option.name}}
+        {{/power-select}}
+      {{/if}}
     </div>
 
     <div class="error-message">{{error-display linkCreateError}}</div>
@@ -143,14 +158,29 @@
     <h3>Delete an implication link</h3>
 
     <div class="link-select">
-      {{#power-select
-        options=linkDeletionOptions
-        selected=selectedLinkDeletionOption
-        onchange=(action (mut selectedLinkDeletionOption))
-        placeholder="Not selected"
-        as |option|}}
-        {{option.display}}
-      {{/power-select}}
+      {{#if (get (has-multiple-pages allLinks) "value")}}
+        {{!-- Retrieves this filter's links from ember-data, such that the
+        linked filter's name matches the search box contents. --}}
+        {{#data-power-select
+          modelName="filterImplicationLink"
+          params=(hash filter_id=filter.id)
+          queryKey="linked_filter_search"
+          selected=selectedLinkDeletionOption
+          onchange=(action (mut selectedLinkDeletionOption))
+          placeholder="Not selected"
+          as |option|}}
+          {{link-delete-option-display option filter}}
+        {{/data-power-select}}
+      {{else}}
+        {{#power-select
+          options=allLinks
+          selected=selectedLinkDeletionOption
+          onchange=(action (mut selectedLinkDeletionOption))
+          placeholder="Not selected"
+          as |option|}}
+          {{link-delete-option-display option filter}}
+        {{/power-select}}
+      {{/if}}
     </div>
 
     <div class="error-message">{{error-display linkDeleteError}}</div>

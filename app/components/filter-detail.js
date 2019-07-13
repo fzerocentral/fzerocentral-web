@@ -7,6 +7,7 @@ import { inject as service } from '@ember/service';
 export default Component.extend({
   editableParams: EmberObject.create(),
   filterDeleteError: null,
+  filterGroupId: null,
   filterId: null,
   incomingImplicationsPageNumber: 1,
   incomingLinksPageNumber: 1,
@@ -21,6 +22,11 @@ export default Component.extend({
   selectedLinkDeletionOption: null,
   store: service('store'),
   isEditing: false,
+
+  allFilters: computed('filterGroupId', function() {
+    return this.get('store').query(
+      'filter', {filter_group_id: this.get('filterGroupId')});
+  }),
 
   filter: computed('filterId', function() {
     let filterId = this.get('filterId');
@@ -57,6 +63,17 @@ export default Component.extend({
     });
   }),
 
+  allLinks: computed('filter', 'linksLastUpdated', function() {
+    return DS.PromiseArray.create({
+      promise: this.get('filter').then((filter) => {
+        if (filter === null) { return A([]); }
+
+        let args = {filter_id: filter.get('id')};
+        return this.get('store').query('filterImplicationLink', args);
+      })
+    });
+  }),
+
   incomingLinks: computed('filter', 'incomingLinksPageNumber', 'linksLastUpdated', function() {
     return DS.PromiseArray.create({
       promise: this.get('filter').then((filter) => {
@@ -83,30 +100,6 @@ export default Component.extend({
         return this.get('store').query('filterImplicationLink', args);
       })
     });
-  }),
-
-  linkDeletionOptions: computed('incomingLinks', 'outgoingLinks', function() {
-    let options = A([]);
-
-    this.get('incomingLinks').then((incomingLinks) => {
-      incomingLinks.forEach((link) => {
-        options.pushObject({
-          'display': "from " + link.get('implyingFilter').get('name'),
-          'link': link,
-        });
-      });
-    });
-
-    this.get('outgoingLinks').then((outgoingLinks) => {
-      outgoingLinks.forEach((link) => {
-        options.pushObject({
-          'display': "to " + link.get('impliedFilter').get('name'),
-          'link': link,
-        });
-      });
-    });
-
-    return options;
   }),
 
 
@@ -177,7 +170,7 @@ export default Component.extend({
         return;
       }
 
-      let link = this.get('selectedLinkDeletionOption')['link'];
+      let link = this.get('selectedLinkDeletionOption');
 
       link.destroyRecord().then(() => {
         // Success callback
