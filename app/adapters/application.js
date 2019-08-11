@@ -68,6 +68,10 @@ export default DS.JSONAPIAdapter.extend({
       }
     }
 
+    // payload might be undefined if we got a 204 No Content response
+    if (!payload) {
+      payload = {};
+    }
     payload.meta = meta;
 
     // By default, this function hook just returns the json payload passed to
