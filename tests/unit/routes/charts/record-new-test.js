@@ -7,6 +7,14 @@ import { selectChoose } from 'ember-power-select/test-support';
 import { createModelInstance }
   from 'fzerocentral-web/tests/helpers/model-helpers';
 
+
+function createFilter(server, name, group, type='choosable', value=null) {
+  return createModelInstance(
+    server, 'filter',
+    {name: name, filterGroup: group, usageType: type, numericValue: value});
+}
+
+
 module('Unit | Route | charts/record-new', function(hooks) {
   setupTest(hooks);
 
@@ -30,15 +38,13 @@ module('Unit | Route | charts/record-new', function(hooks) {
     this.machineFG = createModelInstance(
       this.server, 'filter-group',
       {name: 'Machine', kind: 'select', showByDefault: true});
-    this.blueFalconFilter = createModelInstance(
-      this.server, 'filter',
-      {name: 'Blue Falcon', filterGroup: this.machineFG});
+    this.blueFalconFilter = createFilter(
+      this.server, "Blue Falcon", this.machineFG, 'choosable');
     this.settingFG = createModelInstance(
       this.server, 'filter-group',
       {name: 'Setting', kind: 'numeric', showByDefault: false});
-    this.setting80Filter = createModelInstance(
-      this.server, 'filter',
-      {name: '80%', numericValue: 80, filterGroup: this.settingFG});
+    this.setting80Filter = createFilter(
+      this.server, "80%", this.settingFG, 'choosable', 80);
 
     createModelInstance(
       this.server, 'chart-type-filter-group',

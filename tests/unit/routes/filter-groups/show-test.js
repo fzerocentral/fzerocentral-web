@@ -11,13 +11,14 @@ import { createModelInstance }
 function getFiltersListItemByName(rootElement, name, type='choosable') {
   let filtersList = null;
   if (type === 'choosable') {
-    filtersList = rootElement.querySelector('ul.choosable-filter-list');
+    filtersList = rootElement.querySelector('div.choosable-filter-list ul');
   }
   else {
-    filtersList = rootElement.querySelector('ul.implied-filter-list');
+    filtersList = rootElement.querySelector('div.implied-filter-list ul');
   }
 
   let listItems = filtersList.querySelectorAll('li');
+
   // Return the first row which has this name; if no match, undefined
   return Array.from(listItems).find((listItem) => {
     return listItem.querySelector('button').textContent.trim() === name;
@@ -160,14 +161,14 @@ module('Unit | Route | filter-groups/show', function(hooks) {
     assert.ok(newFilter, "Expected filter was created");
     assert.equal(
       newFilter.get('filterGroup').get('id'), this.filterGroup.id,
-      "New filter has the correct filter group")
+      "New filter has the correct filter group");
     assert.equal(
       newFilter.get('usageType'), 'implied',
-      "New filter has the correct usage type")
+      "New filter has the correct usage type");
 
     // Filter should be on the list (list should have been refreshed)
     assert.ok(
-      getFiltersListItemByName(this.element, "Golden Fox"),
+      getFiltersListItemByName(this.element, "Golden Fox", 'implied'),
       "New filter is on the list");
   });
 
@@ -190,10 +191,10 @@ module('Unit | Route | filter-groups/show', function(hooks) {
     assert.ok(newFilter, "Expected filter was created");
     assert.equal(
       newFilter.get('filterGroup').get('id'), this.numericFilterGroup.id,
-      "New filter has the correct filter group")
+      "New filter has the correct filter group");
     assert.equal(
       newFilter.get('numericValue'), 65,
-      "New filter has the correct numeric value")
+      "New filter has the correct numeric value");
 
     // Filter should be on the list (list should have been refreshed)
     assert.ok(

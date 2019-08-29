@@ -1,12 +1,11 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { A } from '@ember/array';
 import { run } from "@ember/runloop";
 import { click, render, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { selectChoose } from 'ember-power-select/test-support';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
-import { createModelInstance, modelAsProperty }
+import { createModelInstance }
   from 'fzerocentral-web/tests/helpers/model-helpers';
 import { assertPowerSelectCurrentTextEqual }
   from 'fzerocentral-web/tests/helpers/power-select-helpers';
@@ -70,17 +69,6 @@ module('Integration | Component | filter-detail', function(hooks) {
       {name: "Setting", kind: 'numeric'});
     this.s30Filter = createFilter(
       this.server, "30%", this.settingGroup, 'choosable', 30);
-
-    // Set the allFilters property value.
-    // Individual tests can set a filterId property value.
-    this.set(
-      'allFilters',
-      A([
-        modelAsProperty(this.store, 'filter', this.gsg4Filter),
-        modelAsProperty(this.store, 'filter', this.qcg4Filter),
-        modelAsProperty(this.store, 'filter', this.titang4Filter),
-        modelAsProperty(this.store, 'filter', this.bCustomBoosterFilter),
-      ]));
   });
 
   hooks.afterEach( function() {
@@ -90,8 +78,9 @@ module('Integration | Component | filter-detail', function(hooks) {
 
   test("can show a filter's details", async function(assert) {
     this.set('filterId', this.gsg4Filter.id);
+    this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId allFilters=allFilters}}`);
+      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
 
     let detailSection = this.element.querySelector('.filter-basic-fields');
     let detailSectionName =
@@ -108,8 +97,9 @@ module('Integration | Component | filter-detail', function(hooks) {
 
   test("can show a numeric filter's details", async function(assert) {
     this.set('filterId', this.s30Filter.id);
+    this.set('filterGroupId', this.settingGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId allFilters=allFilters}}`);
+      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
 
     let detailSection = this.element.querySelector('.filter-basic-fields');
     let detailSectionName =
@@ -126,8 +116,9 @@ module('Integration | Component | filter-detail', function(hooks) {
 
   test("can bring up and dismiss the filter edit form", async function(assert) {
     this.set('filterId', this.gsg4Filter.id);
+    this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId allFilters=allFilters}}`);
+      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
 
     let detailDisplay = this.element.querySelector('div.filter-basic-fields');
     let editForm = this.element.querySelector('div.filter-edit-form');
@@ -174,8 +165,9 @@ module('Integration | Component | filter-detail', function(hooks) {
 
   test("can edit a filter's fields", async function(assert) {
     this.set('filterId', this.gsg4Filter.id);
+    this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId allFilters=allFilters}}`);
+      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
 
     let editForm = this.element.querySelector('div.filter-edit-form');
     let editButton =
@@ -198,14 +190,10 @@ module('Integration | Component | filter-detail', function(hooks) {
   });
 
   test("can edit a numeric filter's fields", async function(assert) {
-    this.set(
-      'allFilters',
-      A([
-        modelAsProperty(this.store, 'filter', this.s30Filter),
-      ]));
     this.set('filterId', this.s30Filter.id);
+    this.set('filterGroupId', this.settingGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId allFilters=allFilters}}`);
+      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
 
     let editForm = this.element.querySelector('div.filter-edit-form');
     let editButton =
@@ -234,8 +222,9 @@ module('Integration | Component | filter-detail', function(hooks) {
 
   test("can delete a filter", async function(assert) {
     this.set('filterId', this.gsg4Filter.id);
+    this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId allFilters=allFilters}}`);
+      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
 
     // Delete filter
     let deleteButton = this.element.querySelector('.filter-delete-button');
@@ -258,8 +247,9 @@ module('Integration | Component | filter-detail', function(hooks) {
     createLink(this.server, this.titang4Filter, this.bCustomBoosterFilter);
 
     this.set('filterId', this.titang4Filter.id);
+    this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId allFilters=allFilters}}`);
+      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
 
     assert.ok(
       getImplicationLinkButtonByFilter(
@@ -278,8 +268,9 @@ module('Integration | Component | filter-detail', function(hooks) {
   test("can create a new filter implication link from the incoming filter", async function(assert) {
     // Have the component focus on the incoming filter.
     this.set('filterId', this.gsg4Filter.id);
+    this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId allFilters=allFilters}}`);
+      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
 
     // On the link creation form, select 'to', select the outgoing filter,
     // and click create.
@@ -313,8 +304,9 @@ module('Integration | Component | filter-detail', function(hooks) {
   test("can create a new filter implication link from the outgoing filter", async function(assert) {
     // Have the component focus on the outgoing filter.
     this.set('filterId', this.titang4Filter.id);
+    this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId allFilters=allFilters}}`);
+      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
 
     // On the link creation form, select 'from', select the incoming filter,
     // and click create.
@@ -349,8 +341,9 @@ module('Integration | Component | filter-detail', function(hooks) {
     createLink(this.server, this.gsg4Filter, this.titang4Filter);
 
     this.set('filterId', this.gsg4Filter.id);
+    this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId allFilters=allFilters}}`);
+      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
 
     // Select the link from the existing links dropdown. Then delete it.
     let form =
@@ -381,8 +374,9 @@ module('Integration | Component | filter-detail', function(hooks) {
     createLink(this.server, this.gsg4Filter, this.titang4Filter);
 
     this.set('filterId', this.titang4Filter.id);
+    this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId allFilters=allFilters}}`);
+      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
 
     // Select the link from the existing links dropdown. Then delete it.
     let form =
@@ -413,8 +407,9 @@ module('Integration | Component | filter-detail', function(hooks) {
     createLink(this.server, this.gsg4Filter, this.titang4Filter);
 
     this.set('filterId', this.gsg4Filter.id);
+    this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId allFilters=allFilters}}`);
+      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
 
     // Click a button in one of the linked-filters lists
     let filterButton = getImplicationLinkButtonByFilter(
@@ -429,8 +424,9 @@ module('Integration | Component | filter-detail', function(hooks) {
     createLink(this.server, this.gsg4Filter, this.titang4Filter);
 
     this.set('filterId', this.gsg4Filter.id);
+    this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId allFilters=allFilters}}`);
+      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
 
     // Select choices on the link creation form
     let linkCreateForm =

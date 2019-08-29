@@ -4,8 +4,18 @@ import { A } from '@ember/array';
 import { render } from '@ember/test-helpers';
 import { run } from "@ember/runloop";
 import { clearSelected, selectChoose } from 'ember-power-select/test-support';
-import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
 import hbs from 'htmlbars-inline-precompile';
+import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
+import { createModelInstance }
+  from 'fzerocentral-web/tests/helpers/model-helpers';
+
+
+function createFilter(server, name, group, type='choosable', value=null) {
+  return createModelInstance(
+    server, 'filter',
+    {name: name, filterGroup: group, usageType: type, numericValue: value});
+}
+
 
 module('Integration | Component | record-filters-edit', function(hooks) {
   setupRenderingTest(hooks);
@@ -16,11 +26,11 @@ module('Integration | Component | record-filters-edit', function(hooks) {
     let store = this.owner.lookup('service:store');
 
     this.groupA = server.create('filterGroup', {name: 'Group A'});
-    this.filterA1 = server.create('filter', {name: 'Filter A1', filterGroup: this.groupA});
+    this.filterA1 = createFilter(this.server, "Filter A1", this.groupA);
     server.create('filter', {name: 'Filter A2', filterGroup: this.groupA});
     this.groupB = server.create('filterGroup', {name: 'Group B'});
     server.create('filter', {name: 'Filter B1', filterGroup: this.groupB});
-    this.filterB2 = server.create('filter', {name: 'Filter B2', filterGroup: this.groupB});
+    this.filterB2 = createFilter(this.server, "Filter B2", this.groupB);
 
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });

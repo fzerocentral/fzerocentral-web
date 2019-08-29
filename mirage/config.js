@@ -1,3 +1,5 @@
+import { Response } from 'ember-cli-mirage';
+
 export default function() {
 
   // These comments are here to help you get started. Feel free to delete them.
@@ -113,7 +115,7 @@ export default function() {
               filterGroupId: filterGroup.id}).length === 0) {
             filterGroups.add(filterGroup);
           }
-        })
+        });
 
         return filterGroups;
       }
@@ -179,22 +181,27 @@ export default function() {
   });
 
   this.get('/filter_implication_links', (schema, request) => {
+    let links = null;
     if (request.queryParams.hasOwnProperty('filter_group_id')) {
       // FILs of a particular FG
       let allLinks = schema.filterImplicationLinks.all();
-      let links = schema.filterImplicationLinks.none();
+      links = schema.filterImplicationLinks.none();
       allLinks.models.forEach((link) => {
         let filterGroupId = link.implyingFilter.filterGroup.id;
         if (filterGroupId === request.queryParams.filter_group_id) {
           links.add(link);
         }
       });
-      return links;
     }
     else {
       // All objects
-      return schema.filterImplicationLinks.all();
+      links = schema.filterImplicationLinks.all();
     }
+
+    // Partial implementation of pagination. The results aren't actually
+    // paginated, but the Per-Page and Total headers are given.
+    return new Response(
+      200, {'Per-Page': 20, 'Total': links.length}, links);
   });
 
   this.post('/filter_implication_links', (schema, request) => {
@@ -238,6 +245,13 @@ export default function() {
         request.queryParams.filter_group_id);
 
       filters = filterGroup.filters;
+
+      if (request.queryParams.usage_type) {
+        // Keep only the filters that match the desired usage type
+        let usageType = request.queryParams.usage_type;
+        filters = filters.filter(
+          (filter) => filter.usageType === usageType);
+      }
       // Sort by filter name, ascending
       filters = filters.sort((a, b) => { return b.name < a.name; });
     }
@@ -245,7 +259,10 @@ export default function() {
       filters = schema.filters.all();
     }
 
-    return filters;
+    // Partial implementation of pagination. The results aren't actually
+    // paginated, but the Per-Page and Total headers are given.
+    return new Response(
+      200, {'Per-Page': 20, 'Total': filters.length}, filters);
   });
 
   this.post('/filters', (schema, request) => {
