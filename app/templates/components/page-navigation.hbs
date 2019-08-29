@@ -1,5 +1,5 @@
 {{#if (get (has-multiple-pages pageResults) "value")}}
-  <div>
+  <div class="page-links">
     Page
 
     {{#if pageResults.meta.pagination.firstPage}}
@@ -29,7 +29,7 @@
     {{/if}}
   </div>
 
-  <div>
+  <div class="page-results-counts">
     {{currentPageFirstResultNumber.value}}-{{currentPageLastResultNumber.value}} of {{pageResults.meta.pagination.totalResults}}
   </div>
 {{/if}}

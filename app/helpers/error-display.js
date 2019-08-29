@@ -10,7 +10,7 @@ export function errorDisplay(params) {
   let [error] = params;
   if (error === null) { return null; }
 
-  if (error.constructor == String) {
+  if (error.constructor === String) {
     // Error string
     return error;
   }
