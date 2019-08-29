@@ -1,7 +1,7 @@
-<ul class="choosable-filter-list plain-bullet-list">
+<ul class="plain-bullet-list">
   {{#each filters as |filter|}}
     <li>
-      <button type="button" class="show-filter-detail-button" {{action (mut selectedFilterId) filter.id}}> {{filter.name}} </button>
+      <button type="button" class="show-filter-detail-button" {{action "updateSelectedFilterId" filter.id}}> {{filter.name}} </button>
     </li>
   {{/each}}
 </ul>

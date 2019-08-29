@@ -4,11 +4,12 @@ import { inject as service } from '@ember/service';
 
 export default Component.extend({
   filterGroupId: null,
+  filtersLastUpdated: null,
   pageNumber: 1,
   store: service('store'),
   usageType: null,
 
-  filters: computed('filterGroupId', 'pageNumber', 'usageType', function() {
+  filters: computed('filterGroupId', 'filtersLastUpdated', 'pageNumber', 'usageType', function() {
     let args = {};
 
     let filterGroupId = this.get('filterGroupId');
@@ -25,4 +26,14 @@ export default Component.extend({
 
     return this.get('store').query('filter', args);
   }),
+
+  actions: {
+    updateSelectedFilterId() {
+      this.updateSelectedFilterId(...arguments);
+    },
+  },
+
+  updateSelectedFilterId() {
+    throw new Error('updateSelectedFilterId must be provided');
+  },
 });

@@ -20,20 +20,22 @@
 <hr>
 
 <div class="filter-section">
-  <div class="filter-list">
+  <div class="filter-list choosable-filter-list">
     Choosable Filters:
     {{filter-list
       filterGroupId=model.filterGroup.id
-      selectedFilterId=selectedFilterId
+      filtersLastUpdated=filtersLastUpdated
+      updateSelectedFilterId=(action (mut selectedFilterId))
       usageType="choosable"}}
   </div>
 
   {{#if (eq model.filterGroup.kind "select")}}
-    <div class="filter-list">
+    <div class="filter-list implied-filter-list">
       Implied Filters:
       {{filter-list
         filterGroupId=model.filterGroup.id
-        selectedFilterId=selectedFilterId
+        filtersLastUpdated=filtersLastUpdated
+        updateSelectedFilterId=(action (mut selectedFilterId))
         usageType="implied"}}
     </div>
   {{/if}}

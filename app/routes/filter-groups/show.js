@@ -22,8 +22,11 @@ export default Route.extend({
         // Success callback
         this.controllerFor(this.routeName).set('filterCreateError', null);
 
-        // Refresh the model (including the group's list of filters + the
-        // new filter tied to the UI fields)
+        // Refresh filter-list computed properties by changing this property.
+        this.controllerFor(this.routeName).set(
+          'filtersLastUpdated', new Date());
+
+        // Refresh the model to reset newFilter.
         this.refresh();
       }, (response) => {
         // Error callback
