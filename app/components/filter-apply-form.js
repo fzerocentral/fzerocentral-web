@@ -6,9 +6,7 @@ import { inject as service } from '@ember/service';
 
 export default Component.extend({
   appliedFiltersString: null,
-  compareOptions: A([]),
   filterGroups: A([]),
-  filterOptions: A([]),
   selectedCompareOption: null,
   selectedFilter: null,
   selectedFilterGroup: null,
@@ -86,6 +84,80 @@ export default Component.extend({
     });
   }),
 
+  compareOptions: computed('selectedFilterGroup', function() {
+    let group = this.get('selectedFilterGroup');
+    if (!group) {
+      return A([]);
+    }
+
+    let compareOptions = A([]);
+    compareOptions.pushObject({text: "-", typeSuffix: ''});
+    compareOptions.pushObject({text: "NOT", typeSuffix: 'n'});
+    if (group.get('kind') === 'numeric') {
+      compareOptions.pushObject({text: ">=", typeSuffix: 'ge'});
+      compareOptions.pushObject({text: "<=", typeSuffix: 'le'});
+    }
+
+    return compareOptions;
+  }),
+
+  filterOptions: computed('selectedFilterGroup', function() {
+    let group = this.get('selectedFilterGroup');
+    if (!group) {
+      // Return an empty array wrapped in an already-resolved Promise
+      return DS.PromiseArray.create({
+        promise: Promise.resolve().then(() => {
+          return A([]);
+        })
+      });
+    }
+
+    return this.get('store').query(
+      'filter', {filter_group_id: group.get('id')});
+  }),
+
+
+  didUpdate() {
+    // Things to re-check when any attributes update. Only put things here
+    // which can't be done using computed properties (e.g. because we're
+    // dealing an attribute which can also be interactively changed, and
+    // thus can't be a computed property).
+
+    let selectedFilter = this.get('selectedFilter');
+    if (selectedFilter) {
+      let selectedFilterGroup = this.get('selectedFilterGroup');
+      if (selectedFilter.get('filterGroup').get('id')
+          !== selectedFilterGroup.get('id')) {
+        // selectedFilter is not in the current filter group, so reset it.
+        this.set('selectedFilter', null);
+      }
+    }
+
+    let selectedCompareOption = this.get('selectedCompareOption');
+    let compareOptions = this.get('compareOptions');
+    let defaultCompareOption = compareOptions.find((option) => {
+      return option.text === '-';
+    });
+    if (selectedCompareOption) {
+      let matchingOption = compareOptions.find((option) => {
+        return option.text === selectedCompareOption.text;
+      });
+      if (!matchingOption) {
+        // selectedCompareOption is not in the current options, so reset it
+        // to the default option, which should be available for any
+        // filter group.
+        this.set('selectedCompareOption', defaultCompareOption);
+      }
+    }
+    else {
+      // Set this compare option by default, as opposed to 'Not selected'.
+      // The default is the common case, so this should generally save the
+      // user a bit of time.
+      this.set('selectedCompareOption', defaultCompareOption);
+    }
+  },
+
+
   actions: {
     addFilter() {
       // Get the existing applied-filter strings
@@ -106,32 +178,7 @@ export default Component.extend({
       let newAppliedFiltersString = filterStrings.join('-');
       this.send('updateAppliedFiltersString', newAppliedFiltersString);
     },
-    onFilterGroupChange(filterGroup) {
-      this.set('selectedFilterGroup', filterGroup);
 
-      // Prepare compare options
-      let compareOptions = this.get('compareOptions');
-      compareOptions.clear();
-      compareOptions.pushObject({text: "-", typeSuffix: ''});
-      compareOptions.pushObject({text: "NOT", typeSuffix: 'n'});
-      if (filterGroup.get('kind') === 'numeric') {
-        compareOptions.pushObject({text: ">=", typeSuffix: 'ge'});
-        compareOptions.pushObject({text: "<=", typeSuffix: 'le'});
-      }
-      this.set('selectedCompareOption', compareOptions.objectAt(0));
-
-      // Prepare filter options
-      let filtersPromise = this.get('store').query(
-        'filter', {filter_group_id: filterGroup.get('id')});
-      filtersPromise.then((filters) => {
-        let filterOptions = this.get('filterOptions');
-        filterOptions.clear();
-        filters.forEach((f) => {
-          filterOptions.pushObject(f);
-        });
-        this.set('selectedFilter', filterOptions.objectAt(0));
-      });
-    },
     removeFilter(index) {
       // We're assuming this'll only ever be called with a valid index.
       let filtersString = this.get('appliedFiltersString');
@@ -147,6 +194,7 @@ export default Component.extend({
         this.set('appliedFiltersString', filterStrings.join('-'));
       }
     },
+
     updateAppliedFiltersString() {
       this.updateAppliedFiltersString(...arguments);
     },

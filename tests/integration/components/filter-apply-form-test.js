@@ -97,7 +97,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
       "Choice-based filter group: options are as expected");
     assertPowerSelectCurrentTextEqual(
       assert, compareMethodSelect, "-",
-      "Choice-based filter group: default selection as expected");
+      "Choice-based filter group: default selection is as expected");
 
     // Numeric filter group
     await selectChoose(`#${filterGroupSelect.id}`, 'Setting');
@@ -106,7 +106,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
       "Numeric filter group: options are as expected");
     assertPowerSelectCurrentTextEqual(
       assert, compareMethodSelect, "-",
-      "Numeric filter group: default selection as expected");
+      "Numeric filter group: default selection is as expected");
   });
 
   test("selecting a filter group fills the third dropdown with the group's filter options", async function(assert) {
@@ -122,16 +122,46 @@ module('Integration | Component | filter-apply-form', function(hooks) {
       assert, filterSelect, ["Blue Falcon", "White Cat"],
       "Choice-based filter group: options are as expected");
     assertPowerSelectCurrentTextEqual(
-      assert, filterSelect, "Blue Falcon",
-      "Choice-based filter group: default selection as expected");
+      assert, filterSelect, "Not selected",
+      "Choice-based filter group: default selection is as expected");
 
     await selectChoose(`#${filterGroupSelect.id}`, 'Setting');
     await assertPowerSelectOptionsEqual(
       assert, filterSelect, ["30%", "80%"],
       "Numeric filter group: options are as expected");
     assertPowerSelectCurrentTextEqual(
-      assert, filterSelect, "30%",
-      "Numeric filter group: default selection as expected");
+      assert, filterSelect, "Not selected",
+      "Numeric filter group: default selection is as expected");
+  });
+
+  test("changing the filter group resets the other dropdowns as needed", async function(assert) {
+    await render(
+      hbs`{{filter-apply-form filterGroups=filterGroups
+            appliedFiltersString=appliedFiltersString}}`);
+
+    let filterGroupSelect = getFilterGroupSelect(this);
+    let compareMethodSelect = getCompareMethodSelect(this);
+    let filterSelect = getFilterSelect(this);
+
+    await selectChoose(`#${filterGroupSelect.id}`, 'Setting');
+    await selectChoose(`#${compareMethodSelect.id}`, '<=');
+    await selectChoose(`#${filterSelect.id}`, '80%');
+
+    assertPowerSelectCurrentTextEqual(
+      assert, compareMethodSelect, "<=",
+      "Compare method should be set as expected");
+    assertPowerSelectCurrentTextEqual(
+      assert, filterSelect, "80%",
+      "Filter selection should be set as expected");
+
+    // Change to a filter group where <= doesn't apply, and 80% doesn't apply
+    await selectChoose(`#${filterGroupSelect.id}`, 'Machine');
+    assertPowerSelectCurrentTextEqual(
+      assert, compareMethodSelect, "-",
+      "Compare method should be reset as expected");
+    assertPowerSelectCurrentTextEqual(
+      assert, filterSelect, "Not selected",
+      "Filter selection should be reset as expected");
   });
 
   test("adding a filter calls updateAppliedFiltersString with an appropriate updated filters string", async function(assert) {
