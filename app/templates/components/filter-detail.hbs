@@ -123,6 +123,7 @@
         selected=newLinkDirection
         onchange=(action (mut newLinkDirection))
         placeholder="Not selected"
+        matchTriggerWidth=false
         as |option|}}
         {{option}}
       {{/power-select}}
@@ -155,6 +156,7 @@
         selected=selectedLinkDeletionOption
         onchange=(action (mut selectedLinkDeletionOption))
         placeholder="Not selected"
+        matchTriggerWidth=false
         as |option|}}
         {{link-delete-option-display option filter}}
       {{/data-power-select}}

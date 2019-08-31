@@ -6,15 +6,9 @@ div.error-message {
 }
 
 div.select-field-wrapper {
-  /* Power-select fields take up as much width as possible if its wrapper has
-   no specific style.
-   display: flex restricts it to the current selection's width. */
+  /* Wrap a select field and its associated label in this div to put them on
+     the same line, as well as limit the select field width to what it needs. */
   display: flex;
-}
-div.select-field-wrapper .ember-power-select-trigger {
-  /* This ensures that the width doesn't collapse to near
-   zero when the current selection is empty or short. */
-  min-width: 200px;
 }
 
 div.filter-apply-form {

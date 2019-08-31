@@ -6,6 +6,8 @@
     options=model.users
     selected=model.record.user
     onchange=(action (mut model.record.user))
+    placeholder="Not selected"
+    matchTriggerWidth=false
     as |user|}}
     {{user.username}}
   {{/power-select}}
