@@ -117,7 +117,7 @@
   <div class="filter-implication-link-create-form">
     <h3>Create an implication link</h3>
 
-    <div class="link-direction-select">
+    <div class="link-direction-select select-field-wrapper">
       {{#power-select
         options=linkDirectionOptions
         selected=newLinkDirection
@@ -128,7 +128,7 @@
       {{/power-select}}
     </div>
 
-    <div class="linked-filter-select">
+    <div class="linked-filter-select select-field-wrapper">
       {{#if (get (has-multiple-pages allFilters) "value")}}
         {{!-- Retrieves this group's filters from ember-data whose names match
         the search box contents. --}}
@@ -164,7 +164,7 @@
   <div class="filter-implication-link-delete-form">
     <h3>Delete an implication link</h3>
 
-    <div class="link-select">
+    <div class="link-select select-field-wrapper">
       {{#if (get (has-multiple-pages allLinks) "value")}}
         {{!-- Retrieves this filter's links from ember-data, such that the
         linked filter's name matches the search box contents. --}}

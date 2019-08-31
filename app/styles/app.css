@@ -5,6 +5,18 @@ div.error-message {
   color: red;
 }
 
+div.select-field-wrapper {
+  /* Power-select fields take up as much width as possible if its wrapper has
+   no specific style.
+   display: flex restricts it to the current selection's width. */
+  display: flex;
+}
+div.select-field-wrapper .ember-power-select-trigger {
+  /* This ensures that the width doesn't collapse to near
+   zero when the current selection is empty or short. */
+  min-width: 200px;
+}
+
 div.filter-apply-form {
   /* Contents can go on one line and wrap to multiple lines as needed. */
   display: flex;
@@ -56,9 +68,6 @@ div.filter-section > div.filter-list {
 div.filter-section > div.filter-detail-section {
   flex-basis: 540px;
   flex-grow: 3;
-}
-div.filter-create-form > div.type-field {
-  display: flex;
 }
 div.implication-links-display {
   display: flex;
