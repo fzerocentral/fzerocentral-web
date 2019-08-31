@@ -1,9 +1,12 @@
-{{#power-select
-  options=filterOptions
+{{!-- Dropdown of filters which satisfy `params` and whose names contain the search box contents. Only shows the first page of results from the API, so the search box may be needed to narrow down results. --}}
+{{#data-power-select
+  modelName="filter"
+  params=(hash filter_group_id=filterGroup.id usage_type=filterUsageType)
+  queryKey="name_search"
   selected=selected
   onchange=(action "onFilterChange")
   placeholder="Not selected"
   allowClear=true
   as |filter|}}
   {{filter.name}}
-{{/power-select}}
+{{/data-power-select}}
