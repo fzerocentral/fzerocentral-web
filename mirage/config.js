@@ -371,7 +371,8 @@ export default function() {
       }
     });
 
-    return records;
+    return new Response(
+      200, {'Per-Page': 1000, 'Total': records.length}, records);
   });
 
   this.post('/records', (schema, request) => {

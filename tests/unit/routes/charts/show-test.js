@@ -87,6 +87,7 @@ module('Unit | Route | charts/show', function(hooks) {
     let expectedParams = {
       chart_id: this.chart.id,
       filters: '',
+      per_page: '1000',
       ranked_entity: 'user',
       sort: 'value',
     };

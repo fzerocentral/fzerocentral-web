@@ -8,9 +8,8 @@ export default Route.extend({
       user: this.store.findRecord('user', params.user_id),
       records: this.store.query('record', {
         chart_id: params.chart_id, user_id: params.user_id,
-        sort: 'date_achieved', improvements: 'flag',
-      }),
-      filterGroups: this.get('store').query(
+        sort: 'date_achieved', improvements: 'flag', per_page: 1000}),
+      filterGroups: this.store.query(
         'filterGroup', {chart_id: params.chart_id}),
     });
   }

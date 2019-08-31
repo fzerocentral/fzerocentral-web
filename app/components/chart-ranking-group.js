@@ -23,10 +23,12 @@ export default Component.extend({
     this.get('chartGroup').get('charts').forEach((chart) => {
       // Call API to get this chart's records
       let chartId = chart.get('id');
-      let args = {chart_id: chartId, sort: 'value', ranked_entity: 'user'};
+      let args = {
+        chart_id: chartId, sort: 'value', ranked_entity: 'user',
+        per_page: 1000};
       let chartRecordsPromise = this.get('store').query('record', args).then(
         (chartRecords) => {return [chartId, chartRecords];}
-      )
+      );
       chartRecordsPromises.push(chartRecordsPromise);
     });
 
