@@ -101,21 +101,6 @@ export default Component.extend({
     return compareOptions;
   }),
 
-  filterOptions: computed('selectedFilterGroup', function() {
-    let group = this.get('selectedFilterGroup');
-    if (!group) {
-      // Return an empty array wrapped in an already-resolved Promise
-      return DS.PromiseArray.create({
-        promise: Promise.resolve().then(() => {
-          return A([]);
-        })
-      });
-    }
-
-    return this.get('store').query(
-      'filter', {filter_group_id: group.get('id')});
-  }),
-
 
   didUpdate() {
     // Things to re-check when any attributes update. Only put things here

@@ -24,31 +24,10 @@
   {{/power-select}}
 
   {{!-- Choice of filter from the filter group --}}
-  {{#if (get (has-multiple-pages filterOptions) "value")}}
-    {{!-- Retrieves this group's filters from ember-data whose names match
-    the search box contents. --}}
-    {{#data-power-select
-      modelName="filter"
-      params=(hash filter_group_id=selectedFilterGroup.id)
-      queryKey="name_search"
-      selected=selectedFilter
-      onchange=(action (mut selectedFilter))
-      placeholder="Not selected"
-      matchTriggerWidth=false
-      as |filter|}}
-      {{filter.name}}
-    {{/data-power-select}}
-  {{else}}
-    {{#power-select
-      options=filterOptions
-      selected=selectedFilter
-      onchange=(action (mut selectedFilter))
-      placeholder="Not selected"
-      matchTriggerWidth=false
-      as |filter|}}
-      {{filter.name}}
-    {{/power-select}}
-  {{/if}}
+  {{filter-select
+    filterGroup=selectedFilterGroup
+    selected=selectedFilter
+    onFilterChange=(action (mut selectedFilter))}}
 
   <button class="add-filter-button" type="submit" {{action "addFilter"}}>Add</button>
 </div>

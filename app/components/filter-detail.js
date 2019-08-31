@@ -23,11 +23,6 @@ export default Component.extend({
   store: service('store'),
   isEditing: false,
 
-  allFilters: computed('filterGroupId', function() {
-    return this.get('store').query(
-      'filter', {filter_group_id: this.get('filterGroupId')});
-  }),
-
   filter: computed('filterId', function() {
     let filterId = this.get('filterId');
     if (filterId === null) { return null; }
@@ -76,17 +71,6 @@ export default Component.extend({
           page: this.get('outgoingImplicationsPageNumber'),
         };
         return this.get('store').query('filterImplication', args);
-      })
-    });
-  }),
-
-  allLinks: computed('filter', 'linksLastUpdated', function() {
-    return DS.PromiseArray.create({
-      promise: this.get('filter').then((filter) => {
-        if (filter === null) { return A([]); }
-
-        let args = {filter_id: filter.get('id')};
-        return this.get('store').query('filterImplicationLink', args);
       })
     });
   }),

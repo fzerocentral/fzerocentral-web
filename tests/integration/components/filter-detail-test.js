@@ -277,10 +277,10 @@ module('Integration | Component | filter-detail', function(hooks) {
     let form =
       this.element.querySelector('.filter-implication-link-create-form');
     let directionSelect = form.querySelector(
-      'div.link-direction-select > .ember-power-select-trigger');
+      'div.link-direction-select .ember-power-select-trigger');
     await selectChoose(directionSelect, "to");
     let filterSelect = form.querySelector(
-      'div.linked-filter-select > .ember-power-select-trigger');
+      'div.linked-filter-select .ember-power-select-trigger');
     await selectChoose(filterSelect, "Titan -G4 booster");
     let createButton = form.querySelector('.create-button');
     await click(createButton);
@@ -313,10 +313,10 @@ module('Integration | Component | filter-detail', function(hooks) {
     let form =
       this.element.querySelector('.filter-implication-link-create-form');
     let directionSelect = form.querySelector(
-      'div.link-direction-select > .ember-power-select-trigger');
+      'div.link-direction-select .ember-power-select-trigger');
     await selectChoose(directionSelect, "from");
     let filterSelect = form.querySelector(
-      'div.linked-filter-select > .ember-power-select-trigger');
+      'div.linked-filter-select .ember-power-select-trigger');
     await selectChoose(filterSelect, "Gallant Star-G4");
     let createButton = form.querySelector('.create-button');
     await click(createButton);
@@ -349,7 +349,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     let form =
       this.element.querySelector('.filter-implication-link-delete-form');
     let linkSelect = form.querySelector(
-      'div.link-select > .ember-power-select-trigger');
+      'div.link-select .ember-power-select-trigger');
     await selectChoose(linkSelect, "to Titan -G4 booster");
     let deleteButton = form.querySelector('.delete-button');
     await click(deleteButton);
@@ -382,7 +382,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     let form =
       this.element.querySelector('.filter-implication-link-delete-form');
     let linkSelect = form.querySelector(
-      'div.link-select > .ember-power-select-trigger');
+      'div.link-select .ember-power-select-trigger');
     await selectChoose(linkSelect, "from Gallant Star-G4");
     let deleteButton = form.querySelector('.delete-button');
     await click(deleteButton);
@@ -432,10 +432,10 @@ module('Integration | Component | filter-detail', function(hooks) {
     let linkCreateForm =
       this.element.querySelector('.filter-implication-link-create-form');
     let directionSelect = linkCreateForm.querySelector(
-      'div.link-direction-select > .ember-power-select-trigger');
+      'div.link-direction-select .ember-power-select-trigger');
     await selectChoose(directionSelect, "to");
     let filterSelect = linkCreateForm.querySelector(
-      'div.linked-filter-select > .ember-power-select-trigger');
+      'div.linked-filter-select .ember-power-select-trigger');
     await selectChoose(filterSelect, "B custom booster");
     assertPowerSelectCurrentTextEqual(
       assert, directionSelect, "to",
@@ -448,7 +448,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     let linkDeleteForm =
       this.element.querySelector('.filter-implication-link-delete-form');
     let linkSelect = linkDeleteForm.querySelector(
-      'div.link-select > .ember-power-select-trigger');
+      'div.link-select .ember-power-select-trigger');
     await selectChoose(linkSelect, "to Titan -G4 booster");
     assertPowerSelectCurrentTextEqual(
       assert, linkSelect, "to Titan -G4 booster",
@@ -472,9 +472,9 @@ module('Integration | Component | filter-detail', function(hooks) {
     linkCreateForm =
       this.element.querySelector('.filter-implication-link-create-form');
     directionSelect = linkCreateForm.querySelector(
-      'div.link-direction-select > .ember-power-select-trigger');
+      'div.link-direction-select .ember-power-select-trigger');
     filterSelect = linkCreateForm.querySelector(
-      'div.linked-filter-select > .ember-power-select-trigger');
+      'div.linked-filter-select .ember-power-select-trigger');
     assertPowerSelectCurrentTextEqual(
       assert, directionSelect, "Not selected",
       "Direction selection is reset");
@@ -486,7 +486,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     linkDeleteForm =
       this.element.querySelector('.filter-implication-link-delete-form');
     linkSelect = linkDeleteForm.querySelector(
-      'div.link-select > .ember-power-select-trigger');
+      'div.link-select .ember-power-select-trigger');
     assertPowerSelectCurrentTextEqual(
       assert, linkSelect, "Not selected",
       "Link selection is reset");
