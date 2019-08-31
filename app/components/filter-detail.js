@@ -35,6 +35,20 @@ export default Component.extend({
     return this.get('store').findRecord('filter', this.get('filterId'));
   }),
 
+  recordCount: computed('filter', function() {
+    // The record count can be retrieved from the pagination headers of a
+    // GET records response. We're not interested in the records themselves,
+    // so we just request 1 record.
+    let recordsPromise = this.get('store').query(
+      'record', {filters: this.get('filterId').toString(), per_page: 1});
+
+    return DS.PromiseObject.create({
+      promise: recordsPromise.then((records) => {
+        return {value: records.meta.pagination.totalResults};
+      })
+    });
+  }),
+
   incomingImplications: computed('filter', 'incomingImplicationsPageNumber', 'linksLastUpdated', function() {
     return DS.PromiseArray.create({
       promise: this.get('filter').then((filter) => {
