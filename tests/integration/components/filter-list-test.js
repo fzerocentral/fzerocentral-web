@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { click, render } from '@ember/test-helpers';
+import { click, fillIn, render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
 import { createModelInstance }
@@ -109,6 +109,23 @@ module('Integration | Component | filter-list', function(hooks) {
     assert.notOk(
       getFiltersListItemByName(this.element, "Gamecube"),
       "Gamecube (other group) shouldn't be on the list");
+  });
+
+  test('filter query should account for search text', async function(assert) {
+    await render(hbs`
+      {{filter-list
+        filterGroupId=filterGroupId
+        updateSelectedFilterId=updateSelectedFilterId
+        usageType="choosable"}}
+    `);
+
+    await fillIn('.search-input', 'star');
+
+    const queryRequest = server.pretender.handledRequests.find((request) => {
+      return (
+        request.url.includes('name_search=star') && request.method === 'GET');
+    });
+    assert.ok(queryRequest, "Should find a query using the search text");
   });
 
   test('should update selectedFilterId when clicking a list button', async function(assert) {
