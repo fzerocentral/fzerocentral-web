@@ -22,6 +22,9 @@ export async function assertPowerSelectOptionsEqual(
 
 export function assertPowerSelectCurrentTextEqual(
     assert, powerSelectElement, expectedText, assertMessage) {
+  // The first span within `.ember-power-select-trigger` should contain
+  // either the placeholder text or the selection text, while not containing
+  // the little x which lets you clear the selection.
   assert.equal(
     powerSelectElement
       .querySelector(`span:first-child`)

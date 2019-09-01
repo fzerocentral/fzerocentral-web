@@ -67,11 +67,35 @@ module('Integration | Component | data-power-select', function(hooks) {
       {{/data-power-select}}
     `);
 
-    let select = this.element.querySelector(
-      '.ember-power-select-trigger');
+    let select = this.element.querySelector('.ember-power-select-trigger');
     assertPowerSelectCurrentTextEqual(
       assert, select, "Not selected",
       "Placeholder text is as expected");
+  });
+
+  test('should tolerate null params', async function(assert) {
+    this.set('params', null);
+    await render(hbs`
+      {{#data-power-select
+        modelName="filter"
+        params=params
+        selected=selectedFilter
+        onchange=(action (mut selectedFilter))
+        placeholder="Not selected"
+        as |option|}}
+        {{option.name}}
+      {{/data-power-select}}
+    `);
+
+    let select = this.element.querySelector('.ember-power-select-trigger');
+    await assertPowerSelectOptionsEqual(
+      assert, select, ["Type to search"],
+      "Choices should be empty");
+
+    const queryRequest = server.pretender.handledRequests.find((request) => {
+      return request.url.startsWith('/filters') && request.method === 'GET';
+    });
+    assert.notOk(queryRequest, "Shouldn't have made a filters request");
   });
 
   test('can populate choices with model instances and filter the choices by params', async function(assert) {
@@ -87,8 +111,7 @@ module('Integration | Component | data-power-select', function(hooks) {
       {{/data-power-select}}
     `);
 
-    let select = this.element.querySelector(
-      '.ember-power-select-trigger');
+    let select = this.element.querySelector('.ember-power-select-trigger');
     await assertPowerSelectOptionsEqual(
       assert, select,
       ["B custom booster", "Gallant Star-G4",
@@ -109,8 +132,7 @@ module('Integration | Component | data-power-select', function(hooks) {
       {{/data-power-select}}
     `);
 
-    let select = this.element.querySelector(
-      '.ember-power-select-trigger');
+    let select = this.element.querySelector('.ember-power-select-trigger');
     await selectChoose(select, "Quick Cannon-G4");
     assertPowerSelectCurrentTextEqual(
       assert, select, "Quick Cannon-G4",
@@ -131,8 +153,7 @@ module('Integration | Component | data-power-select', function(hooks) {
       {{/data-power-select}}
     `);
 
-    let select = this.element.querySelector(
-      '.ember-power-select-trigger');
+    let select = this.element.querySelector('.ember-power-select-trigger');
     // Type in the search field
     await selectSearch(select, "booster");
 

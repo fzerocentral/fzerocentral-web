@@ -3,8 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { run } from "@ember/runloop";
 import { clearSelected, selectChoose } from 'ember-power-select/test-support';
-import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
 import hbs from 'htmlbars-inline-precompile';
+import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
+import { assertPowerSelectCurrentTextEqual, assertPowerSelectOptionsEqual }
+  from 'fzerocentral-web/tests/helpers/power-select-helpers';
 
 module('Integration | Component | filter-select', function(hooks) {
   setupRenderingTest(hooks);
@@ -32,7 +34,8 @@ module('Integration | Component | filter-select', function(hooks) {
     this.server.shutdown();
   });
 
-  test('initializes filter to not-selected', async function(assert) {
+  test('should tolerate null filterGroup', async function(assert) {
+    this.set('filterGroup', null);
 
     // Use `onAnyFilterChange` when onAnyFilterChange is a property.
     // Use `'onAnyFilterChange'` when onAnyFilterChange is defined in
@@ -44,10 +47,27 @@ module('Integration | Component | filter-select', function(hooks) {
         onFilterChange=(action onAnyFilterChange)}}
     `);
 
-    // The first span within `.ember-power-select-trigger` should contain
-    // either the placeholder text or the selection text, while not containing
-    // the little x which lets you clear the selection.
-    assert.equal(this.element.querySelector(`.ember-power-select-trigger > span:first-child`).textContent.trim(), "Not selected");
+    let select = this.element.querySelector('.ember-power-select-trigger');
+    await assertPowerSelectOptionsEqual(
+      assert, select, ["Type to search"],
+      "Choices should be empty");
+
+    assert.equal(this.get('params'), null, "params should be null");
+  });
+
+  test('initializes selection to placeholder text', async function(assert) {
+
+    await render(hbs`
+      {{filter-select
+        filterGroup=filterGroup
+        selected=filter
+        onFilterChange=(action onAnyFilterChange)}}
+    `);
+
+    let select = this.element.querySelector('.ember-power-select-trigger');
+    assertPowerSelectCurrentTextEqual(
+      assert, select, "Not selected",
+      "Should be initialized to placeholder text");
   });
 
   test('can change filter', async function(assert) {
@@ -64,8 +84,12 @@ module('Integration | Component | filter-select', function(hooks) {
     // Test parent callback's result.
     assert.equal(this.get('filter').get('name'), "Filter A1");
     assert.equal(this.get('filter').get('id'), this.filterA1.id);
+
     // Test text.
-    assert.equal(this.element.querySelector(`.ember-power-select-trigger > span:first-child`).textContent.trim(), "Filter A1");
+    let select = this.element.querySelector('.ember-power-select-trigger');
+    assertPowerSelectCurrentTextEqual(
+      assert, select, "Filter A1",
+      "Should have selected Filter A1");
   });
 
   test('can clear selection', async function(assert) {
@@ -82,7 +106,11 @@ module('Integration | Component | filter-select', function(hooks) {
 
     // Test parent callback's result.
     assert.equal(this.get('filter'), null);
+
     // Test text.
-    assert.equal(this.element.querySelector(`.ember-power-select-trigger > span:first-child`).textContent.trim(), "Not selected");
+    let select = this.element.querySelector('.ember-power-select-trigger');
+    assertPowerSelectCurrentTextEqual(
+      assert, select, "Not selected",
+      "Selection should be cleared");
   });
 });
