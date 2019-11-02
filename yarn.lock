@@ -1142,10 +1142,10 @@ async@^1.5.2:
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
 
 async@^2.4.1, async@^2.5.0:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/async/-/async-2.6.2.tgz#18330ea7e6e313887f5d2f2a904bac6fe4dd5381"
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/async/-/async-2.6.3.tgz#d72625e2344a3656e3a3ad4fa749fa83299d82ff"
   dependencies:
-    lodash "^4.17.11"
+    lodash "^4.17.14"
 
 async@~0.2.9:
   version "0.2.10"
@@ -2693,9 +2693,9 @@ commander@^2.15.1, commander@^2.19.0, commander@^2.6.0:
   version "2.19.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.19.0.tgz#f6198aa84e5b83c46054b94ddedbfed5ee9ff12a"
 
-commander@~2.17.1:
-  version "2.17.1"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
+commander@~2.20.3:
+  version "2.20.3"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
 
 common-tags@^1.4.0:
   version "1.8.0"
@@ -4652,8 +4652,8 @@ handlebars@^4.0.11, handlebars@^4.0.4, handlebars@^4.0.6:
     uglify-js "^3.1.4"
 
 handlebars@~4.0.13:
-  version "4.0.13"
-  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.0.13.tgz#89fc17bf26f46fd7f6f99d341d92efaae64f997d"
+  version "4.0.14"
+  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.0.14.tgz#88de711eb693a5b783ae06065f9b91b0dd373a71"
   dependencies:
     async "^2.5.0"
     optimist "^0.6.1"
@@ -5717,6 +5717,10 @@ lodash.values@~2.3.0:
 lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.4, lodash@^4.3.0, lodash@^4.5.1:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
+
+lodash@^4.17.14:
+  version "4.17.15"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
 
 log-symbols@^2.2.0:
   version "2.2.0"
@@ -7902,10 +7906,10 @@ uc.micro@^1.0.1, uc.micro@^1.0.5:
   resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.6.tgz#9c411a802a409a91fc6cf74081baba34b24499ac"
 
 uglify-js@^3.1.4:
-  version "3.4.9"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.4.9.tgz#af02f180c1207d76432e473ed24a28f4a782bae3"
+  version "3.6.7"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.6.7.tgz#15f49211df6b8a01ee91322bbe46fa33223175dc"
   dependencies:
-    commander "~2.17.1"
+    commander "~2.20.3"
     source-map "~0.6.1"
 
 underscore.string@^3.2.2, underscore.string@~3.3.4:
