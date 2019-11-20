@@ -1,5 +1,5 @@
-import { module } from 'qunit';
-import test from 'ember-sinon-qunit/test-support/test';
+import { module, test } from 'qunit';
+import sinon from 'sinon';
 import { setupTest } from 'ember-qunit';
 import { run } from "@ember/runloop";
 import { click, currentURL, fillIn, visit } from '@ember/test-helpers';
@@ -352,7 +352,7 @@ module('Unit | Route | chart-types/filter-groups', function(hooks) {
 
   test("unlink a filter group that belongs to no other chart type, then cancel the confirmation", async function(assert){
     // Automatically cancel any window confirmations.
-    let confirmFalseStub = this.stub(window, 'confirm');
+    let confirmFalseStub = sinon.stub(window, 'confirm');
     confirmFalseStub.returns(false);
 
     createModelInstance(
@@ -373,7 +373,7 @@ module('Unit | Route | chart-types/filter-groups', function(hooks) {
 
   test("unlink a filter group that belongs to no other chart type, then confirm the confirmation", async function(assert){
     // Automatically confirm any window confirmations.
-    let confirmFalseStub = this.stub(window, 'confirm');
+    let confirmFalseStub = sinon.stub(window, 'confirm');
     confirmFalseStub.returns(true);
 
     createModelInstance(
