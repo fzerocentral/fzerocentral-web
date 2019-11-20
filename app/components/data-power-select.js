@@ -1,5 +1,5 @@
 import { A } from '@ember/array';
-import { computed } from '@ember/object'
+import { action, computed } from '@ember/object'
 import { inject as service } from '@ember/service';
 import DS from 'ember-data';
 import PowerSelect from 'ember-power-select/components/power-select';
@@ -35,10 +35,9 @@ export default PowerSelect.extend({
     };
   }),
 
-  actions: {
-    onTriggerFocus(){
-      this._super(...arguments);
-      this._performSearch('');
-    }
+  @action
+  handleTriggerFocus() {
+    this._super(...arguments);
+    this._performSearch('');
   }
 });
