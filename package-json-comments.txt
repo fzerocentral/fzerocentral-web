@@ -6,6 +6,7 @@ The focus here is on packages that aren't in a default Ember-CLI app. Default pa
 
 ember-cli-mirage
 Mock API server for testing.
+https://www.ember-cli-mirage.com/docs/getting-started/upgrade-guide
 
 ember-cli-tutorial-style
 Styling for the official Ember-CLI tutorial.
@@ -14,13 +15,19 @@ ember-moment
 ember-cli-moment-shim
 moment
 Date/time library.
+https://github.com/stefanpenner/ember-moment/blob/master/CHANGELOG.md
+https://github.com/jasonmit/ember-cli-moment-shim/releases
+https://github.com/moment/moment/blob/develop/CHANGELOG.md
 
 ember-power-select
 Ember-powered HTML select elements. Base Ember supports input elements, but not select.
+https://github.com/cibernox/ember-power-select/blob/master/CHANGELOG.md
 
 ember-sinon-qunit
 ember-window-mock
 Testing window.confirm() functionality and similar.
+https://github.com/elwayman02/ember-sinon-qunit/releases
+https://github.com/kaliber5/ember-window-mock/releases
 
 ember-truth-helpers
 Without this, Handlebars doesn't give a way to use boolean logic in templates. In order words, you'd better hope "if x" is the only thing you ever need. Even "if !x" needs a package like this.
