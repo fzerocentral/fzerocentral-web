@@ -1,13 +1,14 @@
 {{!-- Dropdown of filters which satisfy `params` and whose names contain the search box contents. Only shows the first page of results from the API, so the search box may be needed to narrow down results. --}}
-{{#data-power-select
-  modelName="filter"
-  params=params
-  queryKey="name_search"
-  selected=selected
-  onchange=(action "onFilterChange")
-  placeholder="Not selected"
-  allowClear=true
-  matchTriggerWidth=false
-  as |filter|}}
+<DataPowerSelect
+  @modelName="filter"
+  @params={{params}}
+  @searchEnabled={{true}}
+  @queryKey="name_search"
+  @selected={{selected}}
+  @onChange={{action "onFilterChange"}}
+  @placeholder="Not selected"
+  @allowClear={{true}}
+  @matchTriggerWidth={{false}}
+  as |filter|>
   {{filter.name}}
-{{/data-power-select}}
+</DataPowerSelect>

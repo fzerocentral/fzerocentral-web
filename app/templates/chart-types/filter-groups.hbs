@@ -82,14 +82,14 @@
 
 <div class="kind-select">
   <label>Kind</label>
-  {{#power-select
-    options=kindOptions
-    selected=model.newFilterGroup.kind
-    onchange=(action (mut model.newFilterGroup.kind))
-    placeholder="Not selected"
-    as |option|}}
+  <PowerSelect
+    @options={{kindOptions}}
+    @selected={{model.newFilterGroup.kind}}
+    @onChange={{action (mut model.newFilterGroup.kind)}}
+    @placeholder="Not selected"
+    as |option|>
     {{option}}
-  {{/power-select}}
+  </PowerSelect>
 </div>
 
 <div>

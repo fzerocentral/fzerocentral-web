@@ -118,15 +118,15 @@
     <h3>Create an implication link</h3>
 
     <div class="link-direction-select select-field-wrapper">
-      {{#power-select
-        options=linkDirectionOptions
-        selected=newLinkDirection
-        onchange=(action (mut newLinkDirection))
-        placeholder="Not selected"
-        matchTriggerWidth=false
-        as |option|}}
+      <PowerSelect
+        @options={{linkDirectionOptions}}
+        @selected={{newLinkDirection}}
+        @onChange={{action (mut newLinkDirection)}}
+        @placeholder="Not selected"
+        @matchTriggerWidth={{false}}
+        as |option|>
         {{option}}
-      {{/power-select}}
+      </PowerSelect>
     </div>
 
     <div class="linked-filter-select select-field-wrapper">
@@ -149,17 +149,18 @@
     <div class="link-select select-field-wrapper">
       {{!-- Retrieves this filter's links from ember-data, such that the
       linked filter's name matches the search box contents. --}}
-      {{#data-power-select
-        modelName="filterImplicationLink"
-        params=(hash filter_id=filter.id)
-        queryKey="linked_filter_search"
-        selected=selectedLinkDeletionOption
-        onchange=(action (mut selectedLinkDeletionOption))
-        placeholder="Not selected"
-        matchTriggerWidth=false
-        as |option|}}
+      <DataPowerSelect
+        @modelName="filterImplicationLink"
+        @params={{hash filter_id=filter.id}}
+        @searchEnabled={{true}}
+        @queryKey="linked_filter_search"
+        @selected={{selectedLinkDeletionOption}}
+        @onChange={{action (mut selectedLinkDeletionOption)}}
+        @placeholder="Not selected"
+        @matchTriggerWidth={{false}}
+        as |option|>
         {{link-delete-option-display option filter}}
-      {{/data-power-select}}
+      </DataPowerSelect>
     </div>
 
     <div class="error-message">{{error-display linkDeleteError}}</div>

@@ -62,15 +62,15 @@
   {{#if (eq model.filterGroup.kind "select")}}
     <div class="type-field select-field-wrapper">
       <label>Type</label>
-      {{#power-select
-        options=usageTypeOptions
-        selected=model.newFilter.usageType
-        onchange=(action (mut model.newFilter.usageType))
-        placeholder="Not selected"
-        matchTriggerWidth=false
-        as |option|}}
+      <PowerSelect
+        @options={{usageTypeOptions}}
+        @selected={{model.newFilter.usageType}}
+        @onChange={{action (mut model.newFilter.usageType)}}
+        @placeholder="Not selected"
+        @matchTriggerWidth={{false}}
+        as |option|>
         {{option}}
-      {{/power-select}}
+      </PowerSelect>
     </div>
   {{/if}}
 

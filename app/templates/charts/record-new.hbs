@@ -2,15 +2,15 @@
 
 <div class="user-select select-field-wrapper">
   <label>User</label>
-  {{#power-select
-    options=model.users
-    selected=model.record.user
-    onchange=(action (mut model.record.user))
-    placeholder="Not selected"
-    matchTriggerWidth=false
-    as |user|}}
+  <PowerSelect
+    @options={{model.users}}
+    @selected={{model.record.user}}
+    @onChange={{action (mut model.record.user)}}
+    @placeholder="Not selected"
+    @matchTriggerWidth={{false}}
+    as |user|>
     {{user.username}}
-  {{/power-select}}
+  </PowerSelect>
 </div>
 
 <div>
