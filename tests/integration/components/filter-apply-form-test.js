@@ -91,7 +91,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
     let filterGroupSelect = getFilterGroupSelect(this);
     let compareMethodSelect = getCompareMethodSelect(this);
 
-    await selectChoose(`#${filterGroupSelect.id}`, 'Machine');
+    await selectChoose(filterGroupSelect, 'Machine');
     await assertPowerSelectOptionsEqual(
       assert, compareMethodSelect, ["-", "NOT"],
       "Choice-based filter group: options are as expected");
@@ -100,7 +100,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
       "Choice-based filter group: default selection is as expected");
 
     // Numeric filter group
-    await selectChoose(`#${filterGroupSelect.id}`, 'Setting');
+    await selectChoose(filterGroupSelect, 'Setting');
     await assertPowerSelectOptionsEqual(
       assert, compareMethodSelect, ["-", "NOT", ">=", "<="],
       "Numeric filter group: options are as expected");
@@ -117,7 +117,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
     let filterGroupSelect = getFilterGroupSelect(this);
     let filterSelect = getFilterSelect(this);
 
-    await selectChoose(`#${filterGroupSelect.id}`, 'Machine');
+    await selectChoose(filterGroupSelect, 'Machine');
     await assertPowerSelectOptionsEqual(
       assert, filterSelect, ["Blue Falcon", "White Cat"],
       "Choice-based filter group: options are as expected");
@@ -125,7 +125,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
       assert, filterSelect, "Not selected",
       "Choice-based filter group: default selection is as expected");
 
-    await selectChoose(`#${filterGroupSelect.id}`, 'Setting');
+    await selectChoose(filterGroupSelect, 'Setting');
     await assertPowerSelectOptionsEqual(
       assert, filterSelect, ["30%", "80%"],
       "Numeric filter group: options are as expected");
@@ -143,9 +143,9 @@ module('Integration | Component | filter-apply-form', function(hooks) {
     let compareMethodSelect = getCompareMethodSelect(this);
     let filterSelect = getFilterSelect(this);
 
-    await selectChoose(`#${filterGroupSelect.id}`, 'Setting');
-    await selectChoose(`#${compareMethodSelect.id}`, '<=');
-    await selectChoose(`#${filterSelect.id}`, '80%');
+    await selectChoose(filterGroupSelect, 'Setting');
+    await selectChoose(compareMethodSelect, '<=');
+    await selectChoose(filterSelect, '80%');
 
     assertPowerSelectCurrentTextEqual(
       assert, compareMethodSelect, "<=",
@@ -155,7 +155,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
       "Filter selection should be set as expected");
 
     // Change to a filter group where <= doesn't apply, and 80% doesn't apply
-    await selectChoose(`#${filterGroupSelect.id}`, 'Machine');
+    await selectChoose(filterGroupSelect, 'Machine');
     assertPowerSelectCurrentTextEqual(
       assert, compareMethodSelect, "-",
       "Compare method should be reset as expected");
@@ -174,36 +174,36 @@ module('Integration | Component | filter-apply-form', function(hooks) {
     let compareMethodSelect = getCompareMethodSelect(this);
     let filterSelect = getFilterSelect(this);
 
-    await selectChoose(`#${filterGroupSelect.id}`, 'Machine');
-    await selectChoose(`#${compareMethodSelect.id}`, '-');
-    await selectChoose(`#${filterSelect.id}`, 'White Cat');
+    await selectChoose(filterGroupSelect, 'Machine');
+    await selectChoose(compareMethodSelect, '-');
+    await selectChoose(filterSelect, 'White Cat');
     await click(`button.add-filter-button`);
     let expectedAFString = `${this.whiteCatFilter.id}`;
     assert.equal(
       this.get('appliedFiltersString'), expectedAFString,
       "Works for equality comparison");
 
-    await selectChoose(`#${filterGroupSelect.id}`, 'Machine');
-    await selectChoose(`#${compareMethodSelect.id}`, 'NOT');
-    await selectChoose(`#${filterSelect.id}`, 'Blue Falcon');
+    await selectChoose(filterGroupSelect, 'Machine');
+    await selectChoose(compareMethodSelect, 'NOT');
+    await selectChoose(filterSelect, 'Blue Falcon');
     await click(`button.add-filter-button`);
     expectedAFString += `-${this.blueFalconFilter.id}n`;
     assert.equal(
       this.get('appliedFiltersString'), expectedAFString,
       "Works for NOT comparison");
 
-    await selectChoose(`#${filterGroupSelect.id}`, 'Setting');
-    await selectChoose(`#${compareMethodSelect.id}`, '>=');
-    await selectChoose(`#${filterSelect.id}`, '80%');
+    await selectChoose(filterGroupSelect, 'Setting');
+    await selectChoose(compareMethodSelect, '>=');
+    await selectChoose(filterSelect, '80%');
     await click(`button.add-filter-button`);
     expectedAFString += `-${this.setting80Filter.id}ge`;
     assert.equal(
       this.get('appliedFiltersString'), expectedAFString,
       "Works for greater-or-equal comparison");
 
-    await selectChoose(`#${filterGroupSelect.id}`, 'Setting');
-    await selectChoose(`#${compareMethodSelect.id}`, '<=');
-    await selectChoose(`#${filterSelect.id}`, '30%');
+    await selectChoose(filterGroupSelect, 'Setting');
+    await selectChoose(compareMethodSelect, '<=');
+    await selectChoose(filterSelect, '30%');
     await click(`button.add-filter-button`);
     expectedAFString += `-${this.setting30Filter.id}le`;
     assert.equal(
