@@ -239,25 +239,21 @@ export default function() {
   });
 
   this.get('/filters', (schema, request) => {
-    let filters = null;
+    let filters = schema.filters.all();
+
     if (request.queryParams.filter_group_id) {
-      let filterGroup = schema.filterGroups.find(
-        request.queryParams.filter_group_id);
-
-      filters = filterGroup.filters;
-
-      if (request.queryParams.usage_type) {
-        // Keep only the filters that match the desired usage type
-        let usageType = request.queryParams.usage_type;
-        filters = filters.filter(
-          (filter) => filter.usageType === usageType);
-      }
-      // Sort by filter name, ascending
-      filters = filters.sort((a, b) => { return b.name < a.name; });
+      filters = filters.filter(
+        f => f.filterGroup.id === request.queryParams.filter_group_id);
     }
-    else {
-      filters = schema.filters.all();
+    if (request.queryParams.usage_type) {
+      filters = filters.filter(
+        f => f.usageType === request.queryParams.usage_type);
     }
+
+    // Sort by filter name, ascending
+    filters = filters.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
 
     // Partial implementation of pagination. The results aren't actually
     // paginated, but the Per-Page and Total headers are given.

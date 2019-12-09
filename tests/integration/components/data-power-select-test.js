@@ -98,7 +98,27 @@ module('Integration | Component | data-power-select', function(hooks) {
     assert.notOk(queryRequest, "Shouldn't have made a filters request");
   });
 
-  test('can populate choices with model instances and filter the choices by params', async function(assert) {
+  test('can populate choices with model instances', async function(assert) {
+    await render(hbs`
+      <DataPowerSelect
+        @modelName="filter"
+        @selected={{selectedFilter}}
+        @onChange={{action (mut selectedFilter)}}
+        @placeholder="Not selected"
+        as |option|>
+        {{option.name}}
+      </DataPowerSelect>
+    `);
+
+    let select = this.element.querySelector('.ember-power-select-trigger');
+    await assertPowerSelectOptionsEqual(
+      assert, select,
+      ["B custom booster", "Gallant Star-G4", "Gamecube",
+       "Quick Cannon-G4", "Titan -G4 booster"],
+      "Choices are populated as expected");
+  });
+
+  test('can filter the choices by params', async function(assert) {
     await render(hbs`
       <DataPowerSelect
         @modelName="filter"
