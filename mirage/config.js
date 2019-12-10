@@ -164,11 +164,10 @@ export default function() {
     let name = data.attributes.name;
     let kind = data.attributes.kind;
     let description = data.attributes.description;
-    let showByDefault = false;
-    let filterGroup = schema.filterGroups.create({
+    let showByDefault = data.attributes.showByDefault || false;
+    return schema.filterGroups.create({
       name: name, kind: kind,
       description: description, showByDefault: showByDefault});
-    return filterGroup;
   });
 
   this.get('/filter_groups/:id', (schema, request) => {

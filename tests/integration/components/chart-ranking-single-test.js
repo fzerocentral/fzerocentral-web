@@ -60,10 +60,8 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
       'records',
       [this.recordA, this.recordB].map(
         rec => modelAsProperty(this.store, 'record', rec)));
-    this.set(
-      'filterGroups',
-      [this.machineFG, this.settingFG].map(
-        fg => modelAsProperty(this.store, 'filterGroup', fg)));
+    this.set('filterGroups', this.store.query(
+        'filterGroup', {chart_id: this.chart.id}));
     this.set('appliedFiltersString', null);
     this.set(
       'updateAppliedFiltersString',
@@ -91,6 +89,7 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
       tableColumnHeaders, expectedTableHeaders,
       "Column headers are as expected with only default filter groups shown");
 
+    // Check
     await click('input[name="showAllFilterGroups"]');
 
     firstRow = this.element.querySelectorAll('table.records-table tr')[0];
@@ -102,6 +101,19 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     assert.deepEqual(
       tableColumnHeaders, expectedTableHeaders,
       "Column headers are as expected with all filter groups shown");
+
+    // Uncheck
+    await click('input[name="showAllFilterGroups"]');
+
+    firstRow = this.element.querySelectorAll('table.records-table tr')[0];
+    tableColumnHeaders =
+      Array.from(firstRow.querySelectorAll('th'))
+      .map(th => th.textContent.trim());
+    expectedTableHeaders = [
+      "Rank", "Player", "Record", "Machine"];
+    assert.deepEqual(
+      tableColumnHeaders, expectedTableHeaders,
+      "Column headers are as expected with only default filter groups shown");
   });
 
   test("records table has one row per record, with expected values", async function(assert) {

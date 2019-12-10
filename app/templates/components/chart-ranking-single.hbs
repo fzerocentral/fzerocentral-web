@@ -1,4 +1,8 @@
-{{filter-groups-toggle filterGroups=filterGroups onToggleUpdate=(action "onToggleUpdate")}}
+<div>
+  {{input type="checkbox" name="showAllFilterGroups" id="showAllFilterGroupsCheckbox"
+    checked=showAllFilterGroups}}
+  <label for="showAllFilterGroupsCheckbox">Show all filter groups</label>
+</div>
 
 {{filter-apply-form filterGroups=filterGroups
   appliedFiltersString=appliedFiltersString
