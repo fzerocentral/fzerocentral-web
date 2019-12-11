@@ -3,7 +3,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
-import { createModelInstance, modelAsProperty }
+import { createModelInstance }
   from 'fzerocentral-web/tests/helpers/model-helpers';
 
 module('Integration | Component | chart-ranking-group', function(hooks) {
@@ -47,20 +47,35 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
     this.set(
-      'chartGroup',
-      modelAsProperty(this.store, 'chart-group', this.chartGroup));
-    this.set(
-      'mainChart',
-      modelAsProperty(this.store, 'chart', this.chart1));
+      'chartGroup', this.store.findRecord('chart-group', this.chartGroup.id));
   });
 
   hooks.afterEach( function() {
     this.server.shutdown();
   });
 
-  test("records table has one column per chart", async function(assert) {
+  test("records table has one column per chart, and shows the main chart first", async function(assert) {
+    this.set('mainChartIdQueryArg', this.chart2.id);
+
     await render(
-      hbs`{{chart-ranking-group chartGroup=chartGroup mainChart=mainChart}}`);
+      hbs`{{chart-ranking-group
+            chartGroup=chartGroup
+            mainChartIdQueryArg=mainChartIdQueryArg}}`);
+
+    let firstRow = this.element.querySelectorAll('table.records-table tr')[0];
+    let tableColumnHeaders =
+      Array.from(firstRow.querySelectorAll('th'))
+      .map(th => th.textContent.trim());
+    let expectedTableHeaders = [
+      "Rank", "Player", "Chart 2", "Chart 1"];
+    assert.deepEqual(
+      tableColumnHeaders, expectedTableHeaders,
+      "Column headers are as expected");
+  });
+
+  test("if no main chart is specified, the first chart is the main chart", async function(assert) {
+    await render(
+      hbs`{{chart-ranking-group chartGroup=chartGroup}}`);
 
     let firstRow = this.element.querySelectorAll('table.records-table tr')[0];
     let tableColumnHeaders =
@@ -74,8 +89,12 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
   });
 
   test("records table has one row per player, with expected values", async function(assert) {
+    this.set('mainChartIdQueryArg', this.chart1.id);
+
     await render(
-      hbs`{{chart-ranking-group chartGroup=chartGroup mainChart=mainChart}}`);
+      hbs`{{chart-ranking-group
+            chartGroup=chartGroup
+            mainChartIdQueryArg=mainChartIdQueryArg}}`);
 
     let rows = this.element.querySelectorAll('table.records-table tr');
 
@@ -107,12 +126,16 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
   });
 
   test("records table can have a blank cell when a player has no record for a non-main chart", async function(assert) {
+    this.set('mainChartIdQueryArg', this.chart1.id);
+
     this.userC = createModelInstance(this.server, 'user', {username: 'User C'});
     this.recordC1 = createModelInstance(this.server, 'record',
       {value: 27, valueDisplay: "0:27", user: this.userC, chart: this.chart1,
        rank: 3});
     await render(
-      hbs`{{chart-ranking-group chartGroup=chartGroup mainChart=mainChart}}`);
+      hbs`{{chart-ranking-group
+            chartGroup=chartGroup
+            mainChartIdQueryArg=mainChartIdQueryArg}}`);
 
     let rows = this.element.querySelectorAll('table.records-table tr');
     let cells = rows[3].querySelectorAll('td');
@@ -130,12 +153,16 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
   });
 
   test("records table doesn't show a player who is in the non-main chart, but not in the main chart", async function(assert) {
+    this.set('mainChartIdQueryArg', this.chart1.id);
+
     this.userC = createModelInstance(this.server, 'user', {username: 'User C'});
     this.recordC2 = createModelInstance(this.server, 'record',
       {value: 27, valueDisplay: "27m", user: this.userC, chart: this.chart2,
        rank: 1});
     await render(
-      hbs`{{chart-ranking-group chartGroup=chartGroup mainChart=mainChart}}`);
+      hbs`{{chart-ranking-group
+            chartGroup=chartGroup
+            mainChartIdQueryArg=mainChartIdQueryArg}}`);
 
     let rows = this.element.querySelectorAll('table.records-table tr');
     assert.equal(rows.length, 3, "No row added for User C");
