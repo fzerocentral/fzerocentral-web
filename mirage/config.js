@@ -323,24 +323,23 @@ export default function() {
       records = chart.records;
 
       // Handle sort params
-      let orderAscending = chart.chartType.order_ascending;
       let sortMethod = request.queryParams.sort || 'value';
       let sortFunc = null;
+
+      // Negative return value = sort a first, positive = sort b first
       if (sortMethod === 'value') {
+        let orderAscending = chart.chartType.order_ascending;
+
         if (orderAscending === true) {
-          sortFunc = ((a, b) => { return b.value < a.value; });
+          sortFunc = ((a, b) => { return a.value - b.value; });
         }
         else {
-          sortFunc = ((a, b) => { return a.value < b.value; });
+          sortFunc = ((a, b) => { return b.value - a.value; });
         }
       }
       else if (sortMethod === 'date_achieved') {
-        if (orderAscending === true) {
-          sortFunc = ((a, b) => { return b.achievedAt < a.achievedAt; });
-        }
-        else {
-          sortFunc = ((a, b) => { return a.achievedAt < b.achievedAt; });
-        }
+        // Latest date first
+        sortFunc = ((a, b) => { return b.achievedAt - a.achievedAt; });
       }
       records = records.sort(sortFunc);
 

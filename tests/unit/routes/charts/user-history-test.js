@@ -4,6 +4,8 @@ import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
 import { click, visit } from "@ember/test-helpers";
 import { createModelInstance }
   from 'fzerocentral-web/tests/helpers/model-helpers';
+import { getURLSearchParamsHash }
+  from 'fzerocentral-web/tests/helpers/route-helpers';
 
 module('Unit | Route | charts/user-history', function(hooks) {
   setupTest(hooks);
@@ -49,6 +51,57 @@ module('Unit | Route | charts/user-history', function(hooks) {
   test('it exists', function(assert) {
     let route = this.owner.lookup('route:charts/user-history');
     assert.ok(route);
+  });
+
+  test("makes the expected API request for records", async function(assert) {
+    await visit(`/charts/${this.chart.id}/users/${this.user.id}/history`);
+
+    let recordsRequest =
+      this.server.pretender.handledRequests.find((request) => {
+        return (
+          request.url.startsWith('/records?')
+          && request.method === 'GET');
+      });
+    assert.ok(recordsRequest, "Records API call was made");
+
+    let actualParams = getURLSearchParamsHash(recordsRequest.url);
+    let expectedParams = {
+      chart_id: this.chart.id,
+      user_id: this.user.id,
+      improvements: 'flag',
+      per_page: '1000',
+      sort: 'date_achieved',
+    };
+    assert.deepEqual(actualParams, expectedParams, "Params were as expected");
+  });
+
+  test("records table lists records in order of date achieved", async function(assert) {
+    // These records are defined such that ordering by create date or value
+    // gives a 1-2-3 order, and ordering by achieve date gives a 2-3-1 order.
+    // Thus, if the result respects 2-3-1 order, then we know it sorted by
+    // achieve date.
+    this.record2 = createModelInstance(this.server, 'record',
+      {value: 70, valueDisplay: "70m", user: this.user, chart: this.chart,
+       achievedAt: new Date(2002, 0)});
+    this.record3 = createModelInstance(this.server, 'record',
+      {value: 60, valueDisplay: "60m", user: this.user, chart: this.chart,
+       achievedAt: new Date(2003, 0)});
+    this.record1 = createModelInstance(this.server, 'record',
+      {value: 50, valueDisplay: "50m", user: this.user, chart: this.chart,
+       achievedAt: new Date(2001, 0)});
+
+    await visit(`/charts/${this.chart.id}/users/${this.user.id}/history`);
+
+    let rows = this.element.querySelectorAll('table.records-table tr');
+    let row1DateCell = rows[1].querySelectorAll('td')[1];
+    assert.equal(
+      row1DateCell.textContent.trim(), '2003-01-01 00:00', "Latest record first");
+    let row2DateCell = rows[2].querySelectorAll('td')[1];
+    assert.equal(
+      row2DateCell.textContent.trim(), '2002-01-01 00:00', "Second-latest second");
+    let row3DateCell = rows[3].querySelectorAll('td')[1];
+    assert.equal(
+      row3DateCell.textContent.trim(), '2001-01-01 00:00', "Earliest record last");
   });
 
   test("records table has one column per shown filter group", async function(assert) {

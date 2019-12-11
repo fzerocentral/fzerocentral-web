@@ -54,7 +54,24 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
     this.server.shutdown();
   });
 
-  test("records table has one column per chart, and shows the main chart first", async function(assert) {
+  test("if no main chart is specified, the first chart is the main chart", async function(assert) {
+    await render(
+      hbs`{{chart-ranking-group chartGroup=chartGroup}}`);
+
+    let firstRow = this.element.querySelectorAll('table.records-table tr')[0];
+    let tableColumnHeaders =
+      Array.from(firstRow.querySelectorAll('th'))
+      .map(th => th.textContent.trim());
+    let expectedTableHeaders = [
+      "Rank", "Player", "Chart 1", "Chart 2"];
+    assert.deepEqual(
+      tableColumnHeaders, expectedTableHeaders,
+      "Column headers are as expected");
+  });
+
+  test("specified main chart is respected", async function(assert) {
+    // We specify a chart other than the first chart, to ensure it's different
+    // from the default.
     this.set('mainChartIdQueryArg', this.chart2.id);
 
     await render(
@@ -73,9 +90,13 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
       "Column headers are as expected");
   });
 
-  test("if no main chart is specified, the first chart is the main chart", async function(assert) {
+  test("records table has one column per chart, and shows the main chart first", async function(assert) {
+    this.set('mainChartIdQueryArg', this.chart1.id);
+
     await render(
-      hbs`{{chart-ranking-group chartGroup=chartGroup}}`);
+      hbs`{{chart-ranking-group
+            chartGroup=chartGroup
+            mainChartIdQueryArg=mainChartIdQueryArg}}`);
 
     let firstRow = this.element.querySelectorAll('table.records-table tr')[0];
     let tableColumnHeaders =
