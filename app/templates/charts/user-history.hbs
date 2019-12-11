@@ -1,6 +1,10 @@
 <h1>{{model.user.username}}'s history for {{model.chart.chartGroup.name}} - {{model.chart.name}}</h1>
 
-{{filter-groups-toggle filterGroups=model.filterGroups onToggleUpdate=(action "onToggleUpdate")}}
+<div>
+  {{input type="checkbox" name="showAllFilterGroups" id="showAllFilterGroupsCheckbox"
+    checked=showAllFilterGroups}}
+  <label for="showAllFilterGroupsCheckbox">Show all filter groups</label>
+</div>
 
 <table class="records-table">
   <thead>

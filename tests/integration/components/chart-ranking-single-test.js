@@ -46,6 +46,13 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
       this.server, 'filter',
       {name: '80%', numericValue: 80, filterGroup: this.settingFG});
 
+    createModelInstance(
+      this.server, 'chart-type-filter-group',
+      {chartType: this.chartType, filterGroup: this.machineFG});
+    createModelInstance(
+      this.server, 'chart-type-filter-group',
+      {chartType: this.chartType, filterGroup: this.settingFG});
+
     this.recordA = createModelInstance(this.server, 'record',
       {value: 20, valueDisplay: "20m", user: this.userA, chart: this.chart,
        rank: 1, filters: [this.blueFalconFilter, this.setting30Filter]});
@@ -61,7 +68,7 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
       [this.recordA, this.recordB].map(
         rec => modelAsProperty(this.store, 'record', rec)));
     this.set('filterGroups', this.store.query(
-        'filterGroup', {chart_id: this.chart.id}));
+        'filterGroup', {chart_type_id: this.chartType.id}));
     this.set('appliedFiltersString', null);
     this.set(
       'updateAppliedFiltersString',
