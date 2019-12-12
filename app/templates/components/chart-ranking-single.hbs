@@ -1,12 +1,14 @@
 <div>
-  {{input type="checkbox" name="showAllFilterGroups" id="showAllFilterGroupsCheckbox"
-    checked=showAllFilterGroups}}
+  <Input
+    @type="checkbox" @checked={{showAllFilterGroups}}
+    name="showAllFilterGroups" id="showAllFilterGroupsCheckbox" />
   <label for="showAllFilterGroupsCheckbox">Show all filter groups</label>
 </div>
 
-{{filter-apply-form filterGroups=filterGroups
-  appliedFiltersString=appliedFiltersString
-  updateAppliedFiltersString=updateAppliedFiltersString}}
+<FilterApplyForm
+  @filterGroups={{filterGroups}}
+  @appliedFiltersString={{appliedFiltersString}}
+  @updateAppliedFiltersString={{updateAppliedFiltersString}} />
 
 <table class="records-table">
   <thead>

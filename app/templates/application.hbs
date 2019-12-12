@@ -1,14 +1,14 @@
 <div class="container">
   <div class="menu">
-    {{#link-to "index"}}
+    <LinkTo @route="index">
       <h1>
         <em>F-Zero Central</em>
       </h1>
-    {{/link-to}}
+    </LinkTo>
     <div class="links">
-      {{#link-to "games" class="menu-games"}}
+      <LinkTo @route="games">
         Games
-      {{/link-to}}
+      </LinkTo>
     </div>
   </div>
   <div class="body">

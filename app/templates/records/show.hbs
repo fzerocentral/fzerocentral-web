@@ -1,8 +1,8 @@
 <h1>
   Edit record for:
-  {{#link-to "charts.show" model.record.chart.id}}
+  <LinkTo @route="charts.show" @model={{model.record.chart}}>
     {{model.record.chart.chartGroup.name}} - {{model.record.chart.name}}
-  {{/link-to}}
+  </LinkTo>
 </h1>
 
 <div>User: {{model.record.user.username}}</div>
@@ -10,11 +10,11 @@
 
 <div>
   <label>Date achieved</label>
-  {{date-field dateValue=model.record.achievedAt}}
+  <DateField @dateValue={{model.record.achievedAt}} />
 </div>
 
-{{record-filters-edit
-  filterGroups=model.filterGroups
-  filters=model.record.filters}}
+<RecordFiltersEdit
+  @filterGroups={{model.filterGroups}}
+  @filters={{model.record.filters}} />
 
 <div><button type="submit" {{action "saveRecord"}}>Save edits</button></div>

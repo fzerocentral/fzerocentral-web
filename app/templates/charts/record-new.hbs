@@ -1,4 +1,4 @@
-<h1>Submit record for: {{#link-to "charts.show" model.chart.id}} {{model.chart.chartGroup.name}} - {{model.chart.name}}{{/link-to}}</h1>
+<h1>Submit record for: <LinkTo @route="charts.show" @model={{model.chart}}> {{model.chart.chartGroup.name}} - {{model.chart.name}}</LinkTo></h1>
 
 <div class="user-select select-field-wrapper">
   <label>User</label>
@@ -14,16 +14,20 @@
 </div>
 
 <div>
-  <label>Value</label>
+  <label for="new-record-value">Value</label>
   {{!-- For now, this is just a simple integer field which doesn't take the chart type's record format into account. --}}
-  {{input type="text" class="value-input" value=model.record.value placeholder="Example: 123"}}
+  <Input
+    @type="text" @value={{model.record.value}}
+    class="value-input" id="new-record-value" placeholder="Example: 123" />
 </div>
 
 <div>
   <label>Date achieved</label>
-  {{date-field dateValue=model.record.achievedAt}}
+  <DateField @dateValue={{model.record.achievedAt}} />
 </div>
 
-{{record-filters-edit filterGroups=model.filterGroups filters=model.record.filters}}
+<RecordFiltersEdit
+  @filterGroups={{model.filterGroups}}
+  @filters={{model.record.filters}} />
 
 <div><button type="submit" {{action "saveRecord"}}>Submit record</button></div>

@@ -18,11 +18,17 @@
 
 <div class="filter-edit-form {{if (not isEditing) "hidden"}}">
   <div>
-    Name {{input type="text" name="name" value=editableParams.name}}
+    <label for="edit-filter-name">Name</label>
+    <Input
+      @type="text" @value={{editableParams.name}}
+      name="name" id="edit-filter-name" />
   </div>
   {{#if (eq filter.filterGroup.kind "numeric")}}
     <div>
-      Numeric value {{input type="number" name="numeric-value" value=editableParams.numericValue}}
+      <label for="edit-filter-numeric-value">Numeric value</label>
+      <Input
+        @type="number" @value={{editableParams.numericValue}}
+        name="numeric-value" id="edit-filter-numeric-value" />
     </div>
   {{/if}}
 
@@ -61,7 +67,7 @@
             {{implication.implyingFilter.name}}
           </button>
         {{/each}}
-        {{page-navigation pageResults=incomingImplications pageNumber=incomingImplicationsPageNumber}}
+        <PageNavigation @pageResults={{incomingImplications}} @pageNumber={{incomingImplicationsPageNumber}} />
       {{/if}}
     </div>
   {{/if}}
@@ -78,7 +84,7 @@
             {{implication.impliedFilter.name}}
           </button>
         {{/each}}
-        {{page-navigation pageResults=outgoingImplications pageNumber=outgoingImplicationsPageNumber}}
+        <PageNavigation @pageResults={{outgoingImplications}} @pageNumber={{outgoingImplicationsPageNumber}} />
       {{/if}}
     </div>
   {{/if}}
@@ -95,7 +101,7 @@
           </li>
         {{/each}}
       </ul>
-      {{page-navigation pageResults=incomingLinks pageNumber=incomingLinksPageNumber}}
+      <PageNavigation @pageResults={{incomingLinks}} @pageNumber={{incomingLinksPageNumber}} />
     </div>
 
     <span>-&gt; {{filter.name}} -&gt;</span>
@@ -110,7 +116,7 @@
           </li>
         {{/each}}
       </ul>
-      {{page-navigation pageResults=outgoingLinks pageNumber=outgoingLinksPageNumber}}
+      <PageNavigation @pageResults={{outgoingLinks}} @pageNumber={{outgoingLinksPageNumber}} />
     </div>
   </div>
 

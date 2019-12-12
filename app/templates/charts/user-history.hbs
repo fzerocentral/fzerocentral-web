@@ -1,8 +1,9 @@
 <h1>{{model.user.username}}'s history for {{model.chart.chartGroup.name}} - {{model.chart.name}}</h1>
 
 <div>
-  {{input type="checkbox" name="showAllFilterGroups" id="showAllFilterGroupsCheckbox"
-    checked=showAllFilterGroups}}
+  <Input
+    @type="checkbox" @checked={{showAllFilterGroups}}
+    name="showAllFilterGroups" id="showAllFilterGroupsCheckbox" />
   <label for="showAllFilterGroupsCheckbox">Show all filter groups</label>
 </div>
 
@@ -21,7 +22,7 @@
     {{#each model.records as |record|}}
       <tr class={{if record.isImprovement "" "non-personal-best"}}>
         <td>
-          {{#link-to "records.show" record.id}}{{record.valueDisplay}}{{/link-to}}
+          <LinkTo @route="records.show" @model={{record}}>{{record.valueDisplay}}</LinkTo>
         </td>
         <td>{{moment-format record.achievedAt "YYYY-MM-DD HH:mm"}}</td>
 

@@ -22,9 +22,9 @@
             {{input type="text" size="2" class="order-input" value=ctfg.orderInChartType change=(action "onOrderChange" ctfg)}}
           </td>
           <td>
-            {{#link-to "filter-groups.show" ctfg.filterGroup.id}}
+            <LinkTo @route="filter-groups.show" @model={{ctfg.filterGroup}}>
               {{ctfg.filterGroup.name}}
-            {{/link-to}}
+            </LinkTo>
           </td>
           <td>
             {{input type="checkbox" class="show-input" checked=ctfg.showByDefault click=(action (action "onShowChange" ctfg) value="target.checked")}}
@@ -47,9 +47,9 @@
   <ul class="game-fgs">
     {{#each otherFilterGroups as |filterGroup|}}
       <li>
-        {{#link-to "filter-groups.show" filterGroup.id}}
+        <LinkTo @route="filter-groups.show" @model={{filterGroup}}>
           {{filterGroup.name}}
-        {{/link-to}}
+        </LinkTo>
         <button type="button" class="link-fg-button" {{action "linkFilterGroup" filterGroup}}> + </button>
       </li>
     {{/each}}
@@ -63,9 +63,9 @@
   <ul class="orphaned-fgs">
     {{#each model.orphanedFilterGroups as |filterGroup|}}
       <li>
-        {{#link-to "filter-groups.show" filterGroup.id}}
+        <LinkTo @route="filter-groups.show" @model={{filterGroup}}>
           {{filterGroup.name}}
-        {{/link-to}}
+        </LinkTo>
         <button type="button" class="link-fg-button" {{action "linkFilterGroup" filterGroup}}> + </button>
       </li>
     {{/each}}
@@ -76,8 +76,10 @@
 <h2>Create new filter group</h2>
 
 <div>
-  <label>Name</label>
-  {{input type="text" class="name-input" value=model.newFilterGroup.name}}
+  <label for="new-filter-group-name">Name</label>
+  <Input
+    @type="text" @value={{model.newFilterGroup.name}}
+    class="name-input" id="new-filter-group-name" />
 </div>
 
 <div class="kind-select">
@@ -93,8 +95,10 @@
 </div>
 
 <div>
-  <label>Description</label>
-  {{input type="text" class="description-input" value=model.newFilterGroup.description}}
+  <label for="new-filter-group-description">Description</label>
+  <Input
+    @type="text" @value={{model.newFilterGroup.description}}
+    class="description-input" id="new-filter-group-description" />
 </div>
 
 <div>

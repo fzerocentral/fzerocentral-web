@@ -7,7 +7,7 @@
 </ul>
 
 <div>
-  Search: {{input type="text" class="search-input" value=searchText}}
+  Search: <Input @type="text" @value={{searchText}} class="search-input" />
 </div>
 
-{{page-navigation pageResults=filters pageNumber=pageNumber}}
+<PageNavigation @pageResults={{filters}} @pageNumber={{pageNumber}} />

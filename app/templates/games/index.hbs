@@ -2,6 +2,6 @@
 
 <ul class="results">
   {{#each model as |game|}}
-    <li>{{#link-to "games.show" game.id}}{{game.name}}{{/link-to}}</li>
+    <li><LinkTo @route="games.show" @model={{game}}>{{game.name}}</LinkTo></li>
   {{/each}}
 </ul>

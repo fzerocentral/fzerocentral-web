@@ -9,9 +9,9 @@
   <ul class="chart-type-list plain-bullet-list">
     {{#each model.chartTypes as |chartType|}}
       <li>
-        {{#link-to "chart-types.filter-groups" chartType.id}}
+        <LinkTo @route="chart-types.filter-groups" @model={{chartType}}>
           {{chartType.name}}
-        {{/link-to}}
+        </LinkTo>
       </li>
     {{/each}}
   </ul>
@@ -42,9 +42,9 @@
 
   <div class="filter-detail-section">
     {{#if selectedFilterId}}
-      {{filter-detail
-        filterId=selectedFilterId
-        filterGroupId=model.filterGroup.id}}
+      <FilterDetail
+        @filterId={{selectedFilterId}}
+        @filterGroupId={{model.filterGroup.id}} />
     {{/if}}
   </div>
 </div>
@@ -55,8 +55,10 @@
   <h3>New filter</h3>
 
   <div>
-    <label>Name</label>
-    {{input type="text" name="name" value=model.newFilter.name}}
+    <label for="new-filter-name">Name</label>
+    <Input
+      @type="text" @value={{model.newFilter.name}}
+      name="name" id="new-filter-name" />
   </div>
 
   {{#if (eq model.filterGroup.kind "select")}}
@@ -76,8 +78,10 @@
 
   {{#if (eq model.filterGroup.kind "numeric")}}
     <div>
-      <label>Numeric value</label>
-      {{input type="number" name="numeric-value" value=model.newFilter.numericValue}}
+      <label for="new-filter-numeric-value">Numeric value</label>
+      <Input
+        @type="number" @value={{model.newFilter.numericValue}}
+        name="numeric-value" id="new-filter-numeric-value" />
     </div>
   {{/if}}
 
