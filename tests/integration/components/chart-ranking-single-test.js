@@ -81,10 +81,11 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
 
   test("records table has one column per shown filter group", async function(assert) {
     await render(
-      hbs`{{chart-ranking-single chart=chart records=records
-            filterGroups=filterGroups
-            appliedFiltersString=appliedFiltersString
-            updatedAppliedFiltersString=updateAppliedFiltersString}}`);
+      hbs`<ChartRankingSingle
+            @chart={{chart}} @records={{records}}
+            @filterGroups={{filterGroups}}
+            @appliedFiltersString={{appliedFiltersString}}
+            @updateAppliedFiltersString={{updateAppliedFiltersString}} />`);
 
     let firstRow = this.element.querySelectorAll('table.records-table tr')[0];
     let tableColumnHeaders =
@@ -129,10 +130,11 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     this.owner.lookup('router:main').setupRouter();
 
     await render(
-      hbs`{{chart-ranking-single chart=chart records=records
-            filterGroups=filterGroups
-            appliedFiltersString=appliedFiltersString
-            updatedAppliedFiltersString=updateAppliedFiltersString}}`);
+      hbs`<ChartRankingSingle
+            @chart={{chart}} @records={{records}}
+            @filterGroups={{filterGroups}}
+            @appliedFiltersString={{appliedFiltersString}}
+            @updateAppliedFiltersString={{updateAppliedFiltersString}} />`);
 
     let rows = this.element.querySelectorAll('table.records-table tr');
     let cells = rows[1].querySelectorAll('td');

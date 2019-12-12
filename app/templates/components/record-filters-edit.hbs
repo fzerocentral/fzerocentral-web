@@ -2,10 +2,10 @@
   <div class="filter-group-{{filterGroup.id}}-select select-field-wrapper">
     <label>{{filterGroup.name}}</label>
 
-    {{filter-select
-      filterGroup=filterGroup
-      selected=(get filtersPerGroup filterGroup.id)
-      onFilterChange=(action "onAnyFilterChange" filterGroup.id)
-      filterUsageType="choosable"}}
+    <FilterSelect
+      @filterGroup={{filterGroup}}
+      @selected={{get filtersPerGroup filterGroup.id}}
+      @onFilterChange={{action "onAnyFilterChange" filterGroup.id}}
+      @filterUsageType="choosable" />
   </div>
 {{/each}}

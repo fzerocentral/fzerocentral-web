@@ -41,10 +41,10 @@ module('Integration | Component | filter-select', function(hooks) {
     // Use `'onAnyFilterChange'` when onAnyFilterChange is defined in
     // a component's `actions`.
     await render(hbs`
-      {{filter-select
-        filterGroup=filterGroup
-        selected=filter
-        onFilterChange=(action onAnyFilterChange)}}
+      <FilterSelect
+        @filterGroup={{filterGroup}}
+        @selected={{filter}}
+        @onFilterChange={{action onAnyFilterChange}} />
     `);
 
     let select = this.element.querySelector('.ember-power-select-trigger');
@@ -58,10 +58,10 @@ module('Integration | Component | filter-select', function(hooks) {
   test('initializes selection to placeholder text', async function(assert) {
 
     await render(hbs`
-      {{filter-select
-        filterGroup=filterGroup
-        selected=filter
-        onFilterChange=(action onAnyFilterChange)}}
+      <FilterSelect
+        @filterGroup={{filterGroup}}
+        @selected={{filter}}
+        @onFilterChange={{action onAnyFilterChange}} />
     `);
 
     let select = this.element.querySelector('.ember-power-select-trigger');
@@ -73,10 +73,10 @@ module('Integration | Component | filter-select', function(hooks) {
   test('can change filter', async function(assert) {
 
     await render(hbs`
-      {{filter-select
-        filterGroup=filterGroup
-        selected=filter
-        onFilterChange=(action onAnyFilterChange)}}
+      <FilterSelect
+        @filterGroup={{filterGroup}}
+        @selected={{filter}}
+        @onFilterChange={{action onAnyFilterChange}} />
     `);
 
     await selectChoose(`.ember-power-select-trigger`, "Filter A1");
@@ -95,10 +95,10 @@ module('Integration | Component | filter-select', function(hooks) {
   test('can clear selection', async function(assert) {
 
     await render(hbs`
-      {{filter-select
-        filterGroup=filterGroup
-        selected=filter
-        onFilterChange=(action onAnyFilterChange)}}
+      <FilterSelect
+        @filterGroup={{filterGroup}}
+        @selected={{filter}}
+        @onFilterChange={{action onAnyFilterChange}} />
     `);
 
     await selectChoose(`.ember-power-select-trigger`, "Filter A1");

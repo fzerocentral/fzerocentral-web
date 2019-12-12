@@ -35,7 +35,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     }));
 
     await render(hbs`
-      {{page-navigation pageResults=pageResults pageNumber=1}}
+      <PageNavigation @pageResults={{pageResults}} @pageNumber=1 />
     `);
 
     assert.equal(
@@ -51,7 +51,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     }));
 
     await render(hbs`
-      {{page-navigation pageResults=pageResults pageNumber=1}}
+      <PageNavigation @pageResults={{pageResults}} @pageNumber=1 />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -74,7 +74,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     }));
 
     await render(hbs`
-      {{page-navigation pageResults=pageResults pageNumber=2}}
+      <PageNavigation @pageResults={{pageResults}} @pageNumber=2 />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -98,7 +98,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     }));
 
     await render(hbs`
-      {{page-navigation pageResults=pageResults pageNumber=1}}
+      <PageNavigation @pageResults={{pageResults}} @pageNumber=1 />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -122,7 +122,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     }));
 
     await render(hbs`
-      {{page-navigation pageResults=pageResults pageNumber=2}}
+      <PageNavigation @pageResults={{pageResults}} @pageNumber=2 />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -146,7 +146,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     }));
 
     await render(hbs`
-      {{page-navigation pageResults=pageResults pageNumber=3}}
+      <PageNavigation @pageResults={{pageResults}} @pageNumber=3 />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -170,7 +170,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     }));
 
     await render(hbs`
-      {{page-navigation pageResults=pageResults pageNumber=1}}
+      <PageNavigation @pageResults={{pageResults}} @pageNumber=1 />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -196,7 +196,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     }));
 
     await render(hbs`
-      {{page-navigation pageResults=pageResults pageNumber=5}}
+      <PageNavigation @pageResults={{pageResults}} @pageNumber=5 />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -221,7 +221,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     }));
 
     await render(hbs`
-      {{page-navigation pageResults=pageResults pageNumber=10}}
+      <PageNavigation @pageResults={{pageResults}} @pageNumber=10 />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -245,7 +245,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     }));
 
     await render(hbs`
-      {{page-navigation pageResults=pageResults pageNumber=1}}
+      <PageNavigation @pageResults={{pageResults}} @pageNumber=1 />
     `);
 
     // There should be page buttons to pages 2 and 10
@@ -260,7 +260,7 @@ module('Integration | Component | page-navigation', function(hooks) {
       "Should have changed to the correct page");
   });
 
-  test('next page button should switch to the correct page', async function(assert) {
+  test('last page button should switch to the correct page', async function(assert) {
     this.set('pageResults', createPageResults({
       totalResults: 95,
       resultsPerPage: 10,
@@ -270,7 +270,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     }));
 
     await render(hbs`
-      {{page-navigation pageResults=pageResults pageNumber=2}}
+      <PageNavigation @pageResults={{pageResults}} @pageNumber=2 />
     `);
 
     // There should be page buttons to pages 1, 3, and 10
@@ -283,7 +283,7 @@ module('Integration | Component | page-navigation', function(hooks) {
       "Should have changed to the correct page");
   });
 
-  test('next page button should switch to the correct page', async function(assert) {
+  test('prev page button should switch to the correct page', async function(assert) {
     this.set('pageResults', createPageResults({
       totalResults: 95,
       resultsPerPage: 10,
@@ -292,7 +292,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     }));
 
     await render(hbs`
-      {{page-navigation pageResults=pageResults pageNumber=10}}
+      <PageNavigation @pageResults={{pageResults}} @pageNumber=10 />
     `);
     // There should be page buttons to pages 1 and 9
     let buttons = this.element.querySelectorAll('button');
@@ -304,7 +304,7 @@ module('Integration | Component | page-navigation', function(hooks) {
       "Should have changed to the correct page");
   });
 
-  test('next page button should switch to the correct page', async function(assert) {
+  test('first page button should switch to the correct page', async function(assert) {
     this.set('pageResults', createPageResults({
       totalResults: 95,
       resultsPerPage: 10,
@@ -314,7 +314,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     }));
 
     await render(hbs`
-      {{page-navigation pageResults=pageResults pageNumber=9}}
+      <PageNavigation @pageResults={{pageResults}} @pageNumber=9 />
     `);
     // There should be page buttons to pages 1, 8, and 10
     let buttons = this.element.querySelectorAll('button');

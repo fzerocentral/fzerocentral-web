@@ -56,7 +56,7 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
 
   test("if no main chart is specified, the first chart is the main chart", async function(assert) {
     await render(
-      hbs`{{chart-ranking-group chartGroup=chartGroup}}`);
+      hbs`<ChartRankingGroup @chartGroup={{chartGroup}} />`);
 
     let firstRow = this.element.querySelectorAll('table.records-table tr')[0];
     let tableColumnHeaders =
@@ -75,9 +75,9 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
     this.set('mainChartIdQueryArg', this.chart2.id);
 
     await render(
-      hbs`{{chart-ranking-group
-            chartGroup=chartGroup
-            mainChartIdQueryArg=mainChartIdQueryArg}}`);
+      hbs`<ChartRankingGroup
+            @chartGroup={{chartGroup}}
+            @mainChartIdQueryArg={{mainChartIdQueryArg}} />`);
 
     let firstRow = this.element.querySelectorAll('table.records-table tr')[0];
     let tableColumnHeaders =
@@ -94,9 +94,9 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
     this.set('mainChartIdQueryArg', this.chart1.id);
 
     await render(
-      hbs`{{chart-ranking-group
-            chartGroup=chartGroup
-            mainChartIdQueryArg=mainChartIdQueryArg}}`);
+      hbs`<ChartRankingGroup
+            @chartGroup={{chartGroup}}
+            @mainChartIdQueryArg={{mainChartIdQueryArg}} />`);
 
     let firstRow = this.element.querySelectorAll('table.records-table tr')[0];
     let tableColumnHeaders =
@@ -113,9 +113,9 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
     this.set('mainChartIdQueryArg', this.chart1.id);
 
     await render(
-      hbs`{{chart-ranking-group
-            chartGroup=chartGroup
-            mainChartIdQueryArg=mainChartIdQueryArg}}`);
+      hbs`<ChartRankingGroup
+            @chartGroup={{chartGroup}}
+            @mainChartIdQueryArg={{mainChartIdQueryArg}} />`);
 
     let rows = this.element.querySelectorAll('table.records-table tr');
 
@@ -154,9 +154,9 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
       {value: 27, valueDisplay: "0:27", user: this.userC, chart: this.chart1,
        rank: 3});
     await render(
-      hbs`{{chart-ranking-group
-            chartGroup=chartGroup
-            mainChartIdQueryArg=mainChartIdQueryArg}}`);
+      hbs`<ChartRankingGroup
+            @chartGroup={{chartGroup}}
+            @mainChartIdQueryArg={{mainChartIdQueryArg}} />`);
 
     let rows = this.element.querySelectorAll('table.records-table tr');
     let cells = rows[3].querySelectorAll('td');
@@ -181,9 +181,9 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
       {value: 27, valueDisplay: "27m", user: this.userC, chart: this.chart2,
        rank: 1});
     await render(
-      hbs`{{chart-ranking-group
-            chartGroup=chartGroup
-            mainChartIdQueryArg=mainChartIdQueryArg}}`);
+      hbs`<ChartRankingGroup
+            @chartGroup={{chartGroup}}
+            @mainChartIdQueryArg={{mainChartIdQueryArg}} />`);
 
     let rows = this.element.querySelectorAll('table.records-table tr');
     assert.equal(rows.length, 3, "No row added for User C");

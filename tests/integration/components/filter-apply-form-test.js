@@ -71,8 +71,8 @@ module('Integration | Component | filter-apply-form', function(hooks) {
 
   test("first dropdown has the filter groups", async function(assert) {
     await render(
-      hbs`{{filter-apply-form filterGroups=filterGroups
-            appliedFiltersString=appliedFiltersString}}`);
+      hbs`<FilterApplyForm @filterGroups={{filterGroups}}
+            @appliedFiltersString={{appliedFiltersString}} />`);
 
     let filterGroupSelect = getFilterGroupSelect(this);
     await assertPowerSelectOptionsEqual(
@@ -85,8 +85,8 @@ module('Integration | Component | filter-apply-form', function(hooks) {
 
   test("selecting a filter group fills the second dropdown with relevant compare options", async function(assert) {
     await render(
-      hbs`{{filter-apply-form filterGroups=filterGroups
-            appliedFiltersString=appliedFiltersString}}`);
+      hbs`<FilterApplyForm @filterGroups={{filterGroups}}
+            @appliedFiltersString={{appliedFiltersString}} />`);
 
     let filterGroupSelect = getFilterGroupSelect(this);
     let compareMethodSelect = getCompareMethodSelect(this);
@@ -111,8 +111,8 @@ module('Integration | Component | filter-apply-form', function(hooks) {
 
   test("selecting a filter group fills the third dropdown with the group's filter options", async function(assert) {
     await render(
-      hbs`{{filter-apply-form filterGroups=filterGroups
-            appliedFiltersString=appliedFiltersString}}`);
+      hbs`<FilterApplyForm @filterGroups={{filterGroups}}
+            @appliedFiltersString={{appliedFiltersString}} />`);
 
     let filterGroupSelect = getFilterGroupSelect(this);
     let filterSelect = getFilterSelect(this);
@@ -136,8 +136,8 @@ module('Integration | Component | filter-apply-form', function(hooks) {
 
   test("changing the filter group resets the other dropdowns as needed", async function(assert) {
     await render(
-      hbs`{{filter-apply-form filterGroups=filterGroups
-            appliedFiltersString=appliedFiltersString}}`);
+      hbs`<FilterApplyForm @filterGroups={{filterGroups}}
+            @appliedFiltersString={{appliedFiltersString}} />`);
 
     let filterGroupSelect = getFilterGroupSelect(this);
     let compareMethodSelect = getCompareMethodSelect(this);
@@ -166,9 +166,9 @@ module('Integration | Component | filter-apply-form', function(hooks) {
 
   test("adding a filter calls updateAppliedFiltersString with an appropriate updated filters string", async function(assert) {
     await render(
-      hbs`{{filter-apply-form filterGroups=filterGroups
-            appliedFiltersString=appliedFiltersString
-            updateAppliedFiltersString=updateAppliedFiltersString}}`);
+      hbs`<FilterApplyForm @filterGroups={{filterGroups}}
+            @appliedFiltersString={{appliedFiltersString}}
+            @updateAppliedFiltersString={{updateAppliedFiltersString}} />`);
 
     let filterGroupSelect = getFilterGroupSelect(this);
     let compareMethodSelect = getCompareMethodSelect(this);
@@ -219,9 +219,9 @@ module('Integration | Component | filter-apply-form', function(hooks) {
       + `-${this.setting30Filter.id}le`;
     this.set('appliedFiltersString', appliedFiltersString);
     await render(
-      hbs`{{filter-apply-form filterGroups=filterGroups
-            appliedFiltersString=appliedFiltersString
-            updateAppliedFiltersString=updateAppliedFiltersString}}`);
+      hbs`<FilterApplyForm @filterGroups={{filterGroups}}
+            @appliedFiltersString={{appliedFiltersString}}
+            @updateAppliedFiltersString={{updateAppliedFiltersString}} />`);
 
     let appliedFilterDisplays =
       Array.from(this.element.querySelectorAll('span.applied-filter'))
@@ -241,9 +241,9 @@ module('Integration | Component | filter-apply-form', function(hooks) {
       + `-${this.setting30Filter.id}le`;
     this.set('appliedFiltersString', appliedFiltersString);
     await render(
-      hbs`{{filter-apply-form filterGroups=filterGroups
-            appliedFiltersString=appliedFiltersString
-            updateAppliedFiltersString=updateAppliedFiltersString}}`);
+      hbs`<FilterApplyForm @filterGroups={{filterGroups}}
+            @appliedFiltersString={{appliedFiltersString}}
+            @updateAppliedFiltersString={{updateAppliedFiltersString}} />`);
 
     let removeButtons =
       this.element.querySelectorAll('button.applied-filter-remove-button');

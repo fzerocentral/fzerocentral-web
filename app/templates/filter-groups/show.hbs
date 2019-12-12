@@ -22,21 +22,21 @@
 <div class="filter-section">
   <div class="filter-list choosable-filter-list">
     Choosable Filters:
-    {{filter-list
-      filterGroupId=model.filterGroup.id
-      filtersLastUpdated=filtersLastUpdated
-      updateSelectedFilterId=(action (mut selectedFilterId))
-      usageType="choosable"}}
+    <FilterList
+      @filterGroupId={{model.filterGroup.id}}
+      @filtersLastUpdated={{filtersLastUpdated}}
+      @updateSelectedFilterId={{action (mut selectedFilterId)}}
+      @usageType="choosable" />
   </div>
 
   {{#if (eq model.filterGroup.kind "select")}}
     <div class="filter-list implied-filter-list">
       Implied Filters:
-      {{filter-list
-        filterGroupId=model.filterGroup.id
-        filtersLastUpdated=filtersLastUpdated
-        updateSelectedFilterId=(action (mut selectedFilterId))
-        usageType="implied"}}
+      <FilterList
+        @filterGroupId={{model.filterGroup.id}}
+        @filtersLastUpdated={{filtersLastUpdated}}
+        @updateSelectedFilterId={{action (mut selectedFilterId)}}
+        @usageType="implied" />
     </div>
   {{/if}}
 

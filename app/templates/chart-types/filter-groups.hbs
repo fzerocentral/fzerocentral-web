@@ -19,7 +19,10 @@
             <button type="button" class="unlink-fg-button" {{action "unlinkFilterGroup" ctfg}}> - </button>
           </td>
           <td>
-            {{input type="text" size="2" class="order-input" value=ctfg.orderInChartType change=(action "onOrderChange" ctfg)}}
+            <Input
+              @type="text" @value={{ctfg.orderInChartType}}
+              onchange={{action "onOrderChange" ctfg}}
+              size="2" class="order-input" />
           </td>
           <td>
             <LinkTo @route="filter-groups.show" @model={{ctfg.filterGroup}}>
@@ -27,7 +30,10 @@
             </LinkTo>
           </td>
           <td>
-            {{input type="checkbox" class="show-input" checked=ctfg.showByDefault click=(action (action "onShowChange" ctfg) value="target.checked")}}
+            <Input
+              @type="checkbox" @checked={{ctfg.showByDefault}}
+              onclick={{action (action "onShowChange" ctfg) value="target.checked"}}
+              class="show-input" />
           </td>
         </tr>
       {{/each}}

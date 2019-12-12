@@ -136,10 +136,10 @@
     </div>
 
     <div class="linked-filter-select select-field-wrapper">
-      {{filter-select
-        filterGroup=filter.filterGroup
-        selected=newLinkOtherFilter
-        onFilterChange=(action (mut newLinkOtherFilter))}}
+      <FilterSelect
+        @filterGroup={{filter.filterGroup}}
+        @selected={{newLinkOtherFilter}}
+        @onFilterChange={{action (mut newLinkOtherFilter)}} />
     </div>
 
     <div class="error-message">{{error-display linkCreateError}}</div>

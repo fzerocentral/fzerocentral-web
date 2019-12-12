@@ -24,10 +24,10 @@
   </PowerSelect>
 
   {{!-- Choice of filter from the filter group --}}
-  {{filter-select
-    filterGroup=selectedFilterGroup
-    selected=selectedFilter
-    onFilterChange=(action (mut selectedFilter))}}
+  <FilterSelect
+    @filterGroup={{selectedFilterGroup}}
+    @selected={{selectedFilter}}
+    @onFilterChange={{action (mut selectedFilter)}} />
 
   <button class="add-filter-button" type="submit" {{action "addFilter"}}>Add</button>
 </div>

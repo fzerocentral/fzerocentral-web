@@ -10,7 +10,7 @@ module('Integration | Component | chart-group-contents', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{chart-group-contents}}`);
+    await render(hbs`<ChartGroupContents />`);
 
     assert.equal(this.element.textContent.trim(), '');
   });
