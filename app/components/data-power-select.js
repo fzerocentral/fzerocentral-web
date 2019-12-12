@@ -15,7 +15,8 @@ export default PowerSelect.extend({
 
   store: service(),
 
-  search: computed(function() {
+  @computed()
+  get search() {
     return term => {
       const { modelName, params, queryKey = 'search', store } =
         this.getProperties('modelName', 'params', 'queryKey', 'store');
@@ -33,7 +34,7 @@ export default PowerSelect.extend({
 
       return store.query(modelName, query);
     };
-  }),
+  },
 
   @action
   handleTriggerFocus() {

@@ -6,7 +6,8 @@ export default Component.extend({
   pageNumber: null,
   pageResults: null,
 
-  currentPageFirstResultNumber: computed('pageNumber', 'pageResults', function() {
+  @computed('pageNumber', 'pageResults')
+  get currentPageFirstResultNumber() {
     return DS.PromiseObject.create({
       promise: this.get('pageResults').then((pageResults) => {
         let paginationMeta = pageResults.meta.pagination;
@@ -15,9 +16,10 @@ export default Component.extend({
         return {value: (pageNumber - 1)*resultsPerPage + 1};
       })
     });
-  }),
+  },
 
-  currentPageLastResultNumber: computed('pageNumber', 'pageResults', function() {
+  @computed('pageNumber', 'pageResults')
+  get currentPageLastResultNumber() {
     return DS.PromiseObject.create({
       promise: this.get('pageResults').then((pageResults) => {
         let paginationMeta = pageResults.meta.pagination;
@@ -27,9 +29,10 @@ export default Component.extend({
         return {value: Math.min(pageNumber*resultsPerPage, totalResults)};
       })
     });
-  }),
+  },
 
-  hasGapBetweenFirstAndPrevPage: computed('pageResults', function() {
+  @computed('pageResults')
+  get hasGapBetweenFirstAndPrevPage() {
     return DS.PromiseObject.create({
       promise: this.get('pageResults').then((pageResults) => {
         let paginationMeta = pageResults.meta.pagination;
@@ -38,9 +41,10 @@ export default Component.extend({
         return {value: firstPage && prevPage && (prevPage - firstPage > 1)};
       })
     });
-  }),
+  },
 
-  hasGapBetweenLastAndNextPage: computed('pageResults', function() {
+  @computed('pageResults')
+  get hasGapBetweenLastAndNextPage() {
     return DS.PromiseObject.create({
       promise: this.get('pageResults').then((pageResults) => {
         let paginationMeta = pageResults.meta.pagination;
@@ -49,5 +53,5 @@ export default Component.extend({
         return {value: lastPage && nextPage && (lastPage - nextPage > 1)};
       })
     });
-  }),
+  },
 });

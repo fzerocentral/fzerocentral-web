@@ -1,3 +1,4 @@
+import { action } from '@ember/object';
 import Route from '@ember/routing/route';
 import RSVP from 'rsvp';
 
@@ -10,17 +11,17 @@ export default Route.extend({
     });
   },
 
-  actions: {
-    saveRecord() {
-      let record = this.modelFor(this.routeName).record;
+  @action
+  saveRecord() {
+    let record = this.modelFor(this.routeName).record;
 
-      record.save().then(() => {
-        this.transitionTo('charts.show', record.get('chart'));
-      });
-    },
+    record.save().then(() => {
+      this.transitionTo('charts.show', record.get('chart'));
+    });
+  },
 
-    willTransition() {
-      this.modelFor(this.routeName).record.rollbackAttributes();
-    }
+  @action
+  willTransition() {
+    this.modelFor(this.routeName).record.rollbackAttributes();
   }
 });

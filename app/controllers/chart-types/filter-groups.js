@@ -1,14 +1,15 @@
 import { A } from '@ember/array';
 import Controller from '@ember/controller';
 import DS from 'ember-data';
-import { computed } from '@ember/object';
+import { action, computed } from '@ember/object';
 
 export default Controller.extend({
   kindOptions: A(['select', 'numeric']),
 
   // Filter groups which are not associated with this chart type, but are in
   // the same game as this chart type
-  otherFilterGroups: computed('model', function() {
+  @computed('model')
+  get otherFilterGroups() {
     let chartType = this.model.chartType;
     let gameFilterGroupsPromise = this.get('store').query(
       'filter-group', {game_id: chartType.get('game').get('id')}
@@ -27,16 +28,16 @@ export default Controller.extend({
         return result;
       })
     });
-  }),
+  },
 
-  actions: {
-    onOrderChange(ctfg) {
-      ctfg.save().then(() => {this.send('refreshRoute');});
-    },
+  @action
+  onOrderChange(ctfg) {
+    ctfg.save().then(() => {this.send('refreshRoute');});
+  },
 
-    onShowChange(ctfg, showByDefault) {
-      ctfg.set('showByDefault', showByDefault);
-      ctfg.save().then(() => {this.send('refreshRoute');});
-    },
+  @action
+  onShowChange(ctfg, showByDefault) {
+    ctfg.set('showByDefault', showByDefault);
+    ctfg.save().then(() => {this.send('refreshRoute');});
   },
 });
