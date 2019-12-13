@@ -1,9 +1,9 @@
-{{#if (not root)}}
-  <LinkTo @route="chart-groups.show" @model={{cg}}>{{cg.name}}</LinkTo>
+{{#if (not @root)}}
+  <LinkTo @route="chart-groups.show" @model={{@cg}}>{{cg.name}}</LinkTo>
 {{/if}}
 
 <ul class="chart-group-listing">
-  {{#each cg.childGroups as |cg2|}}
+  {{#each @cg.childGroups as |cg2|}}
     <li>
       <ChartGroupContents @cg={{cg2}} @root={{false}} />
     </li>
@@ -11,7 +11,7 @@
 </ul>
 
 <ul class="chart-group-listing">
-  {{#each cg.charts as |chart|}}
+  {{#each @cg.charts as |chart|}}
     <li>
       <LinkTo @route="charts.show" @model={{chart.id}}>{{chart.name}}</LinkTo>
     </li>

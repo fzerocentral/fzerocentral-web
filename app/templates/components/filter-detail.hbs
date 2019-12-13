@@ -63,7 +63,7 @@
         (None)
       {{else}}
         {{#each incomingImplications as |implication|}}
-          <button type="button" class="show-filter-detail-button" {{action (mut filterId) implication.implyingFilter.id}}>
+          <button type="button" class="show-filter-detail-button" {{action (mut @filterId) implication.implyingFilter.id}}>
             {{implication.implyingFilter.name}}
           </button>
         {{/each}}
@@ -80,7 +80,7 @@
         (None)
       {{else}}
         {{#each outgoingImplications as |implication|}}
-          <button type="button" class="show-filter-detail-button" {{action (mut filterId) implication.impliedFilter.id}}>
+          <button type="button" class="show-filter-detail-button" {{action (mut @filterId) implication.impliedFilter.id}}>
             {{implication.impliedFilter.name}}
           </button>
         {{/each}}
@@ -95,7 +95,7 @@
       <ul class="incoming-implication-links-list">
         {{#each incomingLinks as |link|}}
           <li>
-            <button type="button" class="show-filter-detail-button" {{action (mut filterId) link.implyingFilter.id}}>
+            <button type="button" class="show-filter-detail-button" {{action (mut @filterId) link.implyingFilter.id}}>
               {{link.implyingFilter.name}}
             </button>
           </li>
@@ -110,7 +110,7 @@
       <ul class="outgoing-implication-links-list">
         {{#each outgoingLinks as |link|}}
           <li>
-            <button type="button" class="show-filter-detail-button" {{action (mut filterId) link.impliedFilter.id}}>
+            <button type="button" class="show-filter-detail-button" {{action (mut @filterId) link.impliedFilter.id}}>
               {{link.impliedFilter.name}}
             </button>
           </li>

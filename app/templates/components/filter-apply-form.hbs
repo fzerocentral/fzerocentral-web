@@ -3,7 +3,7 @@
 
   {{!-- Choice of filter group --}}
   <PowerSelect
-    @options={{filterGroups}}
+    @options={{@filterGroups}}
     @selected={{selectedFilterGroup}}
     @onChange={{action (mut selectedFilterGroup)}}
     @placeholder="Not selected"

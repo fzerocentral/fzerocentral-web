@@ -256,7 +256,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     // didn't actually trigger a change in the pageResults.
     let pageLinksDiv = this.element.querySelector('div.page-links');
     assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent), "Page 2 2 ... 10",
+      normalizeHTMLTextContent(pageLinksDiv.textContent), "Page 1 2 ... 10",
       "Should have changed to the correct page");
   });
 
@@ -279,7 +279,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     // The current page number should've changed from 2 to 10.
     let pageLinksDiv = this.element.querySelector('div.page-links');
     assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent), "Page 1 10 3 ... 10",
+      normalizeHTMLTextContent(pageLinksDiv.textContent), "Page 1 2 3 ... 10",
       "Should have changed to the correct page");
   });
 
@@ -300,7 +300,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     // The current page number should've changed from 10 to 9.
     let pageLinksDiv = this.element.querySelector('div.page-links');
     assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent), "Page 1 ... 9 9",
+      normalizeHTMLTextContent(pageLinksDiv.textContent), "Page 1 ... 9 10",
       "Should have changed to the correct page");
   });
 
@@ -322,7 +322,7 @@ module('Integration | Component | page-navigation', function(hooks) {
     // The current page number should've changed from 9 to 1.
     let pageLinksDiv = this.element.querySelector('div.page-links');
     assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent), "Page 1 ... 8 1 10",
+      normalizeHTMLTextContent(pageLinksDiv.textContent), "Page 1 ... 8 9 10",
       "Should have changed to the correct page");
   });
 });
