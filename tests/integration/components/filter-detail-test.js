@@ -80,7 +80,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     this.set('filterId', this.gsg4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
+      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
     let detailSection = this.element.querySelector('.filter-basic-fields');
     let detailSectionName =
@@ -99,7 +99,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     this.set('filterId', this.s30Filter.id);
     this.set('filterGroupId', this.settingGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
+      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
     let detailSection = this.element.querySelector('.filter-basic-fields');
     let detailSectionName =
@@ -118,7 +118,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     this.set('filterId', this.gsg4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
+      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
     let detailDisplay = this.element.querySelector('div.filter-basic-fields');
     let editForm = this.element.querySelector('div.filter-edit-form');
@@ -167,7 +167,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     this.set('filterId', this.gsg4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
+      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
     let editForm = this.element.querySelector('div.filter-edit-form');
     let editButton =
@@ -193,7 +193,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     this.set('filterId', this.s30Filter.id);
     this.set('filterGroupId', this.settingGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
+      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
     let editForm = this.element.querySelector('div.filter-edit-form');
     let editButton =
@@ -224,7 +224,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     this.set('filterId', this.gsg4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
+      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
     // Delete filter
     let deleteButton = this.element.querySelector('.filter-delete-button');
@@ -249,7 +249,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     this.set('filterId', this.titang4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
+      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
     assert.ok(
       getImplicationLinkButtonByFilter(
@@ -270,7 +270,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     this.set('filterId', this.gsg4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
+      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
     // On the link creation form, select 'to', select the outgoing filter,
     // and click create.
@@ -306,7 +306,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     this.set('filterId', this.titang4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
+      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
     // On the link creation form, select 'from', select the incoming filter,
     // and click create.
@@ -343,7 +343,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     this.set('filterId', this.gsg4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
+      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
     // Select the link from the existing links dropdown. Then delete it.
     let form =
@@ -376,7 +376,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     this.set('filterId', this.titang4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
+      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
     // Select the link from the existing links dropdown. Then delete it.
     let form =
@@ -409,7 +409,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     this.set('filterId', this.gsg4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
+      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
     // Click a button in one of the linked-filters lists
     let filterButton = getImplicationLinkButtonByFilter(
@@ -426,7 +426,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     this.set('filterId', this.gsg4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
-      hbs`{{filter-detail filterId=filterId filterGroupId=filterGroupId}}`);
+      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
     // Select choices on the link creation form
     let linkCreateForm =

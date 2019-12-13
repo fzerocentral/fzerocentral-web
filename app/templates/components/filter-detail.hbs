@@ -18,11 +18,17 @@
 
 <div class="filter-edit-form {{if (not isEditing) "hidden"}}">
   <div>
-    Name {{input type="text" name="name" value=editableParams.name}}
+    <label for="edit-filter-name">Name</label>
+    <Input
+      @type="text" @value={{editableParams.name}}
+      name="name" id="edit-filter-name" />
   </div>
   {{#if (eq filter.filterGroup.kind "numeric")}}
     <div>
-      Numeric value {{input type="number" name="numeric-value" value=editableParams.numericValue}}
+      <label for="edit-filter-numeric-value">Numeric value</label>
+      <Input
+        @type="number" @value={{editableParams.numericValue}}
+        name="numeric-value" id="edit-filter-numeric-value" />
     </div>
   {{/if}}
 
@@ -57,11 +63,11 @@
         (None)
       {{else}}
         {{#each incomingImplications as |implication|}}
-          <button type="button" class="show-filter-detail-button" {{action (mut filterId) implication.implyingFilter.id}}>
+          <button type="button" class="show-filter-detail-button" {{action (mut @filterId) implication.implyingFilter.id}}>
             {{implication.implyingFilter.name}}
           </button>
         {{/each}}
-        {{page-navigation pageResults=incomingImplications pageNumber=incomingImplicationsPageNumber}}
+        <PageNavigation @pageResults={{incomingImplications}} @pageNumber={{incomingImplicationsPageNumber}} />
       {{/if}}
     </div>
   {{/if}}
@@ -74,11 +80,11 @@
         (None)
       {{else}}
         {{#each outgoingImplications as |implication|}}
-          <button type="button" class="show-filter-detail-button" {{action (mut filterId) implication.impliedFilter.id}}>
+          <button type="button" class="show-filter-detail-button" {{action (mut @filterId) implication.impliedFilter.id}}>
             {{implication.impliedFilter.name}}
           </button>
         {{/each}}
-        {{page-navigation pageResults=outgoingImplications pageNumber=outgoingImplicationsPageNumber}}
+        <PageNavigation @pageResults={{outgoingImplications}} @pageNumber={{outgoingImplicationsPageNumber}} />
       {{/if}}
     </div>
   {{/if}}
@@ -89,13 +95,13 @@
       <ul class="incoming-implication-links-list">
         {{#each incomingLinks as |link|}}
           <li>
-            <button type="button" class="show-filter-detail-button" {{action (mut filterId) link.implyingFilter.id}}>
+            <button type="button" class="show-filter-detail-button" {{action (mut @filterId) link.implyingFilter.id}}>
               {{link.implyingFilter.name}}
             </button>
           </li>
         {{/each}}
       </ul>
-      {{page-navigation pageResults=incomingLinks pageNumber=incomingLinksPageNumber}}
+      <PageNavigation @pageResults={{incomingLinks}} @pageNumber={{incomingLinksPageNumber}} />
     </div>
 
     <span>-&gt; {{filter.name}} -&gt;</span>
@@ -104,13 +110,13 @@
       <ul class="outgoing-implication-links-list">
         {{#each outgoingLinks as |link|}}
           <li>
-            <button type="button" class="show-filter-detail-button" {{action (mut filterId) link.impliedFilter.id}}>
+            <button type="button" class="show-filter-detail-button" {{action (mut @filterId) link.impliedFilter.id}}>
               {{link.impliedFilter.name}}
             </button>
           </li>
         {{/each}}
       </ul>
-      {{page-navigation pageResults=outgoingLinks pageNumber=outgoingLinksPageNumber}}
+      <PageNavigation @pageResults={{outgoingLinks}} @pageNumber={{outgoingLinksPageNumber}} />
     </div>
   </div>
 
@@ -118,22 +124,22 @@
     <h3>Create an implication link</h3>
 
     <div class="link-direction-select select-field-wrapper">
-      {{#power-select
-        options=linkDirectionOptions
-        selected=newLinkDirection
-        onchange=(action (mut newLinkDirection))
-        placeholder="Not selected"
-        matchTriggerWidth=false
-        as |option|}}
+      <PowerSelect
+        @options={{linkDirectionOptions}}
+        @selected={{newLinkDirection}}
+        @onChange={{action (mut newLinkDirection)}}
+        @placeholder="Not selected"
+        @matchTriggerWidth={{false}}
+        as |option|>
         {{option}}
-      {{/power-select}}
+      </PowerSelect>
     </div>
 
     <div class="linked-filter-select select-field-wrapper">
-      {{filter-select
-        filterGroup=filter.filterGroup
-        selected=newLinkOtherFilter
-        onFilterChange=(action (mut newLinkOtherFilter))}}
+      <FilterSelect
+        @filterGroup={{filter.filterGroup}}
+        @selected={{newLinkOtherFilter}}
+        @onFilterChange={{action (mut newLinkOtherFilter)}} />
     </div>
 
     <div class="error-message">{{error-display linkCreateError}}</div>
@@ -149,17 +155,18 @@
     <div class="link-select select-field-wrapper">
       {{!-- Retrieves this filter's links from ember-data, such that the
       linked filter's name matches the search box contents. --}}
-      {{#data-power-select
-        modelName="filterImplicationLink"
-        params=(hash filter_id=filter.id)
-        queryKey="linked_filter_search"
-        selected=selectedLinkDeletionOption
-        onchange=(action (mut selectedLinkDeletionOption))
-        placeholder="Not selected"
-        matchTriggerWidth=false
-        as |option|}}
+      <DataPowerSelect
+        @modelName="filterImplicationLink"
+        @params={{hash filter_id=filter.id}}
+        @searchEnabled={{true}}
+        @queryKey="linked_filter_search"
+        @selected={{selectedLinkDeletionOption}}
+        @onChange={{action (mut selectedLinkDeletionOption)}}
+        @placeholder="Not selected"
+        @matchTriggerWidth={{false}}
+        as |option|>
         {{link-delete-option-display option filter}}
-      {{/data-power-select}}
+      </DataPowerSelect>
     </div>
 
     <div class="error-message">{{error-display linkDeleteError}}</div>

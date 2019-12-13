@@ -1,6 +1,6 @@
-<h1>{{model.game.name}} - {{model.chartType.name}} (Chart type) - Filter groups</h1>
+<h1>{{@model.game.name}} - {{@model.chartType.name}} (Chart type) - Filter groups</h1>
 
-{{#if model.chartTypeFilterGroups}}
+{{#if @model.chartTypeFilterGroups}}
 
   <table class="chart-type-fgs">
     <thead>
@@ -13,21 +13,27 @@
     </thead>
 
     <tbody>
-      {{#each model.chartTypeFilterGroups as |ctfg|}}
+      {{#each @model.chartTypeFilterGroups as |ctfg|}}
         <tr>
           <td>
             <button type="button" class="unlink-fg-button" {{action "unlinkFilterGroup" ctfg}}> - </button>
           </td>
           <td>
-            {{input type="text" size="2" class="order-input" value=ctfg.orderInChartType change=(action "onOrderChange" ctfg)}}
+            <Input
+              @type="text" @value={{ctfg.orderInChartType}}
+              onchange={{action "onOrderChange" ctfg}}
+              size="2" class="order-input" />
           </td>
           <td>
-            {{#link-to "filter-groups.show" ctfg.filterGroup.id}}
+            <LinkTo @route="filter-groups.show" @model={{ctfg.filterGroup}}>
               {{ctfg.filterGroup.name}}
-            {{/link-to}}
+            </LinkTo>
           </td>
           <td>
-            {{input type="checkbox" class="show-input" checked=ctfg.showByDefault click=(action (action "onShowChange" ctfg) value="target.checked")}}
+            <Input
+              @type="checkbox" @checked={{ctfg.showByDefault}}
+              onclick={{action (action "onShowChange" ctfg) value="target.checked"}}
+              class="show-input" />
           </td>
         </tr>
       {{/each}}
@@ -47,9 +53,9 @@
   <ul class="game-fgs">
     {{#each otherFilterGroups as |filterGroup|}}
       <li>
-        {{#link-to "filter-groups.show" filterGroup.id}}
+        <LinkTo @route="filter-groups.show" @model={{filterGroup}}>
           {{filterGroup.name}}
-        {{/link-to}}
+        </LinkTo>
         <button type="button" class="link-fg-button" {{action "linkFilterGroup" filterGroup}}> + </button>
       </li>
     {{/each}}
@@ -57,15 +63,15 @@
 {{/if}}
 
 
-{{#if model.orphanedFilterGroups}}
+{{#if @model.orphanedFilterGroups}}
   <h2>Orphaned filter groups</h2>
 
   <ul class="orphaned-fgs">
-    {{#each model.orphanedFilterGroups as |filterGroup|}}
+    {{#each @model.orphanedFilterGroups as |filterGroup|}}
       <li>
-        {{#link-to "filter-groups.show" filterGroup.id}}
+        <LinkTo @route="filter-groups.show" @model={{filterGroup}}>
           {{filterGroup.name}}
-        {{/link-to}}
+        </LinkTo>
         <button type="button" class="link-fg-button" {{action "linkFilterGroup" filterGroup}}> + </button>
       </li>
     {{/each}}
@@ -76,25 +82,29 @@
 <h2>Create new filter group</h2>
 
 <div>
-  <label>Name</label>
-  {{input type="text" class="name-input" value=model.newFilterGroup.name}}
+  <label for="new-filter-group-name">Name</label>
+  <Input
+    @type="text" @value={{@model.newFilterGroup.name}}
+    class="name-input" id="new-filter-group-name" />
 </div>
 
 <div class="kind-select">
   <label>Kind</label>
-  {{#power-select
-    options=kindOptions
-    selected=model.newFilterGroup.kind
-    onchange=(action (mut model.newFilterGroup.kind))
-    placeholder="Not selected"
-    as |option|}}
+  <PowerSelect
+    @options={{kindOptions}}
+    @selected={{@model.newFilterGroup.kind}}
+    @onChange={{action (mut @model.newFilterGroup.kind)}}
+    @placeholder="Not selected"
+    as |option|>
     {{option}}
-  {{/power-select}}
+  </PowerSelect>
 </div>
 
 <div>
-  <label>Description</label>
-  {{input type="text" class="description-input" value=model.newFilterGroup.description}}
+  <label for="new-filter-group-description">Description</label>
+  <Input
+    @type="text" @value={{@model.newFilterGroup.description}}
+    class="description-input" id="new-filter-group-description" />
 </div>
 
 <div>

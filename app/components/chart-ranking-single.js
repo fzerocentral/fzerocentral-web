@@ -1,23 +1,19 @@
-import { A } from '@ember/array';
 import Component from '@ember/component';
+import { computed } from '@ember/object';
 
 export default Component.extend({
   chart: null,
   filterGroups: null,
   records: null,
-  shownFilterGroups: A([]),
+  showAllFilterGroups: null,
 
-  actions: {
-    // If we could set array properties directly, we'd use `action (mut
-    // shownFilterGroups)` instead of this defined action. But we can't set
-    // array properties directly in Ember.
-    onToggleUpdate(newShownFilterGroups) {
-      // Clear old filter groups
-      this.get('shownFilterGroups').clear();
-      // Add new set of filter groups
-      newShownFilterGroups.forEach((filterGroup) => {
-        this.get('shownFilterGroups').pushObject(filterGroup);
-      });
-    },
+  @computed('filterGroups.[]', 'showAllFilterGroups')
+  get shownFilterGroups() {
+    if (this.get('showAllFilterGroups')) {
+      return this.get('filterGroups');
+    }
+    else {
+      return this.get('filterGroups').filterBy('showByDefault', true);
+    }
   },
 });

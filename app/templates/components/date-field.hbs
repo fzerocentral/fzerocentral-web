@@ -1,4 +1,8 @@
 {{!-- For now, this is just a simple string field. Obviously not the most human-friendly date widget. And this is only used for input of a new value, not to display the current value. --}}
-{{input type="text" class="date-input" value=dateInput change=(action "onchange") size="30" placeholder="Examples: 2018-10-16, 2018-10-16T16:27, 2018-10-16T16:27:02-07:00"}}
+<Input
+  @type="text" @value={{dateInput}}
+  onchange={{action "onchange"}}
+  size="30" class="date-input"
+  placeholder="Examples: 2018-10-16, 2018-10-16T16:27, 2018-10-16T16:27:02-07:00" />
 {{!-- This displays the current date value. --}}
 {{dateStr}}

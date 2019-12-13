@@ -46,6 +46,13 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
       this.server, 'filter',
       {name: '80%', numericValue: 80, filterGroup: this.settingFG});
 
+    createModelInstance(
+      this.server, 'chart-type-filter-group',
+      {chartType: this.chartType, filterGroup: this.machineFG});
+    createModelInstance(
+      this.server, 'chart-type-filter-group',
+      {chartType: this.chartType, filterGroup: this.settingFG});
+
     this.recordA = createModelInstance(this.server, 'record',
       {value: 20, valueDisplay: "20m", user: this.userA, chart: this.chart,
        rank: 1, filters: [this.blueFalconFilter, this.setting30Filter]});
@@ -60,10 +67,8 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
       'records',
       [this.recordA, this.recordB].map(
         rec => modelAsProperty(this.store, 'record', rec)));
-    this.set(
-      'filterGroups',
-      [this.machineFG, this.settingFG].map(
-        fg => modelAsProperty(this.store, 'filterGroup', fg)));
+    this.set('filterGroups', this.store.query(
+        'filterGroup', {chart_type_id: this.chartType.id}));
     this.set('appliedFiltersString', null);
     this.set(
       'updateAppliedFiltersString',
@@ -76,10 +81,11 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
 
   test("records table has one column per shown filter group", async function(assert) {
     await render(
-      hbs`{{chart-ranking-single chart=chart records=records
-            filterGroups=filterGroups
-            appliedFiltersString=appliedFiltersString
-            updatedAppliedFiltersString=updateAppliedFiltersString}}`);
+      hbs`<ChartRankingSingle
+            @chart={{chart}} @records={{records}}
+            @filterGroups={{filterGroups}}
+            @appliedFiltersString={{appliedFiltersString}}
+            @updateAppliedFiltersString={{updateAppliedFiltersString}} />`);
 
     let firstRow = this.element.querySelectorAll('table.records-table tr')[0];
     let tableColumnHeaders =
@@ -91,6 +97,7 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
       tableColumnHeaders, expectedTableHeaders,
       "Column headers are as expected with only default filter groups shown");
 
+    // Check
     await click('input[name="showAllFilterGroups"]');
 
     firstRow = this.element.querySelectorAll('table.records-table tr')[0];
@@ -102,6 +109,19 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     assert.deepEqual(
       tableColumnHeaders, expectedTableHeaders,
       "Column headers are as expected with all filter groups shown");
+
+    // Uncheck
+    await click('input[name="showAllFilterGroups"]');
+
+    firstRow = this.element.querySelectorAll('table.records-table tr')[0];
+    tableColumnHeaders =
+      Array.from(firstRow.querySelectorAll('th'))
+      .map(th => th.textContent.trim());
+    expectedTableHeaders = [
+      "Rank", "Player", "Record", "Machine"];
+    assert.deepEqual(
+      tableColumnHeaders, expectedTableHeaders,
+      "Column headers are as expected with only default filter groups shown");
   });
 
   test("records table has one row per record, with expected values", async function(assert) {
@@ -110,10 +130,11 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     this.owner.lookup('router:main').setupRouter();
 
     await render(
-      hbs`{{chart-ranking-single chart=chart records=records
-            filterGroups=filterGroups
-            appliedFiltersString=appliedFiltersString
-            updatedAppliedFiltersString=updateAppliedFiltersString}}`);
+      hbs`<ChartRankingSingle
+            @chart={{chart}} @records={{records}}
+            @filterGroups={{filterGroups}}
+            @appliedFiltersString={{appliedFiltersString}}
+            @updateAppliedFiltersString={{updateAppliedFiltersString}} />`);
 
     let rows = this.element.querySelectorAll('table.records-table tr');
     let cells = rows[1].querySelectorAll('td');

@@ -164,11 +164,10 @@ export default function() {
     let name = data.attributes.name;
     let kind = data.attributes.kind;
     let description = data.attributes.description;
-    let showByDefault = false;
-    let filterGroup = schema.filterGroups.create({
+    let showByDefault = data.attributes.showByDefault || false;
+    return schema.filterGroups.create({
       name: name, kind: kind,
       description: description, showByDefault: showByDefault});
-    return filterGroup;
   });
 
   this.get('/filter_groups/:id', (schema, request) => {
@@ -239,25 +238,21 @@ export default function() {
   });
 
   this.get('/filters', (schema, request) => {
-    let filters = null;
+    let filters = schema.filters.all();
+
     if (request.queryParams.filter_group_id) {
-      let filterGroup = schema.filterGroups.find(
-        request.queryParams.filter_group_id);
-
-      filters = filterGroup.filters;
-
-      if (request.queryParams.usage_type) {
-        // Keep only the filters that match the desired usage type
-        let usageType = request.queryParams.usage_type;
-        filters = filters.filter(
-          (filter) => filter.usageType === usageType);
-      }
-      // Sort by filter name, ascending
-      filters = filters.sort((a, b) => { return b.name < a.name; });
+      filters = filters.filter(
+        f => f.filterGroup.id === request.queryParams.filter_group_id);
     }
-    else {
-      filters = schema.filters.all();
+    if (request.queryParams.usage_type) {
+      filters = filters.filter(
+        f => f.usageType === request.queryParams.usage_type);
     }
+
+    // Sort by filter name, ascending
+    filters = filters.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
 
     // Partial implementation of pagination. The results aren't actually
     // paginated, but the Per-Page and Total headers are given.
@@ -328,24 +323,23 @@ export default function() {
       records = chart.records;
 
       // Handle sort params
-      let orderAscending = chart.chartType.order_ascending;
       let sortMethod = request.queryParams.sort || 'value';
       let sortFunc = null;
+
+      // Negative return value = sort a first, positive = sort b first
       if (sortMethod === 'value') {
+        let orderAscending = chart.chartType.order_ascending;
+
         if (orderAscending === true) {
-          sortFunc = ((a, b) => { return b.value < a.value; });
+          sortFunc = ((a, b) => { return a.value - b.value; });
         }
         else {
-          sortFunc = ((a, b) => { return a.value < b.value; });
+          sortFunc = ((a, b) => { return b.value - a.value; });
         }
       }
       else if (sortMethod === 'date_achieved') {
-        if (orderAscending === true) {
-          sortFunc = ((a, b) => { return b.achievedAt < a.achievedAt; });
-        }
-        else {
-          sortFunc = ((a, b) => { return a.achievedAt < b.achievedAt; });
-        }
+        // Latest date first
+        sortFunc = ((a, b) => { return b.achievedAt - a.achievedAt; });
       }
       records = records.sort(sortFunc);
 

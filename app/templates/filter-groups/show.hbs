@@ -1,17 +1,17 @@
-<h1>{{model.filterGroup.name}} (filter group)</h1>
+<h1>{{@model.filterGroup.name}} (filter group)</h1>
 
-<div>Kind: {{model.filterGroup.kind}}</div>
+<div>Kind: {{@model.filterGroup.kind}}</div>
 
-<div>Description: {{model.filterGroup.description}}</div>
+<div>Description: {{@model.filterGroup.description}}</div>
 
 <div>
   Used by these chart types:
   <ul class="chart-type-list plain-bullet-list">
-    {{#each model.chartTypes as |chartType|}}
+    {{#each @model.chartTypes as |chartType|}}
       <li>
-        {{#link-to "chart-types.filter-groups" chartType.id}}
+        <LinkTo @route="chart-types.filter-groups" @model={{chartType}}>
           {{chartType.name}}
-        {{/link-to}}
+        </LinkTo>
       </li>
     {{/each}}
   </ul>
@@ -22,29 +22,29 @@
 <div class="filter-section">
   <div class="filter-list choosable-filter-list">
     Choosable Filters:
-    {{filter-list
-      filterGroupId=model.filterGroup.id
-      filtersLastUpdated=filtersLastUpdated
-      updateSelectedFilterId=(action (mut selectedFilterId))
-      usageType="choosable"}}
+    <FilterList
+      @filterGroupId={{@model.filterGroup.id}}
+      @filtersLastUpdated={{filtersLastUpdated}}
+      @updateSelectedFilterId={{action (mut selectedFilterId)}}
+      @usageType="choosable" />
   </div>
 
-  {{#if (eq model.filterGroup.kind "select")}}
+  {{#if (eq @model.filterGroup.kind "select")}}
     <div class="filter-list implied-filter-list">
       Implied Filters:
-      {{filter-list
-        filterGroupId=model.filterGroup.id
-        filtersLastUpdated=filtersLastUpdated
-        updateSelectedFilterId=(action (mut selectedFilterId))
-        usageType="implied"}}
+      <FilterList
+        @filterGroupId={{@model.filterGroup.id}}
+        @filtersLastUpdated={{filtersLastUpdated}}
+        @updateSelectedFilterId={{action (mut selectedFilterId)}}
+        @usageType="implied" />
     </div>
   {{/if}}
 
   <div class="filter-detail-section">
     {{#if selectedFilterId}}
-      {{filter-detail
-        filterId=selectedFilterId
-        filterGroupId=model.filterGroup.id}}
+      <FilterDetail
+        @filterId={{selectedFilterId}}
+        @filterGroupId={{@model.filterGroup.id}} />
     {{/if}}
   </div>
 </div>
@@ -55,29 +55,33 @@
   <h3>New filter</h3>
 
   <div>
-    <label>Name</label>
-    {{input type="text" name="name" value=model.newFilter.name}}
+    <label for="new-filter-name">Name</label>
+    <Input
+      @type="text" @value={{@model.newFilter.name}}
+      name="name" id="new-filter-name" />
   </div>
 
-  {{#if (eq model.filterGroup.kind "select")}}
+  {{#if (eq @model.filterGroup.kind "select")}}
     <div class="type-field select-field-wrapper">
       <label>Type</label>
-      {{#power-select
-        options=usageTypeOptions
-        selected=model.newFilter.usageType
-        onchange=(action (mut model.newFilter.usageType))
-        placeholder="Not selected"
-        matchTriggerWidth=false
-        as |option|}}
+      <PowerSelect
+        @options={{usageTypeOptions}}
+        @selected={{@model.newFilter.usageType}}
+        @onChange={{action (mut @model.newFilter.usageType)}}
+        @placeholder="Not selected"
+        @matchTriggerWidth={{false}}
+        as |option|>
         {{option}}
-      {{/power-select}}
+      </PowerSelect>
     </div>
   {{/if}}
 
-  {{#if (eq model.filterGroup.kind "numeric")}}
+  {{#if (eq @model.filterGroup.kind "numeric")}}
     <div>
-      <label>Numeric value</label>
-      {{input type="number" name="numeric-value" value=model.newFilter.numericValue}}
+      <label for="new-filter-numeric-value">Numeric value</label>
+      <Input
+        @type="number" @value={{@model.newFilter.numericValue}}
+        name="numeric-value" id="new-filter-numeric-value" />
     </div>
   {{/if}}
 

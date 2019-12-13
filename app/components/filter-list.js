@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { action, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({
@@ -10,7 +10,8 @@ export default Component.extend({
   store: service('store'),
   usageType: null,
 
-  filters: computed('filterGroupId', 'filtersLastUpdated', 'pageNumber', 'searchText', 'usageType', function() {
+  @computed('filterGroupId', 'filtersLastUpdated', 'pageNumber', 'searchText', 'usageType')
+  get filters() {
     let args = {};
 
     let filterGroupId = this.get('filterGroupId');
@@ -30,16 +31,15 @@ export default Component.extend({
     }
 
     return this.get('store').query('filter', args);
-  }),
+  },
 
   // TODO: If you're not on page 1 and you type some searchText, the page
   // number won't reset, so the results may appear blank. It's not that
   // intrusive, but would be nice to fix.
 
-  actions: {
-    updateSelectedFilterId() {
-      this.updateSelectedFilterId(...arguments);
-    },
+  @action
+  updateSelectedFilterIdAction() {
+    this.updateSelectedFilterId(...arguments);
   },
 
   updateSelectedFilterId() {

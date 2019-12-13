@@ -1,7 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
-import { run } from "@ember/runloop";
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
 import hbs from 'htmlbars-inline-precompile';
 
@@ -23,12 +22,9 @@ module('Integration | Helper | find-filter-of-group', function(hooks) {
 
   test('it renders', async function(assert) {
     let store = this.owner.lookup('service:store');
-    this.set('filters', [
-      run(() => store.findRecord('filter', this.filterA1.id)),
-      run(() => store.findRecord('filter', this.filterB1.id)),
-    ]);
+    this.set('filters', store.findAll('filter'));
     this.set('filterGroupId', this.groupB.id);
-    await render(hbs`{{get (find-filter-of-group filters filterGroupId) name}}`);
+    await render(hbs`{{get (find-filter-of-group filters filterGroupId) "name"}}`);
 
     assert.equal(this.element.textContent.trim(), 'Filter B1');
   });

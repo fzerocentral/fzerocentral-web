@@ -2,32 +2,32 @@
   Add filter:
 
   {{!-- Choice of filter group --}}
-  {{#power-select
-    options=filterGroups
-    selected=selectedFilterGroup
-    onchange=(action (mut selectedFilterGroup))
-    placeholder="Not selected"
-    matchTriggerWidth=false
-    as |filterGroup|}}
+  <PowerSelect
+    @options={{@filterGroups}}
+    @selected={{selectedFilterGroup}}
+    @onChange={{action (mut selectedFilterGroup)}}
+    @placeholder="Not selected"
+    @matchTriggerWidth={{false}}
+    as |filterGroup|>
     {{filterGroup.name}}
-  {{/power-select}}
+  </PowerSelect>
 
   {{!-- Choice of is, is not, <=, >= --}}
-  {{#power-select
-    options=compareOptions
-    selected=selectedCompareOption
-    onchange=(action (mut selectedCompareOption))
-    placeholder="Not selected"
-    matchTriggerWidth=false
-    as |compareOption|}}
+  <PowerSelect
+    @options={{compareOptions}}
+    @selected={{selectedCompareOption}}
+    @onChange={{action (mut selectedCompareOption)}}
+    @placeholder="Not selected"
+    @matchTriggerWidth={{false}}
+    as |compareOption|>
     {{compareOption.text}}
-  {{/power-select}}
+  </PowerSelect>
 
   {{!-- Choice of filter from the filter group --}}
-  {{filter-select
-    filterGroup=selectedFilterGroup
-    selected=selectedFilter
-    onFilterChange=(action (mut selectedFilter))}}
+  <FilterSelect
+    @filterGroup={{selectedFilterGroup}}
+    @selected={{selectedFilter}}
+    @onFilterChange={{action (mut selectedFilter)}} />
 
   <button class="add-filter-button" type="submit" {{action "addFilter"}}>Add</button>
 </div>

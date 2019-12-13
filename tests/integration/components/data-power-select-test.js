@@ -57,14 +57,14 @@ module('Integration | Component | data-power-select', function(hooks) {
 
   test('placeholder text works', async function(assert) {
     await render(hbs`
-      {{#data-power-select
-        modelName="filter"
-        selected=selectedFilter
-        onchange=(action (mut selectedFilter))
-        placeholder="Not selected"
-        as |option|}}
+      <DataPowerSelect
+        @modelName="filter"
+        @selected={{selectedFilter}}
+        @onChange={{action (mut selectedFilter)}}
+        @placeholder="Not selected"
+        as |option|>
         {{option.name}}
-      {{/data-power-select}}
+      </DataPowerSelect>
     `);
 
     let select = this.element.querySelector('.ember-power-select-trigger');
@@ -76,15 +76,15 @@ module('Integration | Component | data-power-select', function(hooks) {
   test('should tolerate null params', async function(assert) {
     this.set('params', null);
     await render(hbs`
-      {{#data-power-select
-        modelName="filter"
-        params=params
-        selected=selectedFilter
-        onchange=(action (mut selectedFilter))
-        placeholder="Not selected"
-        as |option|}}
+      <DataPowerSelect
+        @modelName="filter"
+        @params={{params}}
+        @selected={{selectedFilter}}
+        @onChange={{action (mut selectedFilter)}}
+        @placeholder="Not selected"
+        as |option|>
         {{option.name}}
-      {{/data-power-select}}
+      </DataPowerSelect>
     `);
 
     let select = this.element.querySelector('.ember-power-select-trigger');
@@ -98,17 +98,37 @@ module('Integration | Component | data-power-select', function(hooks) {
     assert.notOk(queryRequest, "Shouldn't have made a filters request");
   });
 
-  test('can populate choices with model instances and filter the choices by params', async function(assert) {
+  test('can populate choices with model instances', async function(assert) {
     await render(hbs`
-      {{#data-power-select
-        modelName="filter"
-        params=(hash filter_group_id=filterGroup.id)
-        selected=selectedFilter
-        onchange=(action (mut selectedFilter))
-        placeholder="Not selected"
-        as |option|}}
+      <DataPowerSelect
+        @modelName="filter"
+        @selected={{selectedFilter}}
+        @onChange={{action (mut selectedFilter)}}
+        @placeholder="Not selected"
+        as |option|>
         {{option.name}}
-      {{/data-power-select}}
+      </DataPowerSelect>
+    `);
+
+    let select = this.element.querySelector('.ember-power-select-trigger');
+    await assertPowerSelectOptionsEqual(
+      assert, select,
+      ["B custom booster", "Gallant Star-G4", "Gamecube",
+       "Quick Cannon-G4", "Titan -G4 booster"],
+      "Choices are populated as expected");
+  });
+
+  test('can filter the choices by params', async function(assert) {
+    await render(hbs`
+      <DataPowerSelect
+        @modelName="filter"
+        @params={{hash filter_group_id=filterGroup.id}}
+        @selected={{selectedFilter}}
+        @onChange={{action (mut selectedFilter)}}
+        @placeholder="Not selected"
+        as |option|>
+        {{option.name}}
+      </DataPowerSelect>
     `);
 
     let select = this.element.querySelector('.ember-power-select-trigger');
@@ -121,15 +141,15 @@ module('Integration | Component | data-power-select', function(hooks) {
 
   test('can select a choice', async function(assert) {
     await render(hbs`
-      {{#data-power-select
-        modelName="filter"
-        params=(hash filter_group_id=filterGroup.id)
-        selected=selectedFilter
-        onchange=(action (mut selectedFilter))
-        placeholder="Not selected"
-        as |option|}}
+      <DataPowerSelect
+        @modelName="filter"
+        @params={{hash filter_group_id=filterGroup.id}}
+        @selected={{selectedFilter}}
+        @onChange={{action (mut selectedFilter)}}
+        @placeholder="Not selected"
+        as |option|>
         {{option.name}}
-      {{/data-power-select}}
+      </DataPowerSelect>
     `);
 
     let select = this.element.querySelector('.ember-power-select-trigger');
@@ -141,16 +161,17 @@ module('Integration | Component | data-power-select', function(hooks) {
 
   test('can type in the search field to modify the choices query', async function(assert) {
     await render(hbs`
-      {{#data-power-select
-        modelName="filter"
-        params=(hash filter_group_id=filterGroup.id)
-        queryKey="name_search"
-        selected=selectedFilter
-        onchange=(action (mut selectedFilter))
-        placeholder="Not selected"
-        as |option|}}
+      <DataPowerSelect
+        @modelName="filter"
+        @params={{hash filter_group_id=filterGroup.id}}
+        @searchEnabled={{true}}
+        @queryKey="name_search"
+        @selected={{selectedFilter}}
+        @onChange={{action (mut selectedFilter)}}
+        @placeholder="Not selected"
+        as |option|>
         {{option.name}}
-      {{/data-power-select}}
+      </DataPowerSelect>
     `);
 
     let select = this.element.querySelector('.ember-power-select-trigger');

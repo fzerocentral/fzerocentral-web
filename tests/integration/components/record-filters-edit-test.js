@@ -44,7 +44,7 @@ module('Integration | Component | record-filters-edit', function(hooks) {
 
   test('initializes filters to not-selected', async function(assert) {
     await render(hbs`
-      {{record-filters-edit filterGroups=filterGroups filters=filters}}
+      <RecordFiltersEdit @filterGroups={{filterGroups}} @filters={{filters}} />
     `);
 
     // Test `filters` value
@@ -60,7 +60,7 @@ module('Integration | Component | record-filters-edit', function(hooks) {
 
   test('can choose a filter for one group while leaving the other blank', async function(assert) {
     await render(hbs`
-      {{record-filters-edit filterGroups=filterGroups filters=filters}}
+      <RecordFiltersEdit @filterGroups={{filterGroups}} @filters={{filters}} />
     `);
 
     // Pick one filter
@@ -77,7 +77,7 @@ module('Integration | Component | record-filters-edit', function(hooks) {
 
   test('can choose filters in both groups', async function(assert) {
     await render(hbs`
-      {{record-filters-edit filterGroups=filterGroups filters=filters}}
+      <RecordFiltersEdit @filterGroups={{filterGroups}} @filters={{filters}} />
     `);
 
     // Pick both filters
@@ -96,7 +96,7 @@ module('Integration | Component | record-filters-edit', function(hooks) {
 
   test('can clear a selected filter', async function(assert) {
     await render(hbs`
-      {{record-filters-edit filterGroups=filterGroups filters=filters}}
+      <RecordFiltersEdit @filterGroups={{filterGroups}} @filters={{filters}} />
     `);
 
     // Pick a filter

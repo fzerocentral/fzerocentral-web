@@ -1,7 +1,7 @@
 import { A } from '@ember/array';
 import Component from '@ember/component';
 import DS from 'ember-data';
-import EmberObject, { computed } from '@ember/object';
+import EmberObject, { action, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({
@@ -23,14 +23,16 @@ export default Component.extend({
   store: service('store'),
   isEditing: false,
 
-  filter: computed('filterId', function() {
+  @computed('filterId')
+  get filter() {
     let filterId = this.get('filterId');
     if (filterId === null) { return null; }
 
     return this.get('store').findRecord('filter', this.get('filterId'));
-  }),
+  },
 
-  recordCount: computed('filterId', function() {
+  @computed('filterId')
+  get recordCount() {
     let filterId = this.get('filterId');
     if (filterId === null) { return {value: ""}; }
 
@@ -45,9 +47,10 @@ export default Component.extend({
         return {value: records.meta.pagination.totalResults};
       })
     });
-  }),
+  },
 
-  incomingImplications: computed('filter', 'incomingImplicationsPageNumber', 'linksLastUpdated', function() {
+  @computed('filter', 'incomingImplicationsPageNumber', 'linksLastUpdated')
+  get incomingImplications() {
     return DS.PromiseArray.create({
       promise: this.get('filter').then((filter) => {
         if (filter === null) { return A([]); }
@@ -59,9 +62,10 @@ export default Component.extend({
         return this.get('store').query('filterImplication', args);
       })
     });
-  }),
+  },
 
-  outgoingImplications: computed('filter', 'linksLastUpdated', 'outgoingImplicationsPageNumber', function() {
+  @computed('filter', 'linksLastUpdated', 'outgoingImplicationsPageNumber')
+  get outgoingImplications() {
     return DS.PromiseArray.create({
       promise: this.get('filter').then((filter) => {
         if (filter === null) { return A([]); }
@@ -73,9 +77,10 @@ export default Component.extend({
         return this.get('store').query('filterImplication', args);
       })
     });
-  }),
+  },
 
-  incomingLinks: computed('filter', 'incomingLinksPageNumber', 'linksLastUpdated', function() {
+  @computed('filter', 'incomingLinksPageNumber', 'linksLastUpdated')
+  get incomingLinks() {
     return DS.PromiseArray.create({
       promise: this.get('filter').then((filter) => {
         if (filter === null) { return A([]); }
@@ -87,9 +92,10 @@ export default Component.extend({
         return this.get('store').query('filterImplicationLink', args);
       })
     });
-  }),
+  },
 
-  outgoingLinks: computed('filter', 'linksLastUpdated', 'outgoingLinksPageNumber', function() {
+  @computed('filter', 'linksLastUpdated', 'outgoingLinksPageNumber')
+  get outgoingLinks() {
     return DS.PromiseArray.create({
       promise: this.get('filter').then((filter) => {
         if (filter === null) { return A([]); }
@@ -101,7 +107,7 @@ export default Component.extend({
         return this.get('store').query('filterImplicationLink', args);
       })
     });
-  }),
+  },
 
 
   didUpdateAttrs() {
@@ -120,115 +126,119 @@ export default Component.extend({
   },
 
 
-  actions: {
-    createLink() {
-      if (this.get('newLinkDirection') === null) {
-        this.set(
-          'linkCreateError', "Please select a link direction (from or to).");
-        return;
-      }
-      if (this.get('newLinkOtherFilter') === null) {
-        this.set(
-          'linkCreateError', "Please select a filter to link to.");
-        return;
-      }
+  @action
+  createLink() {
+    if (this.get('newLinkDirection') === null) {
+      this.set(
+        'linkCreateError', "Please select a link direction (from or to).");
+      return;
+    }
+    if (this.get('newLinkOtherFilter') === null) {
+      this.set(
+        'linkCreateError', "Please select a filter to link to.");
+      return;
+    }
 
-      let args = {};
-      if (this.get('newLinkDirection') === "from") {
-        args['implyingFilter'] = this.get('newLinkOtherFilter');
-        args['impliedFilter'] = this.get('filter');
-      }
-      else {
-        // "to"
-        args['implyingFilter'] = this.get('filter');
-        args['impliedFilter'] = this.get('newLinkOtherFilter');
-      }
+    let args = {};
+    if (this.get('newLinkDirection') === "from") {
+      args['implyingFilter'] = this.get('newLinkOtherFilter');
+      args['impliedFilter'] = this.get('filter');
+    }
+    else {
+      // "to"
+      args['implyingFilter'] = this.get('filter');
+      args['impliedFilter'] = this.get('newLinkOtherFilter');
+    }
 
-      let newLink = this.get('store').createRecord(
-        'filterImplicationLink', args);
+    let newLink = this.get('store').createRecord(
+      'filterImplicationLink', args);
 
-      // Save the link
-      newLink.save().then(() => {
-        // Success callback
-        this.set('linkCreateError', null);
+    // Save the link
+    newLink.save().then(() => {
+      // Success callback
+      this.set('linkCreateError', null);
 
-        // Reset the other-filter field. We won't reset the link-direction
-        // field, because the user might want to add several "From" links in
-        // a row, for example.
-        this.set('newLinkOtherFilter', null);
-        // Refresh link-related computed properties by changing this property.
-        this.set('linksLastUpdated', new Date());
-      }, (response) => {
-        // Error callback
-        this.set('linkCreateError', response.errors[0]);
-      });
-    },
+      // Reset the other-filter field. We won't reset the link-direction
+      // field, because the user might want to add several "From" links in
+      // a row, for example.
+      this.set('newLinkOtherFilter', null);
+      // Refresh link-related computed properties by changing this property.
+      this.set('linksLastUpdated', new Date());
+    }, (response) => {
+      // Error callback
+      this.set('linkCreateError', response.errors[0]);
+    });
+  },
 
-    deleteLink() {
-      if (this.get('selectedLinkDeletionOption') === null) {
-        this.set(
-          'linkDeleteError', "Please select a link to delete.");
-        return;
-      }
+  @action
+  deleteLink() {
+    if (this.get('selectedLinkDeletionOption') === null) {
+      this.set(
+        'linkDeleteError', "Please select a link to delete.");
+      return;
+    }
 
-      let link = this.get('selectedLinkDeletionOption');
+    let link = this.get('selectedLinkDeletionOption');
 
-      link.destroyRecord().then(() => {
-        // Success callback
-        this.set('linkDeleteError', null);
+    link.destroyRecord().then(() => {
+      // Success callback
+      this.set('linkDeleteError', null);
 
-        // Reset the link field.
-        this.set('selectedLinkDeletionOption', null);
-        // Refresh link-related computed properties by changing this property.
-        this.set('linksLastUpdated', new Date());
-      }, (response) => {
-        // Error callback
-        this.set('linkDeleteError', response.errors[0]);
-      });
-    },
+      // Reset the link field.
+      this.set('selectedLinkDeletionOption', null);
+      // Refresh link-related computed properties by changing this property.
+      this.set('linksLastUpdated', new Date());
+    }, (response) => {
+      // Error callback
+      this.set('linkDeleteError', response.errors[0]);
+    });
+  },
 
-    deleteFilter() {
-      // filter is a promise. Need to unwrap the promise to get the underlying
-      // DS.Model and call destroyRecord() on it.
-      this.get('filter').then((filter) => {
-        return filter.destroyRecord();
-      }).then(() => {
-        // Success callback
-        this.set('filterDeleteError', null);
-        // When done destroying, clear the active filter ID.
-        this.set('filterId', null);
-      }, (response) => {
-        // Error callback
-        this.set('filterDeleteError', response.errors[0]);
-      });
-    },
+  @action
+  deleteFilter() {
+    // filter is a promise. Need to unwrap the promise to get the underlying
+    // DS.Model and call destroyRecord() on it.
+    this.get('filter').then((filter) => {
+      return filter.destroyRecord();
+    }).then(() => {
+      // Success callback
+      this.set('filterDeleteError', null);
+      // When done destroying, clear the active filter ID.
+      this.set('filterId', null);
+    }, (response) => {
+      // Error callback
+      this.set('filterDeleteError', response.errors[0]);
+    });
+  },
 
-    saveEdits() {
-      let params = this.get('editableParams');
-      // filter is a promise. Need to unwrap the promise to get the underlying
-      // DS.Model and call save() on it.
-      this.get('filter').then((filter) => {
-        filter.set('name', params.name);
-        filter.set('numericValue', params.numericValue);
-        return filter.save();
-      }).then(() => {
-        // When done saving, close the edit form.
-        this.send('stopEditing');
-      });
-    },
+  @action
+  saveEdits() {
+    let params = this.get('editableParams');
+    // filter is a promise. Need to unwrap the promise to get the underlying
+    // DS.Model and call save() on it.
+    this.get('filter').then((filter) => {
+      filter.set('name', params.name);
+      filter.set('numericValue', params.numericValue);
+      return filter.save();
+    }).then(() => {
+      // When done saving, close the edit form.
+      this.send('stopEditing');
+    });
+  },
 
-    startEditing() {
-      this.set('isEditing', true);
+  @action
+  startEditing() {
+    this.set('isEditing', true);
 
-      // Populate fields
-      let params = this.get('editableParams');
-      let filter = this.get('filter');
-      params.set('name', filter.get('name'));
-      params.set('numericValue', filter.get('numericValue'));
-    },
+    // Populate fields
+    let params = this.get('editableParams');
+    let filter = this.get('filter');
+    params.set('name', filter.get('name'));
+    params.set('numericValue', filter.get('numericValue'));
+  },
 
-    stopEditing() {
-      this.set('isEditing', false);
-    },
+  @action
+  stopEditing() {
+    this.set('isEditing', false);
   },
 });

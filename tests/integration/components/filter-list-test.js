@@ -63,10 +63,10 @@ module('Integration | Component | filter-list', function(hooks) {
 
   test('should list choosable filters', async function(assert) {
     await render(hbs`
-      {{filter-list
-        filterGroupId=filterGroupId
-        updateSelectedFilterId=updateSelectedFilterId
-        usageType="choosable"}}
+      <FilterList
+        @filterGroupId={{filterGroupId}}
+        @updateSelectedFilterId={{updateSelectedFilterId}}
+        @usageType="choosable" />
     `);
 
     assert.ok(
@@ -88,10 +88,10 @@ module('Integration | Component | filter-list', function(hooks) {
 
   test('should list implied filters', async function(assert) {
     await render(hbs`
-      {{filter-list
-        filterGroupId=filterGroupId
-        updateSelectedFilterId=updateSelectedFilterId
-        usageType="implied"}}
+      <FilterList
+        @filterGroupId={{filterGroupId}}
+        @updateSelectedFilterId={{updateSelectedFilterId}}
+        @usageType="implied" />
     `);
 
     assert.notOk(
@@ -113,10 +113,10 @@ module('Integration | Component | filter-list', function(hooks) {
 
   test('filter query should account for search text', async function(assert) {
     await render(hbs`
-      {{filter-list
-        filterGroupId=filterGroupId
-        updateSelectedFilterId=updateSelectedFilterId
-        usageType="choosable"}}
+      <FilterList
+        @filterGroupId={{filterGroupId}}
+        @updateSelectedFilterId={{updateSelectedFilterId}}
+        @usageType="choosable" />
     `);
 
     await fillIn('.search-input', 'star');
@@ -130,10 +130,10 @@ module('Integration | Component | filter-list', function(hooks) {
 
   test('should update selectedFilterId when clicking a list button', async function(assert) {
     await render(hbs`
-      {{filter-list
-        filterGroupId=filterGroupId
-        updateSelectedFilterId=updateSelectedFilterId
-        usageType="choosable"}}
+      <FilterList
+        @filterGroupId={{filterGroupId}}
+        @updateSelectedFilterId={{updateSelectedFilterId}}
+        @usageType="choosable" />
     `);
 
     let gsg4ListItem = getFiltersListItemByName(

@@ -9,7 +9,7 @@ export async function assertPowerSelectOptionsEqual(
   // the power-select to make the dropdown appear, then we have to check
   // the ember-basic-dropdown-wormhole for the element indicated by the
   // power-select's aria-owns attribute.
-  await click(`#${powerSelectElement.id}`);
+  await click(powerSelectElement);
   let dropdownContentId = powerSelectElement.getAttribute('aria-owns');
   let dropdownContent = document.getElementById(dropdownContentId);
   let optionsList =

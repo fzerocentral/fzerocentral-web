@@ -1,13 +1,13 @@
 <ul class="plain-bullet-list">
   {{#each filters as |filter|}}
     <li>
-      <button type="button" class="show-filter-detail-button" {{action "updateSelectedFilterId" filter.id}}> {{filter.name}} </button>
+      <button type="button" class="show-filter-detail-button" {{action "updateSelectedFilterIdAction" filter.id}}> {{filter.name}} </button>
     </li>
   {{/each}}
 </ul>
 
 <div>
-  Search: {{input type="text" class="search-input" value=searchText}}
+  Search: <Input @type="text" @value={{searchText}} class="search-input" />
 </div>
 
-{{page-navigation pageResults=filters pageNumber=pageNumber}}
+<PageNavigation @pageResults={{filters}} @pageNumber={{pageNumber}} />

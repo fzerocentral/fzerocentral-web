@@ -119,9 +119,9 @@ module('Unit | Route | charts/show', function(hooks) {
     let compareMethodSelect = getCompareMethodSelect(this);
     let filterSelect = getFilterSelect(this);
 
-    await selectChoose(`#${filterGroupSelect.id}`, 'Machine');
-    await selectChoose(`#${compareMethodSelect.id}`, '-');
-    await selectChoose(`#${filterSelect.id}`, 'Blue Falcon');
+    await selectChoose(filterGroupSelect, 'Machine');
+    await selectChoose(compareMethodSelect, '-');
+    await selectChoose(filterSelect, 'Blue Falcon');
     await click(`button.add-filter-button`);
 
     assert.equal(currentURL(),

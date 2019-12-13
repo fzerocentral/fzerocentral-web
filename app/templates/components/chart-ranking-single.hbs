@@ -1,8 +1,14 @@
-{{filter-groups-toggle filterGroups=filterGroups onToggleUpdate=(action "onToggleUpdate")}}
+<div>
+  <Input
+    @type="checkbox" @checked={{showAllFilterGroups}}
+    name="showAllFilterGroups" id="showAllFilterGroupsCheckbox" />
+  <label for="showAllFilterGroupsCheckbox">Show all filter groups</label>
+</div>
 
-{{filter-apply-form filterGroups=filterGroups
-  appliedFiltersString=appliedFiltersString
-  updateAppliedFiltersString=updateAppliedFiltersString}}
+<FilterApplyForm
+  @filterGroups={{@filterGroups}}
+  @appliedFiltersString={{@appliedFiltersString}}
+  @updateAppliedFiltersString={{@updateAppliedFiltersString}} />
 
 <table class="records-table">
   <thead>
@@ -17,12 +23,12 @@
   </thead>
 
   <tbody>
-    {{#each records as |record|}}
+    {{#each @records as |record|}}
       <tr>
         <td>{{record.rank}}</td>
         <td>{{record.user.username}}</td>
         <td>
-          {{#link-to "charts.user-history" chart.id record.user.id}}
+          {{#link-to "charts.user-history" @chart.id record.user.id}}
             {{record.valueDisplay}}
           {{/link-to}}
         </td>

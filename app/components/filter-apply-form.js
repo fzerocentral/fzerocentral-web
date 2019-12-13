@@ -1,7 +1,7 @@
 import { A } from '@ember/array';
 import Component from '@ember/component';
 import DS from 'ember-data';
-import { computed } from '@ember/object';
+import { action, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({
@@ -12,7 +12,8 @@ export default Component.extend({
   selectedFilterGroup: null,
   store: service('store'),
 
-  appliedFilterSpecs: computed('appliedFiltersString', function() {
+  @computed('appliedFiltersString')
+  get appliedFilterSpecs() {
     let appliedFiltersString = this.get('appliedFiltersString');
     if (appliedFiltersString === null) {
       return A([]);
@@ -31,9 +32,10 @@ export default Component.extend({
         filterId: regexMatch[1], typeSuffix: regexMatch[2]});
     });
     return appliedFilterSpecs;
-  }),
+  },
 
-  appliedFilters: computed('appliedFilterSpecs', function() {
+  @computed('appliedFilterSpecs')
+  get appliedFilters() {
     let filterIds = [];
     this.get('appliedFilterSpecs').forEach((afSpec) => {
       filterIds.push(afSpec.filterId);
@@ -82,9 +84,10 @@ export default Component.extend({
         return appliedFilters;
       })
     });
-  }),
+  },
 
-  compareOptions: computed('selectedFilterGroup', function() {
+  @computed('selectedFilterGroup')
+  get compareOptions() {
     let group = this.get('selectedFilterGroup');
     if (!group) {
       return A([]);
@@ -99,7 +102,7 @@ export default Component.extend({
     }
 
     return compareOptions;
-  }),
+  },
 
 
   didUpdate() {
@@ -143,46 +146,47 @@ export default Component.extend({
   },
 
 
-  actions: {
-    addFilter() {
-      // Get the existing applied-filter strings
-      let filtersString = this.get('appliedFiltersString');
-      let filterStrings = [];
-      if (filtersString !== null) {
-        filterStrings = filtersString.split('-');
-      }
+  @action
+  addFilter() {
+    // Get the existing applied-filter strings
+    let filtersString = this.get('appliedFiltersString');
+    let filterStrings = [];
+    if (filtersString !== null) {
+      filterStrings = filtersString.split('-');
+    }
 
-      // Make a string for the newly added filter
-      let newFilterId = this.get('selectedFilter').get('id');
-      let compareOptionTypeSuffix =
-        this.get('selectedCompareOption').typeSuffix;
-      let newFilterString = `${newFilterId}${compareOptionTypeSuffix}`;
+    // Make a string for the newly added filter
+    let newFilterId = this.get('selectedFilter').get('id');
+    let compareOptionTypeSuffix =
+      this.get('selectedCompareOption').typeSuffix;
+    let newFilterString = `${newFilterId}${compareOptionTypeSuffix}`;
 
-      // Add the new string
-      filterStrings.push(newFilterString);
-      let newAppliedFiltersString = filterStrings.join('-');
-      this.send('updateAppliedFiltersString', newAppliedFiltersString);
-    },
+    // Add the new string
+    filterStrings.push(newFilterString);
+    let newAppliedFiltersString = filterStrings.join('-');
+    this.send('updateAppliedFiltersStringAction', newAppliedFiltersString);
+  },
 
-    removeFilter(index) {
-      // We're assuming this'll only ever be called with a valid index.
-      let filtersString = this.get('appliedFiltersString');
-      let filterStrings = filtersString.split('-');
-      // Remove 1 element at the specified index.
-      filterStrings.splice(index, 1);
+  @action
+  removeFilter(index) {
+    // We're assuming this'll only ever be called with a valid index.
+    let filtersString = this.get('appliedFiltersString');
+    let filterStrings = filtersString.split('-');
+    // Remove 1 element at the specified index.
+    filterStrings.splice(index, 1);
 
-      if (filterStrings.length === 0) {
-        // We expect null, not '', if there's 0 filters applied.
-        this.set('appliedFiltersString', null);
-      }
-      else {
-        this.set('appliedFiltersString', filterStrings.join('-'));
-      }
-    },
+    if (filterStrings.length === 0) {
+      // We expect null, not '', if there's 0 filters applied.
+      this.set('appliedFiltersString', null);
+    }
+    else {
+      this.set('appliedFiltersString', filterStrings.join('-'));
+    }
+  },
 
-    updateAppliedFiltersString() {
-      this.updateAppliedFiltersString(...arguments);
-    },
+  @action
+  updateAppliedFiltersStringAction() {
+    this.updateAppliedFiltersString(...arguments);
   },
 
   updateAppliedFiltersString() {
