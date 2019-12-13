@@ -1,13 +1,13 @@
-<h1>{{model.filterGroup.name}} (filter group)</h1>
+<h1>{{@model.filterGroup.name}} (filter group)</h1>
 
-<div>Kind: {{model.filterGroup.kind}}</div>
+<div>Kind: {{@model.filterGroup.kind}}</div>
 
-<div>Description: {{model.filterGroup.description}}</div>
+<div>Description: {{@model.filterGroup.description}}</div>
 
 <div>
   Used by these chart types:
   <ul class="chart-type-list plain-bullet-list">
-    {{#each model.chartTypes as |chartType|}}
+    {{#each @model.chartTypes as |chartType|}}
       <li>
         <LinkTo @route="chart-types.filter-groups" @model={{chartType}}>
           {{chartType.name}}
@@ -23,17 +23,17 @@
   <div class="filter-list choosable-filter-list">
     Choosable Filters:
     <FilterList
-      @filterGroupId={{model.filterGroup.id}}
+      @filterGroupId={{@model.filterGroup.id}}
       @filtersLastUpdated={{filtersLastUpdated}}
       @updateSelectedFilterId={{action (mut selectedFilterId)}}
       @usageType="choosable" />
   </div>
 
-  {{#if (eq model.filterGroup.kind "select")}}
+  {{#if (eq @model.filterGroup.kind "select")}}
     <div class="filter-list implied-filter-list">
       Implied Filters:
       <FilterList
-        @filterGroupId={{model.filterGroup.id}}
+        @filterGroupId={{@model.filterGroup.id}}
         @filtersLastUpdated={{filtersLastUpdated}}
         @updateSelectedFilterId={{action (mut selectedFilterId)}}
         @usageType="implied" />
@@ -44,7 +44,7 @@
     {{#if selectedFilterId}}
       <FilterDetail
         @filterId={{selectedFilterId}}
-        @filterGroupId={{model.filterGroup.id}} />
+        @filterGroupId={{@model.filterGroup.id}} />
     {{/if}}
   </div>
 </div>
@@ -57,17 +57,17 @@
   <div>
     <label for="new-filter-name">Name</label>
     <Input
-      @type="text" @value={{model.newFilter.name}}
+      @type="text" @value={{@model.newFilter.name}}
       name="name" id="new-filter-name" />
   </div>
 
-  {{#if (eq model.filterGroup.kind "select")}}
+  {{#if (eq @model.filterGroup.kind "select")}}
     <div class="type-field select-field-wrapper">
       <label>Type</label>
       <PowerSelect
         @options={{usageTypeOptions}}
-        @selected={{model.newFilter.usageType}}
-        @onChange={{action (mut model.newFilter.usageType)}}
+        @selected={{@model.newFilter.usageType}}
+        @onChange={{action (mut @model.newFilter.usageType)}}
         @placeholder="Not selected"
         @matchTriggerWidth={{false}}
         as |option|>
@@ -76,11 +76,11 @@
     </div>
   {{/if}}
 
-  {{#if (eq model.filterGroup.kind "numeric")}}
+  {{#if (eq @model.filterGroup.kind "numeric")}}
     <div>
       <label for="new-filter-numeric-value">Numeric value</label>
       <Input
-        @type="number" @value={{model.newFilter.numericValue}}
+        @type="number" @value={{@model.newFilter.numericValue}}
         name="numeric-value" id="new-filter-numeric-value" />
     </div>
   {{/if}}

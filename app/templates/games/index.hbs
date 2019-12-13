@@ -1,7 +1,7 @@
 <h1>Games</h1>
 
 <ul class="results">
-  {{#each model as |game|}}
+  {{#each @model as |game|}}
     <li><LinkTo @route="games.show" @model={{game}}>{{game.name}}</LinkTo></li>
   {{/each}}
 </ul>

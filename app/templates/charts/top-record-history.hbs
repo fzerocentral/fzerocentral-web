@@ -1,4 +1,4 @@
-<h1>Top record history for {{model.chart.chartGroup.name}} - {{model.chart.name}}</h1>
+<h1>Top record history for {{@model.chart.chartGroup.name}} - {{@model.chart.name}}</h1>
 
 <div>
   <Input
@@ -20,7 +20,7 @@
   </thead>
 
   <tbody>
-    {{#each model.records as |record|}}
+    {{#each @model.records as |record|}}
       <tr>
         <td>{{record.user.username}}</td>
         <td>{{record.valueDisplay}}</td>

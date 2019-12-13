@@ -1,6 +1,6 @@
-<h1>{{model.game.name}} - {{model.chartType.name}} (Chart type) - Filter groups</h1>
+<h1>{{@model.game.name}} - {{@model.chartType.name}} (Chart type) - Filter groups</h1>
 
-{{#if model.chartTypeFilterGroups}}
+{{#if @model.chartTypeFilterGroups}}
 
   <table class="chart-type-fgs">
     <thead>
@@ -13,7 +13,7 @@
     </thead>
 
     <tbody>
-      {{#each model.chartTypeFilterGroups as |ctfg|}}
+      {{#each @model.chartTypeFilterGroups as |ctfg|}}
         <tr>
           <td>
             <button type="button" class="unlink-fg-button" {{action "unlinkFilterGroup" ctfg}}> - </button>
@@ -63,11 +63,11 @@
 {{/if}}
 
 
-{{#if model.orphanedFilterGroups}}
+{{#if @model.orphanedFilterGroups}}
   <h2>Orphaned filter groups</h2>
 
   <ul class="orphaned-fgs">
-    {{#each model.orphanedFilterGroups as |filterGroup|}}
+    {{#each @model.orphanedFilterGroups as |filterGroup|}}
       <li>
         <LinkTo @route="filter-groups.show" @model={{filterGroup}}>
           {{filterGroup.name}}
@@ -84,7 +84,7 @@
 <div>
   <label for="new-filter-group-name">Name</label>
   <Input
-    @type="text" @value={{model.newFilterGroup.name}}
+    @type="text" @value={{@model.newFilterGroup.name}}
     class="name-input" id="new-filter-group-name" />
 </div>
 
@@ -92,8 +92,8 @@
   <label>Kind</label>
   <PowerSelect
     @options={{kindOptions}}
-    @selected={{model.newFilterGroup.kind}}
-    @onChange={{action (mut model.newFilterGroup.kind)}}
+    @selected={{@model.newFilterGroup.kind}}
+    @onChange={{action (mut @model.newFilterGroup.kind)}}
     @placeholder="Not selected"
     as |option|>
     {{option}}
@@ -103,7 +103,7 @@
 <div>
   <label for="new-filter-group-description">Description</label>
   <Input
-    @type="text" @value={{model.newFilterGroup.description}}
+    @type="text" @value={{@model.newFilterGroup.description}}
     class="description-input" id="new-filter-group-description" />
 </div>
 

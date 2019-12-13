@@ -1,11 +1,11 @@
-<h1>Submit record for: <LinkTo @route="charts.show" @model={{model.chart}}> {{model.chart.chartGroup.name}} - {{model.chart.name}}</LinkTo></h1>
+<h1>Submit record for: <LinkTo @route="charts.show" @model={{@model.chart}}> {{@model.chart.chartGroup.name}} - {{@model.chart.name}}</LinkTo></h1>
 
 <div class="user-select select-field-wrapper">
   <label>User</label>
   <PowerSelect
-    @options={{model.users}}
-    @selected={{model.record.user}}
-    @onChange={{action (mut model.record.user)}}
+    @options={{@model.users}}
+    @selected={{@model.record.user}}
+    @onChange={{action (mut @model.record.user)}}
     @placeholder="Not selected"
     @matchTriggerWidth={{false}}
     as |user|>
@@ -17,17 +17,17 @@
   <label for="new-record-value">Value</label>
   {{!-- For now, this is just a simple integer field which doesn't take the chart type's record format into account. --}}
   <Input
-    @type="text" @value={{model.record.value}}
+    @type="text" @value={{@model.record.value}}
     class="value-input" id="new-record-value" placeholder="Example: 123" />
 </div>
 
 <div>
   <label>Date achieved</label>
-  <DateField @dateValue={{model.record.achievedAt}} />
+  <DateField @dateValue={{@model.record.achievedAt}} />
 </div>
 
 <RecordFiltersEdit
-  @filterGroups={{model.filterGroups}}
-  @filters={{model.record.filters}} />
+  @filterGroups={{@model.filterGroups}}
+  @filters={{@model.record.filters}} />
 
 <div><button type="submit" {{action "saveRecord"}}>Submit record</button></div>

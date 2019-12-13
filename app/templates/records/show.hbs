@@ -1,20 +1,20 @@
 <h1>
   Edit record for:
-  <LinkTo @route="charts.show" @model={{model.record.chart}}>
-    {{model.record.chart.chartGroup.name}} - {{model.record.chart.name}}
+  <LinkTo @route="charts.show" @model={{@model.record.chart}}>
+    {{@model.record.chart.chartGroup.name}} - {{@model.record.chart.name}}
   </LinkTo>
 </h1>
 
-<div>User: {{model.record.user.username}}</div>
-<div>Value: {{model.record.valueDisplay}}</div>
+<div>User: {{@model.record.user.username}}</div>
+<div>Value: {{@model.record.valueDisplay}}</div>
 
 <div>
   <label>Date achieved</label>
-  <DateField @dateValue={{model.record.achievedAt}} />
+  <DateField @dateValue={{@model.record.achievedAt}} />
 </div>
 
 <RecordFiltersEdit
-  @filterGroups={{model.filterGroups}}
-  @filters={{model.record.filters}} />
+  @filterGroups={{@model.filterGroups}}
+  @filters={{@model.record.filters}} />
 
 <div><button type="submit" {{action "saveRecord"}}>Save edits</button></div>

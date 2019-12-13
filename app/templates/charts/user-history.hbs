@@ -1,4 +1,4 @@
-<h1>{{model.user.username}}'s history for {{model.chart.chartGroup.name}} - {{model.chart.name}}</h1>
+<h1>{{@model.user.username}}'s history for {{@model.chart.chartGroup.name}} - {{@model.chart.name}}</h1>
 
 <div>
   <Input
@@ -19,7 +19,7 @@
   </thead>
 
   <tbody>
-    {{#each model.records as |record|}}
+    {{#each @model.records as |record|}}
       <tr class={{if record.isImprovement "" "non-personal-best"}}>
         <td>
           <LinkTo @route="records.show" @model={{record}}>{{record.valueDisplay}}</LinkTo>
