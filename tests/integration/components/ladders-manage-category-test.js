@@ -49,24 +49,23 @@ module('Integration | Component | ladders-manage-category', function(hooks) {
       'table.ladders > tbody > tr');
 
     let assertLadderDetails = function(
-        ladderRow, expectedOrder, expectedName) {
+        ladderRow, expectedOrder, expectedName, expectedHref) {
       let cells = ladderRow.querySelectorAll('td');
       let order = cells[0].querySelector('input').value;
       let anchor = cells[1].querySelector('a');
       let name = anchor.textContent.trim();
+      let href = anchor.getAttribute('href');
       assert.equal(order, expectedOrder);
       assert.equal(name, expectedName);
-      // TODO: href gets an undefined ladder id for whatever reason.
-      //let href = anchor.getAttribute('href');
-      //assert.equal(href, expectedHref);
+      assert.equal(href, expectedHref);
     };
 
     assertLadderDetails(
-      ladderRows[0], '1', 'Ladder 1 name');
+      ladderRows[0], '1', 'Ladder 1 name', `/ladders/${this.ladder1.id}`);
     assertLadderDetails(
-      ladderRows[1], '2', 'Ladder 2 name');
+      ladderRows[1], '2', 'Ladder 2 name', `/ladders/${this.ladder2.id}`);
     assertLadderDetails(
-      ladderRows[2], '3', 'Ladder 3 name');
+      ladderRows[2], '3', 'Ladder 3 name', `/ladders/${this.ladder3.id}`);
   });
 
   // Trying to test changing the ladder order encounters the error
