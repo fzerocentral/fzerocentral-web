@@ -29,25 +29,38 @@ export default function() {
     return schema.charts.find(request.params.id);
   });
 
+  this.get('/chart_groups', (schema, request) => {
+    let chartGroups = schema.chartGroups.all();
+
+    if (request.queryParams.game_id) {
+      chartGroups = chartGroups.filter(
+        chartGroup => chartGroup.gameId === request.queryParams.game_id);
+    }
+
+    return chartGroups;
+  });
+
   this.get('/chart_groups/:id', (schema, request) => {
     return schema.chartGroups.find(request.params.id);
   });
 
   this.get('/chart_types', (schema, request) => {
+    let chartTypes = schema.chartTypes.all();
+
+    if (request.queryParams.hasOwnProperty('game_id')) {
+      chartTypes = chartTypes.filter(
+        chartType => chartType.gameId === request.queryParams.game_id);
+    }
     if (request.queryParams.hasOwnProperty('filter_group_id')) {
-      let filterGroup = schema.filterGroups.find(
-        request.queryParams.filter_group_id);
-      let ctfgs = schema.chartTypeFilterGroups.where(
-        {filterGroupId: filterGroup.id});
-      let chartTypes = schema.chartTypes.none();
-      ctfgs.models.forEach((ctfg) => {
-        chartTypes.add(schema.chartTypes.find(ctfg.chartTypeId));
-      });
-      return chartTypes;
+      chartTypes = chartTypes.filter(
+        chartType => schema.chartTypeFilterGroups.findBy({
+          chartTypeId: chartType.id,
+          filterGroupId: request.queryParams.filter_group_id
+        })
+      );
     }
-    else {
-      return schema.chartTypes.all();
-    }
+
+    return chartTypes;
   });
 
   this.get('/chart_types/:id', (schema, request) => {
@@ -304,15 +317,77 @@ export default function() {
     return schema.filters.find(request.params.id);
   });
 
-  this.get('/games', (schema, request) => {
-    if (request.queryParams.chart_type_id) {
-      // Return a single game
-      let chartType = schema.chartTypes.find(request.queryParams.chart_type_id);
-      return chartType.game;
+  this.get('/games', (schema) => {
+    return schema.games.all();
+  });
+
+  this.get('/games/:id', (schema, request) => {
+    return schema.games.find(request.params.id);
+  });
+
+  this.get('/ladders', (schema, request) => {
+    let ladders = schema.ladders.all();
+
+    if (request.queryParams.game_id) {
+      ladders = ladders.filter(
+        ladder => ladder.gameId === request.queryParams.game_id);
     }
-    else {
-      return schema.games.all();
+    if (request.queryParams.kind) {
+      ladders = ladders.filter(
+        ladder => ladder.kind === request.queryParams.kind);
     }
+
+    return ladders;
+  });
+
+  this.post('/ladders', (schema, request) => {
+    let requestJSON = JSON.parse(request.requestBody);
+    let data = requestJSON.data;
+
+    return schema.ladders.create({
+      name: data.attributes.name,
+      kind: data.attributes.kind,
+      filterSpec: data.attributes['filter-spec'],
+      orderInGameAndKind: data.attributes['order-in-game-and-kind'],
+      chartGroup: schema.chartGroups.find(
+        data.relationships['chart-group'].data.id),
+      game: schema.games.find(
+        data.relationships.game.data.id),
+    });
+  });
+
+  this.get('/ladders/:id', (schema, request) => {
+    return schema.ladders.find(request.params.id);
+  });
+
+  this.patch('/ladders/:id', (schema, request) => {
+    let requestJSON = JSON.parse(request.requestBody);
+    let data = requestJSON.data;
+
+    // Accept updates to all besides game and kind
+    let args = {};
+    if (data.attributes.hasOwnProperty('name')) {
+      args['name'] = data.attributes['name'];
+    }
+    if (data.attributes.hasOwnProperty('filter-spec')) {
+      args['filterSpec'] = data.attributes['filter-spec'];
+    }
+    if (data.attributes.hasOwnProperty('order-in-game-and-kind')) {
+      args['orderInGameAndKind'] = data.attributes['order-in-game-and-kind'];
+    }
+    if (data.relationships['chart-group'].data) {
+      args['chartGroup'] = schema.chartGroups.find(
+        data.relationships['chart-group'].data.id);
+    }
+
+    let ladder = schema.ladders.find(request.params.id);
+    ladder.update(args);
+    return ladder;
+  });
+
+  this.delete('/ladders/:id', (schema, request) => {
+    let ladder = schema.ladders.find(request.params.id);
+    ladder.destroy();
   });
 
   this.get('/records', (schema, request) => {

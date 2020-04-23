@@ -1,0 +1,26 @@
+<table class="ladders">
+  <thead>
+    <tr>
+      <th>Order</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each @ladders as |ladder|}}
+      <tr>
+        <td>
+          <Input
+            @type="text" @value={{ladder.orderInGameAndKind}}
+            onchange={{action "onOrderChange" ladder}}
+            size="2" class="order-input" />
+        </td>
+        <td>
+          <LinkTo @route="ladders.show" @model={{ladder}}>
+            {{ladder.name}}
+          </LinkTo>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

@@ -1,0 +1,23 @@
+<h1><LinkTo @route="games.show" @model={{@model.game}}> {{@model.game.name}} </LinkTo> - Manage Ladders</h1>
+
+<h2>Main ladders</h2>
+
+<div class="main-ladders">
+  {{#if @model.mainLadders}}
+    <LaddersManageCategory @ladders={{@model.mainLadders}} />
+  {{else}}
+    (No main ladders)
+  {{/if}}
+</div>
+
+<h2>Side ladders</h2>
+
+<div class="side-ladders">
+  {{#if @model.sideLadders}}
+    <LaddersManageCategory @ladders={{@model.sideLadders}} />
+  {{else}}
+    (No side ladders)
+  {{/if}}
+</div>
+
+<LinkTo @route="games.ladder-new" @model={{@model.game}}> Create ladder </LinkTo>
