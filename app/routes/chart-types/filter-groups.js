@@ -12,8 +12,6 @@ export default Route.extend({
         'chart-type-filter-group', {chart_type_id: params.chart_type_id}),
       filterGroups: this.get('store').query(
         'filterGroup', {chart_type_id: params.chart_type_id}),
-      game: this.get('store').queryRecord(
-        'game', {chart_type_id: params.chart_type_id}),
       newFilterGroup: this.get('store').createRecord('filter-group'),
       // Filter groups which are not associated with any chart type. These
       // aren't supposed to exist, but mistakes happen, so we check for these.

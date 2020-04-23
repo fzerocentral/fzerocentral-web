@@ -6,13 +6,17 @@ import { action, computed } from '@ember/object';
 export default Controller.extend({
   kindOptions: A(['select', 'numeric']),
 
+  @computed('model')
+  get game() {
+    return this.model.chartType.get('game');
+  },
+
   // Filter groups which are not associated with this chart type, but are in
   // the same game as this chart type
   @computed('model')
   get otherFilterGroups() {
-    let chartType = this.model.chartType;
     let gameFilterGroupsPromise = this.get('store').query(
-      'filter-group', {game_id: chartType.get('game').get('id')}
+      'filter-group', {game_id: this.get('game').get('id')}
     );
 
     return DS.PromiseArray.create({
