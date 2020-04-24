@@ -28,9 +28,9 @@
         <td>{{record.rank}}</td>
         <td>{{record.user.username}}</td>
         <td>
-          {{#link-to "charts.user-history" @chart.id record.user.id}}
+          <LinkTo @route="charts.user-history" @models={{array @chart.id record.user.id}}>
             {{record.valueDisplay}}
-          {{/link-to}}
+          </LinkTo>
         </td>
 
         {{#each shownFilterGroups as |filterGroup|}}
