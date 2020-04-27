@@ -1,6 +1,6 @@
-{{#if (not @root)}}
+{{#unless @root}}
   <LinkTo @route="chart-groups.show" @model={{@cg}}>{{cg.name}}</LinkTo>
-{{/if}}
+{{/unless}}
 
 <ul class="chart-group-listing">
   {{#each @cg.childGroups as |cg2|}}

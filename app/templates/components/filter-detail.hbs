@@ -16,7 +16,7 @@
   </div>
 </div>
 
-<div class="filter-edit-form {{if (not isEditing) "hidden"}}">
+<div class="filter-edit-form {{unless isEditing "hidden"}}">
   <div>
     <label for="edit-filter-name">Name</label>
     <Input
