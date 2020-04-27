@@ -47,11 +47,11 @@ export default function() {
   this.get('/chart_types', (schema, request) => {
     let chartTypes = schema.chartTypes.all();
 
-    if (request.queryParams.hasOwnProperty('game_id')) {
+    if (Object.prototype.hasOwnProperty.call(request.queryParams, 'game_id')) {
       chartTypes = chartTypes.filter(
         chartType => chartType.gameId === request.queryParams.game_id);
     }
-    if (request.queryParams.hasOwnProperty('filter_group_id')) {
+    if (Object.prototype.hasOwnProperty.call(request.queryParams, 'filter_group_id')) {
       chartTypes = chartTypes.filter(
         chartType => schema.chartTypeFilterGroups.findBy({
           chartTypeId: chartType.id,
@@ -68,7 +68,7 @@ export default function() {
   });
 
   this.get('/chart_type_filter_groups', (schema, request) => {
-    if (request.queryParams.hasOwnProperty('chart_type_id')) {
+    if (Object.prototype.hasOwnProperty.call(request.queryParams, 'chart_type_id')) {
       let chartType = schema.chartTypes.find(
         request.queryParams.chart_type_id);
       return schema.chartTypeFilterGroups.where({chartTypeId: chartType.id});
@@ -82,11 +82,11 @@ export default function() {
     let requestJSON = JSON.parse(request.requestBody);
     let data = requestJSON.data;
     let order = 1;
-    if (data.attributes.hasOwnProperty('order-in-chart-type')) {
+    if (Object.prototype.hasOwnProperty.call(data.attributes, 'order-in-chart-type')) {
       order = data.attributes['order-in-chart-type'];
     }
     let showByDefault = false;
-    if (data.attributes.hasOwnProperty('show-by-default')) {
+    if (Object.prototype.hasOwnProperty.call(data.attributes, 'show-by-default')) {
       showByDefault = data.attributes['show-by-default'];
     }
     let chartTypeId = data.relationships['chart-type'].data.id;
@@ -102,10 +102,10 @@ export default function() {
     let data = requestJSON.data;
     let ctfg = schema.chartTypeFilterGroups.find(request.params.id);
     let args = {};
-    if (data.attributes.hasOwnProperty('order-in-chart-type')) {
+    if (Object.prototype.hasOwnProperty.call(data.attributes, 'order-in-chart-type')) {
       args.orderInChartType = data.attributes['order-in-chart-type'];
     }
-    if (data.attributes.hasOwnProperty('show-by-default')) {
+    if (Object.prototype.hasOwnProperty.call(data.attributes, 'show-by-default')) {
       args.showByDefault = data.attributes['show-by-default'];
     }
     ctfg.update(args);
@@ -118,7 +118,7 @@ export default function() {
   });
 
   this.get('/filter_groups', (schema, request) => {
-    if (request.queryParams.hasOwnProperty('chart_type_id')) {
+    if (Object.prototype.hasOwnProperty.call(request.queryParams, 'chart_type_id')) {
       if (request.queryParams.chart_type_id === '') {
         // FGs without a CT. We'll implement this very naively, so don't give
         // Mirage too many FGs in this case...
@@ -145,7 +145,7 @@ export default function() {
         return filterGroups;
       }
     }
-    else if (request.queryParams.hasOwnProperty('game_id')) {
+    else if (Object.prototype.hasOwnProperty.call(request.queryParams, 'game_id')) {
       // FGs of a particular game
       let chartTypes = schema.chartTypes.where(
         {gameId: request.queryParams.game_id});
@@ -194,7 +194,7 @@ export default function() {
 
   this.get('/filter_implication_links', (schema, request) => {
     let links = null;
-    if (request.queryParams.hasOwnProperty('filter_group_id')) {
+    if (Object.prototype.hasOwnProperty.call(request.queryParams, 'filter_group_id')) {
       // FILs of a particular FG
       let allLinks = schema.filterImplicationLinks.all();
       links = schema.filterImplicationLinks.none();
@@ -232,7 +232,7 @@ export default function() {
   });
 
   this.get('/filter_implications', (schema, request) => {
-    if (request.queryParams.hasOwnProperty('implying_filter_id')) {
+    if (Object.prototype.hasOwnProperty.call(request.queryParams, 'implying_filter_id')) {
       // FILs of a particular FG
       let allImplications = schema.filterImplications.all();
       let implications = schema.filterImplications.none();
@@ -281,13 +281,13 @@ export default function() {
     args.name = data.attributes.name;
     args.filterGroupId = data.relationships['filter-group'].data.id;
 
-    if (data.attributes.hasOwnProperty('usage-type')) {
+    if (Object.prototype.hasOwnProperty.call(data.attributes, 'usage-type')) {
       args.usageType = data.attributes['usage-type'];
     }
     else {
       args.usageType = 'choosable';
     }
-    if (data.attributes.hasOwnProperty('numeric-value')) {
+    if (Object.prototype.hasOwnProperty.call(data.attributes, 'numeric-value')) {
       args.numericValue = data.attributes['numeric-value'];
     }
 
@@ -300,7 +300,7 @@ export default function() {
     let data = requestJSON.data;
     let args = {};
     args.name = data.attributes.name;
-    if (data.attributes.hasOwnProperty('numeric-value')) {
+    if (Object.prototype.hasOwnProperty.call(data.attributes, 'numeric-value')) {
       args.numericValue = data.attributes['numeric-value'];
     }
     let filter = schema.filters.find(request.params.id);
@@ -366,13 +366,13 @@ export default function() {
 
     // Accept updates to all besides game and kind
     let args = {};
-    if (data.attributes.hasOwnProperty('name')) {
+    if (Object.prototype.hasOwnProperty.call(data.attributes, 'name')) {
       args['name'] = data.attributes['name'];
     }
-    if (data.attributes.hasOwnProperty('filter-spec')) {
+    if (Object.prototype.hasOwnProperty.call(data.attributes, 'filter-spec')) {
       args['filterSpec'] = data.attributes['filter-spec'];
     }
-    if (data.attributes.hasOwnProperty('order-in-game-and-kind')) {
+    if (Object.prototype.hasOwnProperty.call(data.attributes, 'order-in-game-and-kind')) {
       args['orderInGameAndKind'] = data.attributes['order-in-game-and-kind'];
     }
     if (data.relationships['chart-group'].data) {
