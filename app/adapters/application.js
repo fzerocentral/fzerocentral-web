@@ -29,7 +29,7 @@ export default DS.JSONAPIAdapter.extend({
     //
     // (Note: headers is an Object, but it may have been created in such a way
     // that it doesn't have hasOwnProperty. Hence the use of call().)
-    if (Object.hasOwnProperty.call(headers, 'link')) {
+    if (Object.prototype.hasOwnProperty.call(headers, 'link')) {
       let linksHash = {};
       // Here we're assuming that links won't have commas
       headers['link'].split(',').forEach((linkAndRel) => {
@@ -42,7 +42,7 @@ export default DS.JSONAPIAdapter.extend({
     }
 
     // Pagination.
-    if (Object.hasOwnProperty.call(headers, 'per-page')) {
+    if (Object.prototype.hasOwnProperty.call(headers, 'per-page')) {
       meta['pagination'] = {};
 
       meta['pagination']['resultsPerPage'] = headers['per-page'];
@@ -52,8 +52,8 @@ export default DS.JSONAPIAdapter.extend({
 
       // firstPage, prevPage, nextPage, lastPage
       ['first', 'prev', 'next', 'last'].forEach((pageName) => {
-        if (meta.hasOwnProperty('links')
-            && meta['links'].hasOwnProperty(pageName)) {
+        if (Object.prototype.hasOwnProperty.call(meta, 'links')
+            && Object.prototype.hasOwnProperty.call(meta['links'], pageName)) {
           let pageUrl = new URL(meta['links'][pageName]);
           let page = (new URLSearchParams(pageUrl.search)).get('page');
           meta['pagination'][pageName + 'Page'] = page;

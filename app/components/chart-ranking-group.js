@@ -124,7 +124,7 @@ export default Component.extend({
         otherCharts.forEach((chart) => {
           let userId = mainRecord.get('user').get('id');
           let thisChartRecords = otherChartRecordsByUser[chart.get('id')];
-          if (thisChartRecords.hasOwnProperty(userId)) {
+          if (Object.hasOwnProperty.call(thisChartRecords, userId)) {
             otherRecords.push(thisChartRecords[userId]);
           }
           else {
