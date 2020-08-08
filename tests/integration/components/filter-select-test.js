@@ -52,7 +52,7 @@ module('Integration | Component | filter-select', function(hooks) {
       assert, select, ["Type to search"],
       "Choices should be empty");
 
-    assert.equal(this.get('params'), null, "params should be null");
+    assert.equal(this.params, null, "params should be null");
   });
 
   test('initializes selection to placeholder text', async function(assert) {
@@ -82,8 +82,8 @@ module('Integration | Component | filter-select', function(hooks) {
     await selectChoose(`.ember-power-select-trigger`, "Filter A1");
 
     // Test parent callback's result.
-    assert.equal(this.get('filter').get('name'), "Filter A1");
-    assert.equal(this.get('filter').get('id'), this.filterA1.id);
+    assert.equal(this.filter.get('name'), "Filter A1");
+    assert.equal(this.filter.get('id'), this.filterA1.id);
 
     // Test text.
     let select = this.element.querySelector('.ember-power-select-trigger');
@@ -105,7 +105,7 @@ module('Integration | Component | filter-select', function(hooks) {
     await clearSelected(`.ember-power-select-trigger`);
 
     // Test parent callback's result.
-    assert.equal(this.get('filter'), null);
+    assert.equal(this.filter, null);
 
     // Test text.
     let select = this.element.querySelector('.ember-power-select-trigger');

@@ -24,8 +24,7 @@ module('Integration | Helper | has-multiple-pages', function(hooks) {
 
     await render(hbs`{{get (has-multiple-pages pageResults) "value"}}`);
 
-    assert.equal(
-      this.element.textContent.trim(), 'false', "Result should be false");
+    assert.dom(this.element).hasText('false', "Result should be false");
   });
 
   test("works with less than one page of results", async function(assert) {
@@ -36,8 +35,7 @@ module('Integration | Helper | has-multiple-pages', function(hooks) {
 
     await render(hbs`{{get (has-multiple-pages pageResults) "value"}}`);
 
-    assert.equal(
-      this.element.textContent.trim(), 'false', "Result should be false");
+    assert.dom(this.element).hasText('false', "Result should be false");
   });
 
   test("works with exactly one page of results", async function(assert) {
@@ -48,8 +46,7 @@ module('Integration | Helper | has-multiple-pages', function(hooks) {
 
     await render(hbs`{{get (has-multiple-pages pageResults) "value"}}`);
 
-    assert.equal(
-      this.element.textContent.trim(), 'false', "Result should be false");
+    assert.dom(this.element).hasText('false', "Result should be false");
   });
 
   test("works with multiple pages of results", async function(assert) {
@@ -60,7 +57,6 @@ module('Integration | Helper | has-multiple-pages', function(hooks) {
 
     await render(hbs`{{get (has-multiple-pages pageResults) "value"}}`);
 
-    assert.equal(
-      this.element.textContent.trim(), 'true', "Result should be true");
+    assert.dom(this.element).hasText('true', "Result should be true");
   });
 });

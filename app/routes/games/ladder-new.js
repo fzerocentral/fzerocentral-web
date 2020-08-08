@@ -5,10 +5,10 @@ import RSVP from 'rsvp';
 export default Route.extend({
   model(params) {
     return RSVP.hash({
-      chartGroups: this.get('store').query(
+      chartGroups: this.store.query(
         'chartGroup', {game_id: params.game_id}),
-      game: this.get('store').findRecord('game', params.game_id),
-      ladder: this.get('store').createRecord('ladder'),
+      game: this.store.findRecord('game', params.game_id),
+      ladder: this.store.createRecord('ladder'),
     });
   },
 

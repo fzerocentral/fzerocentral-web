@@ -1,12 +1,12 @@
-import DS from 'ember-data';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 
-export default DS.Model.extend({
-  name: DS.attr(),
+export default Model.extend({
+  name: attr(),
   // 'choosable' or 'implied'
-  usageType: DS.attr(),
+  usageType: attr(),
   // Used when the filterGroup is numeric
-  numericValue: DS.attr(),
+  numericValue: attr(),
 
-  filterGroup: DS.belongsTo('filter-group'),
-  records: DS.hasMany('record'),
+  filterGroup: belongsTo('filter-group'),
+  records: hasMany('record'),
 });

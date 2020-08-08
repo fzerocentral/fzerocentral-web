@@ -13,7 +13,7 @@ module('Integration | Component | date-field', function(hooks) {
     this.set('dateValue', null);
     await render(hbs`<DateField @dateValue={{dateValue}} />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.dom(this.element).hasText('');
   });
 
   test('filling the field updates dateValue', async function(assert) {
@@ -27,6 +27,6 @@ module('Integration | Component | date-field', function(hooks) {
     // Just check that it's a date.
     // The exact date will depend on the client timezone; not sure how to
     // make an assert account for that.
-    assert.equal(this.get('dateValue').constructor.name, 'Date');
+    assert.equal(this.dateValue.constructor.name, 'Date');
   });
 });

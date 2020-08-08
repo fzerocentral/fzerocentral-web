@@ -180,7 +180,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
     await click(`button.add-filter-button`);
     let expectedAFString = `${this.whiteCatFilter.id}`;
     assert.equal(
-      this.get('appliedFiltersString'), expectedAFString,
+      this.appliedFiltersString, expectedAFString,
       "Works for equality comparison");
 
     await selectChoose(filterGroupSelect, 'Machine');
@@ -189,7 +189,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
     await click(`button.add-filter-button`);
     expectedAFString += `-${this.blueFalconFilter.id}n`;
     assert.equal(
-      this.get('appliedFiltersString'), expectedAFString,
+      this.appliedFiltersString, expectedAFString,
       "Works for NOT comparison");
 
     await selectChoose(filterGroupSelect, 'Setting');
@@ -198,7 +198,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
     await click(`button.add-filter-button`);
     expectedAFString += `-${this.setting80Filter.id}ge`;
     assert.equal(
-      this.get('appliedFiltersString'), expectedAFString,
+      this.appliedFiltersString, expectedAFString,
       "Works for greater-or-equal comparison");
 
     await selectChoose(filterGroupSelect, 'Setting');
@@ -207,7 +207,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
     await click(`button.add-filter-button`);
     expectedAFString += `-${this.setting30Filter.id}le`;
     assert.equal(
-      this.get('appliedFiltersString'), expectedAFString,
+      this.appliedFiltersString, expectedAFString,
       "Works for less-or-equal comparison");
   });
 
@@ -252,7 +252,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
       `${this.whiteCatFilter.id}`
       + `-${this.setting30Filter.id}le`;
     assert.equal(
-      this.get('appliedFiltersString'), expectedAFString,
+      this.appliedFiltersString, expectedAFString,
       "Properly updated after 1st removal");
 
     removeButtons =
@@ -261,7 +261,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
     expectedAFString =
       `${this.setting30Filter.id}le`;
     assert.equal(
-      this.get('appliedFiltersString'), expectedAFString,
+      this.appliedFiltersString, expectedAFString,
       "Properly updated after 2nd removal");
 
     removeButtons =
@@ -269,7 +269,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
     await click(removeButtons[0]);
     expectedAFString = null;
     assert.equal(
-      this.get('appliedFiltersString'), expectedAFString,
+      this.appliedFiltersString, expectedAFString,
       "Properly updated after 3rd removal");
   });
 });

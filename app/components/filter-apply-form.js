@@ -14,7 +14,7 @@ export default Component.extend({
 
   @computed('appliedFiltersString')
   get appliedFilterSpecs() {
-    let appliedFiltersString = this.get('appliedFiltersString');
+    let appliedFiltersString = this.appliedFiltersString;
     if (appliedFiltersString === null) {
       return A([]);
     }
@@ -37,17 +37,17 @@ export default Component.extend({
   @computed('appliedFilterSpecs')
   get appliedFilters() {
     let filterIds = [];
-    this.get('appliedFilterSpecs').forEach((afSpec) => {
+    this.appliedFilterSpecs.forEach((afSpec) => {
       filterIds.push(afSpec.filterId);
     });
-    let filtersPromise = this.get('store').query(
+    let filtersPromise = this.store.query(
       'filter', {filter_ids: filterIds.join(',')});
 
     return DS.PromiseArray.create({
       promise: filtersPromise.then((filters) => {
         let appliedFilters = A([]);
 
-        this.get('appliedFilterSpecs').forEach((afSpec) => {
+        this.appliedFilterSpecs.forEach((afSpec) => {
           let filterId = afSpec.filterId;
           let typeSuffix = afSpec.typeSuffix;
           let filterInstance = filters.findBy('id', filterId);
@@ -88,7 +88,7 @@ export default Component.extend({
 
   @computed('selectedFilterGroup')
   get compareOptions() {
-    let group = this.get('selectedFilterGroup');
+    let group = this.selectedFilterGroup;
     if (!group) {
       return A([]);
     }
@@ -111,9 +111,9 @@ export default Component.extend({
     // dealing an attribute which can also be interactively changed, and
     // thus can't be a computed property).
 
-    let selectedFilter = this.get('selectedFilter');
+    let selectedFilter = this.selectedFilter;
     if (selectedFilter) {
-      let selectedFilterGroup = this.get('selectedFilterGroup');
+      let selectedFilterGroup = this.selectedFilterGroup;
       if (selectedFilter.get('filterGroup').get('id')
           !== selectedFilterGroup.get('id')) {
         // selectedFilter is not in the current filter group, so reset it.
@@ -121,8 +121,8 @@ export default Component.extend({
       }
     }
 
-    let selectedCompareOption = this.get('selectedCompareOption');
-    let compareOptions = this.get('compareOptions');
+    let selectedCompareOption = this.selectedCompareOption;
+    let compareOptions = this.compareOptions;
     let defaultCompareOption = compareOptions.find((option) => {
       return option.text === '-';
     });
@@ -149,16 +149,16 @@ export default Component.extend({
   @action
   addFilter() {
     // Get the existing applied-filter strings
-    let filtersString = this.get('appliedFiltersString');
+    let filtersString = this.appliedFiltersString;
     let filterStrings = [];
     if (filtersString !== null) {
       filterStrings = filtersString.split('-');
     }
 
     // Make a string for the newly added filter
-    let newFilterId = this.get('selectedFilter').get('id');
+    let newFilterId = this.selectedFilter.get('id');
     let compareOptionTypeSuffix =
-      this.get('selectedCompareOption').typeSuffix;
+      this.selectedCompareOption.typeSuffix;
     let newFilterString = `${newFilterId}${compareOptionTypeSuffix}`;
 
     // Add the new string
@@ -170,7 +170,7 @@ export default Component.extend({
   @action
   removeFilter(index) {
     // We're assuming this'll only ever be called with a valid index.
-    let filtersString = this.get('appliedFiltersString');
+    let filtersString = this.appliedFiltersString;
     let filterStrings = filtersString.split('-');
     // Remove 1 element at the specified index.
     filterStrings.splice(index, 1);

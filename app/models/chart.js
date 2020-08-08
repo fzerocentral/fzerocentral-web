@@ -1,9 +1,9 @@
-import DS from 'ember-data';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 
-export default DS.Model.extend({
-  name: DS.attr(),
+export default Model.extend({
+  name: attr(),
 
-  chartGroup: DS.belongsTo('chart-group'),
-  chartType: DS.belongsTo('chart-type'),
-  records: DS.hasMany('record'),
+  chartGroup: belongsTo('chart-group'),
+  chartType: belongsTo('chart-type'),
+  records: hasMany('record'),
 });

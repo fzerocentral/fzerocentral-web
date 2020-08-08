@@ -25,21 +25,21 @@ export default Component.extend({
 
   @computed('filterId')
   get filter() {
-    let filterId = this.get('filterId');
+    let filterId = this.filterId;
     if (filterId === null) { return null; }
 
-    return this.get('store').findRecord('filter', this.get('filterId'));
+    return this.store.findRecord('filter', this.filterId);
   },
 
   @computed('filterId')
   get recordCount() {
-    let filterId = this.get('filterId');
+    let filterId = this.filterId;
     if (filterId === null) { return {value: ""}; }
 
     // The record count can be retrieved from the pagination headers of a
     // GET records response. We're not interested in the records themselves,
     // so we just request 1 record.
-    let recordsPromise = this.get('store').query(
+    let recordsPromise = this.store.query(
       'record', {filters: filterId.toString(), per_page: 1});
 
     return DS.PromiseObject.create({
@@ -52,14 +52,14 @@ export default Component.extend({
   @computed('filter', 'incomingImplicationsPageNumber', 'linksLastUpdated')
   get incomingImplications() {
     return DS.PromiseArray.create({
-      promise: this.get('filter').then((filter) => {
+      promise: this.filter.then((filter) => {
         if (filter === null) { return A([]); }
 
         let args = {
           implied_filter_id: filter.get('id'),
-          page: this.get('incomingImplicationsPageNumber'),
+          page: this.incomingImplicationsPageNumber,
         };
-        return this.get('store').query('filterImplication', args);
+        return this.store.query('filterImplication', args);
       })
     });
   },
@@ -67,14 +67,14 @@ export default Component.extend({
   @computed('filter', 'linksLastUpdated', 'outgoingImplicationsPageNumber')
   get outgoingImplications() {
     return DS.PromiseArray.create({
-      promise: this.get('filter').then((filter) => {
+      promise: this.filter.then((filter) => {
         if (filter === null) { return A([]); }
 
         let args = {
           implying_filter_id: filter.get('id'),
-          page: this.get('outgoingImplicationsPageNumber'),
+          page: this.outgoingImplicationsPageNumber,
         };
-        return this.get('store').query('filterImplication', args);
+        return this.store.query('filterImplication', args);
       })
     });
   },
@@ -82,14 +82,14 @@ export default Component.extend({
   @computed('filter', 'incomingLinksPageNumber', 'linksLastUpdated')
   get incomingLinks() {
     return DS.PromiseArray.create({
-      promise: this.get('filter').then((filter) => {
+      promise: this.filter.then((filter) => {
         if (filter === null) { return A([]); }
 
         let args = {
           implied_filter_id: filter.get('id'),
-          page: this.get('incomingLinksPageNumber'),
+          page: this.incomingLinksPageNumber,
         };
-        return this.get('store').query('filterImplicationLink', args);
+        return this.store.query('filterImplicationLink', args);
       })
     });
   },
@@ -97,14 +97,14 @@ export default Component.extend({
   @computed('filter', 'linksLastUpdated', 'outgoingLinksPageNumber')
   get outgoingLinks() {
     return DS.PromiseArray.create({
-      promise: this.get('filter').then((filter) => {
+      promise: this.filter.then((filter) => {
         if (filter === null) { return A([]); }
 
         let args = {
           implying_filter_id: filter.get('id'),
-          page: this.get('outgoingLinksPageNumber'),
+          page: this.outgoingLinksPageNumber,
         };
-        return this.get('store').query('filterImplicationLink', args);
+        return this.store.query('filterImplicationLink', args);
       })
     });
   },
@@ -128,29 +128,29 @@ export default Component.extend({
 
   @action
   createLink() {
-    if (this.get('newLinkDirection') === null) {
+    if (this.newLinkDirection === null) {
       this.set(
         'linkCreateError', "Please select a link direction (from or to).");
       return;
     }
-    if (this.get('newLinkOtherFilter') === null) {
+    if (this.newLinkOtherFilter === null) {
       this.set(
         'linkCreateError', "Please select a filter to link to.");
       return;
     }
 
     let args = {};
-    if (this.get('newLinkDirection') === "from") {
-      args['implyingFilter'] = this.get('newLinkOtherFilter');
-      args['impliedFilter'] = this.get('filter');
+    if (this.newLinkDirection === "from") {
+      args['implyingFilter'] = this.newLinkOtherFilter;
+      args['impliedFilter'] = this.filter;
     }
     else {
       // "to"
-      args['implyingFilter'] = this.get('filter');
-      args['impliedFilter'] = this.get('newLinkOtherFilter');
+      args['implyingFilter'] = this.filter;
+      args['impliedFilter'] = this.newLinkOtherFilter;
     }
 
-    let newLink = this.get('store').createRecord(
+    let newLink = this.store.createRecord(
       'filterImplicationLink', args);
 
     // Save the link
@@ -172,13 +172,13 @@ export default Component.extend({
 
   @action
   deleteLink() {
-    if (this.get('selectedLinkDeletionOption') === null) {
+    if (this.selectedLinkDeletionOption === null) {
       this.set(
         'linkDeleteError', "Please select a link to delete.");
       return;
     }
 
-    let link = this.get('selectedLinkDeletionOption');
+    let link = this.selectedLinkDeletionOption;
 
     link.destroyRecord().then(() => {
       // Success callback
@@ -198,7 +198,7 @@ export default Component.extend({
   deleteFilter() {
     // filter is a promise. Need to unwrap the promise to get the underlying
     // DS.Model and call destroyRecord() on it.
-    this.get('filter').then((filter) => {
+    this.filter.then((filter) => {
       return filter.destroyRecord();
     }).then(() => {
       // Success callback
@@ -213,10 +213,10 @@ export default Component.extend({
 
   @action
   saveEdits() {
-    let params = this.get('editableParams');
+    let params = this.editableParams;
     // filter is a promise. Need to unwrap the promise to get the underlying
     // DS.Model and call save() on it.
-    this.get('filter').then((filter) => {
+    this.filter.then((filter) => {
       filter.set('name', params.name);
       filter.set('numericValue', params.numericValue);
       return filter.save();
@@ -231,8 +231,8 @@ export default Component.extend({
     this.set('isEditing', true);
 
     // Populate fields
-    let params = this.get('editableParams');
-    let filter = this.get('filter');
+    let params = this.editableParams;
+    let filter = this.filter;
     params.set('name', filter.get('name'));
     params.set('numericValue', filter.get('numericValue'));
   },

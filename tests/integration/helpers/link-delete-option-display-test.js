@@ -28,9 +28,7 @@ module('Integration | Helper | link-delete-option-display', function(hooks) {
 
     await render(hbs`{{link-delete-option-display link filter}}`);
 
-    assert.equal(
-      this.element.textContent.trim(), 'to Titan -G4 booster',
-      "Link display should be as expected");
+    assert.dom(this.element).hasText('to Titan -G4 booster', "Link display should be as expected");
   });
 
   test('should be able to display text for an incoming link', async function(assert) {
@@ -39,9 +37,7 @@ module('Integration | Helper | link-delete-option-display', function(hooks) {
 
     await render(hbs`{{link-delete-option-display link filter}}`);
 
-    assert.equal(
-      this.element.textContent.trim(), 'from Gallant Star-G4',
-      "Link display should be as expected");
+    assert.dom(this.element).hasText('from Gallant Star-G4', "Link display should be as expected");
   });
 
   test('should tolerate having the filter not be in the link', async function(assert) {
@@ -50,8 +46,6 @@ module('Integration | Helper | link-delete-option-display', function(hooks) {
 
     await render(hbs`{{link-delete-option-display link filter}}`);
 
-    assert.equal(
-      this.element.textContent.trim(), '-',
-      "Link display should be as expected");
+    assert.dom(this.element).hasText('-', "Link display should be as expected");
   });
 });

@@ -11,7 +11,7 @@ export default Component.extend({
 
   @computed('chartGroup.charts')
   get charts() {
-    let charts = this.get('chartGroup').get('charts');
+    let charts = this.chartGroup.get('charts');
     if (charts === undefined) {
       return A([]);
     }
@@ -22,14 +22,14 @@ export default Component.extend({
 
   @computed('charts', 'mainChartIdQueryArg')
   get mainChartId() {
-    if (this.get('mainChartIdQueryArg')) {
+    if (this.mainChartIdQueryArg) {
       // Main chart has been specified.
-      return this.get('mainChartIdQueryArg');
+      return this.mainChartIdQueryArg;
     }
 
-    if (this.get('charts').length > 0) {
+    if (this.charts.length > 0) {
       // Main chart has not been specified, so use the first chart.
-      return this.get('charts').objectAt(0).get('id');
+      return this.charts.objectAt(0).get('id');
     }
 
     // No charts specified yet, so all we can return is null.
@@ -38,20 +38,20 @@ export default Component.extend({
 
   @computed('charts', 'mainChartId')
   get mainChart() {
-    if (this.get('mainChartId') === null) {
+    if (this.mainChartId === null) {
       return null;
     }
 
-    return this.get('charts').findBy('id', this.get('mainChartId'));
+    return this.charts.findBy('id', this.mainChartId);
   },
 
   // Array of charts other than the mainChart.
   @computed('charts', 'mainChartId')
   get otherCharts() {
     let notMainChart = (chart) => {
-      return chart.id !== this.get('mainChartId');
+      return chart.id !== this.mainChartId;
     };
-    return this.get('charts').filter(notMainChart);
+    return this.charts.filter(notMainChart);
   },
 
   // Object mapping each chart ID of this group to an array of records,
@@ -59,13 +59,13 @@ export default Component.extend({
   @computed('charts')
   get records() {
     let chartRecordsPromises = [];
-    this.get('charts').forEach((chart) => {
+    this.charts.forEach((chart) => {
       // Call API to get this chart's records
       let chartId = chart.get('id');
       let args = {
         chart_id: chartId, sort: 'value', ranked_entity: 'user',
         per_page: 1000};
-      let chartRecordsPromise = this.get('store').query('record', args).then(
+      let chartRecordsPromise = this.store.query('record', args).then(
         (chartRecords) => {return [chartId, chartRecords];}
       );
       chartRecordsPromises.push(chartRecordsPromise);
@@ -89,13 +89,13 @@ export default Component.extend({
   // record) and `otherRecords` (array of records).
   @computed('otherCharts.[]', 'records.[]')
   get recordRows() {
-    if (this.get('mainChartId') === null) {
+    if (this.mainChartId === null) {
       return A([]);
     }
 
-    let records = this.get('records');
-    let otherCharts = this.get('otherCharts');
-    let mainChartRecords = records.get(this.get('mainChartId'));
+    let records = this.records;
+    let otherCharts = this.otherCharts;
+    let mainChartRecords = records.get(this.mainChartId);
 
     // For non-main charts, organize records as hashes from user ID to record
     let otherChartRecordsByUser = {};

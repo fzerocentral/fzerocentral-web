@@ -26,6 +26,6 @@ module('Integration | Helper | find-filter-of-group', function(hooks) {
     this.set('filterGroupId', this.groupB.id);
     await render(hbs`{{get (find-filter-of-group filters filterGroupId) "name"}}`);
 
-    assert.equal(this.element.textContent.trim(), 'Filter B1');
+    assert.dom(this.element).hasText('Filter B1');
   });
 });

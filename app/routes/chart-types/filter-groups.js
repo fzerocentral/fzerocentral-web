@@ -6,16 +6,16 @@ import window from 'ember-window-mock';
 export default Route.extend({
   model(params) {
     return RSVP.hash({
-      chartType: this.get('store').findRecord(
+      chartType: this.store.findRecord(
         'chart-type', params.chart_type_id),
-      chartTypeFilterGroups: this.get('store').query(
+      chartTypeFilterGroups: this.store.query(
         'chart-type-filter-group', {chart_type_id: params.chart_type_id}),
-      filterGroups: this.get('store').query(
+      filterGroups: this.store.query(
         'filterGroup', {chart_type_id: params.chart_type_id}),
-      newFilterGroup: this.get('store').createRecord('filter-group'),
+      newFilterGroup: this.store.createRecord('filter-group'),
       // Filter groups which are not associated with any chart type. These
       // aren't supposed to exist, but mistakes happen, so we check for these.
-      orphanedFilterGroups: this.get('store').query(
+      orphanedFilterGroups: this.store.query(
         'filter-group', {chart_type_id: null}),
     });
   },
@@ -29,7 +29,7 @@ export default Route.extend({
       // Save the chart type - filter group link
       let chartType = this.modelFor(this.routeName).chartType;
       let chartTypeFilterGroup =
-        this.get('store').createRecord(
+        this.store.createRecord(
           'chart-type-filter-group',
           {chartType: chartType, filterGroup: newFilterGroup});
       return chartTypeFilterGroup.save();
@@ -46,7 +46,7 @@ export default Route.extend({
     // Save the chart type - filter group link
     let chartType = this.modelFor(this.routeName).chartType;
     let chartTypeFilterGroup =
-      this.get('store').createRecord(
+      this.store.createRecord(
         'chart-type-filter-group',
         {chartType: chartType, filterGroup: filterGroup});
     chartTypeFilterGroup.save().then(() => {
@@ -65,7 +65,7 @@ export default Route.extend({
   unlinkFilterGroup(ctfg) {
 
     let filterGroupId = ctfg.get('filterGroup').get('id');
-    let chartTypesOfFilterGroupPromise = this.get('store').query(
+    let chartTypesOfFilterGroupPromise = this.store.query(
       'chartType', {filter_group_id: filterGroupId});
     let shouldDeleteFilterGroup = false;
 
@@ -93,7 +93,7 @@ export default Route.extend({
       // event `pushedData` on ... while in state root.deleted.saved"
       // which would otherwise happen when we delete this filter group.
       // https://stackoverflow.com/a/39232642/
-      return this.get('store').findRecord(
+      return this.store.findRecord(
         'filter-group', filterGroupId, { reload: true });
 
     }).then((filterGroup) => {

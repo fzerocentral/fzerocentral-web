@@ -6,7 +6,7 @@ export default Controller.extend({
 
   @computed('model.filterGroups.[]', 'showAllFilterGroups')
   get shownFilterGroups() {
-    if (this.get('showAllFilterGroups')) {
+    if (this.showAllFilterGroups) {
       return this.model.filterGroups;
     }
     else {

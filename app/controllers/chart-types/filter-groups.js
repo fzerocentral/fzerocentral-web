@@ -15,8 +15,8 @@ export default Controller.extend({
   // the same game as this chart type
   @computed('model')
   get otherFilterGroups() {
-    let gameFilterGroupsPromise = this.get('store').query(
-      'filter-group', {game_id: this.get('game').get('id')}
+    let gameFilterGroupsPromise = this.store.query(
+      'filter-group', {game_id: this.game.get('id')}
     );
 
     return DS.PromiseArray.create({

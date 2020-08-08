@@ -5,11 +5,11 @@ import RSVP from 'rsvp';
 export default Route.extend({
   model(params) {
     return RSVP.hash({
-      chartTypes: this.get('store').query(
+      chartTypes: this.store.query(
         'chart-type', {filter_group_id: params.filter_group_id}),
-      filterGroup: this.get('store').findRecord(
+      filterGroup: this.store.findRecord(
         'filter-group', params.filter_group_id),
-      newFilter: this.get('store').createRecord('filter'),
+      newFilter: this.store.createRecord('filter'),
     });
   },
 

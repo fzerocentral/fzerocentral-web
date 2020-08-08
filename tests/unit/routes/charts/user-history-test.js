@@ -94,14 +94,11 @@ module('Unit | Route | charts/user-history', function(hooks) {
 
     let rows = this.element.querySelectorAll('table.records-table tr');
     let row1DateCell = rows[1].querySelectorAll('td')[1];
-    assert.equal(
-      row1DateCell.textContent.trim(), '2003-01-01 00:00', "Latest record first");
+    assert.dom(row1DateCell).hasText('2003-01-01 00:00', "Latest record first");
     let row2DateCell = rows[2].querySelectorAll('td')[1];
-    assert.equal(
-      row2DateCell.textContent.trim(), '2002-01-01 00:00', "Second-latest second");
+    assert.dom(row2DateCell).hasText('2002-01-01 00:00', "Second-latest second");
     let row3DateCell = rows[3].querySelectorAll('td')[1];
-    assert.equal(
-      row3DateCell.textContent.trim(), '2001-01-01 00:00', "Earliest record last");
+    assert.dom(row3DateCell).hasText('2001-01-01 00:00', "Earliest record last");
   });
 
   test("records table has one column per shown filter group", async function(assert) {

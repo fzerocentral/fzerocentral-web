@@ -19,7 +19,7 @@ export default PowerSelect.extend({
   get search() {
     return term => {
       const { modelName, params, queryKey = 'search', store } =
-        this.getProperties('modelName', 'params', 'queryKey', 'store');
+        this;
 
       if (params === null) {
         // params may be set to null, signaling that we don't want a search

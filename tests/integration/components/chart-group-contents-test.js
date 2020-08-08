@@ -12,6 +12,6 @@ module('Integration | Component | chart-group-contents', function(hooks) {
 
     await render(hbs`<ChartGroupContents />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.dom(this.element).hasText('');
   });
 });

@@ -417,7 +417,7 @@ module('Integration | Component | filter-detail', function(hooks) {
     await click(filterButton);
 
     // Check that the filter changed
-    assert.equal(this.get('filterId'), this.titang4Filter.id);
+    assert.equal(this.filterId, this.titang4Filter.id);
   });
 
   test("forms are reset when switching the selected filter", async function(assert) {

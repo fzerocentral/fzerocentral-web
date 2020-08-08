@@ -9,9 +9,9 @@ export default Component.extend({
   @computed('pageNumber', 'pageResults')
   get currentPageFirstResultNumber() {
     return DS.PromiseObject.create({
-      promise: this.get('pageResults').then((pageResults) => {
+      promise: this.pageResults.then((pageResults) => {
         let paginationMeta = pageResults.meta.pagination;
-        let pageNumber = this.get('pageNumber');
+        let pageNumber = this.pageNumber;
         let resultsPerPage = Number(paginationMeta.resultsPerPage);
         return {value: (pageNumber - 1)*resultsPerPage + 1};
       })
@@ -21,9 +21,9 @@ export default Component.extend({
   @computed('pageNumber', 'pageResults')
   get currentPageLastResultNumber() {
     return DS.PromiseObject.create({
-      promise: this.get('pageResults').then((pageResults) => {
+      promise: this.pageResults.then((pageResults) => {
         let paginationMeta = pageResults.meta.pagination;
-        let pageNumber = this.get('pageNumber');
+        let pageNumber = this.pageNumber;
         let resultsPerPage = Number(paginationMeta.resultsPerPage);
         let totalResults = Number(paginationMeta.totalResults);
         return {value: Math.min(pageNumber*resultsPerPage, totalResults)};
@@ -34,7 +34,7 @@ export default Component.extend({
   @computed('pageResults')
   get hasGapBetweenFirstAndPrevPage() {
     return DS.PromiseObject.create({
-      promise: this.get('pageResults').then((pageResults) => {
+      promise: this.pageResults.then((pageResults) => {
         let paginationMeta = pageResults.meta.pagination;
         let firstPage = paginationMeta.firstPage;
         let prevPage = paginationMeta.prevPage;
@@ -46,7 +46,7 @@ export default Component.extend({
   @computed('pageResults')
   get hasGapBetweenLastAndNextPage() {
     return DS.PromiseObject.create({
-      promise: this.get('pageResults').then((pageResults) => {
+      promise: this.pageResults.then((pageResults) => {
         let paginationMeta = pageResults.meta.pagination;
         let lastPage = paginationMeta.lastPage;
         let nextPage = paginationMeta.nextPage;

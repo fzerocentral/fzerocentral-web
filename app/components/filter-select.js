@@ -7,7 +7,7 @@ export default Component.extend({
 
   @computed('filterGroup', 'filterUsageType')
   get params() {
-    let filterGroup = this.get('filterGroup');
+    let filterGroup = this.filterGroup;
     if (!filterGroup) {
       // This signals to data-power-select that we don't want a search to
       // take place.
@@ -15,7 +15,7 @@ export default Component.extend({
     }
     let params = EmberObject.create();
     params.set('filter_group_id', filterGroup.get('id'));
-    params.set('usage_type', this.get('filterUsageType'));
+    params.set('usage_type', this.filterUsageType);
     return params;
   },
 

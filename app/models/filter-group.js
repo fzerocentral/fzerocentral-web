@@ -1,15 +1,15 @@
-import DS from 'ember-data';
+import Model, { attr, hasMany } from '@ember-data/model';
 
-export default DS.Model.extend({
-  name: DS.attr(),
+export default Model.extend({
+  name: attr(),
   // 'select' or 'numeric' - denoting the group's filters should be multiple
   // choice selected, or entered as a number
-  kind: DS.attr(),
-  description: DS.attr(),
+  kind: attr(),
+  description: attr(),
 
   // Chart-type-specific attribute
-  showByDefault: DS.attr('boolean'),
+  showByDefault: attr('boolean'),
 
-  filters: DS.hasMany('filter'),
-  chartTypes: DS.hasMany('chart-type'),
+  filters: hasMany('filter'),
+  chartTypes: hasMany('chart-type'),
 });

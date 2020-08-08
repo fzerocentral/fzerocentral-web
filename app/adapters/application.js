@@ -1,4 +1,4 @@
-import DS from 'ember-data';
+import JSONAPIAdapter from '@ember-data/adapter/json-api';
 import { pluralize } from 'ember-inflector';
 import { underscore } from '@ember/string';
 import ENV from 'fzerocentral-web/config/environment';
@@ -11,7 +11,7 @@ import ENV from 'fzerocentral-web/config/environment';
 // - Possible spaces
 let linkAndRelRegex = /\s*<([^>]+)>; rel="([^"]+)"\s*/;
 
-export default DS.JSONAPIAdapter.extend({
+export default JSONAPIAdapter.extend({
   namespace: ENV.APP.apiNamespace,
 
   // The API response headers may have some info that we want.

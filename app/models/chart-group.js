@@ -1,11 +1,11 @@
-import DS from 'ember-data';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 
-export default DS.Model.extend({
-  name: DS.attr(),
-  showChartsTogether: DS.attr(),
+export default Model.extend({
+  name: attr(),
+  showChartsTogether: attr(),
 
-  game: DS.belongsTo('game'),
-  parentGroup: DS.belongsTo('chart-group', { inverse: 'childGroups' }),
-  childGroups: DS.hasMany('chart-group', { inverse: 'parentGroup' }),
-  charts: DS.hasMany('chart'),
+  game: belongsTo('game'),
+  parentGroup: belongsTo('chart-group', { inverse: 'childGroups' }),
+  childGroups: hasMany('chart-group', { inverse: 'parentGroup' }),
+  charts: hasMany('chart'),
 });

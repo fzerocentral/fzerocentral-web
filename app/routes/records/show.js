@@ -5,8 +5,8 @@ import RSVP from 'rsvp';
 export default Route.extend({
   model(params) {
     return RSVP.hash({
-      record: this.get('store').findRecord('record', params.record_id),
-      filterGroups: this.get('store').query(
+      record: this.store.findRecord('record', params.record_id),
+      filterGroups: this.store.query(
         'filterGroup', {record_id: params.record_id}),
     });
   },

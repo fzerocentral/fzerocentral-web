@@ -9,7 +9,7 @@ export default Component.extend({
   // Date -> String
   @computed('dateValue')
   get dateStr() {
-    let value = this.get('dateValue');
+    let value = this.dateValue;
     if (value === null || value === undefined) {
       return "";
     }
@@ -20,14 +20,14 @@ export default Component.extend({
   onchange() {
     // String -> Date
     let momentDate = moment(
-      this.get('dateInput'),
+      this.dateInput,
       ['YYYY-MM-DD', 'YYYY-MM-DDTHH:mm', 'YYYY-MM-DDTHH:mm:ssZ']);
     if (momentDate.isValid()) {
       this.set('dateValue', momentDate.toDate());
     }
     else {
       // If not valid, trigger a reset of dateStr
-      this.set('dateValue', this.get('dateValue'));
+      this.set('dateValue', this.dateValue);
     }
 
     // Reset dateInput. It's not used for displaying the date after it's

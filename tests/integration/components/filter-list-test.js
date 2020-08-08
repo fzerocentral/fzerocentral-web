@@ -142,7 +142,7 @@ module('Integration | Component | filter-list', function(hooks) {
     await click(button);
 
     assert.equal(
-      this.get('selectedFilterId'), this.gsg4Filter.id,
+      this.selectedFilterId, this.gsg4Filter.id,
       "selectedFilterId should be updated");
   });
 });

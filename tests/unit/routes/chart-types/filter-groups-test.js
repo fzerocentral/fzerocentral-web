@@ -4,7 +4,10 @@ import { setupTest } from 'ember-qunit';
 import { run } from "@ember/runloop";
 import { click, currentURL, fillIn, visit } from '@ember/test-helpers';
 import { selectChoose } from 'ember-power-select/test-support';
-import { default as window, reset as windowMockReset } from 'ember-window-mock';
+import {
+  default as window,
+  reset as windowMockReset
+} from 'ember-window-mock';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
 import { createModelInstance }
   from 'fzerocentral-web/tests/helpers/model-helpers';
@@ -201,8 +204,7 @@ module('Unit | Route | chart-types/filter-groups', function(hooks) {
       orderField.value, "1",
       "Group A's displayed order is as expected")
     let link = row.querySelectorAll('td')[2].querySelector('a');
-    assert.equal(
-      link.textContent.trim(), this.filterGroupA.name, "Group A's displayed name is as expected");
+    assert.dom(link).hasText(this.filterGroupA.name, "Group A's displayed name is as expected");
     assert.equal(
       link.getAttribute('href'), `/filter-groups/${this.filterGroupA.id}`,
       "Group A's link href is as expected");
@@ -220,8 +222,7 @@ module('Unit | Route | chart-types/filter-groups', function(hooks) {
       orderField.value, "2",
       "Group B's displayed order is as expected")
     link = row.querySelectorAll('td')[2].querySelector('a');
-    assert.equal(
-      link.textContent.trim(), this.filterGroupB.name, "Group B's displayed name is as expected");
+    assert.dom(link).hasText(this.filterGroupB.name, "Group B's displayed name is as expected");
     assert.equal(
       link.getAttribute('href'), `/filter-groups/${this.filterGroupB.id}`,
       "Group B's link href is as expected");

@@ -120,30 +120,16 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
     let rows = this.element.querySelectorAll('table.records-table tr');
 
     let cells = rows[1].querySelectorAll('td');
-    assert.equal(
-      cells[0].textContent.trim(), '1', "User A's rank is as expected");
-    assert.equal(
-      cells[1].textContent.trim(), 'User A',
-      "User A's player display is as expected");
-    assert.equal(
-      cells[2].textContent.trim(), '20m',
-      "User A's Chart 1 value is as expected");
-    assert.equal(
-      cells[3].textContent.trim(), '35m',
-      "User A's Chart 2 value is as expected");
+    assert.dom(cells[0]).hasText('1', "User A's rank is as expected");
+    assert.dom(cells[1]).hasText('User A', "User A's player display is as expected");
+    assert.dom(cells[2]).hasText('20m', "User A's Chart 1 value is as expected");
+    assert.dom(cells[3]).hasText('35m', "User A's Chart 2 value is as expected");
 
     cells = rows[2].querySelectorAll('td');
-    assert.equal(
-      cells[0].textContent.trim(), '2', "User B's rank is as expected");
-    assert.equal(
-      cells[1].textContent.trim(), 'User B',
-      "User B's player display is as expected");
-    assert.equal(
-      cells[2].textContent.trim(), '25m',
-      "User B's Chart 1 value is as expected");
-    assert.equal(
-      cells[3].textContent.trim(), '30m',
-      "User B's Chart 2 value is as expected");
+    assert.dom(cells[0]).hasText('2', "User B's rank is as expected");
+    assert.dom(cells[1]).hasText('User B', "User B's player display is as expected");
+    assert.dom(cells[2]).hasText('25m', "User B's Chart 1 value is as expected");
+    assert.dom(cells[3]).hasText('30m', "User B's Chart 2 value is as expected");
   });
 
   test("records table can have a blank cell when a player has no record for a non-main chart", async function(assert) {
@@ -160,17 +146,10 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
 
     let rows = this.element.querySelectorAll('table.records-table tr');
     let cells = rows[3].querySelectorAll('td');
-    assert.equal(
-      cells[0].textContent.trim(), '3', "User C's rank is as expected");
-    assert.equal(
-      cells[1].textContent.trim(), 'User C',
-      "User C's player display is as expected");
-    assert.equal(
-      cells[2].textContent.trim(), '27m',
-      "User C's Chart 1 value is as expected");
-    assert.equal(
-      cells[3].textContent.trim(), '',
-      "User C's Chart 2 value is as expected");
+    assert.dom(cells[0]).hasText('3', "User C's rank is as expected");
+    assert.dom(cells[1]).hasText('User C', "User C's player display is as expected");
+    assert.dom(cells[2]).hasText('27m', "User C's Chart 1 value is as expected");
+    assert.dom(cells[3]).hasText('', "User C's Chart 2 value is as expected");
   });
 
   test("records table doesn't show a player who is in the non-main chart, but not in the main chart", async function(assert) {

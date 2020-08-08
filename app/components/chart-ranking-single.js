@@ -9,11 +9,11 @@ export default Component.extend({
 
   @computed('filterGroups.[]', 'showAllFilterGroups')
   get shownFilterGroups() {
-    if (this.get('showAllFilterGroups')) {
-      return this.get('filterGroups');
+    if (this.showAllFilterGroups) {
+      return this.filterGroups;
     }
     else {
-      return this.get('filterGroups').filterBy('showByDefault', true);
+      return this.filterGroups.filterBy('showByDefault', true);
     }
   },
 });

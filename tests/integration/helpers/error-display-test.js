@@ -11,7 +11,7 @@ module('Integration | Helper | error-display', function(hooks) {
 
     await render(hbs`{{error-display error}}`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.dom(this.element).hasText('');
   });
 
   test('string error should be rendered properly', async function(assert) {
@@ -19,7 +19,7 @@ module('Integration | Helper | error-display', function(hooks) {
 
     await render(hbs`{{error-display error}}`);
 
-    assert.equal(this.element.textContent.trim(), 'Error detail goes here');
+    assert.dom(this.element).hasText('Error detail goes here');
   });
 
   test('error without source should be rendered properly', async function(assert) {
@@ -27,7 +27,7 @@ module('Integration | Helper | error-display', function(hooks) {
 
     await render(hbs`{{error-display error}}`);
 
-    assert.equal(this.element.textContent.trim(), 'Error detail goes here');
+    assert.dom(this.element).hasText('Error detail goes here');
   });
 
   test('error with base source pointer should be rendered properly', async function(assert) {
@@ -38,7 +38,7 @@ module('Integration | Helper | error-display', function(hooks) {
 
     await render(hbs`{{error-display error}}`);
 
-    assert.equal(this.element.textContent.trim(), 'Error detail goes here');
+    assert.dom(this.element).hasText('Error detail goes here');
   });
 
   test('error with non-base source pointer should be rendered properly', async function(assert) {
@@ -49,6 +49,6 @@ module('Integration | Helper | error-display', function(hooks) {
 
     await render(hbs`{{error-display error}}`);
 
-    assert.equal(this.element.textContent.trim(), 'Usage type is required');
+    assert.dom(this.element).hasText('Usage type is required');
   });
 });

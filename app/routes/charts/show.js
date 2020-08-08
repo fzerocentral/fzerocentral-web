@@ -12,11 +12,11 @@ export default Route.extend({
 
   model(params) {
     return RSVP.hash({
-      chart: this.get('store').findRecord('chart', params.chart_id),
-      records: this.get('store').query('record', {
+      chart: this.store.findRecord('chart', params.chart_id),
+      records: this.store.query('record', {
         chart_id: params.chart_id, sort: 'value', ranked_entity: 'user',
         filters: params.appliedFiltersString, per_page: 1000}),
-      filterGroups: this.get('store').query(
+      filterGroups: this.store.query(
         'filterGroup', {chart_id: params.chart_id}),
     });
   }

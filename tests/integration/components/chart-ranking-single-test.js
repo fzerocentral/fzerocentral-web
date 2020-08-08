@@ -138,21 +138,14 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
 
     let rows = this.element.querySelectorAll('table.records-table tr');
     let cells = rows[1].querySelectorAll('td');
-    assert.equal(
-      cells[0].textContent.trim(), '1', "Record A's rank is as expected");
-    assert.equal(
-      cells[1].textContent.trim(), 'User A',
-      "Record A's player is as expected");
-    assert.equal(
-      cells[2].textContent.trim(), '20m',
-      "Record A's value display is as expected");
+    assert.dom(cells[0]).hasText('1', "Record A's rank is as expected");
+    assert.dom(cells[1]).hasText('User A', "Record A's player is as expected");
+    assert.dom(cells[2]).hasText('20m', "Record A's value display is as expected");
     assert.equal(
       cells[2].querySelector('a').getAttribute('href'),
       `/charts/${this.chart.id}/users/${this.userA.id}/history`,
       "Record A's user-history link is as expected");
-    assert.equal(
-      cells[3].textContent.trim(), 'Blue Falcon',
-      "Record A's machine filter is as expected");
+    assert.dom(cells[3]).hasText('Blue Falcon', "Record A's machine filter is as expected");
     assert.equal(
       cells.length, 4,
       "Only 4 columns when only showing default filter groups");
@@ -160,28 +153,17 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     await click('input[name="showAllFilterGroups"]');
     rows = this.element.querySelectorAll('table.records-table tr');
     cells = rows[1].querySelectorAll('td');
-    assert.equal(
-      cells[4].textContent.trim(), '30%',
-      "Record A's setting filter is as expected");
+    assert.dom(cells[4]).hasText('30%', "Record A's setting filter is as expected");
 
     cells = rows[2].querySelectorAll('td');
-    assert.equal(
-      cells[0].textContent.trim(), '2', "Record B's rank is as expected");
-    assert.equal(
-      cells[1].textContent.trim(), 'User B',
-      "Record B's player is as expected");
-    assert.equal(
-      cells[2].textContent.trim(), '25m',
-      "Record B's value display is as expected");
+    assert.dom(cells[0]).hasText('2', "Record B's rank is as expected");
+    assert.dom(cells[1]).hasText('User B', "Record B's player is as expected");
+    assert.dom(cells[2]).hasText('25m', "Record B's value display is as expected");
     assert.equal(
       cells[2].querySelector('a').getAttribute('href'),
       `/charts/${this.chart.id}/users/${this.userB.id}/history`,
       "Record B's user-history link is as expected");
-    assert.equal(
-      cells[3].textContent.trim(), '',
-      "Record B's machine filter is as expected");
-    assert.equal(
-      cells[4].textContent.trim(), '',
-      "Record B's setting filter is as expected");
+    assert.dom(cells[3]).hasText('', "Record B's machine filter is as expected");
+    assert.dom(cells[4]).hasText('', "Record B's setting filter is as expected");
   });
 });

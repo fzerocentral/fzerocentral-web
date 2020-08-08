@@ -48,14 +48,18 @@ module('Integration | Component | record-filters-edit', function(hooks) {
     `);
 
     // Test `filters` value
-    assert.deepEqual(this.get('filters').length, 0);
+    assert.deepEqual(this.filters.length, 0);
 
     // Test the text of each select box.
     // The first span within `.ember-power-select-trigger` should contain
     // either the placeholder text or the selection text, while not containing
     // the little x which lets you clear the selection.
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Not selected");
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupB.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Not selected");
+    assert.dom(
+      this.element.querySelector(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger > span:first-child`)
+    ).hasText('Not selected');
+    assert.dom(
+      this.element.querySelector(`div.filter-group-${this.groupB.id}-select .ember-power-select-trigger > span:first-child`)
+    ).hasText('Not selected');
   });
 
   test('can choose a filter for one group while leaving the other blank', async function(assert) {
@@ -67,12 +71,16 @@ module('Integration | Component | record-filters-edit', function(hooks) {
     await selectChoose(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger`, "Filter A1");
 
     // Test `filters` value
-    assert.deepEqual(this.get('filters').length, 1);
-    assert.deepEqual(this.get('filters').objectAt(0).id, this.filterA1.id);
+    assert.deepEqual(this.filters.length, 1);
+    assert.deepEqual(this.filters.objectAt(0).id, this.filterA1.id);
 
     // Test the text of each select box
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Filter A1");
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupB.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Not selected");
+    assert.dom(
+      this.element.querySelector(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger > span:first-child`)
+    ).hasText('Filter A1');
+    assert.dom(
+      this.element.querySelector(`div.filter-group-${this.groupB.id}-select .ember-power-select-trigger > span:first-child`)
+    ).hasText('Not selected');
   });
 
   test('can choose filters in both groups', async function(assert) {
@@ -85,13 +93,17 @@ module('Integration | Component | record-filters-edit', function(hooks) {
     await selectChoose(`div.filter-group-${this.groupB.id}-select .ember-power-select-trigger`, "Filter B2");
 
     // Test `filters` value
-    assert.deepEqual(this.get('filters').length, 2);
-    assert.deepEqual(this.get('filters').objectAt(0).id, this.filterA1.id);
-    assert.deepEqual(this.get('filters').objectAt(1).id, this.filterB2.id);
+    assert.deepEqual(this.filters.length, 2);
+    assert.deepEqual(this.filters.objectAt(0).id, this.filterA1.id);
+    assert.deepEqual(this.filters.objectAt(1).id, this.filterB2.id);
 
     // Test the text of each select box
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Filter A1");
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupB.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Filter B2");
+    assert.dom(
+      this.element.querySelector(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger > span:first-child`)
+    ).hasText('Filter A1');
+    assert.dom(
+      this.element.querySelector(`div.filter-group-${this.groupB.id}-select .ember-power-select-trigger > span:first-child`)
+    ).hasText('Filter B2');
   });
 
   test('can clear a selected filter', async function(assert) {
@@ -103,17 +115,21 @@ module('Integration | Component | record-filters-edit', function(hooks) {
     await selectChoose(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger`, "Filter A1");
 
     // Test `filters` value
-    assert.deepEqual(this.get('filters').length, 1);
-    assert.deepEqual(this.get('filters').objectAt(0).id, this.filterA1.id);
+    assert.deepEqual(this.filters.length, 1);
+    assert.deepEqual(this.filters.objectAt(0).id, this.filterA1.id);
     // Test text
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Filter A1");
+    assert.dom(
+      this.element.querySelector(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger > span:first-child`)
+    ).hasText('Filter A1');
 
     // Clear the selection
     await clearSelected(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger`);
 
     // Test `filters` value
-    assert.deepEqual(this.get('filters').length, 0);
+    assert.deepEqual(this.filters.length, 0);
     // Test text
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Not selected");
+    assert.dom(
+      this.element.querySelector(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger > span:first-child`)
+    ).hasText('Not selected');
   });
 });

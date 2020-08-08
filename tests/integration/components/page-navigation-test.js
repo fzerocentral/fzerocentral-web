@@ -38,9 +38,7 @@ module('Integration | Component | page-navigation', function(hooks) {
       <PageNavigation @pageResults={{pageResults}} @pageNumber=1 />
     `);
 
-    assert.equal(
-      this.element.textContent.trim(), '',
-      "Should render nothing");
+    assert.dom(this.element).hasText('', "Should render nothing");
   });
 
   test('should render page 1 of 2 properly', async function(assert) {
@@ -61,9 +59,7 @@ module('Integration | Component | page-navigation', function(hooks) {
 
     let resultsCountDiv = this.element.querySelector(
       'div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(), "1-10 of 12",
-      "Results count display should be correct");
+    assert.dom(resultsCountDiv).hasText('1-10 of 12', "Results count display should be correct");
   });
 
   test('should render page 2 of 2 properly', async function(assert) {
@@ -84,9 +80,7 @@ module('Integration | Component | page-navigation', function(hooks) {
 
     let resultsCountDiv = this.element.querySelector(
       'div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(), "11-12 of 12",
-      "Results count display should be correct");
+    assert.dom(resultsCountDiv).hasText('11-12 of 12', "Results count display should be correct");
   });
 
   test('should render page 1 of 3 properly', async function(assert) {
@@ -108,9 +102,7 @@ module('Integration | Component | page-navigation', function(hooks) {
 
     let resultsCountDiv = this.element.querySelector(
       'div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(), "1-10 of 30",
-      "Results count display should be correct");
+    assert.dom(resultsCountDiv).hasText('1-10 of 30', "Results count display should be correct");
   });
 
   test('should render page 2 of 3 properly', async function(assert) {
@@ -132,9 +124,7 @@ module('Integration | Component | page-navigation', function(hooks) {
 
     let resultsCountDiv = this.element.querySelector(
       'div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(), "11-20 of 30",
-      "Results count display should be correct");
+    assert.dom(resultsCountDiv).hasText('11-20 of 30', "Results count display should be correct");
   });
 
   test('should render page 3 of 3 properly', async function(assert) {
@@ -156,9 +146,7 @@ module('Integration | Component | page-navigation', function(hooks) {
 
     let resultsCountDiv = this.element.querySelector(
       'div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(), "21-30 of 30",
-      "Results count display should be correct");
+    assert.dom(resultsCountDiv).hasText('21-30 of 30', "Results count display should be correct");
   });
 
   test('should render the first page of many properly', async function(assert) {
@@ -180,9 +168,7 @@ module('Integration | Component | page-navigation', function(hooks) {
 
     let resultsCountDiv = this.element.querySelector(
       'div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(), "1-10 of 95",
-      "Results count display should be correct");
+    assert.dom(resultsCountDiv).hasText('1-10 of 95', "Results count display should be correct");
   });
 
   test('should render a middle page of many properly', async function(assert) {
@@ -207,9 +193,7 @@ module('Integration | Component | page-navigation', function(hooks) {
 
     let resultsCountDiv = this.element.querySelector(
       'div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(), "41-50 of 95",
-      "Results count display should be correct");
+    assert.dom(resultsCountDiv).hasText('41-50 of 95', "Results count display should be correct");
   });
 
   test('should render the last page of many properly', async function(assert) {
@@ -231,9 +215,7 @@ module('Integration | Component | page-navigation', function(hooks) {
 
     let resultsCountDiv = this.element.querySelector(
       'div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(), "91-95 of 95",
-      "Results count display should be correct");
+    assert.dom(resultsCountDiv).hasText('91-95 of 95', "Results count display should be correct");
   });
 
   test('next page button should switch to the correct page', async function(assert) {
