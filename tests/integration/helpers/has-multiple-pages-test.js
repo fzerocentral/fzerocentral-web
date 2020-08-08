@@ -2,7 +2,8 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import DS from "ember-data";
+import DS from "ember-data"; /* eslint-disable-line ember/use-ember-data-rfc-395-imports */ 
+
 
 
 function createPageResults(metaPagination) {

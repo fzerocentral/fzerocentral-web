@@ -1,6 +1,7 @@
 import { A } from '@ember/array';
 import Controller from '@ember/controller';
-import DS from 'ember-data';
+import DS from 'ember-data'; /* eslint-disable-line ember/use-ember-data-rfc-395-imports */ 
+
 import { action, computed } from '@ember/object';
 
 export default Controller.extend({

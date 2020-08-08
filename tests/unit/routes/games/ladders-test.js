@@ -54,8 +54,8 @@ module('Unit | Route | games/ladders', function(hooks) {
     // otherGameLadder shouldn't be present.
     let mainLadderRows = this.element.querySelectorAll(
       'div.main-ladders table.ladders > tbody > tr');
-    assert.equal(mainLadderRows.length, 1);
-    assert.equal(getLadderNameFromRow(mainLadderRows[0]), 'Main ladder');
+    assert.equal(mainLadderRows.length, 1, "Should only contain main ladders");
+    assert.equal(getLadderNameFromRow(mainLadderRows[0]), 'Main ladder', "Should only contain main ladders");
 
     // Side ladder table should only have side ladders from this game.
     let sideLadderRows = this.element.querySelectorAll(

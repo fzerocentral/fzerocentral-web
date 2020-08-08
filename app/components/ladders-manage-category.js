@@ -11,7 +11,7 @@ export default Component.extend({
     ladder.save().then(() => {
       // Ensure the ladder list order is updated by refreshing the route.
       // https://stackoverflow.com/a/44146547/
-      const currentRouteName = this.get('router.currentRouteName');
+      const currentRouteName = this.router.currentRouteName;
       const currentRouteInstance = getOwner(this).lookup(`route:${currentRouteName}`);
       currentRouteInstance.refresh();
     });

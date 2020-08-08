@@ -1,6 +1,7 @@
 import { A } from '@ember/array';
 import Component from '@ember/component';
-import DS from 'ember-data';
+import DS from 'ember-data'; /* eslint-disable-line ember/use-ember-data-rfc-395-imports */ 
+
 import EmberObject, { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 

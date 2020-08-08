@@ -38,9 +38,8 @@ module('Unit | Route | games/show', function(hooks) {
   test('lists chart types for the game', async function(assert){
     await visit(`/games/${this.game.id}`);
 
-    // Shouldn't contain the other game's chart type
-    assert.ok(this.element.innerHTML.indexOf('Chart Type 1') !== -1);
-    assert.ok(this.element.innerHTML.indexOf('Chart Type 2') !== -1);
-    assert.ok(this.element.innerHTML.indexOf('Other Chart Type') === -1);
+    assert.ok(this.element.innerHTML.indexOf('Chart Type 1') !== -1, "Shouldn't contain other games' chart type");
+    assert.ok(this.element.innerHTML.indexOf('Chart Type 2') !== -1, "Shouldn't contain other games' chart type") ;
+    assert.ok(this.element.innerHTML.indexOf('Other Chart Type') === -1, "Shouldn't contain other games' chart type");
   });
 });

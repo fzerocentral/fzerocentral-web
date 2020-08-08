@@ -1,7 +1,8 @@
 import { A } from '@ember/array';
 import { action, computed } from '@ember/object'
 import { inject as service } from '@ember/service';
-import DS from 'ember-data';
+import DS from 'ember-data'; /* eslint-disable-line ember/use-ember-data-rfc-395-imports */ 
+
 import PowerSelect from 'ember-power-select/components/power-select';
 
 // This component is from:
