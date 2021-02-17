@@ -56,12 +56,6 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-    // use mirage in production too since the app will break
-    // if there is no API for Ember Data
-    ENV['ember-cli-mirage'] = {
-      enabled: true
-    }
-
     // Custom ENV key: The JSONAPIAdapter's namespace.
     ENV.APP.apiNamespace = 'api';
   }
