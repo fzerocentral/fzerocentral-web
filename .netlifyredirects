@@ -1,1 +1,1 @@
-/api https://api.fzerocentral.org
+/api/* https://api.fzerocentral.org/:splat 200
