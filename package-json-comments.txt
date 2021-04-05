@@ -1,8 +1,10 @@
 This file contains comments about package.json, since there's no particularly clean way to add comments directly in JSON files.
 
+
+
+devDependencies
+
 The focus here is on packages that aren't in a default Ember-CLI app. Default packages can be seen here: https://github.com/ember-cli/ember-new-output/blob/master/package.json
-
-
 
 ember-cli-mirage
 Mock API server for testing.
@@ -32,5 +34,15 @@ https://github.com/kaliber5/ember-window-mock/releases
 ember-truth-helpers
 Without this, Handlebars doesn't give a way to use boolean logic in templates. In order words, you'd better hope "if x" is the only thing you ever need. Even "if !x" needs a package like this.
 
-node
+
+
+engines
+
 ember-cli-update should take care of updating this.
+
+
+
+resolutions
+
+whatwg-fetch: See https://github.com/ember-cli/ember-fetch/issues/547
+This line can probably be removed once ember is updated to a version that has ember-fetch 8.0.2 or later.
