@@ -10,4 +10,4 @@
   Search: <Input @type="text" @value={{searchText}} class="search-input" />
 </div>
 
-<PageNavigation @pageResults={{filters}} @pageNumber={{pageNumber}} />
+<PageNavigation @pageResults={{filters}} @pageNumber={{pageNumber}} @updatePageNumber={{action (mut pageNumber)}} />

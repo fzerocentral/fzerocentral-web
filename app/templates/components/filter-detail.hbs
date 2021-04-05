@@ -67,7 +67,9 @@
             {{implication.implyingFilter.name}}
           </button>
         {{/each}}
-        <PageNavigation @pageResults={{incomingImplications}} @pageNumber={{incomingImplicationsPageNumber}} />
+        <PageNavigation
+          @pageResults={{incomingImplications}} @pageNumber={{incomingImplicationsPageNumber}}
+          @updatePageNumber={{action (mut incomingImplicationsPageNumber)}} />
       {{/if}}
     </div>
   {{/if}}
@@ -84,7 +86,9 @@
             {{implication.impliedFilter.name}}
           </button>
         {{/each}}
-        <PageNavigation @pageResults={{outgoingImplications}} @pageNumber={{outgoingImplicationsPageNumber}} />
+        <PageNavigation
+          @pageResults={{outgoingImplications}} @pageNumber={{outgoingImplicationsPageNumber}}
+          @updatePageNumber={{action (mut outgoingImplicationsPageNumber)}} />
       {{/if}}
     </div>
   {{/if}}
@@ -101,7 +105,9 @@
           </li>
         {{/each}}
       </ul>
-      <PageNavigation @pageResults={{incomingLinks}} @pageNumber={{incomingLinksPageNumber}} />
+      <PageNavigation
+        @pageResults={{incomingLinks}} @pageNumber={{incomingLinksPageNumber}}
+        @updatePageNumber={{action (mut incomingLinksPageNumber)}} />
     </div>
 
     <span>-&gt; {{filter.name}} -&gt;</span>
@@ -116,7 +122,9 @@
           </li>
         {{/each}}
       </ul>
-      <PageNavigation @pageResults={{outgoingLinks}} @pageNumber={{outgoingLinksPageNumber}} />
+      <PageNavigation
+        @pageResults={{outgoingLinks}} @pageNumber={{outgoingLinksPageNumber}}
+        @updatePageNumber={{action (mut outgoingLinksPageNumber)}} />
     </div>
   </div>
 

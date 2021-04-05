@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { action, computed } from '@ember/object';
 
 export default Component.extend({
   pageNumber: null,
@@ -53,5 +53,14 @@ export default Component.extend({
         return {value: lastPage && nextPage && (lastPage - nextPage > 1)};
       })
     });
+  },
+
+  @action
+  updatePageNumberAction() {
+    this.updatePageNumber(...arguments);
+  },
+
+  updatePageNumber() {
+    throw new Error('updatePageNumber must be provided');
   },
 });
