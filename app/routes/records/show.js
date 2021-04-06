@@ -1,15 +1,18 @@
 import { action } from '@ember/object';
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 
-export default Route.extend({
+export default class RecordsShowRoute extends Route {
+  @service store;
+
   model(params) {
     return RSVP.hash({
-      record: this.get('store').findRecord('record', params.record_id),
-      filterGroups: this.get('store').query(
+      record: this.store.findRecord('record', params.record_id),
+      filterGroups: this.store.query(
         'filterGroup', {record_id: params.record_id}),
     });
-  },
+  }
 
   @action
   saveRecord() {
@@ -18,10 +21,10 @@ export default Route.extend({
     record.save().then(() => {
       this.transitionTo('charts.show', record.get('chart'));
     });
-  },
+  }
 
   @action
   willTransition() {
     this.modelFor(this.routeName).record.rollbackAttributes();
   }
-});
+}

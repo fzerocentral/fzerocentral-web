@@ -1,6 +1,6 @@
-import DS from 'ember-data';
+import Model, { belongsTo } from '@ember-data/model';
 
-export default DS.Model.extend({
-  implyingFilter: DS.belongsTo('filter'),
-  impliedFilter: DS.belongsTo('filter'),
-});
+export default class FilterImplicationLinkModel extends Model {
+  @belongsTo('filter') implyingFilter;
+  @belongsTo('filter') impliedFilter;
+}

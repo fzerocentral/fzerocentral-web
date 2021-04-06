@@ -1,7 +1,10 @@
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 
-export default Route.extend({
+export default class ChartsTopRecordHistoryRoute extends Route {
+  @service store;
+
   model(params) {
     return RSVP.hash({
       chart: this.store.findRecord('chart', params.chart_id),
@@ -12,4 +15,4 @@ export default Route.extend({
         'filterGroup', {chart_id: params.chart_id}),
     });
   }
-});
+}

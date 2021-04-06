@@ -1,7 +1,7 @@
-import DS from 'ember-data';
+import Model, { attr, hasMany } from '@ember-data/model';
 
-export default DS.Model.extend({
-  name: DS.attr(),
+export default class GameModel extends Model {
+  @attr('string') name;
 
-  chartTypes: DS.hasMany('chart-type'),
-});
+  @hasMany('chart-type') chartTypes;
+}

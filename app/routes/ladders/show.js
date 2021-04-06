@@ -1,7 +1,7 @@
 import { action } from '@ember/object';
 import Route from '@ember/routing/route';
 
-export default Route.extend({
+export default class LaddersShowRoute extends Route {
   @action
   deleteLadder() {
     if (window.confirm("Are you sure you want to delete this ladder?")) {
@@ -14,5 +14,5 @@ export default Route.extend({
         this.transitionTo('games.ladders', gameId);
       });
     }
-  },
-});
+  }
+}
