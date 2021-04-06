@@ -6,7 +6,7 @@
       <button type="button" {{action "updatePageNumberAction" @pageResults.meta.pagination.firstPage}}> {{@pageResults.meta.pagination.firstPage}} </button>
     {{/if}}
 
-    {{#if hasGapBetweenFirstAndPrevPage.value}}
+    {{#if this.hasGapBetweenFirstAndPrevPage.value}}
       ...
     {{/if}}
 
@@ -20,7 +20,7 @@
       <button type="button" {{action "updatePageNumberAction" @pageResults.meta.pagination.nextPage}}> {{@pageResults.meta.pagination.nextPage}} </button>
     {{/if}}
 
-    {{#if hasGapBetweenLastAndNextPage.value}}
+    {{#if this.hasGapBetweenLastAndNextPage.value}}
       ...
     {{/if}}
 
@@ -30,6 +30,6 @@
   </div>
 
   <div class="page-results-counts">
-    {{currentPageFirstResultNumber.value}}-{{currentPageLastResultNumber.value}} of {{@pageResults.meta.pagination.totalResults}}
+    {{this.currentPageFirstResultNumber.value}}-{{this.currentPageLastResultNumber.value}} of {{@pageResults.meta.pagination.totalResults}}
   </div>
 {{/if}}

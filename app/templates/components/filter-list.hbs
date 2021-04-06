@@ -1,5 +1,5 @@
 <ul class="plain-bullet-list">
-  {{#each filters as |filter|}}
+  {{#each this.filters as |filter|}}
     <li>
       <button type="button" class="show-filter-detail-button" {{action "updateSelectedFilterIdAction" filter.id}}> {{filter.name}} </button>
     </li>
@@ -7,7 +7,7 @@
 </ul>
 
 <div>
-  Search: <Input @type="text" @value={{searchText}} class="search-input" />
+  Search: <Input @type="text" @value={{this.searchText}} class="search-input" />
 </div>
 
-<PageNavigation @pageResults={{filters}} @pageNumber={{pageNumber}} @updatePageNumber={{action (mut pageNumber)}} />
+<PageNavigation @pageResults={{this.filters}} @pageNumber={{this.pageNumber}} @updatePageNumber={{action (mut this.pageNumber)}} />

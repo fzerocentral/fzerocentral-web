@@ -1,13 +1,13 @@
-<div class="filter-basic-fields {{if isEditing "hidden"}}">
-  <h2>{{filter.name}}</h2>
-  {{#if (eq filter.filterGroup.kind "select")}}
+<div class="filter-basic-fields {{if this.isEditing "hidden"}}">
+  <h2>{{this.filter.name}}</h2>
+  {{#if (eq this.filter.filterGroup.kind "select")}}
     <div>
-      Type: {{filter.usageType}}
+      Type: {{this.filter.usageType}}
     </div>
   {{/if}}
-  {{#if (eq filter.filterGroup.kind "numeric")}}
+  {{#if (eq this.filter.filterGroup.kind "numeric")}}
     <div>
-      Numeric value: {{filter.numericValue}}
+      Numeric value: {{this.filter.numericValue}}
     </div>
   {{/if}}
 
@@ -16,18 +16,18 @@
   </div>
 </div>
 
-<div class="filter-edit-form {{unless isEditing "hidden"}}">
+<div class="filter-edit-form {{unless this.isEditing "hidden"}}">
   <div>
     <label for="edit-filter-name">Name</label>
     <Input
-      @type="text" @value={{editableParams.name}}
+      @type="text" @value={{this.editableParams.name}}
       name="name" id="edit-filter-name" />
   </div>
-  {{#if (eq filter.filterGroup.kind "numeric")}}
+  {{#if (eq this.filter.filterGroup.kind "numeric")}}
     <div>
       <label for="edit-filter-numeric-value">Numeric value</label>
       <Input
-        @type="number" @value={{editableParams.numericValue}}
+        @type="number" @value={{this.editableParams.numericValue}}
         name="numeric-value" id="edit-filter-numeric-value" />
     </div>
   {{/if}}
@@ -39,56 +39,56 @@
 </div>
 
 
-{{#if (eq filter.usageType "choosable")}}
-  <div class="record-count">Used by {{recordCount.value}} records</div>
+{{#if (eq this.filter.usageType "choosable")}}
+  <div class="record-count">Used by {{this.recordCount.value}} records</div>
 {{else}}
-  <div class="record-count">Applies to {{recordCount.value}} records</div>
+  <div class="record-count">Applies to {{this.recordCount.value}} records</div>
 {{/if}}
 
 
-<div class="error-message">{{error-display filterDeleteError}}</div>
+<div class="error-message">{{error-display this.filterDeleteError}}</div>
 <div>
   <button type="button" class="filter-delete-button" {{action "deleteFilter"}}> Delete this filter </button>
 </div>
 
 
-{{#if (eq filter.filterGroup.kind "select")}}
+{{#if (eq this.filter.filterGroup.kind "select")}}
   <hr>
 
-  {{#if (eq filter.usageType "implied")}}
+  {{#if (eq this.filter.usageType "implied")}}
     <div>
       <h3>Implied by</h3>
 
-      {{#if (eq incomingImplications.length 0)}}
+      {{#if (eq this.incomingImplications.length 0)}}
         (None)
       {{else}}
-        {{#each incomingImplications as |implication|}}
+        {{#each this.incomingImplications as |implication|}}
           <button type="button" class="show-filter-detail-button" {{action (mut @filterId) implication.implyingFilter.id}}>
             {{implication.implyingFilter.name}}
           </button>
         {{/each}}
         <PageNavigation
-          @pageResults={{incomingImplications}} @pageNumber={{incomingImplicationsPageNumber}}
-          @updatePageNumber={{action (mut incomingImplicationsPageNumber)}} />
+          @pageResults={{this.incomingImplications}} @pageNumber={{this.incomingImplicationsPageNumber}}
+          @updatePageNumber={{action (mut this.incomingImplicationsPageNumber)}} />
       {{/if}}
     </div>
   {{/if}}
 
-  {{#if (eq filter.usageType "choosable")}}
+  {{#if (eq this.filter.usageType "choosable")}}
     <div>
       <h3>Implies</h3>
 
-      {{#if (eq outgoingImplications.length 0)}}
+      {{#if (eq this.outgoingImplications.length 0)}}
         (None)
       {{else}}
-        {{#each outgoingImplications as |implication|}}
+        {{#each this.outgoingImplications as |implication|}}
           <button type="button" class="show-filter-detail-button" {{action (mut @filterId) implication.impliedFilter.id}}>
             {{implication.impliedFilter.name}}
           </button>
         {{/each}}
         <PageNavigation
-          @pageResults={{outgoingImplications}} @pageNumber={{outgoingImplicationsPageNumber}}
-          @updatePageNumber={{action (mut outgoingImplicationsPageNumber)}} />
+          @pageResults={{this.outgoingImplications}} @pageNumber={{this.outgoingImplicationsPageNumber}}
+          @updatePageNumber={{action (mut this.outgoingImplicationsPageNumber)}} />
       {{/if}}
     </div>
   {{/if}}
@@ -97,7 +97,7 @@
   <div class="implication-links-display">
     <div>
       <ul class="incoming-implication-links-list">
-        {{#each incomingLinks as |link|}}
+        {{#each this.incomingLinks as |link|}}
           <li>
             <button type="button" class="show-filter-detail-button" {{action (mut @filterId) link.implyingFilter.id}}>
               {{link.implyingFilter.name}}
@@ -106,15 +106,15 @@
         {{/each}}
       </ul>
       <PageNavigation
-        @pageResults={{incomingLinks}} @pageNumber={{incomingLinksPageNumber}}
-        @updatePageNumber={{action (mut incomingLinksPageNumber)}} />
+        @pageResults={{this.incomingLinks}} @pageNumber={{this.incomingLinksPageNumber}}
+        @updatePageNumber={{action (mut this.incomingLinksPageNumber)}} />
     </div>
 
-    <span>-&gt; {{filter.name}} -&gt;</span>
+    <span>-&gt; {{this.filter.name}} -&gt;</span>
 
     <div>
       <ul class="outgoing-implication-links-list">
-        {{#each outgoingLinks as |link|}}
+        {{#each this.outgoingLinks as |link|}}
           <li>
             <button type="button" class="show-filter-detail-button" {{action (mut @filterId) link.impliedFilter.id}}>
               {{link.impliedFilter.name}}
@@ -123,8 +123,8 @@
         {{/each}}
       </ul>
       <PageNavigation
-        @pageResults={{outgoingLinks}} @pageNumber={{outgoingLinksPageNumber}}
-        @updatePageNumber={{action (mut outgoingLinksPageNumber)}} />
+        @pageResults={{this.outgoingLinks}} @pageNumber={{this.outgoingLinksPageNumber}}
+        @updatePageNumber={{action (mut this.outgoingLinksPageNumber)}} />
     </div>
   </div>
 
@@ -133,9 +133,9 @@
 
     <div class="link-direction-select select-field-wrapper">
       <PowerSelect
-        @options={{linkDirectionOptions}}
-        @selected={{newLinkDirection}}
-        @onChange={{action (mut newLinkDirection)}}
+        @options={{this.linkDirectionOptions}}
+        @selected={{this.newLinkDirection}}
+        @onChange={{action (mut this.newLinkDirection)}}
         @placeholder="Not selected"
         @matchTriggerWidth={{false}}
         as |option|>
@@ -145,12 +145,12 @@
 
     <div class="linked-filter-select select-field-wrapper">
       <FilterSelect
-        @filterGroup={{filter.filterGroup}}
-        @selected={{newLinkOtherFilter}}
-        @onFilterChange={{action (mut newLinkOtherFilter)}} />
+        @filterGroup={{this.filter.filterGroup}}
+        @selected={{this.newLinkOtherFilter}}
+        @onFilterChange={{action (mut this.newLinkOtherFilter)}} />
     </div>
 
-    <div class="error-message">{{error-display linkCreateError}}</div>
+    <div class="error-message">{{error-display this.linkCreateError}}</div>
 
     <div>
       <button type="button" class="create-button" {{action "createLink"}}> Create link </button>
@@ -165,19 +165,19 @@
       linked filter's name matches the search box contents. --}}
       <DataPowerSelect
         @modelName="filterImplicationLink"
-        @params={{hash filter_id=filter.id}}
+        @params={{hash filter_id=this.filter.id}}
         @searchEnabled={{true}}
         @queryKey="linked_filter_search"
-        @selected={{selectedLinkDeletionOption}}
-        @onChange={{action (mut selectedLinkDeletionOption)}}
+        @selected={{this.selectedLinkDeletionOption}}
+        @onChange={{action (mut this.selectedLinkDeletionOption)}}
         @placeholder="Not selected"
         @matchTriggerWidth={{false}}
         as |option|>
-        {{link-delete-option-display option filter}}
+        {{link-delete-option-display option this.filter}}
       </DataPowerSelect>
     </div>
 
-    <div class="error-message">{{error-display linkDeleteError}}</div>
+    <div class="error-message">{{error-display this.linkDeleteError}}</div>
 
     <div>
       <button type="button" class="delete-button" {{action "deleteLink"}}> Delete link </button>

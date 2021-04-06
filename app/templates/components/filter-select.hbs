@@ -1,7 +1,7 @@
 {{!-- Dropdown of filters which satisfy `params` and whose names contain the search box contents. Only shows the first page of results from the API, so the search box may be needed to narrow down results. --}}
 <DataPowerSelect
   @modelName="filter"
-  @params={{params}}
+  @params={{this.params}}
   @searchEnabled={{true}}
   @queryKey="name_search"
   @selected={{@selected}}
