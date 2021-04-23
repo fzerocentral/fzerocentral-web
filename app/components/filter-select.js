@@ -1,13 +1,10 @@
-import Component from '@ember/component';
-import EmberObject, { action, computed } from '@ember/object';
+import EmberObject, { action } from '@ember/object';
+import Component from '@glimmer/component';
 
-export default Component.extend({
-  filterGroup: null,
-  filterUsageType: null,
+export default class FilterSelectComponent extends Component {
 
-  @computed('filterGroup', 'filterUsageType')
   get params() {
-    let filterGroup = this.get('filterGroup');
+    let filterGroup = this.args.filterGroup;
     if (!filterGroup) {
       // This signals to data-power-select that we don't want a search to
       // take place.
@@ -15,16 +12,7 @@ export default Component.extend({
     }
     let params = EmberObject.create();
     params.set('filter_group_id', filterGroup.get('id'));
-    params.set('usage_type', this.get('filterUsageType'));
+    params.set('usage_type', this.args.filterUsageType);
     return params;
-  },
-
-  @action
-  onFilterChangeAction() {
-    this.onFilterChange(...arguments);
-  },
-
-  onFilterChange() {
-    throw new Error('onFilterChange must be provided');
-  },
-});
+  }
+}
