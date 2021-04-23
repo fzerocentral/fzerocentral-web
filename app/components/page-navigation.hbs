@@ -1,0 +1,35 @@
+{{#if this.hasMultiplePages}}
+  <div class="page-links">
+    Page
+
+    {{#if @pageResults.meta.pagination.firstPage}}
+      <button type="button" {{on "click" (fn @updatePageNumber @pageResults.meta.pagination.firstPage)}}> {{@pageResults.meta.pagination.firstPage}} </button>
+    {{/if}}
+
+    {{#if this.hasGapBetweenFirstAndPrevPage}}
+      ...
+    {{/if}}
+
+    {{#if @pageResults.meta.pagination.prevPage}}
+      <button type="button" {{on "click" (fn @updatePageNumber @pageResults.meta.pagination.prevPage)}}> {{@pageResults.meta.pagination.prevPage}} </button>
+    {{/if}}
+
+    {{@pageNumber}}
+
+    {{#if @pageResults.meta.pagination.nextPage}}
+      <button type="button" {{on "click" (fn @updatePageNumber @pageResults.meta.pagination.nextPage)}}> {{@pageResults.meta.pagination.nextPage}} </button>
+    {{/if}}
+
+    {{#if this.hasGapBetweenLastAndNextPage}}
+      ...
+    {{/if}}
+
+    {{#if @pageResults.meta.pagination.lastPage}}
+      <button type="button" {{on "click" (fn @updatePageNumber @pageResults.meta.pagination.lastPage)}}> {{@pageResults.meta.pagination.lastPage}} </button>
+    {{/if}}
+  </div>
+
+  <div class="page-results-counts">
+    {{this.currentPageFirstResultNumber}}-{{this.currentPageLastResultNumber}} of {{@pageResults.meta.pagination.totalResults}}
+  </div>
+{{/if}}

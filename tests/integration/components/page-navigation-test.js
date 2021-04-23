@@ -33,11 +33,24 @@ module('Integration | Component | page-navigation', function(hooks) {
       (s) => this.set('pageNumber', s));
   });
 
+  test("should tolerate page results without a meta attribute", async function(assert) {
+    this.set('pageResults', DS.PromiseObject.create({
+      promise: Promise.resolve().then(() => {return {};})
+    }));
+    this.set('pageNumber', 1);
+
+    await render(hbs`
+      <PageNavigation
+        @pageResults={{pageResults}} @pageNumber={{pageNumber}}
+        @updatePageNumber={{action (mut pageNumber)}} />
+    `);
+
+    assert.equal(
+      this.element.textContent.trim(), '',
+      "Should render nothing");
+  });
+
   test('should render properly with only one page', async function(assert) {
-    // pageResults needs to be a PromiseObject - to match the expectations of
-    // the has-multiple-pages component, for example. But for this test, we
-    // don't have to wait for anything to resolve, so we use Promise.resolve()
-    // to create an already-resolved promise.
     this.set('pageResults', createPageResults({
       totalResults: 9,
       resultsPerPage: 10,

@@ -1,66 +1,48 @@
-import DS from 'ember-data';
-import Component from '@ember/component';
-import { action, computed } from '@ember/object';
+import Component from '@glimmer/component';
 
-export default Component.extend({
-  pageNumber: null,
-  pageResults: null,
+export default class PageNavigationComponent extends Component {
 
-  @computed('pageNumber', 'pageResults')
   get currentPageFirstResultNumber() {
-    return DS.PromiseObject.create({
-      promise: this.get('pageResults').then((pageResults) => {
-        let paginationMeta = pageResults.meta.pagination;
-        let pageNumber = this.get('pageNumber');
-        let resultsPerPage = Number(paginationMeta.resultsPerPage);
-        return {value: (pageNumber - 1)*resultsPerPage + 1};
-      })
-    });
-  },
+    if (!this.args.pageResults) {return " ";}
 
-  @computed('pageNumber', 'pageResults')
+    let meta = this.args.pageResults.get('meta').pagination;
+    let resultsPerPage = Number(meta.resultsPerPage);
+    return (this.args.pageNumber - 1)*resultsPerPage + 1;
+  }
+
   get currentPageLastResultNumber() {
-    return DS.PromiseObject.create({
-      promise: this.get('pageResults').then((pageResults) => {
-        let paginationMeta = pageResults.meta.pagination;
-        let pageNumber = this.get('pageNumber');
-        let resultsPerPage = Number(paginationMeta.resultsPerPage);
-        let totalResults = Number(paginationMeta.totalResults);
-        return {value: Math.min(pageNumber*resultsPerPage, totalResults)};
-      })
-    });
-  },
+    if (!this.args.pageResults) {return " ";}
 
-  @computed('pageResults')
+    let meta = this.args.pageResults.get('meta').pagination;
+    let resultsPerPage = Number(meta.resultsPerPage);
+    let totalResults = Number(meta.totalResults);
+    return Math.min(this.args.pageNumber*resultsPerPage, totalResults);
+  }
+
   get hasGapBetweenFirstAndPrevPage() {
-    return DS.PromiseObject.create({
-      promise: this.get('pageResults').then((pageResults) => {
-        let paginationMeta = pageResults.meta.pagination;
-        let firstPage = paginationMeta.firstPage;
-        let prevPage = paginationMeta.prevPage;
-        return {value: firstPage && prevPage && (prevPage - firstPage > 1)};
-      })
-    });
-  },
+    if (!this.args.pageResults) {return false;}
 
-  @computed('pageResults')
+    let meta = this.args.pageResults.get('meta').pagination;
+    return meta.firstPage && meta.prevPage && (meta.prevPage - meta.firstPage > 1);
+  }
+
   get hasGapBetweenLastAndNextPage() {
-    return DS.PromiseObject.create({
-      promise: this.get('pageResults').then((pageResults) => {
-        let paginationMeta = pageResults.meta.pagination;
-        let lastPage = paginationMeta.lastPage;
-        let nextPage = paginationMeta.nextPage;
-        return {value: lastPage && nextPage && (lastPage - nextPage > 1)};
-      })
-    });
-  },
+    if (!this.args.pageResults) {return false;}
 
-  @action
-  updatePageNumberAction() {
-    this.updatePageNumber(...arguments);
-  },
+    let meta = this.args.pageResults.get('meta').pagination;
+    return meta.lastPage && meta.nextPage && (meta.lastPage - meta.nextPage > 1);
+  }
 
-  updatePageNumber() {
-    throw new Error('updatePageNumber must be provided');
-  },
-});
+  get hasMultiplePages() {
+    if (!this.args.pageResults) {return false;}
+
+    // In some trivial cases, pageResults may be an empty
+    // PromiseArray which we didn't bother adding a meta attribute to.
+    if (!this.args.pageResults.get('meta')) {return false;}
+
+    let paginationMeta = this.args.pageResults.get('meta').pagination;
+    let totalResults = Number(paginationMeta.totalResults);
+    let resultsPerPage = Number(paginationMeta.resultsPerPage);
+    return totalResults > resultsPerPage;
+  }
+}
