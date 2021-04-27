@@ -1,5 +1,46 @@
 import { Response } from 'ember-cli-mirage';
 
+
+function paginatedResponse(objects, perPage, pageNumber) {
+  if (!pageNumber) {
+    pageNumber = 1;
+  }
+  pageNumber = Number(pageNumber);
+
+  let headers = {'Per-Page': perPage, 'Total': objects.length};
+
+  // Create a `link` header with up to 4 links: first, prev, next, last.
+  // Each link just has to be a valid URL with the page-number query arg
+  // that we want.
+  // Example: <http://example.com?page=2>; rel="last", <http://example.com?page=2>; rel="next"
+  if (objects.length > perPage) {
+    let lastPage = Math.ceil(objects.length / perPage);
+    let linkNamesAndPageNumbers = {};
+    if (pageNumber !== 1) {
+      linkNamesAndPageNumbers.first = 1;
+      linkNamesAndPageNumbers.prev = Math.max(1, pageNumber - 1);
+    }
+    if (pageNumber !== lastPage) {
+      linkNamesAndPageNumbers.next = Math.min(pageNumber + 1, lastPage);
+      linkNamesAndPageNumbers.last = lastPage;
+    }
+
+    let links = [];
+    for (let [name, page] of Object.entries(linkNamesAndPageNumbers)) {
+      links.push(`<http://example.com?page=${page}>; rel="${name}"`);
+    }
+
+    headers['Link'] = links.join(', ');
+  }
+
+  return new Response(
+    200, headers,
+    // This page's objects
+    objects.slice(perPage*(pageNumber-1), perPage*pageNumber));
+}
+
+
+
 export default function() {
 
   // These comments are here to help you get started. Feel free to delete them.
@@ -261,16 +302,18 @@ export default function() {
       filters = filters.filter(
         f => f.usageType === request.queryParams.usage_type);
     }
+    if (request.queryParams.name_search) {
+      // Filters which have the name_search value as a substring of their name
+      filters = filters.filter(
+        f => f.name.toLowerCase().indexOf(request.queryParams.name_search.toLowerCase()) !== -1);
+    }
 
     // Sort by filter name, ascending
     filters = filters.sort((a, b) => {
       return a.name.localeCompare(b.name);
     });
 
-    // Partial implementation of pagination. The results aren't actually
-    // paginated, but the Per-Page and Total headers are given.
-    return new Response(
-      200, {'Per-Page': 20, 'Total': filters.length}, filters);
+    return paginatedResponse(filters, 20, request.queryParams.page);
   });
 
   this.post('/filters', (schema, request) => {

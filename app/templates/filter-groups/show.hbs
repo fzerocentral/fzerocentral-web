@@ -23,20 +23,20 @@
   <div class="filter-list choosable-filter-list">
     Choosable Filters:
     <FilterList
-      @filterGroupId={{@model.filterGroup.id}}
-      @filtersLastUpdated={{filtersLastUpdated}}
-      @updateSelectedFilterId={{action (mut selectedFilterId)}}
-      @usageType="choosable" />
+      @filters={{@model.filtersChoosable}}
+      @updatePageNumber={{action this.updateChoosablePage}}
+      @updateSearchText={{action this.updateChoosableSearchText}}
+      @updateSelectedFilterId={{action (mut selectedFilterId)}} />
   </div>
 
   {{#if (eq @model.filterGroup.kind "select")}}
     <div class="filter-list implied-filter-list">
       Implied Filters:
       <FilterList
-        @filterGroupId={{@model.filterGroup.id}}
-        @filtersLastUpdated={{filtersLastUpdated}}
-        @updateSelectedFilterId={{action (mut selectedFilterId)}}
-        @usageType="implied" />
+        @filters={{@model.filtersImplied}}
+        @updatePageNumber={{action this.updateImpliedPage}}
+        @updateSearchText={{action this.updateImpliedSearchText}}
+        @updateSelectedFilterId={{action (mut selectedFilterId)}} />
     </div>
   {{/if}}
 

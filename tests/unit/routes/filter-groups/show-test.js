@@ -26,6 +26,17 @@ function getFiltersListItemByName(rootElement, name, type='choosable') {
 }
 
 
+function createFilter(thisObj, name, usageType, {filterGroup=null, numericValue=null} = {}) {
+  createModelInstance(
+    thisObj.server, 'filter', {
+      name: name,
+      usageType: usageType,
+      filterGroup: filterGroup || thisObj.filterGroup,
+      numericValue: numericValue,
+    });
+}
+
+
 module('Unit | Route | filter-groups/show', function(hooks) {
   setupTest(hooks);
 
@@ -99,26 +110,13 @@ module('Unit | Route | filter-groups/show', function(hooks) {
 
   test("lists the filters in the filter group", async function(assert) {
     // 2 filters in the filter group we'll check, 1 filter in another group
-    createModelInstance(
-      this.server, 'filter',
-      {name: "White Cat", filterGroup: this.filterGroup,
-       usageType: 'choosable'});
-    createModelInstance(
-      this.server, 'filter',
-      {name: "Blue Falcon", filterGroup: this.filterGroup,
-       usageType: 'choosable'});
-    createModelInstance(
-      this.server, 'filter',
-      {name: "Custom", filterGroup: this.filterGroup,
-       usageType: 'implied'});
-    createModelInstance(
-      this.server, 'filter',
-      {name: "Non-Custom", filterGroup: this.filterGroup,
-       usageType: 'implied'});
-    createModelInstance(
-      this.server, 'filter',
-      {name: "30%", numericValue: 30, filterGroup: this.numericFilterGroup,
-       usageType: 'choosable'});
+    createFilter(this, "White Cat", 'choosable');
+    createFilter(this, "Blue Falcon", 'choosable');
+    createFilter(this, "Custom", 'implied');
+    createFilter(this, "Non-Custom", 'implied');
+    createFilter(
+      this, "30%", 'choosable',
+      {filterGroup: this.numericFilterGroup, numericValue: 30});
 
     await visit(`/filter-groups/${this.filterGroup.id}`);
 
@@ -203,10 +201,7 @@ module('Unit | Route | filter-groups/show', function(hooks) {
   });
 
   test("filter buttons change the selected filter", async function(assert) {
-    createModelInstance(
-      this.server, 'filter',
-      {name: "Blue Falcon", filterGroup: this.filterGroup,
-       usageType: 'choosable'});
+    createFilter(this, "Blue Falcon", 'choosable');
 
     await visit(`/filter-groups/${this.filterGroup.id}`);
 
@@ -224,5 +219,117 @@ module('Unit | Route | filter-groups/show', function(hooks) {
     let filterDetailName = filterDetailNameElement.textContent.trim();
     assert.equal(
       filterDetailName, "Blue Falcon", "Filter name display is as expected");
+  });
+
+  test("choosable filters search box should work", async function(assert) {
+    createFilter(this, "Great Star", 'choosable');
+    createFilter(this, "Gallant Star-G4", 'choosable');
+    createFilter(this, "Astro Robin", 'choosable');
+
+    await visit(`/filter-groups/${this.filterGroup.id}`);
+
+    await fillIn('div.choosable-filter-list .search-input', 'star');
+
+    // Check that the filters updated accordingly. We're not focusing on the
+    // nuances of the search logic, but we do want to make sure the update
+    // propagation goes all the way to the filter list getting updated.
+    assert.ok(
+      getFiltersListItemByName(this.element, "Great Star"),
+      "GS should be on the list");
+    assert.ok(
+      getFiltersListItemByName(this.element, "Gallant Star-G4"),
+      "GSG4 should be on the list");
+    assert.notOk(
+      getFiltersListItemByName(this.element, "Astro Robin"),
+      "AR should not be on the list");
+  });
+
+  test("implied filters search box should work", async function(assert) {
+    createFilter(this, "B booster", 'implied');
+    createFilter(this, "C booster", 'implied');
+    createFilter(this, "D body", 'implied');
+
+    await visit(`/filter-groups/${this.filterGroup.id}`);
+
+    await fillIn('div.implied-filter-list .search-input', 'boost');
+
+    // Check that the filters updated accordingly.
+    assert.ok(
+      getFiltersListItemByName(this.element, "B booster", 'implied'),
+      "B booster should be on the list");
+    assert.ok(
+      getFiltersListItemByName(this.element, "C booster", 'implied'),
+      "C booster should be on the list");
+    assert.notOk(
+      getFiltersListItemByName(this.element, "D body", 'implied'),
+      "D body should not be on the list");
+  });
+
+  test("choosable filters page buttons should work", async function(assert) {
+    // Mirage should be specifying a page size of 20, so create 21 filters to
+    // get multiple pages.
+    for (let n = 1; n <= 21; n++) {
+      // Filter 01, Filter 02, ..., Filter 21
+      let filterNumber = n.toString().padStart(2, '0');
+      createFilter(this, `Filter ${filterNumber}`, 'choosable');
+    }
+
+    await visit(`/filter-groups/${this.filterGroup.id}`);
+
+    assert.ok(
+      getFiltersListItemByName(this.element, "Filter 01", 'choosable'),
+      "Page 1 should have filter 1");
+    assert.notOk(
+      getFiltersListItemByName(this.element, "Filter 21", 'choosable'),
+      "Page 1 should not have filter 21");
+
+    let buttons = this.element.querySelectorAll(
+      'div.choosable-filter-list div.page-links button');
+
+    // First page-button should go to the next page, 2
+    let nextPageButton = buttons[0];
+    await click(nextPageButton);
+
+    // Check that the filters updated accordingly. We want to make sure the
+    // update propagation goes all the way to the filter list getting updated.
+    assert.notOk(
+      getFiltersListItemByName(this.element, "Filter 01", 'choosable'),
+      "Page 1 should not have filter 1");
+    assert.ok(
+      getFiltersListItemByName(this.element, "Filter 21", 'choosable'),
+      "Page 1 should have filter 21");
+  });
+
+  test("implied filters page buttons should work", async function(assert) {
+    for (let n = 1; n <= 21; n++) {
+      // Filter 01, Filter 02, ..., Filter 21
+      let filterNumber = n.toString().padStart(2, '0');
+      createFilter(this, `Filter ${filterNumber}`, 'implied');
+    }
+
+    await visit(`/filter-groups/${this.filterGroup.id}`);
+
+    assert.ok(
+      getFiltersListItemByName(this.element, "Filter 01", 'implied'),
+      "Page 1 should have filter 1");
+    assert.notOk(
+      getFiltersListItemByName(this.element, "Filter 21", 'implied'),
+      "Page 1 should not have filter 21");
+
+    let buttons = this.element.querySelectorAll(
+      'div.implied-filter-list div.page-links button');
+
+    // First page-button should go to the next page, 2
+    let nextPageButton = buttons[0];
+    await click(nextPageButton);
+
+    // Check that the filters updated accordingly. We want to make sure the
+    // update propagation goes all the way to the filter list getting updated.
+    assert.notOk(
+      getFiltersListItemByName(this.element, "Filter 01", 'implied'),
+      "Page 1 should not have filter 1");
+    assert.ok(
+      getFiltersListItemByName(this.element, "Filter 21", 'implied'),
+      "Page 1 should have filter 21");
   });
 });

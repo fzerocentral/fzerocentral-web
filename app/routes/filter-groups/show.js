@@ -6,12 +6,31 @@ import RSVP from 'rsvp';
 export default class FilterGroupsShowRoute extends Route {
   @service store;
 
+  queryParams = {
+    choosable_filters_name_search: {refreshModel: true},
+    choosable_filters_page: {refreshModel: true},
+    implied_filters_name_search: {refreshModel: true},
+    implied_filters_page: {refreshModel: true},
+  };
+
   model(params) {
     return RSVP.hash({
       chartTypes: this.store.query(
         'chart-type', {filter_group_id: params.filter_group_id}),
       filterGroup: this.store.findRecord(
         'filter-group', params.filter_group_id),
+      filtersChoosable: this.store.query('filter', {
+        filter_group_id: params.filter_group_id,
+        name_search: params.choosable_filters_name_search,
+        page: params.choosable_filters_page,
+        usage_type: 'choosable',
+      }),
+      filtersImplied: this.store.query('filter', {
+        filter_group_id: params.filter_group_id,
+        name_search: params.implied_filters_name_search,
+        page: params.implied_filters_page,
+        usage_type: 'implied',
+      }),
       newFilter: this.store.createRecord('filter'),
     });
   }
@@ -25,10 +44,6 @@ export default class FilterGroupsShowRoute extends Route {
     newFilter.save().then(() => {
       // Success callback
       this.controllerFor(this.routeName).set('filterCreateError', null);
-
-      // Refresh filter-list computed properties by changing this property.
-      this.controllerFor(this.routeName).set(
-        'filtersLastUpdated', new Date());
 
       // Refresh the model to reset newFilter.
       this.refresh();
