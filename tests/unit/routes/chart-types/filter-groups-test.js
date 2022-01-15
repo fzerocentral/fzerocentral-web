@@ -121,7 +121,7 @@ module('Unit | Route | chart-types/filter-groups', function(hooks) {
       this.server.pretender.handledRequests.find((request) => {
         let params = getURLSearchParamsHash(request.url);
         return (
-          request.url.startsWith('/filter_groups?')
+          request.url.startsWith('/filter_groups/?')
           && Object.prototype.hasOwnProperty.call(params, 'chart_type_id')
           && params['chart_type_id'] !== ''
           && request.method === 'GET');
@@ -140,7 +140,7 @@ module('Unit | Route | chart-types/filter-groups', function(hooks) {
       this.server.pretender.handledRequests.find((request) => {
         let params = getURLSearchParamsHash(request.url);
         return (
-          request.url.startsWith('/filter_groups?')
+          request.url.startsWith('/filter_groups/?')
           && Object.prototype.hasOwnProperty.call(params, 'game_id')
           && request.method === 'GET');
       });
@@ -158,7 +158,7 @@ module('Unit | Route | chart-types/filter-groups', function(hooks) {
       this.server.pretender.handledRequests.find((request) => {
         let params = getURLSearchParamsHash(request.url);
         return (
-          request.url.startsWith('/filter_groups?')
+          request.url.startsWith('/filter_groups/?')
           && Object.prototype.hasOwnProperty.call(params, 'chart_type_id')
           && params['chart_type_id'] === ''
           && request.method === 'GET');

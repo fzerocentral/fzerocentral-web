@@ -1,46 +1,6 @@
 import { Response } from 'ember-cli-mirage';
 
 
-function paginatedResponse(objects, perPage, pageNumber) {
-  if (!pageNumber) {
-    pageNumber = 1;
-  }
-  pageNumber = Number(pageNumber);
-
-  let headers = {'Per-Page': perPage, 'Total': objects.length};
-
-  // Create a `link` header with up to 4 links: first, prev, next, last.
-  // Each link just has to be a valid URL with the page-number query arg
-  // that we want.
-  // Example: <http://example.com?page=2>; rel="last", <http://example.com?page=2>; rel="next"
-  if (objects.length > perPage) {
-    let lastPage = Math.ceil(objects.length / perPage);
-    let linkNamesAndPageNumbers = {};
-    if (pageNumber !== 1) {
-      linkNamesAndPageNumbers.first = 1;
-      linkNamesAndPageNumbers.prev = Math.max(1, pageNumber - 1);
-    }
-    if (pageNumber !== lastPage) {
-      linkNamesAndPageNumbers.next = Math.min(pageNumber + 1, lastPage);
-      linkNamesAndPageNumbers.last = lastPage;
-    }
-
-    let links = [];
-    for (let [name, page] of Object.entries(linkNamesAndPageNumbers)) {
-      links.push(`<http://example.com?page=${page}>; rel="${name}"`);
-    }
-
-    headers['Link'] = links.join(', ');
-  }
-
-  return new Response(
-    200, headers,
-    // This page's objects
-    objects.slice(perPage*(pageNumber-1), perPage*pageNumber));
-}
-
-
-
 export default function() {
 
   // These comments are here to help you get started. Feel free to delete them.
@@ -307,13 +267,27 @@ export default function() {
       filters = filters.filter(
         f => f.name.toLowerCase().indexOf(request.queryParams.name_search.toLowerCase()) !== -1);
     }
+    if (request.queryParams.implied_by_filter_id) {
+      // Filters which have the specified filter id in its incoming implications
+      let implied_by_filter = schema.filters.find(
+        request.queryParams.implied_by_filter_id);
+      filters = filters.filter(
+        f => f.incomingFilterImplications.includes(implied_by_filter));
+    }
+    if (request.queryParams.implies_filter_id) {
+      // Filters which have the specified filter id in its outgoing implications
+      let implies_filter = schema.filters.find(
+        request.queryParams.implies_filter_id);
+      filters = filters.filter(
+        f => f.outgoingFilterImplications.includes(implies_filter));
+    }
 
     // Sort by filter name, ascending
     filters = filters.sort((a, b) => {
       return a.name.localeCompare(b.name);
     });
 
-    return paginatedResponse(filters, 20, request.queryParams.page);
+    return filters;
   });
 
   this.post('/filters', (schema, request) => {
@@ -358,6 +332,28 @@ export default function() {
 
   this.get('/filters/:id', (schema, request) => {
     return schema.filters.find(request.params.id);
+  });
+
+  this.post('/filters/:id/relationships/outgoing_filter_implications', (schema, request) => {
+    let requestJSON = JSON.parse(request.requestBody);
+    let filter = schema.filters.find(request.params.id);
+    let implications = filter.outgoingFilterImplications;
+    requestJSON.data.forEach(f => {
+      implications.add(schema.filters.find(f.id));
+    });
+    filter.update('outgoingFilterImplications', implications);
+    return filter;
+  });
+
+  this.delete('/filters/:id/relationships/outgoing_filter_implications', (schema, request) => {
+    let requestJSON = JSON.parse(request.requestBody);
+    let filter = schema.filters.find(request.params.id);
+    let implications = filter.outgoingFilterImplications;
+    requestJSON.data.forEach(f => {
+      implications.remove(schema.filters.find(f.id));
+    });
+    filter.update('outgoingFilterImplications', implications);
+    return filter;
   });
 
   this.get('/games', (schema) => {
@@ -483,8 +479,7 @@ export default function() {
       }
     });
 
-    return new Response(
-      200, {'Per-Page': 1000, 'Total': records.length}, records);
+    return records;
   });
 
   this.post('/records', (schema, request) => {

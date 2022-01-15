@@ -65,7 +65,9 @@ module('Integration | Component | filter-list', function(hooks) {
 
 
   test('should list the given filters', async function(assert) {
-    this.set('filters', [this.gsg4Filter, this.titang4Filter]);
+    let filters = [this.gsg4Filter, this.titang4Filter];
+    filters.meta = {pagination: {count: 2}};
+    this.set('filters', filters);
     await render(hbs`
       <FilterList
         @filters={{filters}}
@@ -87,12 +89,7 @@ module('Integration | Component | filter-list', function(hooks) {
 
   test('should update pageNumber when page button is clicked', async function(assert) {
     let filters = [this.gsg4Filter, this.titang4Filter];
-    filters.meta = {'pagination': {
-      totalResults: 22,
-      resultsPerPage: 10,
-      nextPage: 2,
-      lastPage: 3,
-    }};
+    filters.meta = {pagination: {count: 22, pages: 3, page: 1}};
     this.set('filters', filters);
     await render(hbs`
       <FilterList
@@ -111,7 +108,9 @@ module('Integration | Component | filter-list', function(hooks) {
   });
 
   test('should update searchText when search field is filled', async function(assert) {
-    this.set('filters', this.allFilters);
+    let filters = this.allFilters;
+    filters.meta = {pagination: {count: 4}};
+    this.set('filters', filters);
     await render(hbs`
       <FilterList
         @filters={{filters}}
@@ -125,7 +124,9 @@ module('Integration | Component | filter-list', function(hooks) {
   });
 
   test('should update selectedFilterId when clicking a list button', async function(assert) {
-    this.set('filters', this.allFilters);
+    let filters = this.allFilters;
+    filters.meta = {pagination: {count: 4}};
+    this.set('filters', filters);
     await render(hbs`
       <FilterList
         @filters={{filters}}

@@ -78,7 +78,7 @@ module('Unit | Route | charts/show', function(hooks) {
     let recordsRequest =
       this.server.pretender.handledRequests.find((request) => {
         return (
-          request.url.startsWith('/records?')
+          request.url.startsWith('/records/?')
           && request.method === 'GET');
       });
     assert.ok(recordsRequest, "Records API call was made");
@@ -87,7 +87,7 @@ module('Unit | Route | charts/show', function(hooks) {
     let expectedParams = {
       chart_id: this.chart.id,
       filters: '',
-      per_page: '1000',
+      'page[size]': '1000',
       ranked_entity: 'user',
       sort: 'value',
     };
@@ -100,7 +100,7 @@ module('Unit | Route | charts/show', function(hooks) {
     let filterGroupsRequest =
       this.server.pretender.handledRequests.find((request) => {
         return (
-          request.url.startsWith('/filter_groups?')
+          request.url.startsWith('/filter_groups/?')
           && request.method === 'GET');
       });
     assert.ok(filterGroupsRequest, "Filter groups API call was made");

@@ -59,7 +59,7 @@ module('Unit | Route | charts/user-history', function(hooks) {
     let recordsRequest =
       this.server.pretender.handledRequests.find((request) => {
         return (
-          request.url.startsWith('/records?')
+          request.url.startsWith('/records/?')
           && request.method === 'GET');
       });
     assert.ok(recordsRequest, "Records API call was made");
@@ -69,7 +69,7 @@ module('Unit | Route | charts/user-history', function(hooks) {
       chart_id: this.chart.id,
       user_id: this.user.id,
       improvements: 'flag',
-      per_page: '1000',
+      'page[size]': '1000',
       sort: 'date_achieved',
     };
     assert.deepEqual(actualParams, expectedParams, "Params were as expected");

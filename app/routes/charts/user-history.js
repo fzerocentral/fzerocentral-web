@@ -11,7 +11,7 @@ export default class ChartsUserHistoryRoute extends Route {
       user: this.store.findRecord('user', params.user_id),
       records: this.store.query('record', {
         chart_id: params.chart_id, user_id: params.user_id,
-        sort: 'date_achieved', improvements: 'flag', per_page: 1000}),
+        sort: 'date_achieved', improvements: 'flag', 'page[size]': 1000}),
       filterGroups: this.store.query(
         'filterGroup', {chart_id: params.chart_id}),
     });

@@ -56,15 +56,15 @@
   <hr>
 
   {{#if (eq this.filter.usageType "implied")}}
-    <div>
+    <div class="incoming-implications-list">
       <h3>Implied by</h3>
 
       {{#if (eq this.incomingImplications.length 0)}}
         (None)
       {{else}}
-        {{#each this.incomingImplications as |implication|}}
-          <button type="button" class="show-filter-detail-button" {{action (mut @filterId) implication.implyingFilter.id}}>
-            {{implication.implyingFilter.name}}
+        {{#each this.incomingImplications as |implyingFilter|}}
+          <button type="button" class="show-filter-detail-button" {{action (mut @filterId) implyingFilter.id}}>
+            {{implyingFilter.name}}
           </button>
         {{/each}}
         <PageNavigation
@@ -75,15 +75,15 @@
   {{/if}}
 
   {{#if (eq this.filter.usageType "choosable")}}
-    <div>
+    <div class="outgoing-implications-list">
       <h3>Implies</h3>
 
       {{#if (eq this.outgoingImplications.length 0)}}
         (None)
       {{else}}
-        {{#each this.outgoingImplications as |implication|}}
-          <button type="button" class="show-filter-detail-button" {{action (mut @filterId) implication.impliedFilter.id}}>
-            {{implication.impliedFilter.name}}
+        {{#each this.outgoingImplications as |impliedFilter|}}
+          <button type="button" class="show-filter-detail-button" {{action (mut @filterId) impliedFilter.id}}>
+            {{impliedFilter.name}}
           </button>
         {{/each}}
         <PageNavigation
@@ -93,94 +93,47 @@
     </div>
   {{/if}}
 
-  <h3>Links</h3>
-  <div class="implication-links-display">
-    <div>
-      <ul class="incoming-implication-links-list">
-        {{#each this.incomingLinks as |link|}}
-          <li>
-            <button type="button" class="show-filter-detail-button" {{action (mut @filterId) link.implyingFilter.id}}>
-              {{link.implyingFilter.name}}
-            </button>
-          </li>
-        {{/each}}
-      </ul>
-      <PageNavigation
-        @pageResults={{this.incomingLinks}} @pageNumber={{this.incomingLinksPageNumber}}
-        @updatePageNumber={{action (mut this.incomingLinksPageNumber)}} />
-    </div>
+  <div class="filter-implication-create-form">
+    <h3>Create an outgoing implication</h3>
 
-    <span>-&gt; {{this.filter.name}} -&gt;</span>
-
-    <div>
-      <ul class="outgoing-implication-links-list">
-        {{#each this.outgoingLinks as |link|}}
-          <li>
-            <button type="button" class="show-filter-detail-button" {{action (mut @filterId) link.impliedFilter.id}}>
-              {{link.impliedFilter.name}}
-            </button>
-          </li>
-        {{/each}}
-      </ul>
-      <PageNavigation
-        @pageResults={{this.outgoingLinks}} @pageNumber={{this.outgoingLinksPageNumber}}
-        @updatePageNumber={{action (mut this.outgoingLinksPageNumber)}} />
-    </div>
-  </div>
-
-  <div class="filter-implication-link-create-form">
-    <h3>Create an implication link</h3>
-
-    <div class="link-direction-select select-field-wrapper">
-      <PowerSelect
-        @options={{this.linkDirectionOptions}}
-        @selected={{this.newLinkDirection}}
-        @onChange={{action (mut this.newLinkDirection)}}
-        @placeholder="Not selected"
-        @matchTriggerWidth={{false}}
-        as |option|>
-        {{option}}
-      </PowerSelect>
-    </div>
-
-    <div class="linked-filter-select select-field-wrapper">
+    <div class="target-filter-select select-field-wrapper">
       <FilterSelect
         @filterGroup={{this.filter.filterGroup}}
-        @selected={{this.newLinkOtherFilter}}
-        @onFilterChange={{action (mut this.newLinkOtherFilter)}} />
+        @selected={{this.newImplicationTargetFilter}}
+        @onFilterChange={{action (mut this.newImplicationTargetFilter)}} />
     </div>
 
-    <div class="error-message">{{error-display this.linkCreateError}}</div>
+    <div class="error-message">{{error-display this.implicationCreateError}}</div>
 
     <div>
-      <button type="button" class="create-button" {{action "createLink"}}> Create link </button>
+      <button type="button" class="create-button" {{action "createImplication"}}> Create implication </button>
     </div>
   </div>
 
-  <div class="filter-implication-link-delete-form">
-    <h3>Delete an implication link</h3>
+  <div class="filter-implication-delete-form">
+    <h3>Delete an outgoing implication</h3>
 
-    <div class="link-select select-field-wrapper">
-      {{!-- Retrieves this filter's links from ember-data, such that the
-      linked filter's name matches the search box contents. --}}
+    <div class="implication-select select-field-wrapper">
+      {{!-- Retrieves this filter's implications from ember-data, such that the
+      related filter's name matches the search box contents. --}}
       <DataPowerSelect
-        @modelName="filterImplicationLink"
-        @params={{hash filter_id=this.filter.id}}
+        @modelName="filter"
+        @params={{hash implied_by_filter_id=this.filter.id}}
         @searchEnabled={{true}}
-        @queryKey="linked_filter_search"
-        @selected={{this.selectedLinkDeletionOption}}
-        @onChange={{action (mut this.selectedLinkDeletionOption)}}
+        @queryKey="name_search"
+        @selected={{this.selectedImplicationDeletionOption}}
+        @onChange={{action (mut this.selectedImplicationDeletionOption)}}
         @placeholder="Not selected"
         @matchTriggerWidth={{false}}
         as |option|>
-        {{link-delete-option-display option this.filter}}
+        {{option.name}}
       </DataPowerSelect>
     </div>
 
-    <div class="error-message">{{error-display this.linkDeleteError}}</div>
+    <div class="error-message">{{error-display this.implicationDeleteError}}</div>
 
     <div>
-      <button type="button" class="delete-button" {{action "deleteLink"}}> Delete link </button>
+      <button type="button" class="delete-button" {{action "deleteImplication"}}> Delete implication </button>
     </div>
   </div>
 {{/if}}

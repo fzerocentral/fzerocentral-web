@@ -28,20 +28,18 @@ module('Integration | Component | page-navigation', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
     this.set('pageNumber', null);
-    this.set(
-      'updatePageNumber',
-      (s) => this.set('pageNumber', s));
   });
 
-  test("should tolerate page results without a meta attribute", async function(assert) {
-    this.set('pageResults', DS.PromiseObject.create({
-      promise: Promise.resolve().then(() => {return {};})
+  test("should render nothing with zero results", async function(assert) {
+    this.set('pageResults', createPageResults({
+      count: 0,
+      pages: 1,
+      page: 1,
     }));
-    this.set('pageNumber', 1);
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}} @pageNumber={{pageNumber}}
+        @pageResults={{pageResults}}
         @updatePageNumber={{action (mut pageNumber)}} />
     `);
 
@@ -50,16 +48,16 @@ module('Integration | Component | page-navigation', function(hooks) {
       "Should render nothing");
   });
 
-  test('should render properly with only one page', async function(assert) {
+  test('should render nothing with only one page', async function(assert) {
     this.set('pageResults', createPageResults({
-      totalResults: 9,
-      resultsPerPage: 10,
+      count: 9,
+      pages: 1,
+      page: 1,
     }));
-    this.set('pageNumber', 1);
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}} @pageNumber={{pageNumber}}
+        @pageResults={{pageResults}}
         @updatePageNumber={{action (mut pageNumber)}} />
     `);
 
@@ -70,15 +68,14 @@ module('Integration | Component | page-navigation', function(hooks) {
 
   test('should render page 1 of 2 properly', async function(assert) {
     this.set('pageResults', createPageResults({
-      totalResults: 12,
-      resultsPerPage: 10,
-      lastPage: 2,
+      count: 12,
+      pages: 2,
+      page: 1,
     }));
-    this.set('pageNumber', 1);
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}} @pageNumber={{pageNumber}}
+        @pageResults={{pageResults}}
         @updatePageNumber={{action (mut pageNumber)}} />
     `);
 
@@ -96,15 +93,14 @@ module('Integration | Component | page-navigation', function(hooks) {
 
   test('should render page 2 of 2 properly', async function(assert) {
     this.set('pageResults', createPageResults({
-      totalResults: 12,
-      resultsPerPage: 10,
-      firstPage: 1,
+      count: 12,
+      pages: 2,
+      page: 2,
     }));
-    this.set('pageNumber', 2);
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}} @pageNumber={{pageNumber}}
+        @pageResults={{pageResults}}
         @updatePageNumber={{action (mut pageNumber)}} />
     `);
 
@@ -122,16 +118,14 @@ module('Integration | Component | page-navigation', function(hooks) {
 
   test('should render page 1 of 3 properly', async function(assert) {
     this.set('pageResults', createPageResults({
-      totalResults: 30,
-      resultsPerPage: 10,
-      nextPage: 2,
-      lastPage: 3,
+      count: 30,
+      pages: 3,
+      page: 1,
     }));
-    this.set('pageNumber', 1);
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}} @pageNumber={{pageNumber}}
+        @pageResults={{pageResults}}
         @updatePageNumber={{action (mut pageNumber)}} />
     `);
 
@@ -149,16 +143,14 @@ module('Integration | Component | page-navigation', function(hooks) {
 
   test('should render page 2 of 3 properly', async function(assert) {
     this.set('pageResults', createPageResults({
-      totalResults: 30,
-      resultsPerPage: 10,
-      firstPage: 1,
-      lastPage: 3,
+      count: 30,
+      pages: 3,
+      page: 2,
     }));
-    this.set('pageNumber', 2);
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}} @pageNumber={{pageNumber}}
+        @pageResults={{pageResults}}
         @updatePageNumber={{action (mut pageNumber)}} />
     `);
 
@@ -176,16 +168,14 @@ module('Integration | Component | page-navigation', function(hooks) {
 
   test('should render page 3 of 3 properly', async function(assert) {
     this.set('pageResults', createPageResults({
-      totalResults: 30,
-      resultsPerPage: 10,
-      firstPage: 1,
-      prevPage: 2,
+      count: 30,
+      pages: 3,
+      page: 3,
     }));
-    this.set('pageNumber', 3);
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}} @pageNumber={{pageNumber}}
+        @pageResults={{pageResults}}
         @updatePageNumber={{action (mut pageNumber)}} />
     `);
 
@@ -203,16 +193,14 @@ module('Integration | Component | page-navigation', function(hooks) {
 
   test('should render the first page of many properly', async function(assert) {
     this.set('pageResults', createPageResults({
-      totalResults: 95,
-      resultsPerPage: 10,
-      nextPage: 2,
-      lastPage: 10,
+      count: 95,
+      pages: 10,
+      page: 1,
     }));
-    this.set('pageNumber', 1);
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}} @pageNumber={{pageNumber}}
+        @pageResults={{pageResults}}
         @updatePageNumber={{action (mut pageNumber)}} />
     `);
 
@@ -230,18 +218,14 @@ module('Integration | Component | page-navigation', function(hooks) {
 
   test('should render a middle page of many properly', async function(assert) {
     this.set('pageResults', createPageResults({
-      totalResults: 95,
-      resultsPerPage: 10,
-      firstPage: 1,
-      prevPage: 4,
-      nextPage: 6,
-      lastPage: 10,
+      count: 95,
+      pages: 10,
+      page: 5,
     }));
-    this.set('pageNumber', 5);
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}} @pageNumber={{pageNumber}}
+        @pageResults={{pageResults}}
         @updatePageNumber={{action (mut pageNumber)}} />
     `);
 
@@ -260,16 +244,14 @@ module('Integration | Component | page-navigation', function(hooks) {
 
   test('should render the last page of many properly', async function(assert) {
     this.set('pageResults', createPageResults({
-      totalResults: 95,
-      resultsPerPage: 10,
-      firstPage: 1,
-      prevPage: 9,
+      count: 95,
+      pages: 10,
+      page: 10,
     }));
-    this.set('pageNumber', 10);
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}} @pageNumber={{pageNumber}}
+        @pageResults={{pageResults}}
         @updatePageNumber={{action (mut pageNumber)}} />
     `);
 
@@ -287,105 +269,85 @@ module('Integration | Component | page-navigation', function(hooks) {
 
   test('next page button should switch to the correct page', async function(assert) {
     this.set('pageResults', createPageResults({
-      totalResults: 95,
-      resultsPerPage: 10,
-      nextPage: 2,
-      lastPage: 10,
+      count: 95,
+      pages: 10,
+      page: 1,
     }));
-    this.set('pageNumber', 1);
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}} @pageNumber={{pageNumber}}
+        @pageResults={{pageResults}}
         @updatePageNumber={{action (mut pageNumber)}} />
     `);
 
-    // There should be page buttons to pages 2 and 10
+    // There should be page buttons to pages 2 and 10. Click the first one.
     let buttons = this.element.querySelectorAll('button');
     await click(buttons[0]);
-    // The current page number should've changed from 1 to 2. The rest of the
-    // elements stay the same, since due to the limited scope of this test, we
-    // didn't actually trigger a change in the pageResults.
-    let pageLinksDiv = this.element.querySelector('div.page-links');
     assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent), "Page 2 2 ... 10",
+      this.get('pageNumber'), 2,
       "Should have changed to the correct page");
   });
 
   test('last page button should switch to the correct page', async function(assert) {
     this.set('pageResults', createPageResults({
-      totalResults: 95,
-      resultsPerPage: 10,
-      firstPage: 1,
-      nextPage: 3,
-      lastPage: 10,
+      count: 95,
+      pages: 10,
+      page: 2,
     }));
-    this.set('pageNumber', 2);
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}} @pageNumber={{pageNumber}}
+        @pageResults={{pageResults}}
         @updatePageNumber={{action (mut pageNumber)}} />
     `);
 
-    // There should be page buttons to pages 1, 3, and 10
+    // There should be page buttons to pages 1, 3, and 10. Click the last one.
     let buttons = this.element.querySelectorAll('button');
     await click(buttons[2]);
-    // The current page number should've changed from 2 to 10.
-    let pageLinksDiv = this.element.querySelector('div.page-links');
     assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent), "Page 1 10 3 ... 10",
+      this.get('pageNumber'), 10,
       "Should have changed to the correct page");
   });
 
   test('prev page button should switch to the correct page', async function(assert) {
     this.set('pageResults', createPageResults({
-      totalResults: 95,
-      resultsPerPage: 10,
-      firstPage: 1,
-      prevPage: 9,
+      count: 95,
+      pages: 10,
+      page: 10,
     }));
-    this.set('pageNumber', 10);
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}} @pageNumber={{pageNumber}}
+        @pageResults={{pageResults}}
         @updatePageNumber={{action (mut pageNumber)}} />
     `);
 
-    // There should be page buttons to pages 1 and 9
+    // There should be page buttons to pages 1 and 9. Click the second one.
     let buttons = this.element.querySelectorAll('button');
     await click(buttons[1]);
-    // The current page number should've changed from 10 to 9.
-    let pageLinksDiv = this.element.querySelector('div.page-links');
     assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent), "Page 1 ... 9 9",
+      this.get('pageNumber'), 9,
       "Should have changed to the correct page");
   });
 
   test('first page button should switch to the correct page', async function(assert) {
     this.set('pageResults', createPageResults({
-      totalResults: 95,
-      resultsPerPage: 10,
-      firstPage: 1,
-      prevPage: 8,
-      lastPage: 10,
+      count: 95,
+      pages: 10,
+      page: 9,
     }));
-    this.set('pageNumber', 9);
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}} @pageNumber={{pageNumber}}
+        @pageResults={{pageResults}}
         @updatePageNumber={{action (mut pageNumber)}} />
     `);
 
-    // There should be page buttons to pages 1, 8, and 10
+    // There should be page buttons to pages 1, 8, and 10. Click the first one.
     let buttons = this.element.querySelectorAll('button');
     await click(buttons[0]);
-    // The current page number should've changed from 9 to 1.
-    let pageLinksDiv = this.element.querySelector('div.page-links');
     assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent), "Page 1 ... 8 1 10",
+      this.get('pageNumber'), 1,
       "Should have changed to the correct page");
   });
 });

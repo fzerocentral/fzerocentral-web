@@ -64,7 +64,7 @@ export default Component.extend({
       let chartId = chart.get('id');
       let args = {
         chart_id: chartId, sort: 'value', ranked_entity: 'user',
-        per_page: 1000};
+        'page[size]': 1000};
       let chartRecordsPromise = this.get('store').query('record', args).then(
         (chartRecords) => {return [chartId, chartRecords];}
       );
