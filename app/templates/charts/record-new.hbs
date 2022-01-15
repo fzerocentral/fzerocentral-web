@@ -1,15 +1,15 @@
 <h1>Submit record for: <LinkTo @route="charts.show" @model={{@model.chart}}> {{@model.chart.chartGroup.name}} - {{@model.chart.name}}</LinkTo></h1>
 
-<div class="user-select select-field-wrapper">
-  <label>User</label>
+<div class="player-select select-field-wrapper">
+  <label>Player</label>
   <PowerSelect
-    @options={{@model.users}}
-    @selected={{@model.record.user}}
-    @onChange={{action (mut @model.record.user)}}
+    @options={{@model.players}}
+    @selected={{@model.record.player}}
+    @onChange={{action (mut @model.record.player)}}
     @placeholder="Not selected"
     @matchTriggerWidth={{false}}
-    as |user|>
-    {{user.username}}
+    as |player|>
+    {{player.username}}
   </PowerSelect>
 </div>
 

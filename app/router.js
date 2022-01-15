@@ -15,7 +15,7 @@ Router.map(function() {
 
   this.route('charts', function() {
     this.route('show', { path: '/:chart_id' });
-    this.route('user-history', { path: '/:chart_id/users/:user_id/history' });
+    this.route('player-history', { path: '/:chart_id/players/:player_id/history' });
     this.route('top-record-history', {
       path: '/:chart_id/top-record-history'
     });

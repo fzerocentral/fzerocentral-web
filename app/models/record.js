@@ -8,6 +8,6 @@ export default class RecordModel extends Model {
   @attr('string') valueDisplay;
 
   @belongsTo('chart') chart;
-  @belongsTo('user') user;
+  @belongsTo('player') player;
   @hasMany('filter') filters;
 }

@@ -10,7 +10,7 @@ export default class ChartsRecordNewRoute extends Route {
     return RSVP.hash({
       chart: this.store.findRecord('chart', params.chart_id),
       record: this.store.createRecord('record'),
-      users: this.store.findAll('user'),
+      players: this.store.findAll('player'),
       filterGroups: this.store.query(
         'filterGroup', {chart_id: params.chart_id}),
     });

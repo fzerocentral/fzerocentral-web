@@ -17,7 +17,7 @@ export default class ChartsShowRoute extends Route {
     return RSVP.hash({
       chart: this.store.findRecord('chart', params.chart_id),
       records: this.store.query('record', {
-        chart_id: params.chart_id, sort: 'value', ranked_entity: 'user',
+        chart_id: params.chart_id, sort: 'value', ranked_entity: 'player',
         filters: params.appliedFiltersString, 'page[size]': 1000}),
       filterGroups: this.store.query(
         'filterGroup', {chart_id: params.chart_id}),

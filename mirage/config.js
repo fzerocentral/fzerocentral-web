@@ -488,9 +488,9 @@ export default function() {
     let value = data.attributes.value;
     let achievedAt = data.attributes['achieved-at'];
     let chart = schema.charts.find(data.relationships.chart.data.id);
-    let user = schema.users.find(data.relationships.user.data.id);
+    let player = schema.players.find(data.relationships.player.data.id);
     let record = schema.records.create({
-      value: value, achievedAt: achievedAt, chart: chart, user: user});
+      value: value, achievedAt: achievedAt, chart: chart, player: player});
     return record;
   });
 
@@ -498,11 +498,11 @@ export default function() {
     return schema.records.find(request.params.id);
   });
 
-  this.get('/users', (schema) => {
-    return schema.users.all();
+  this.get('/players', (schema) => {
+    return schema.players.all();
   });
 
-  this.get('/users/:id', (schema, request) => {
-    return schema.users.find(request.params.id);
+  this.get('/players/:id', (schema, request) => {
+    return schema.players.find(request.params.id);
   });
 }

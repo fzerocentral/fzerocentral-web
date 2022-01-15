@@ -22,7 +22,7 @@ module('Unit | Route | charts/record-new', function(hooks) {
     this.server = startMirage();
     this.store = this.owner.lookup('service:store');
 
-    this.user = createModelInstance(this.server, 'user', {username: "User A"});
+    this.player = createModelInstance(this.server, 'player', {username: "Player A"});
     let game = createModelInstance(this.server, 'game', {name: "Game 1"});
     let chartGroup = createModelInstance(
       this.server, 'chart-group',
@@ -73,7 +73,7 @@ module('Unit | Route | charts/record-new', function(hooks) {
     await visit(`/charts/${this.chart.id}/record-new`);
 
     // Fill fields.
-    await selectChoose('div.user-select > .ember-power-select-trigger', 'User A');
+    await selectChoose('div.player-select > .ember-power-select-trigger', 'Player A');
     fillIn('.value-input', '123');
     await selectChoose(`div.filter-group-${this.machineFG.id}-select .ember-power-select-trigger`, 'Blue Falcon');
     await selectChoose(`div.filter-group-${this.settingFG.id}-select .ember-power-select-trigger`, '80%');
@@ -93,7 +93,7 @@ module('Unit | Route | charts/record-new', function(hooks) {
     assert.equal(
       record.get('chart').get('id'), this.chart.id, "Chart is as expected");
     assert.equal(
-      record.get('user').get('id'), this.user.id, "User is as expected");
+      record.get('player').get('id'), this.player.id, "Player is as expected");
     assert.equal(record.get('value'), 123, "Value is as expected");
 
     // The date was just the date of submission, and we don't know exactly

@@ -7,14 +7,14 @@ import { createModelInstance }
 import { getURLSearchParamsHash }
   from 'fzerocentral-web/tests/helpers/route-helpers';
 
-module('Unit | Route | charts/user-history', function(hooks) {
+module('Unit | Route | charts/player-history', function(hooks) {
   setupTest(hooks);
 
   hooks.beforeEach( function() {
     this.server = startMirage();
     this.store = this.owner.lookup('service:store');
 
-    this.user = createModelInstance(this.server, 'user', {username: "User A"});
+    this.player = createModelInstance(this.server, 'player', {username: "Player A"});
     let game = createModelInstance(this.server, 'game', {name: "Game 1"});
     let chartGroup = createModelInstance(
       this.server, 'chart-group',
@@ -49,12 +49,12 @@ module('Unit | Route | charts/user-history', function(hooks) {
   });
 
   test('it exists', function(assert) {
-    let route = this.owner.lookup('route:charts/user-history');
+    let route = this.owner.lookup('route:charts/player-history');
     assert.ok(route);
   });
 
   test("makes the expected API request for records", async function(assert) {
-    await visit(`/charts/${this.chart.id}/users/${this.user.id}/history`);
+    await visit(`/charts/${this.chart.id}/players/${this.player.id}/history`);
 
     let recordsRequest =
       this.server.pretender.handledRequests.find((request) => {
@@ -67,7 +67,7 @@ module('Unit | Route | charts/user-history', function(hooks) {
     let actualParams = getURLSearchParamsHash(recordsRequest.url);
     let expectedParams = {
       chart_id: this.chart.id,
-      user_id: this.user.id,
+      player_id: this.player.id,
       improvements: 'flag',
       'page[size]': '1000',
       sort: 'date_achieved',
@@ -81,16 +81,16 @@ module('Unit | Route | charts/user-history', function(hooks) {
     // Thus, if the result respects 2-3-1 order, then we know it sorted by
     // achieve date.
     this.record2 = createModelInstance(this.server, 'record',
-      {value: 70, valueDisplay: "70m", user: this.user, chart: this.chart,
+      {value: 70, valueDisplay: "70m", player: this.player, chart: this.chart,
        achievedAt: new Date(2002, 0)});
     this.record3 = createModelInstance(this.server, 'record',
-      {value: 60, valueDisplay: "60m", user: this.user, chart: this.chart,
+      {value: 60, valueDisplay: "60m", player: this.player, chart: this.chart,
        achievedAt: new Date(2003, 0)});
     this.record1 = createModelInstance(this.server, 'record',
-      {value: 50, valueDisplay: "50m", user: this.user, chart: this.chart,
+      {value: 50, valueDisplay: "50m", player: this.player, chart: this.chart,
        achievedAt: new Date(2001, 0)});
 
-    await visit(`/charts/${this.chart.id}/users/${this.user.id}/history`);
+    await visit(`/charts/${this.chart.id}/players/${this.player.id}/history`);
 
     let rows = this.element.querySelectorAll('table.records-table tr');
     let row1DateCell = rows[1].querySelectorAll('td')[1];
@@ -105,7 +105,7 @@ module('Unit | Route | charts/user-history', function(hooks) {
   });
 
   test("records table has one column per shown filter group", async function(assert) {
-    await visit(`/charts/${this.chart.id}/users/${this.user.id}/history`);
+    await visit(`/charts/${this.chart.id}/players/${this.player.id}/history`);
 
     let firstRow = this.element.querySelectorAll('table.records-table tr')[0];
     let tableColumnHeaders =

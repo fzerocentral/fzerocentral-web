@@ -13,8 +13,8 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     this.server = startMirage();
     this.store = this.owner.lookup('service:store');
 
-    this.userA = createModelInstance(this.server, 'user', {username: 'User A'});
-    this.userB = createModelInstance(this.server, 'user', {username: 'User B'});
+    this.playerA = createModelInstance(this.server, 'player', {username: 'Player A'});
+    this.playerB = createModelInstance(this.server, 'player', {username: 'Player B'});
     this.game = createModelInstance(this.server, 'game', {name: 'Game 1'});
     this.chartGroup = createModelInstance(
       this.server, 'chart-group',
@@ -54,10 +54,10 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
       {chartType: this.chartType, filterGroup: this.settingFG});
 
     this.recordA = createModelInstance(this.server, 'record',
-      {value: 20, valueDisplay: "20m", user: this.userA, chart: this.chart,
+      {value: 20, valueDisplay: "20m", player: this.playerA, chart: this.chart,
        rank: 1, filters: [this.blueFalconFilter, this.setting30Filter]});
     this.recordB = createModelInstance(this.server, 'record',
-      {value: 25, valueDisplay: "25m", user: this.userB, chart: this.chart,
+      {value: 25, valueDisplay: "25m", player: this.playerB, chart: this.chart,
        rank: 2, filters: []});
 
     // Set any properties with this.set('myProperty', 'value');
@@ -141,15 +141,15 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     assert.equal(
       cells[0].textContent.trim(), '1', "Record A's rank is as expected");
     assert.equal(
-      cells[1].textContent.trim(), 'User A',
+      cells[1].textContent.trim(), 'Player A',
       "Record A's player is as expected");
     assert.equal(
       cells[2].textContent.trim(), '20m',
       "Record A's value display is as expected");
     assert.equal(
       cells[2].querySelector('a').getAttribute('href'),
-      `/charts/${this.chart.id}/users/${this.userA.id}/history`,
-      "Record A's user-history link is as expected");
+      `/charts/${this.chart.id}/players/${this.playerA.id}/history`,
+      "Record A's player-history link is as expected");
     assert.equal(
       cells[3].textContent.trim(), 'Blue Falcon',
       "Record A's machine filter is as expected");
@@ -168,15 +168,15 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     assert.equal(
       cells[0].textContent.trim(), '2', "Record B's rank is as expected");
     assert.equal(
-      cells[1].textContent.trim(), 'User B',
+      cells[1].textContent.trim(), 'Player B',
       "Record B's player is as expected");
     assert.equal(
       cells[2].textContent.trim(), '25m',
       "Record B's value display is as expected");
     assert.equal(
       cells[2].querySelector('a').getAttribute('href'),
-      `/charts/${this.chart.id}/users/${this.userB.id}/history`,
-      "Record B's user-history link is as expected");
+      `/charts/${this.chart.id}/players/${this.playerB.id}/history`,
+      "Record B's player-history link is as expected");
     assert.equal(
       cells[3].textContent.trim(), '',
       "Record B's machine filter is as expected");

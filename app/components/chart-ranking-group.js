@@ -63,7 +63,7 @@ export default Component.extend({
       // Call API to get this chart's records
       let chartId = chart.get('id');
       let args = {
-        chart_id: chartId, sort: 'value', ranked_entity: 'user',
+        chart_id: chartId, sort: 'value', ranked_entity: 'player',
         'page[size]': 1000};
       let chartRecordsPromise = this.get('store').query('record', args).then(
         (chartRecords) => {return [chartId, chartRecords];}
@@ -97,20 +97,20 @@ export default Component.extend({
     let otherCharts = this.get('otherCharts');
     let mainChartRecords = records.get(this.get('mainChartId'));
 
-    // For non-main charts, organize records as hashes from user ID to record
-    let otherChartRecordsByUser = {};
+    // For non-main charts, organize records as hashes from player ID to record
+    let otherChartRecordsByPlayer = {};
     otherCharts.forEach((chart) => {
       let thisChartRecords = records.get(chart.get('id'));
       if (thisChartRecords) {
-        let thisChartRecordsByUser = {};
+        let thisChartRecordsByPlayer = {};
         thisChartRecords.forEach((record) => {
-          thisChartRecordsByUser[record.get('user').get('id')] = record;
+          thisChartRecordsByPlayer[record.get('player').get('id')] = record;
         });
-        otherChartRecordsByUser[chart.get('id')] = thisChartRecordsByUser;
+        otherChartRecordsByPlayer[chart.get('id')] = thisChartRecordsByPlayer;
       }
       else {
         // The promise hasn't completed yet
-        otherChartRecordsByUser[chart.get('id')] = {};
+        otherChartRecordsByPlayer[chart.get('id')] = {};
       }
     });
 
@@ -119,16 +119,16 @@ export default Component.extend({
     if (mainChartRecords) {
       mainChartRecords.forEach((mainRecord) => {
         // For each main-chart record, we grab the other-charts records for the
-        // same user
+        // same player
         let otherRecords = [];
         otherCharts.forEach((chart) => {
-          let userId = mainRecord.get('user').get('id');
-          let thisChartRecords = otherChartRecordsByUser[chart.get('id')];
-          if (Object.hasOwnProperty.call(thisChartRecords, userId)) {
-            otherRecords.push(thisChartRecords[userId]);
+          let playerId = mainRecord.get('player').get('id');
+          let thisChartRecords = otherChartRecordsByPlayer[chart.get('id')];
+          if (Object.hasOwnProperty.call(thisChartRecords, playerId)) {
+            otherRecords.push(thisChartRecords[playerId]);
           }
           else {
-            // This user doesn't have a record for this chart
+            // This player doesn't have a record for this chart
             otherRecords.push(null);
           }
         });

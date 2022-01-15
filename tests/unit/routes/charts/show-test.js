@@ -29,8 +29,8 @@ module('Unit | Route | charts/show', function(hooks) {
     this.server = startMirage();
     this.store = this.owner.lookup('service:store');
 
-    let user1 = createModelInstance(this.server, 'user', {username: "User 1"});
-    let user2 = createModelInstance(this.server, 'user', {username: "User 2"});
+    let player1 = createModelInstance(this.server, 'player', {username: "Player 1"});
+    let player2 = createModelInstance(this.server, 'player', {username: "Player 2"});
     let game = createModelInstance(this.server, 'game', {name: "Game 1"});
     let chartGroup = createModelInstance(
       this.server, 'chart-group',
@@ -51,10 +51,10 @@ module('Unit | Route | charts/show', function(hooks) {
       {name: 'Blue Falcon', filterGroup: this.machineFG});
 
     createModelInstance(this.server, 'record',
-      {value: 20, valueDisplay: "20m", user: user1, chart: this.chart,
+      {value: 20, valueDisplay: "20m", player: player1, chart: this.chart,
        rank: 1, filters: [this.blueFalconFilter]});
     createModelInstance(this.server, 'record',
-      {value: 25, valueDisplay: "25m", user: user2, chart: this.chart,
+      {value: 25, valueDisplay: "25m", player: player2, chart: this.chart,
        rank: 2, filters: []});
   });
 
@@ -88,7 +88,7 @@ module('Unit | Route | charts/show', function(hooks) {
       chart_id: this.chart.id,
       filters: '',
       'page[size]': '1000',
-      ranked_entity: 'user',
+      ranked_entity: 'player',
       sort: 'value',
     };
     assert.deepEqual(actualParams, expectedParams, "Params were as expected");

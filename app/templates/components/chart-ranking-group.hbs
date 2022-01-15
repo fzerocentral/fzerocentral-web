@@ -22,16 +22,16 @@
     {{#each this.recordRows as |recordRow|}}
       <tr>
         <td>{{recordRow.mainRecord.rank}}</td>
-        <td>{{recordRow.mainRecord.user.username}}</td>
+        <td>{{recordRow.mainRecord.player.username}}</td>
         <td>
-          <LinkTo @route="charts.user-history" @models={{array this.mainChart.id recordRow.mainRecord.user.id}}>
+          <LinkTo @route="charts.player-history" @models={{array this.mainChart.id recordRow.mainRecord.player.id}}>
             {{recordRow.mainRecord.valueDisplay}}
           </LinkTo>
         </td>
 
         {{#each recordRow.otherRecords as |otherRecord|}}
           <td>
-            <LinkTo @route="charts.user-history" @models={{array otherRecord.chart.id otherRecord.user.id}}>
+            <LinkTo @route="charts.player-history" @models={{array otherRecord.chart.id otherRecord.player.id}}>
               {{otherRecord.valueDisplay}}
             </LinkTo>
           </td>

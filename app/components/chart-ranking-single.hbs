@@ -26,9 +26,9 @@
     {{#each @records as |record|}}
       <tr>
         <td>{{record.rank}}</td>
-        <td>{{record.user.username}}</td>
+        <td>{{record.player.username}}</td>
         <td>
-          <LinkTo @route="charts.user-history" @models={{array @chart.id record.user.id}}>
+          <LinkTo @route="charts.player-history" @models={{array @chart.id record.player.id}}>
             {{record.valueDisplay}}
           </LinkTo>
         </td>

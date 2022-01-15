@@ -12,7 +12,7 @@ module('Unit | Route | charts/top-record-history', function(hooks) {
     this.server = startMirage();
     this.store = this.owner.lookup('service:store');
 
-    this.user = createModelInstance(this.server, 'user', {username: "User A"});
+    this.player = createModelInstance(this.server, 'player', {username: "Player A"});
     let game = createModelInstance(this.server, 'game', {name: "Game 1"});
     let chartGroup = createModelInstance(
       this.server, 'chart-group',
