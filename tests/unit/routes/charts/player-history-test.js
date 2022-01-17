@@ -1,11 +1,11 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import fetchMock from 'fetch-mock';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
 import { click, visit } from "@ember/test-helpers";
 import { createModelInstance }
   from 'fzerocentral-web/tests/helpers/model-helpers';
-import { getURLSearchParamsHash }
-  from 'fzerocentral-web/tests/helpers/route-helpers';
+
 
 module('Unit | Route | charts/player-history', function(hooks) {
   setupTest(hooks);
@@ -42,10 +42,19 @@ module('Unit | Route | charts/player-history', function(hooks) {
     createModelInstance(
       this.server, 'chart-type-filter-group',
       {chartType: chartType, filterGroup: this.settingFG});
+
+    this.apiPath = `/charts/${this.chart.id}/record_history/`;
+    this.apiExpectedParams = {
+      player_id: this.player.id,
+      filters: '',
+      'page[size]': '50',
+    };
   });
 
   hooks.afterEach( function() {
     this.server.shutdown();
+    // Restore fetch() to its native implementation.
+    fetchMock.reset();
   });
 
   test('it exists', function(assert) {
@@ -53,58 +62,51 @@ module('Unit | Route | charts/player-history', function(hooks) {
     assert.ok(route);
   });
 
-  test("makes the expected API request for records", async function(assert) {
+  test("should make the expected API request for records", async function(assert) {
+    // Mock window.fetch(), setting a flag when the API is
+    // called with the expected URL and params.
+    let called = false;
+    fetchMock.get(
+      {url: 'path:' + this.apiPath, query: this.apiExpectedParams},
+      () => {called = true; return {data: []};},
+    );
+
     await visit(`/charts/${this.chart.id}/players/${this.player.id}/history`);
 
-    let recordsRequest =
-      this.server.pretender.handledRequests.find((request) => {
-        return (
-          request.url.startsWith('/records/?')
-          && request.method === 'GET');
-      });
-    assert.ok(recordsRequest, "Records API call was made");
-
-    let actualParams = getURLSearchParamsHash(recordsRequest.url);
-    let expectedParams = {
-      chart_id: this.chart.id,
-      player_id: this.player.id,
-      improvements: 'flag',
-      'page[size]': '1000',
-      sort: 'date_achieved',
-    };
-    assert.deepEqual(actualParams, expectedParams, "Params were as expected");
+    assert.ok(
+      called, "API call should have been made with expected URL and params");
   });
 
-  test("records table lists records in order of date achieved", async function(assert) {
-    // These records are defined such that ordering by create date or value
-    // gives a 1-2-3 order, and ordering by achieve date gives a 2-3-1 order.
-    // Thus, if the result respects 2-3-1 order, then we know it sorted by
-    // achieve date.
-    this.record2 = createModelInstance(this.server, 'record',
-      {value: 70, valueDisplay: "70m", player: this.player, chart: this.chart,
-       achievedAt: new Date(2002, 0)});
-    this.record3 = createModelInstance(this.server, 'record',
-      {value: 60, valueDisplay: "60m", player: this.player, chart: this.chart,
-       achievedAt: new Date(2003, 0)});
-    this.record1 = createModelInstance(this.server, 'record',
-      {value: 50, valueDisplay: "50m", player: this.player, chart: this.chart,
-       achievedAt: new Date(2001, 0)});
+  test("records table should list record details", async function(assert) {
+    // Mock window.fetch() to get a particular result from the API call.
+    fetchMock.get(
+      {url: 'path:' + this.apiPath, query: this.apiExpectedParams},
+      () => {
+        return {data: [
+          {value_display: "70m", date_achieved: new Date(2003, 0), filters: []},
+          {value_display: "60m", date_achieved: new Date(2002, 0), filters: []},
+        ]};
+      },
+    );
 
     await visit(`/charts/${this.chart.id}/players/${this.player.id}/history`);
 
     let rows = this.element.querySelectorAll('table.records-table tr');
-    let row1DateCell = rows[1].querySelectorAll('td')[1];
+    let [valueCell, dateCell] = rows[1].querySelectorAll('td');
     assert.equal(
-      row1DateCell.textContent.trim(), '2003-01-01 00:00', "Latest record first");
-    let row2DateCell = rows[2].querySelectorAll('td')[1];
+      valueCell.textContent.trim(), "70m", "Value should be as expected");
     assert.equal(
-      row2DateCell.textContent.trim(), '2002-01-01 00:00', "Second-latest second");
-    let row3DateCell = rows[3].querySelectorAll('td')[1];
+      dateCell.textContent.trim(), "2003-01-01 00:00",
+      "Date should be as expected");
+    [valueCell, dateCell] = rows[2].querySelectorAll('td');
     assert.equal(
-      row3DateCell.textContent.trim(), '2001-01-01 00:00', "Earliest record last");
+      valueCell.textContent.trim(), "60m", "Value should be as expected");
+    assert.equal(
+      dateCell.textContent.trim(), "2002-01-01 00:00",
+      "Date should be as expected");
   });
 
-  test("records table has one column per shown filter group", async function(assert) {
+  test("records table should have one column per shown filter group", async function(assert) {
     await visit(`/charts/${this.chart.id}/players/${this.player.id}/history`);
 
     let firstRow = this.element.querySelectorAll('table.records-table tr')[0];

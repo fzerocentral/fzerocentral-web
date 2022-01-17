@@ -3,6 +3,7 @@ import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 
 export default class ChartsShowRoute extends Route {
+  @service nonEmberDataApi;
   @service store;
 
   queryParams = {
@@ -16,9 +17,8 @@ export default class ChartsShowRoute extends Route {
   model(params) {
     return RSVP.hash({
       chart: this.store.findRecord('chart', params.chart_id),
-      records: this.store.query('record', {
-        chart_id: params.chart_id, sort: 'value', ranked_entity: 'player',
-        filters: params.appliedFiltersString, 'page[size]': 1000}),
+      records: this.nonEmberDataApi.getChartRanking(
+        params.chart_id, params.appliedFiltersString),
       filterGroups: this.store.query(
         'filterGroup', {chart_id: params.chart_id}),
     });

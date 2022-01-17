@@ -11,9 +11,7 @@ module('Integration | Helper | find-filter-of-group', function(hooks) {
     this.server = startMirage();
 
     this.groupA = server.create('filterGroup', {name: 'Group A'});
-    this.filterA1 = server.create('filter', {name: 'Filter A1', filterGroup: this.groupA});
     this.groupB = server.create('filterGroup', {name: 'Group B'});
-    this.filterB1 = server.create('filter', {name: 'Filter B1', filterGroup: this.groupB});
   });
 
   hooks.afterEach( function() {
@@ -21,8 +19,10 @@ module('Integration | Helper | find-filter-of-group', function(hooks) {
   });
 
   test('it renders', async function(assert) {
-    let store = this.owner.lookup('service:store');
-    this.set('filters', store.findAll('filter'));
+    this.set('filters', [
+      {name: "Filter A1", filter_group_id: this.groupA.id},
+      {name: "Filter B1", filter_group_id: this.groupB.id},
+    ]);
     this.set('filterGroupId', this.groupB.id);
     await render(hbs`{{get (find-filter-of-group filters filterGroupId) "name"}}`);
 

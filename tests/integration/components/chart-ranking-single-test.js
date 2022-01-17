@@ -3,7 +3,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { click, render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
-import { createModelInstance, modelAsProperty }
+import { createModelInstance }
   from 'fzerocentral-web/tests/helpers/model-helpers';
 
 module('Integration | Component | chart-ranking-single', function(hooks) {
@@ -30,21 +30,9 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     this.machineFG = createModelInstance(
       this.server, 'filter-group',
       {name: 'Machine', kind: 'select', showByDefault: true});
-    this.blueFalconFilter = createModelInstance(
-      this.server, 'filter',
-      {name: 'Blue Falcon', filterGroup: this.machineFG});
-    this.whiteCatFilter = createModelInstance(
-      this.server, 'filter',
-      {name: 'White Cat', filterGroup: this.machineFG});
     this.settingFG = createModelInstance(
       this.server, 'filter-group',
       {name: 'Setting', kind: 'numeric', showByDefault: false});
-    this.setting30Filter = createModelInstance(
-      this.server, 'filter',
-      {name: '30%', numericValue: 30, filterGroup: this.settingFG});
-    this.setting80Filter = createModelInstance(
-      this.server, 'filter',
-      {name: '80%', numericValue: 80, filterGroup: this.settingFG});
 
     createModelInstance(
       this.server, 'chart-type-filter-group',
@@ -53,20 +41,20 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
       this.server, 'chart-type-filter-group',
       {chartType: this.chartType, filterGroup: this.settingFG});
 
-    this.recordA = createModelInstance(this.server, 'record',
-      {value: 20, valueDisplay: "20m", player: this.playerA, chart: this.chart,
-       rank: 1, filters: [this.blueFalconFilter, this.setting30Filter]});
-    this.recordB = createModelInstance(this.server, 'record',
-      {value: 25, valueDisplay: "25m", player: this.playerB, chart: this.chart,
-       rank: 2, filters: []});
-
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
     this.set('chart', this.chart);
-    this.set(
-      'records',
-      [this.recordA, this.recordB].map(
-        rec => modelAsProperty(this.store, 'record', rec)));
+    this.set('records', [
+      {rank: 1, player_username: "Player A",
+       player_id: this.playerA.id, value_display: "20m",
+       filters: [
+         {name: "Blue Falcon", filter_group_id: this.machineFG.id},
+         {name: "30%", filter_group_id: this.settingFG.id},
+       ]},
+      {rank: 2, player_username: "Player B",
+       player_id: this.playerB.id, value_display: "25m",
+       filters: []},
+    ]);
     this.set('filterGroups', this.store.query(
         'filterGroup', {chart_type_id: this.chartType.id}));
     this.set('appliedFiltersString', null);

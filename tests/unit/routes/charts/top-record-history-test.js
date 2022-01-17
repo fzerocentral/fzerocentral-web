@@ -1,5 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import fetchMock from 'fetch-mock';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
 import { click, visit } from "@ember/test-helpers";
 import { createModelInstance }
@@ -40,10 +41,19 @@ module('Unit | Route | charts/top-record-history', function(hooks) {
     createModelInstance(
       this.server, 'chart-type-filter-group',
       {chartType: chartType, filterGroup: this.settingFG});
+
+    this.apiPath = `/charts/${this.chart.id}/record_history/`;
+    this.apiExpectedParams = {
+      filters: '',
+      improvements: 'filter',
+      'page[size]': '50',
+    };
   });
 
   hooks.afterEach( function() {
     this.server.shutdown();
+    // Restore fetch() to its native implementation.
+    fetchMock.reset();
   });
 
   test('it exists', function(assert) {
@@ -51,7 +61,59 @@ module('Unit | Route | charts/top-record-history', function(hooks) {
     assert.ok(route);
   });
 
-  test("records table has one column per shown filter group", async function(assert) {
+  test("should make the expected API request for records", async function(assert) {
+    // Mock window.fetch(), setting a flag when the API is
+    // called with the expected URL and params.
+    let called = false;
+    fetchMock.get(
+      {url: 'path:' + this.apiPath, query: this.apiExpectedParams},
+      () => {called = true; return {data: []};},
+    );
+
+    await visit(`/charts/${this.chart.id}/top-record-history`);
+
+    assert.ok(
+      called, "API call should have been made with expected URL and params");
+  });
+
+  test("records table should list record details", async function(assert) {
+    // Mock window.fetch() to get a particular result from the API call.
+    fetchMock.get(
+      {url: 'path:' + this.apiPath, query: this.apiExpectedParams},
+      () => {
+        return {data: [
+          {value_display: "70m", player_username: "Player B",
+           date_achieved: new Date(2003, 0), filters: []},
+          {value_display: "60m", player_username: "Player A",
+           date_achieved: new Date(2002, 0), filters: []},
+        ]};
+      },
+    );
+
+    await visit(`/charts/${this.chart.id}/top-record-history`);
+
+    let rows = this.element.querySelectorAll('table.records-table tr');
+    let [playerCell, valueCell, dateCell] = rows[1].querySelectorAll('td');
+    assert.equal(
+      playerCell.textContent.trim(), "Player B",
+      "Player should be as expected");
+    assert.equal(
+      valueCell.textContent.trim(), "70m", "Value should be as expected");
+    assert.equal(
+      dateCell.textContent.trim(), "2003-01-01 00:00",
+      "Date should be as expected");
+    [playerCell, valueCell, dateCell] = rows[2].querySelectorAll('td');
+    assert.equal(
+      playerCell.textContent.trim(), "Player A",
+      "Player should be as expected");
+    assert.equal(
+      valueCell.textContent.trim(), "60m", "Value should be as expected");
+    assert.equal(
+      dateCell.textContent.trim(), "2002-01-01 00:00",
+      "Date should be as expected");
+  });
+
+  test("records table should have one column per shown filter group", async function(assert) {
     await visit(`/charts/${this.chart.id}/top-record-history`);
 
     let firstRow = this.element.querySelectorAll('table.records-table tr')[0];
@@ -62,7 +124,7 @@ module('Unit | Route | charts/top-record-history', function(hooks) {
       "Player", "Record", "Date", "Machine"];
     assert.deepEqual(
       tableColumnHeaders, expectedTableHeaders,
-      "Column headers are as expected with only default filter groups shown");
+      "Column headers should be as expected with only default filter groups shown");
 
     // Check
     await click('input[name="showAllFilterGroups"]');
@@ -75,7 +137,7 @@ module('Unit | Route | charts/top-record-history', function(hooks) {
       "Player", "Record", "Date", "Machine", "Setting"];
     assert.deepEqual(
       tableColumnHeaders, expectedTableHeaders,
-      "Column headers are as expected with all filter groups shown");
+      "Column headers should be as expected with all filter groups shown");
 
     // Uncheck
     await click('input[name="showAllFilterGroups"]');
@@ -88,6 +150,6 @@ module('Unit | Route | charts/top-record-history', function(hooks) {
       "Player", "Record", "Date", "Machine"];
     assert.deepEqual(
       tableColumnHeaders, expectedTableHeaders,
-      "Column headers are as expected with only default filter groups shown");
+      "Column headers should be as expected with only default filter groups shown");
   });
 });

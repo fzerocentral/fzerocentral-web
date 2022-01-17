@@ -19,22 +19,28 @@
   </thead>
 
   <tbody>
-    {{#each this.recordRows as |recordRow|}}
+    {{#each @recordRows as |recordRow|}}
       <tr>
-        <td>{{recordRow.mainRecord.rank}}</td>
-        <td>{{recordRow.mainRecord.player.username}}</td>
+        <td>{{recordRow.main_record.rank}}</td>
+        <td>{{recordRow.main_record.player_username}}</td>
         <td>
-          <LinkTo @route="charts.player-history" @models={{array this.mainChart.id recordRow.mainRecord.player.id}}>
-            {{recordRow.mainRecord.valueDisplay}}
+          <LinkTo
+            @route="charts.player-history"
+            @models={{array this.mainChart.id recordRow.main_record.player_id}}>
+            {{recordRow.main_record.value_display}}
           </LinkTo>
         </td>
 
-        {{#each recordRow.otherRecords as |otherRecord|}}
-          <td>
-            <LinkTo @route="charts.player-history" @models={{array otherRecord.chart.id otherRecord.player.id}}>
-              {{otherRecord.valueDisplay}}
-            </LinkTo>
-          </td>
+        {{#each recordRow.other_records as |other_record index|}}
+          {{#let (get this.otherCharts index) as |otherChart|}}
+            <td>
+              <LinkTo
+                @route="charts.player-history"
+                @models={{array otherChart.id other_record.player_id}}>
+                {{other_record.value_display}}
+              </LinkTo>
+            </td>
+          {{/let}}
         {{/each}}
       </tr>
     {{/each}}

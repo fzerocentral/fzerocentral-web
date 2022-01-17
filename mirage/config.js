@@ -30,6 +30,16 @@ export default function() {
     return schema.charts.find(request.params.id);
   });
 
+  this.get('/charts/:id/ranking', (/* schema, request */) => {
+    return [];
+  });
+  this.get('/charts/:id/record_history', (/* schema, request */) => {
+    return [];
+  });
+  this.get('/charts/:chart_id/players/:player_id/history', (/* schema, request */) => {
+    return [];
+  });
+
   this.get('/chart_groups', (schema, request) => {
     let chartGroups = schema.chartGroups.all();
 
