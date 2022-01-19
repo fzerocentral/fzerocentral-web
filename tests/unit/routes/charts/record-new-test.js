@@ -99,7 +99,7 @@ module('Unit | Route | charts/record-new', function(hooks) {
     // The date was just the date of submission, and we don't know exactly
     // what that was, so we'll just check that it is a Date.
     assert.equal(
-      record.get('achievedAt').constructor.name, 'Date',
+      record.get('dateAchieved').constructor.name, 'Date',
       "Date is as expected");
 
     // Compare filters. We're agnostic to filter order here.

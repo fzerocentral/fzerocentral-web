@@ -2,6 +2,7 @@
 
 <div class="player-select select-field-wrapper">
   <label>Player</label>
+  {{!-- TODO: Add a search box here --}}
   <PowerSelect
     @options={{@model.players}}
     @selected={{@model.record.player}}
@@ -23,7 +24,7 @@
 
 <div>
   <label>Date achieved</label>
-  <DateField @dateValue={{@model.record.achievedAt}} />
+  <DateField @dateValue={{@model.record.dateAchieved}} />
 </div>
 
 <RecordFiltersEdit

@@ -463,7 +463,7 @@ export default function() {
       }
       else if (sortMethod === 'date_achieved') {
         // Latest date first
-        sortFunc = ((a, b) => { return b.achievedAt - a.achievedAt; });
+        sortFunc = ((a, b) => { return b.dateAchieved - a.dateAchieved; });
       }
       records = records.sort(sortFunc);
 
@@ -496,11 +496,11 @@ export default function() {
     let requestJSON = JSON.parse(request.requestBody);
     let data = requestJSON.data;
     let value = data.attributes.value;
-    let achievedAt = data.attributes['achieved-at'];
+    let dateAchieved = data.attributes['date-achieved'];
     let chart = schema.charts.find(data.relationships.chart.data.id);
     let player = schema.players.find(data.relationships.player.data.id);
     let record = schema.records.create({
-      value: value, achievedAt: achievedAt, chart: chart, player: player});
+      value: value, dateAchieved: dateAchieved, chart: chart, player: player});
     return record;
   });
 
