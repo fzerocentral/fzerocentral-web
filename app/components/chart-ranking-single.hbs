@@ -1,6 +1,6 @@
 <div>
   <Input
-    @type="checkbox" @checked={{showAllFilterGroups}}
+    @type="checkbox" @checked={{this.showAllFilterGroups}}
     name="showAllFilterGroups" id="showAllFilterGroupsCheckbox" />
   <label for="showAllFilterGroupsCheckbox">Show all filter groups</label>
 </div>
@@ -16,7 +16,7 @@
       <th>Rank</th>
       <th>Player</th>
       <th>Record</th>
-      {{#each shownFilterGroups as |filterGroup|}}
+      {{#each this.shownFilterGroups as |filterGroup|}}
         <th>{{filterGroup.name}}</th>
       {{/each}}
     </tr>
@@ -33,7 +33,7 @@
           </LinkTo>
         </td>
 
-        {{#each shownFilterGroups as |filterGroup|}}
+        {{#each this.shownFilterGroups as |filterGroup|}}
           <td>
             {{get (find-filter-of-group record.filters filterGroup.id) "name"}}
           </td>

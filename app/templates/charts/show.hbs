@@ -4,9 +4,9 @@
 
 {{#if @model.chart.chartGroup.showChartsTogether}}
   <div>
-    {{#link-to "chart-groups.show" @model.chart.chartGroup.id (query-params mainChartId=@model.chart.id)}}
+    <LinkTo @route="chart-groups.show" @model={{@model.chart.chartGroup.id}} @query={{hash mainChartId=@model.chart.id}}>
       View all charts for {{@model.chart.chartGroup.name}}
-    {{/link-to}}
+    </LinkTo>
   </div>
 {{/if}}
 

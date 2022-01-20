@@ -1,17 +1,20 @@
 import { action } from '@ember/object';
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 
-export default Route.extend({
+export default class ChartsRecordNewRoute extends Route {
+  @service store;
+
   model(params) {
     return RSVP.hash({
-      chart: this.get('store').findRecord('chart', params.chart_id),
-      record: this.get('store').createRecord('record'),
-      users: this.get('store').findAll('user'),
-      filterGroups: this.get('store').query(
+      chart: this.store.findRecord('chart', params.chart_id),
+      record: this.store.createRecord('record'),
+      users: this.store.findAll('user'),
+      filterGroups: this.store.query(
         'filterGroup', {chart_id: params.chart_id}),
     });
-  },
+  }
 
   @action
   saveRecord() {
@@ -26,7 +29,7 @@ export default Route.extend({
     }
 
     newRecord.save().then(() => this.transitionTo('charts.show', chart.id));
-  },
+  }
 
   @action
   willTransition() {
@@ -34,4 +37,4 @@ export default Route.extend({
     // if the model 'isNew'
     this.modelFor(this.routeName).record.rollbackAttributes();
   }
-});
+}

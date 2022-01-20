@@ -125,7 +125,7 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
   });
 
   test("records table has one row per record, with expected values", async function(assert) {
-    // Without setupRouter(), link-to nodes won't have an href attribute
+    // Without setupRouter(), LinkTo nodes won't have an href attribute
     // in tests. https://stackoverflow.com/questions/32130798/
     this.owner.lookup('router:main').setupRouter();
 

@@ -1,24 +1,27 @@
 import { action } from '@ember/object';
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import window from 'ember-window-mock';
 
-export default Route.extend({
+export default class ChartTypesFilterGroupsRoute extends Route {
+  @service store;
+
   model(params) {
     return RSVP.hash({
-      chartType: this.get('store').findRecord(
+      chartType: this.store.findRecord(
         'chart-type', params.chart_type_id),
-      chartTypeFilterGroups: this.get('store').query(
+      chartTypeFilterGroups: this.store.query(
         'chart-type-filter-group', {chart_type_id: params.chart_type_id}),
-      filterGroups: this.get('store').query(
+      filterGroups: this.store.query(
         'filterGroup', {chart_type_id: params.chart_type_id}),
-      newFilterGroup: this.get('store').createRecord('filter-group'),
+      newFilterGroup: this.store.createRecord('filter-group'),
       // Filter groups which are not associated with any chart type. These
       // aren't supposed to exist, but mistakes happen, so we check for these.
-      orphanedFilterGroups: this.get('store').query(
+      orphanedFilterGroups: this.store.query(
         'filter-group', {chart_type_id: null}),
     });
-  },
+  }
 
   @action
   createFilterGroup() {
@@ -29,7 +32,7 @@ export default Route.extend({
       // Save the chart type - filter group link
       let chartType = this.modelFor(this.routeName).chartType;
       let chartTypeFilterGroup =
-        this.get('store').createRecord(
+        this.store.createRecord(
           'chart-type-filter-group',
           {chartType: chartType, filterGroup: newFilterGroup});
       return chartTypeFilterGroup.save();
@@ -39,14 +42,14 @@ export default Route.extend({
       // new filter group tied to the UI fields)
       this.refresh();
     });
-  },
+  }
 
   @action
   linkFilterGroup(filterGroup) {
     // Save the chart type - filter group link
     let chartType = this.modelFor(this.routeName).chartType;
     let chartTypeFilterGroup =
-      this.get('store').createRecord(
+      this.store.createRecord(
         'chart-type-filter-group',
         {chartType: chartType, filterGroup: filterGroup});
     chartTypeFilterGroup.save().then(() => {
@@ -54,18 +57,18 @@ export default Route.extend({
       // new filter group tied to the UI fields)
       this.refresh();
     });
-  },
+  }
 
   @action
   refreshRoute() {
     this.refresh();
-  },
+  }
 
   @action
   unlinkFilterGroup(ctfg) {
 
     let filterGroupId = ctfg.get('filterGroup').get('id');
-    let chartTypesOfFilterGroupPromise = this.get('store').query(
+    let chartTypesOfFilterGroupPromise = this.store.query(
       'chartType', {filter_group_id: filterGroupId});
     let shouldDeleteFilterGroup = false;
 
@@ -93,7 +96,7 @@ export default Route.extend({
       // event `pushedData` on ... while in state root.deleted.saved"
       // which would otherwise happen when we delete this filter group.
       // https://stackoverflow.com/a/39232642/
-      return this.get('store').findRecord(
+      return this.store.findRecord(
         'filter-group', filterGroupId, { reload: true });
 
     }).then((filterGroup) => {
@@ -116,7 +119,7 @@ export default Route.extend({
       }
       throw error;
     });
-  },
+  }
 
   @action
   willTransition() {
@@ -124,4 +127,4 @@ export default Route.extend({
     // if the model 'isNew'
     this.modelFor(this.routeName).newFilterGroup.rollbackAttributes();
   }
-});
+}

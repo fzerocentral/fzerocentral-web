@@ -1,14 +1,17 @@
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 
-export default Route.extend({
+export default class GamesLaddersRoute extends Route {
+  @service store;
+
   model(params) {
     return RSVP.hash({
-      game: this.get('store').findRecord('game', params.game_id),
-      mainLadders: this.get('store').query(
+      game: this.store.findRecord('game', params.game_id),
+      mainLadders: this.store.query(
         'ladder', {game_id: params.game_id, kind: 'main'}),
-      sideLadders: this.get('store').query(
+      sideLadders: this.store.query(
         'ladder', {game_id: params.game_id, kind: 'side'})
     });
-  },
-});
+  }
+}

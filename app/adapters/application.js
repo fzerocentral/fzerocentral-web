@@ -1,4 +1,4 @@
-import DS from 'ember-data';
+import JSONAPIAdapter from '@ember-data/adapter/json-api';
 import { pluralize } from 'ember-inflector';
 import { underscore } from '@ember/string';
 import ENV from 'fzerocentral-web/config/environment';
@@ -11,8 +11,8 @@ import ENV from 'fzerocentral-web/config/environment';
 // - Possible spaces
 let linkAndRelRegex = /\s*<([^>]+)>; rel="([^"]+)"\s*/;
 
-export default DS.JSONAPIAdapter.extend({
-  namespace: ENV.APP.apiNamespace,
+export default class ApplicationAdapter extends JSONAPIAdapter {
+  namespace = ENV.APP.apiNamespace;
 
   // The API response headers may have some info that we want.
   // To access this info in routes, components, etc., we can set the
@@ -77,10 +77,10 @@ export default DS.JSONAPIAdapter.extend({
     // By default, this function hook just returns the json payload passed to
     // it. So we do that as well.
     return payload;
-  },
+  }
 
   // Rails uses resource URLs like chart_groups/1
   pathForType(type) {
     return pluralize(underscore(type));
   }
-});
+}

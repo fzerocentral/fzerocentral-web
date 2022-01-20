@@ -3,13 +3,13 @@ import Controller from '@ember/controller';
 import DS from 'ember-data';
 import { action, computed } from '@ember/object';
 
-export default Controller.extend({
-  kindOptions: A(['select', 'numeric']),
+export default class ChartTypesFilterGroupsController extends Controller {
+  kindOptions = A(['select', 'numeric']);
 
   @computed('model')
   get game() {
     return this.model.chartType.get('game');
-  },
+  }
 
   // Filter groups which are not associated with this chart type, but are in
   // the same game as this chart type
@@ -32,16 +32,16 @@ export default Controller.extend({
         return result;
       })
     });
-  },
+  }
 
   @action
   onOrderChange(ctfg) {
     ctfg.save().then(() => {this.send('refreshRoute');});
-  },
+  }
 
   @action
   onShowChange(ctfg, showByDefault) {
     ctfg.set('showByDefault', showByDefault);
     ctfg.save().then(() => {this.send('refreshRoute');});
-  },
-});
+  }
+}

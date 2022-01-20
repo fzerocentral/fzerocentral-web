@@ -1,8 +1,8 @@
 import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 
-export default Controller.extend({
-  showAllFilterGroups: null,
+export default class ChartsTopRecordHistoryController extends Controller {
+  showAllFilterGroups = null;
 
   @computed('model.filterGroups.[]', 'showAllFilterGroups')
   get shownFilterGroups() {
@@ -12,5 +12,5 @@ export default Controller.extend({
     else {
       return this.model.filterGroups.filterBy('showByDefault', true);
     }
-  },
-});
+  }
+}

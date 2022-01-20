@@ -44,7 +44,7 @@ module('Integration | Component | filter-select', function(hooks) {
       <FilterSelect
         @filterGroup={{filterGroup}}
         @selected={{filter}}
-        @onFilterChange={{action onAnyFilterChange}} />
+        @onFilterChange={{this.onAnyFilterChange}} />
     `);
 
     let select = this.element.querySelector('.ember-power-select-trigger');
@@ -61,7 +61,7 @@ module('Integration | Component | filter-select', function(hooks) {
       <FilterSelect
         @filterGroup={{filterGroup}}
         @selected={{filter}}
-        @onFilterChange={{action onAnyFilterChange}} />
+        @onFilterChange={{this.onAnyFilterChange}} />
     `);
 
     let select = this.element.querySelector('.ember-power-select-trigger');
@@ -76,7 +76,7 @@ module('Integration | Component | filter-select', function(hooks) {
       <FilterSelect
         @filterGroup={{filterGroup}}
         @selected={{filter}}
-        @onFilterChange={{action onAnyFilterChange}} />
+        @onFilterChange={{this.onAnyFilterChange}} />
     `);
 
     await selectChoose(`.ember-power-select-trigger`, "Filter A1");
@@ -98,7 +98,7 @@ module('Integration | Component | filter-select', function(hooks) {
       <FilterSelect
         @filterGroup={{filterGroup}}
         @selected={{filter}}
-        @onFilterChange={{action onAnyFilterChange}} />
+        @onFilterChange={{this.onAnyFilterChange}} />
     `);
 
     await selectChoose(`.ember-power-select-trigger`, "Filter A1");

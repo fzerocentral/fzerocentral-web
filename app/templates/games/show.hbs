@@ -42,6 +42,6 @@
 
 <ul class="chart-group-listing">
   {{#each @model.topLevelChartGroups as |chartGroup|}}
-    <li>{{chart-group-contents cg=chartGroup root=false}}</li>
+    <li><ChartGroupContents @cg={{chartGroup}} @root={{false}} /></li>
   {{/each}}
 </ul>

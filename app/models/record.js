@@ -1,13 +1,13 @@
-import DS from 'ember-data';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 
-export default DS.Model.extend({
-  value: DS.attr('number'),
-  achievedAt: DS.attr('date'),
-  isImprovement: DS.attr(),
-  rank: DS.attr(),
-  valueDisplay: DS.attr(),
+export default class RecordModel extends Model {
+  @attr('number') value;
+  @attr('date') achievedAt;
+  @attr('boolean') isImprovement;
+  @attr('number') rank;
+  @attr('string') valueDisplay;
 
-  chart: DS.belongsTo('chart'),
-  user: DS.belongsTo('user'),
-  filters: DS.hasMany('filter'),
-});
+  @belongsTo('chart') chart;
+  @belongsTo('user') user;
+  @hasMany('filter') filters;
+}

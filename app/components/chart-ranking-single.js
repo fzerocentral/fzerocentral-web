@@ -1,19 +1,15 @@
-import Component from '@ember/component';
-import { computed } from '@ember/object';
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
 
-export default Component.extend({
-  chart: null,
-  filterGroups: null,
-  records: null,
-  showAllFilterGroups: null,
+export default class ChartRankingSingleComponent extends Component {
+  @tracked showAllFilterGroups = null;
 
-  @computed('filterGroups.[]', 'showAllFilterGroups')
   get shownFilterGroups() {
-    if (this.get('showAllFilterGroups')) {
-      return this.get('filterGroups');
+    if (this.showAllFilterGroups) {
+      return this.args.filterGroups;
     }
     else {
-      return this.get('filterGroups').filterBy('showByDefault', true);
+      return this.args.filterGroups.filterBy('showByDefault', true);
     }
-  },
-});
+  }
+}

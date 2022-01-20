@@ -1,17 +1,39 @@
 import { action } from '@ember/object';
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 
-export default Route.extend({
+export default class FilterGroupsShowRoute extends Route {
+  @service store;
+
+  queryParams = {
+    choosable_filters_name_search: {refreshModel: true},
+    choosable_filters_page: {refreshModel: true},
+    implied_filters_name_search: {refreshModel: true},
+    implied_filters_page: {refreshModel: true},
+  };
+
   model(params) {
     return RSVP.hash({
-      chartTypes: this.get('store').query(
+      chartTypes: this.store.query(
         'chart-type', {filter_group_id: params.filter_group_id}),
-      filterGroup: this.get('store').findRecord(
+      filterGroup: this.store.findRecord(
         'filter-group', params.filter_group_id),
-      newFilter: this.get('store').createRecord('filter'),
+      filtersChoosable: this.store.query('filter', {
+        filter_group_id: params.filter_group_id,
+        name_search: params.choosable_filters_name_search,
+        page: params.choosable_filters_page,
+        usage_type: 'choosable',
+      }),
+      filtersImplied: this.store.query('filter', {
+        filter_group_id: params.filter_group_id,
+        name_search: params.implied_filters_name_search,
+        page: params.implied_filters_page,
+        usage_type: 'implied',
+      }),
+      newFilter: this.store.createRecord('filter'),
     });
-  },
+  }
 
   @action
   createFilter() {
@@ -23,10 +45,6 @@ export default Route.extend({
       // Success callback
       this.controllerFor(this.routeName).set('filterCreateError', null);
 
-      // Refresh filter-list computed properties by changing this property.
-      this.controllerFor(this.routeName).set(
-        'filtersLastUpdated', new Date());
-
       // Refresh the model to reset newFilter.
       this.refresh();
     }, (response) => {
@@ -34,7 +52,7 @@ export default Route.extend({
       this.controllerFor(this.routeName).set(
         'filterCreateError', response.errors[0]);
     });
-  },
+  }
 
   @action
   willTransition() {
@@ -45,5 +63,5 @@ export default Route.extend({
     // to this route
     this.controllerFor(this.routeName).set('filterCreateError', null);
     this.controllerFor(this.routeName).set('selectedFilterId', null);
-  },
-});
+  }
+}

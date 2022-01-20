@@ -4,8 +4,8 @@
   {{!-- Choice of filter group --}}
   <PowerSelect
     @options={{@filterGroups}}
-    @selected={{selectedFilterGroup}}
-    @onChange={{action (mut selectedFilterGroup)}}
+    @selected={{this.selectedFilterGroup}}
+    @onChange={{action (mut this.selectedFilterGroup)}}
     @placeholder="Not selected"
     @matchTriggerWidth={{false}}
     as |filterGroup|>
@@ -14,9 +14,9 @@
 
   {{!-- Choice of is, is not, <=, >= --}}
   <PowerSelect
-    @options={{compareOptions}}
-    @selected={{selectedCompareOption}}
-    @onChange={{action (mut selectedCompareOption)}}
+    @options={{this.compareOptions}}
+    @selected={{this.selectedCompareOption}}
+    @onChange={{action (mut this.selectedCompareOption)}}
     @placeholder="Not selected"
     @matchTriggerWidth={{false}}
     as |compareOption|>
@@ -25,16 +25,16 @@
 
   {{!-- Choice of filter from the filter group --}}
   <FilterSelect
-    @filterGroup={{selectedFilterGroup}}
-    @selected={{selectedFilter}}
-    @onFilterChange={{action (mut selectedFilter)}} />
+    @filterGroup={{this.selectedFilterGroup}}
+    @selected={{this.selectedFilter}}
+    @onFilterChange={{action (mut this.selectedFilter)}} />
 
   <button class="add-filter-button" type="submit" {{action "addFilter"}}>Add</button>
 </div>
 
 <div>
   Applied filters:
-  {{#each appliedFilters as |appliedFilter index|}}
+  {{#each this.appliedFilters as |appliedFilter index|}}
     <span class="applied-filter">{{appliedFilter.display}}</span>
     {{!-- TODO: This remove button should be an image button or CSS-drawn button, not a text button. Also, ideally the button would only show when hovering over the applied filter. --}}
     <button type="button" class="applied-filter-remove-button" {{action "removeFilter" index}}> x </button>

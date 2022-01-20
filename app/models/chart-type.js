@@ -1,10 +1,10 @@
-import DS from 'ember-data';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 
-export default DS.Model.extend({
-  name: DS.attr('string'),
-  format_spec: DS.attr('string'),
-  order_ascending: DS.attr('boolean'),
+export default class ChartTypeModel extends Model {
+  @attr('string') name;
+  @attr('string') format_spec;
+  @attr('boolean') order_ascending;
 
-  game: DS.belongsTo('game'),
-  filterGroups: DS.hasMany('filter-group'),
-});
+  @belongsTo('game') game;
+  @hasMany('filter-group') filterGroups;
+}

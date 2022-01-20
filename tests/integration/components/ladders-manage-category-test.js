@@ -15,7 +15,7 @@ module('Integration | Component | ladders-manage-category', function(hooks) {
     this.server = startMirage();
     this.store = this.owner.lookup('service:store');
 
-    // Without setupRouter(), link-to nodes won't have an href attribute
+    // Without setupRouter(), LinkTo nodes won't have an href attribute
     // in tests. https://stackoverflow.com/questions/32130798/
     this.owner.lookup('router:main').setupRouter();
 

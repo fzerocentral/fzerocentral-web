@@ -4,36 +4,36 @@
       <th>Rank</th>
       <th>Player</th>
       <th>
-        {{#link-to "chart-groups.show" @chartGroup.id (query-params mainChartId=mainChart.id)}}
-          {{mainChart.name}}
-        {{/link-to}}
+        <LinkTo @route="chart-groups.show" @model={{@chartGroup.id}} @query={{hash mainChartId=this.mainChart.id}}>
+          {{this.mainChart.name}}
+        </LinkTo>
       </th>
-      {{#each otherCharts as |chart|}}
+      {{#each this.otherCharts as |chart|}}
         <th>
-          {{#link-to "chart-groups.show" @chartGroup.id (query-params mainChartId=chart.id)}}
+          <LinkTo @route="chart-groups.show" @model={{@chartGroup.id}} @query={{hash mainChartId=chart.id}}>
             {{chart.name}}
-          {{/link-to}}
+          </LinkTo>
         </th>
       {{/each}}
     </tr>
   </thead>
 
   <tbody>
-    {{#each recordRows as |recordRow|}}
+    {{#each this.recordRows as |recordRow|}}
       <tr>
         <td>{{recordRow.mainRecord.rank}}</td>
         <td>{{recordRow.mainRecord.user.username}}</td>
         <td>
-          {{#link-to "charts.user-history" mainChart.id recordRow.mainRecord.user.id}}
+          <LinkTo @route="charts.user-history" @models={{array this.mainChart.id recordRow.mainRecord.user.id}}>
             {{recordRow.mainRecord.valueDisplay}}
-          {{/link-to}}
+          </LinkTo>
         </td>
 
         {{#each recordRow.otherRecords as |otherRecord|}}
           <td>
-            {{#link-to "charts.user-history" otherRecord.chart.id otherRecord.user.id}}
+            <LinkTo @route="charts.user-history" @models={{array otherRecord.chart.id otherRecord.user.id}}>
               {{otherRecord.valueDisplay}}
-            {{/link-to}}
+            </LinkTo>
           </td>
         {{/each}}
       </tr>

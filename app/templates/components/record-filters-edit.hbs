@@ -4,7 +4,7 @@
 
     <FilterSelect
       @filterGroup={{filterGroup}}
-      @selected={{get filtersPerGroup filterGroup.id}}
+      @selected={{get this.filtersPerGroup filterGroup.id}}
       @onFilterChange={{action "onAnyFilterChange" filterGroup.id}}
       @filterUsageType="choosable" />
   </div>

@@ -1,9 +1,9 @@
-import DS from 'ember-data';
+import Model, { attr, belongsTo } from '@ember-data/model';
 
-export default DS.Model.extend({
-  showByDefault: DS.attr('boolean'),
-  orderInChartType: DS.attr('number'),
+export default class ChartTypeFilterGroupModel extends Model {
+  @attr('boolean') showByDefault;
+  @attr('number') orderInChartType;
 
-  filterGroup: DS.belongsTo('filter-group'),
-  chartType: DS.belongsTo('chart-type'),
-});
+  @belongsTo('filter-group') filterGroup;
+  @belongsTo('chart-type') chartType;
+}

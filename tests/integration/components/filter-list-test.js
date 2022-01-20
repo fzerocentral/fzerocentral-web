@@ -44,13 +44,16 @@ module('Integration | Component | filter-list', function(hooks) {
     this.bCustomBoosterFilter = createFilter(
       this.server, "B custom booster", this.machineGroup, 'implied');
 
-    this.platformGroup = createModelInstance(
-      this.server, 'filterGroup',
-      {name: "Platform", kind: 'select'});
-    this.gamecubeFilter = createFilter(
-      this.server, "Gamecube", this.platformGroup);
+    this.allFilters = [
+      this.gsg4Filter, this.qcg4Filter, this.titang4Filter,
+      this.bCustomBoosterFilter];
 
-    this.set('filterGroupId', this.machineGroup.id);
+    this.set(
+      'updatePageNumber',
+      (pageNumber) => this.set('pageNumber', pageNumber));
+    this.set(
+      'updateSearchText',
+      (inputElement) => this.set('searchText', inputElement.target.value));
     this.set(
       'updateSelectedFilterId',
       (id) => this.set('selectedFilterId', id));
@@ -61,79 +64,74 @@ module('Integration | Component | filter-list', function(hooks) {
   });
 
 
-  test('should list choosable filters', async function(assert) {
+  test('should list the given filters', async function(assert) {
+    this.set('filters', [this.gsg4Filter, this.titang4Filter]);
     await render(hbs`
       <FilterList
-        @filterGroupId={{filterGroupId}}
-        @updateSelectedFilterId={{updateSelectedFilterId}}
-        @usageType="choosable" />
+        @filters={{filters}}
+        @updatePageNumber={{updatePageNumber}}
+        @updateSearchText={{updateSearchText}}
+        @updateSelectedFilterId={{updateSelectedFilterId}} />
     `);
 
     assert.ok(
       getFiltersListItemByName(this.element, "Gallant Star-G4"),
       "Gallant Star-G4 should be on the list");
     assert.ok(
-      getFiltersListItemByName(this.element, "Quick Cannon-G4"),
-      "Quick Cannon-G4 should be on the list");
-    assert.notOk(
-      getFiltersListItemByName(this.element, "Titan -G4 booster"),
-      "Titan -G4 booster (implied) shouldn't be on the list");
-    assert.notOk(
-      getFiltersListItemByName(this.element, "B custom booster"),
-      "B custom booster (implied) shouldn't be on the list");
-    assert.notOk(
-      getFiltersListItemByName(this.element, "Gamecube"),
-      "Gamecube (other group) shouldn't be on the list");
-  });
-
-  test('should list implied filters', async function(assert) {
-    await render(hbs`
-      <FilterList
-        @filterGroupId={{filterGroupId}}
-        @updateSelectedFilterId={{updateSelectedFilterId}}
-        @usageType="implied" />
-    `);
-
-    assert.notOk(
-      getFiltersListItemByName(this.element, "Gallant Star-G4"),
-      "Gallant Star-G4 (choosable) shouldn't be on the list");
-    assert.notOk(
-      getFiltersListItemByName(this.element, "Quick Cannon-G4"),
-      "Quick Cannon-G4 (choosable) shouldn't be on the list");
-    assert.ok(
       getFiltersListItemByName(this.element, "Titan -G4 booster"),
       "Titan -G4 booster should be on the list");
-    assert.ok(
-      getFiltersListItemByName(this.element, "B custom booster"),
-      "B custom booster should be on the list");
     assert.notOk(
-      getFiltersListItemByName(this.element, "Gamecube"),
-      "Gamecube (other group) shouldn't be on the list");
+      getFiltersListItemByName(this.element, "Quick Cannon-G4"),
+      "Quick Cannon-G4 should not be on the list");
   });
 
-  test('filter query should account for search text', async function(assert) {
+  test('should update pageNumber when page button is clicked', async function(assert) {
+    let filters = [this.gsg4Filter, this.titang4Filter];
+    filters.meta = {'pagination': {
+      totalResults: 22,
+      resultsPerPage: 10,
+      nextPage: 2,
+      lastPage: 3,
+    }};
+    this.set('filters', filters);
     await render(hbs`
       <FilterList
-        @filterGroupId={{filterGroupId}}
-        @updateSelectedFilterId={{updateSelectedFilterId}}
-        @usageType="choosable" />
+        @filters={{filters}}
+        @updatePageNumber={{updatePageNumber}}
+        @updateSearchText={{updateSearchText}}
+        @updateSelectedFilterId={{updateSelectedFilterId}} />
+    `);
+
+    let buttons = this.element.querySelectorAll('div.page-links button');
+
+    // First page-button should go to the next page, 2
+    let nextPageButton = buttons[0];
+    await click(nextPageButton);
+    assert.equal(2, this.get('pageNumber'), "pageNumber should be updated");
+  });
+
+  test('should update searchText when search field is filled', async function(assert) {
+    this.set('filters', this.allFilters);
+    await render(hbs`
+      <FilterList
+        @filters={{filters}}
+        @updatePageNumber={{updatePageNumber}}
+        @updateSearchText={{updateSearchText}}
+        @updateSelectedFilterId={{updateSelectedFilterId}} />
     `);
 
     await fillIn('.search-input', 'star');
-
-    const queryRequest = server.pretender.handledRequests.find((request) => {
-      return (
-        request.url.includes('name_search=star') && request.method === 'GET');
-    });
-    assert.ok(queryRequest, "Should find a query using the search text");
+    assert.equal(this.get('searchText'), 'star', "searchText should be updated");
   });
 
   test('should update selectedFilterId when clicking a list button', async function(assert) {
+    this.set('filters', this.allFilters);
     await render(hbs`
       <FilterList
-        @filterGroupId={{filterGroupId}}
-        @updateSelectedFilterId={{updateSelectedFilterId}}
-        @usageType="choosable" />
+        @filters={{filters}}
+        @updatePageNumber={{updatePageNumber}}
+        @updateSearchText={{updateSearchText}}
+        @updateSelectedFilterId={{updateSelectedFilterId}} />
     `);
 
     let gsg4ListItem = getFiltersListItemByName(

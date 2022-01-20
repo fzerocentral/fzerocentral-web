@@ -1,16 +1,19 @@
 import { action } from '@ember/object';
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 
-export default Route.extend({
+export default class GamesLadderNewRoute extends Route {
+  @service store;
+
   model(params) {
     return RSVP.hash({
-      chartGroups: this.get('store').query(
+      chartGroups: this.store.query(
         'chartGroup', {game_id: params.game_id}),
-      game: this.get('store').findRecord('game', params.game_id),
-      ladder: this.get('store').createRecord('ladder'),
+      game: this.store.findRecord('game', params.game_id),
+      ladder: this.store.createRecord('ladder'),
     });
-  },
+  }
 
   @action
   saveLadder() {
@@ -25,7 +28,7 @@ export default Route.extend({
     }
 
     newLadder.save().then(() => this.transitionTo('games.ladders', game.id));
-  },
+  }
 
   @action
   willTransition() {
@@ -33,4 +36,4 @@ export default Route.extend({
     // if the model 'isNew'
     this.modelFor(this.routeName).ladder.rollbackAttributes();
   }
-});
+}

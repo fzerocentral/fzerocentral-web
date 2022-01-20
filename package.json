@@ -62,5 +62,11 @@
   },
   "engines": {
     "node": "10.* || >= 12"
+  },
+  "ember": {
+    "edition": "octane"
+  },
+  "resolutions": {
+    "whatwg-fetch": "3.3.1"
   }
 }
