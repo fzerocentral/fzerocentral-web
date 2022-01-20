@@ -10,7 +10,7 @@ export default class ChartsRecordNewRoute extends Route {
     return RSVP.hash({
       chart: this.store.findRecord('chart', params.chart_id),
       record: this.store.createRecord('record'),
-      users: this.store.findAll('user'),
+      players: this.store.query('player', {'page[size]': 1000}),
       filterGroups: this.store.query(
         'filterGroup', {chart_id: params.chart_id}),
     });
@@ -23,9 +23,9 @@ export default class ChartsRecordNewRoute extends Route {
 
     newRecord.set('chart', chart);
 
-    if (!newRecord.get('achievedAt')) {
+    if (!newRecord.get('dateAchieved')) {
       // If no date entered, use the current date.
-      newRecord.set('achievedAt', new Date());
+      newRecord.set('dateAchieved', new Date());
     }
 
     newRecord.save().then(() => this.transitionTo('charts.show', chart.id));

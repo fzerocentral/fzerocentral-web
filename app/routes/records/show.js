@@ -8,7 +8,8 @@ export default class RecordsShowRoute extends Route {
 
   model(params) {
     return RSVP.hash({
-      record: this.store.findRecord('record', params.record_id),
+      record: this.store.findRecord(
+        'record', params.record_id, {include: 'filters'}),
       filterGroups: this.store.query(
         'filterGroup', {record_id: params.record_id}),
     });

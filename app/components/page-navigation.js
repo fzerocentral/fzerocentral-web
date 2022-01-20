@@ -2,47 +2,77 @@ import Component from '@glimmer/component';
 
 export default class PageNavigationComponent extends Component {
 
-  get currentPageFirstResultNumber() {
-    if (!this.args.pageResults) {return " ";}
-
-    let meta = this.args.pageResults.get('meta').pagination;
-    let resultsPerPage = Number(meta.resultsPerPage);
-    return (this.args.pageNumber - 1)*resultsPerPage + 1;
+  get meta() {
+    if (!this.args.pageResults) {return null;}
+    return this.args.pageResults.get('meta').pagination;
   }
 
-  get currentPageLastResultNumber() {
-    if (!this.args.pageResults) {return " ";}
+  get resultsPerPage() {
+    // TODO: Get from API, rather than hardcoding.
+    //return Number(this.meta['page[size]']);
+    return 10;
+  }
 
-    let meta = this.args.pageResults.get('meta').pagination;
-    let resultsPerPage = Number(meta.resultsPerPage);
-    let totalResults = Number(meta.totalResults);
-    return Math.min(this.args.pageNumber*resultsPerPage, totalResults);
+  get prevPage() {
+    if (!this.meta) {return null;}
+    return this.meta.page - 1;
+  }
+
+  get nextPage() {
+    if (!this.meta) {return null;}
+    return this.meta.page + 1;
+  }
+
+  get lastPage() {
+    if (!this.meta) {return null;}
+
+    let resultCount = Number(this.meta.count);
+    return Math.ceil(resultCount / this.resultsPerPage);
+  }
+
+  get currentPageFirstResultNumber() {
+    if (!this.meta) {return " ";}
+    return (this.meta.page - 1)*this.resultsPerPage + 1;
+  }
+  get currentPageLastResultNumber() {
+    if (!this.meta) {return " ";}
+
+    let resultCount = Number(this.meta.count);
+    return Math.min(this.meta.page*this.resultsPerPage, resultCount);
+  }
+
+  get shouldShowFirstPageLink() {
+    if (!this.meta) {return false;}
+    return this.meta.page >= 2;
   }
 
   get hasGapBetweenFirstAndPrevPage() {
-    if (!this.args.pageResults) {return false;}
+    if (!this.meta) {return false;}
+    return this.meta.page >= 4;
+  }
 
-    let meta = this.args.pageResults.get('meta').pagination;
-    return meta.firstPage && meta.prevPage && (meta.prevPage - meta.firstPage > 1);
+  get shouldShowPrevPageLink() {
+    if (!this.meta) {return false;}
+    return this.meta.page >= 3;
+  }
+
+  get shouldShowNextPageLink() {
+    if (!this.meta) {return false;}
+    return this.meta.page <= this.meta.pages - 2;
   }
 
   get hasGapBetweenLastAndNextPage() {
-    if (!this.args.pageResults) {return false;}
+    if (!this.meta) {return false;}
+    return this.meta.page <= this.meta.pages - 3;
+  }
 
-    let meta = this.args.pageResults.get('meta').pagination;
-    return meta.lastPage && meta.nextPage && (meta.lastPage - meta.nextPage > 1);
+  get shouldShowLastPageLink() {
+    if (!this.meta) {return false;}
+    return this.meta.page <= this.meta.pages - 1;
   }
 
   get hasMultiplePages() {
-    if (!this.args.pageResults) {return false;}
-
-    // In some trivial cases, pageResults may be an empty
-    // PromiseArray which we didn't bother adding a meta attribute to.
-    if (!this.args.pageResults.get('meta')) {return false;}
-
-    let paginationMeta = this.args.pageResults.get('meta').pagination;
-    let totalResults = Number(paginationMeta.totalResults);
-    let resultsPerPage = Number(paginationMeta.resultsPerPage);
-    return totalResults > resultsPerPage;
+    if (!this.meta) {return false;}
+    return Number(this.meta.count) > this.resultsPerPage;
   }
 }

@@ -3,23 +3,21 @@ import Component from '@ember/component';
 import DS from 'ember-data';
 import EmberObject, { action, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
+import fetch from 'fetch';
+
 
 export default Component.extend({
   editableParams: EmberObject.create(),
   filterDeleteError: null,
   filterGroupId: null,
   filterId: null,
+  implicationCreateError: null,
+  implicationDeleteError: null,
+  implicationsLastUpdated: null,
   incomingImplicationsPageNumber: 1,
-  incomingLinksPageNumber: 1,
-  linkCreateError: null,
-  linkDeleteError: null,
-  linksLastUpdated: null,
-  linkDirectionOptions: A(["from", "to"]),
-  newLinkDirection: null,
-  newLinkOtherFilter: null,
+  newImplicationTargetFilter: null,
   outgoingImplicationsPageNumber: 1,
-  outgoingLinksPageNumber: 1,
-  selectedLinkDeletionOption: null,
+  selectedImplicationDeletionOption: null,
   store: service('store'),
   isEditing: false,
 
@@ -40,71 +38,41 @@ export default Component.extend({
     // GET records response. We're not interested in the records themselves,
     // so we just request 1 record.
     let recordsPromise = this.get('store').query(
-      'record', {filters: filterId.toString(), per_page: 1});
+      'record', {filters: filterId.toString(), 'page[size]': 1});
 
     return DS.PromiseObject.create({
       promise: recordsPromise.then((records) => {
-        return {value: records.meta.pagination.totalResults};
+        return {value: records.meta.pagination.count};
       })
     });
   },
 
-  @computed('filter', 'incomingImplicationsPageNumber', 'linksLastUpdated')
+  @computed('filter', 'incomingImplicationsPageNumber', 'implicationsLastUpdated')
   get incomingImplications() {
     return DS.PromiseArray.create({
       promise: this.get('filter').then((filter) => {
         if (filter === null) { return A([]); }
 
         let args = {
-          implied_filter_id: filter.get('id'),
-          page: this.get('incomingImplicationsPageNumber'),
+          implies_filter_id: filter.get('id'),
+          'page[number]': this.get('incomingImplicationsPageNumber'),
         };
-        return this.get('store').query('filterImplication', args);
+        return this.get('store').query('filter', args);
       })
     });
   },
 
-  @computed('filter', 'linksLastUpdated', 'outgoingImplicationsPageNumber')
+  @computed('filter', 'implicationsLastUpdated', 'outgoingImplicationsPageNumber')
   get outgoingImplications() {
     return DS.PromiseArray.create({
       promise: this.get('filter').then((filter) => {
         if (filter === null) { return A([]); }
 
         let args = {
-          implying_filter_id: filter.get('id'),
-          page: this.get('outgoingImplicationsPageNumber'),
+          implied_by_filter_id: filter.get('id'),
+          'page[number]': this.get('outgoingImplicationsPageNumber'),
         };
-        return this.get('store').query('filterImplication', args);
-      })
-    });
-  },
-
-  @computed('filter', 'incomingLinksPageNumber', 'linksLastUpdated')
-  get incomingLinks() {
-    return DS.PromiseArray.create({
-      promise: this.get('filter').then((filter) => {
-        if (filter === null) { return A([]); }
-
-        let args = {
-          implied_filter_id: filter.get('id'),
-          page: this.get('incomingLinksPageNumber'),
-        };
-        return this.get('store').query('filterImplicationLink', args);
-      })
-    });
-  },
-
-  @computed('filter', 'linksLastUpdated', 'outgoingLinksPageNumber')
-  get outgoingLinks() {
-    return DS.PromiseArray.create({
-      promise: this.get('filter').then((filter) => {
-        if (filter === null) { return A([]); }
-
-        let args = {
-          implying_filter_id: filter.get('id'),
-          page: this.get('outgoingLinksPageNumber'),
-        };
-        return this.get('store').query('filterImplicationLink', args);
+        return this.get('store').query('filter', args);
       })
     });
   },
@@ -113,84 +81,96 @@ export default Component.extend({
   didUpdateAttrs() {
     // Re-initialize the component state when the filter selection changes.
     this.set('filterDeleteError', null);
+    this.set('implicationCreateError', null);
+    this.set('implicationDeleteError', null);
     this.set('incomingImplicationsPageNumber', 1);
-    this.set('incomingLinksPageNumber', 1);
-    this.set('linkCreateError', null);
-    this.set('linkDeleteError', null);
-    this.set('newLinkDirection', null);
-    this.set('newLinkOtherFilter', null);
+    this.set('newImplicationTargetFilter', null);
     this.set('outgoingImplicationsPageNumber', 1);
-    this.set('outgoingLinksPageNumber', 1);
-    this.set('selectedLinkDeletionOption', null);
+    this.set('selectedImplicationDeletionOption', null);
     this.send('stopEditing');
   },
 
 
   @action
-  createLink() {
-    if (this.get('newLinkDirection') === null) {
+  createImplication() {
+    let targetFilter = this.get('newImplicationTargetFilter');
+    if (targetFilter === null) {
       this.set(
-        'linkCreateError', "Please select a link direction (from or to).");
-      return;
-    }
-    if (this.get('newLinkOtherFilter') === null) {
-      this.set(
-        'linkCreateError', "Please select a filter to link to.");
+        'implicationCreateError',
+        "Please select the target filter for the implication relation.");
       return;
     }
 
-    let args = {};
-    if (this.get('newLinkDirection') === "from") {
-      args['implyingFilter'] = this.get('newLinkOtherFilter');
-      args['impliedFilter'] = this.get('filter');
-    }
-    else {
-      // "to"
-      args['implyingFilter'] = this.get('filter');
-      args['impliedFilter'] = this.get('newLinkOtherFilter');
-    }
+    // Not sure if this sort of 'add relationship' request is supported by
+    // Ember Data, so just using fetch() here.
+    let implicationRelationshipUrl =
+      `/filters/${this.filterId}/relationships/outgoing_filter_implications/`;
+    fetch(implicationRelationshipUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/vnd.api+json',
+      },
+      body: JSON.stringify({
+        'data': [{'type': 'filters', 'id': targetFilter.get('id')}]
+      }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if ('errors' in data) {
+        throw new Error(data.errors[0].detail);
+      }
 
-    let newLink = this.get('store').createRecord(
-      'filterImplicationLink', args);
+      this.set('implicationCreateError', null);
 
-    // Save the link
-    newLink.save().then(() => {
-      // Success callback
-      this.set('linkCreateError', null);
-
-      // Reset the other-filter field. We won't reset the link-direction
-      // field, because the user might want to add several "From" links in
-      // a row, for example.
-      this.set('newLinkOtherFilter', null);
-      // Refresh link-related computed properties by changing this property.
-      this.set('linksLastUpdated', new Date());
-    }, (response) => {
-      // Error callback
-      this.set('linkCreateError', response.errors[0]);
+      // Reset the target-filter field.
+      this.set('newImplicationTargetFilter', null);
+      // Refresh implication-related computed properties by changing this
+      // property.
+      this.set('implicationsLastUpdated', new Date());
+    })
+    .catch(error => {
+      this.set('implicationCreateError', error.message);
     });
   },
 
   @action
-  deleteLink() {
-    if (this.get('selectedLinkDeletionOption') === null) {
+  deleteImplication() {
+    let targetFilter = this.get('selectedImplicationDeletionOption');
+    if (targetFilter === null) {
       this.set(
-        'linkDeleteError', "Please select a link to delete.");
+        'implicationDeleteError', "Please select an implication to delete.");
       return;
     }
 
-    let link = this.get('selectedLinkDeletionOption');
+    // Not sure if this sort of 'delete relationship' request is supported by
+    // Ember Data, so just using fetch() here.
+    let implicationRelationshipUrl =
+      `/filters/${this.filterId}/relationships/outgoing_filter_implications/`;
+    fetch(implicationRelationshipUrl, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/vnd.api+json',
+      },
+      body: JSON.stringify({
+        'data': [{'type': 'filters', 'id': targetFilter.get('id')}]
+      }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if ('errors' in data) {
+        throw new Error(data.errors[0].detail);
+      }
 
-    link.destroyRecord().then(() => {
-      // Success callback
-      this.set('linkDeleteError', null);
+      this.set('implicationDeleteError', null);
 
-      // Reset the link field.
-      this.set('selectedLinkDeletionOption', null);
-      // Refresh link-related computed properties by changing this property.
-      this.set('linksLastUpdated', new Date());
-    }, (response) => {
-      // Error callback
-      this.set('linkDeleteError', response.errors[0]);
+      // Reset the implication field.
+      this.set('selectedImplicationDeletionOption', null);
+      // Refresh implication-related computed properties by changing this
+      // property.
+      this.set('implicationsLastUpdated', new Date());
+    })
+    .catch(error => {
+      this.set('implicationDeleteError', error.message);
     });
   },
 

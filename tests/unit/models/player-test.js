@@ -1,13 +1,14 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import { run } from '@ember/runloop';
 
-module('Unit | Model | filter implication link', function(hooks) {
+module('Unit | Model | player', function(hooks) {
   setupTest(hooks);
 
   // Replace this with your real tests.
   test('it exists', function(assert) {
     let store = this.owner.lookup('service:store');
-    let model = store.createRecord('filter-implication-link', {});
+    let model = run(() => store.createRecord('player', {}));
     assert.ok(model);
   });
 });

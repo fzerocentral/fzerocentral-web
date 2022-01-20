@@ -13,19 +13,9 @@ export default class FilterModel extends Model {
 
   @belongsTo('filter-group') filterGroup;
   @hasMany('record') records;
+
+  @hasMany('filter', {
+    inverse: 'incomingFilterImplications'}) outgoingFilterImplications;
+  @hasMany('filter', {
+    inverse: 'outgoingFilterImplications'}) incomingFilterImplications;
 }
-
-
-
-// import DS from 'ember-data';
-//
-// export default DS.Model.extend({
-//   name: DS.attr(),
-//   // 'choosable' or 'implied'
-//   usageType: DS.attr(),
-//   // Used when the filterGroup is numeric
-//   numericValue: DS.attr(),
-//
-//   filterGroup: DS.belongsTo('filter-group'),
-//   records: DS.hasMany('record'),
-// });

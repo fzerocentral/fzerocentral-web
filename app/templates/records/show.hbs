@@ -5,12 +5,12 @@
   </LinkTo>
 </h1>
 
-<div>User: {{@model.record.user.username}}</div>
+<div>Player: {{@model.record.player.username}}</div>
 <div>Value: {{@model.record.valueDisplay}}</div>
 
 <div>
   <label>Date achieved</label>
-  <DateField @dateValue={{@model.record.achievedAt}} />
+  <DateField @dateValue={{@model.record.dateAchieved}} />
 </div>
 
 <RecordFiltersEdit

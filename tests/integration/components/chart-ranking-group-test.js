@@ -13,8 +13,6 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
     this.server = startMirage();
     this.store = this.owner.lookup('service:store');
 
-    this.userA = createModelInstance(this.server, 'user', {username: 'User A'});
-    this.userB = createModelInstance(this.server, 'user', {username: 'User B'});
     this.game = createModelInstance(this.server, 'game', {name: 'Game 1'});
     this.chartGroup = createModelInstance(
       this.server, 'chart-group',
@@ -30,19 +28,6 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
     this.chart2 = createModelInstance(this.server, 'chart',
       {name: 'Chart 2', chartType: this.chartType,
        chartGroup: this.chartGroup});
-
-    this.recordA1 = createModelInstance(this.server, 'record',
-      {value: 20, valueDisplay: "20m", user: this.userA, chart: this.chart1,
-       rank: 1});
-    this.recordB1 = createModelInstance(this.server, 'record',
-      {value: 25, valueDisplay: "25m", user: this.userB, chart: this.chart1,
-       rank: 2});
-    this.recordA2 = createModelInstance(this.server, 'record',
-      {value: 35, valueDisplay: "35m", user: this.userA, chart: this.chart2,
-       rank: 2});
-    this.recordB2 = createModelInstance(this.server, 'record',
-      {value: 30, valueDisplay: "30m", user: this.userB, chart: this.chart2,
-       rank: 1});
 
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
@@ -111,81 +96,87 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
 
   test("records table has one row per player, with expected values", async function(assert) {
     this.set('mainChartIdQueryArg', this.chart1.id);
+    this.set('recordRows', [
+      {
+        main_record: {
+          rank: 1, player_username: "Player A", value_display: "20m"},
+        other_records: [{value_display: "35m"}],
+      },
+      {
+        main_record: {
+          rank: 2, player_username: "Player B", value_display: "25m"},
+        other_records: [{value_display: "30m"}],
+      },
+    ]);
 
     await render(
       hbs`<ChartRankingGroup
             @chartGroup={{chartGroup}}
-            @mainChartIdQueryArg={{mainChartIdQueryArg}} />`);
+            @mainChartIdQueryArg={{mainChartIdQueryArg}}
+            @recordRows={{recordRows}} />`);
 
     let rows = this.element.querySelectorAll('table.records-table tr');
 
     let cells = rows[1].querySelectorAll('td');
     assert.equal(
-      cells[0].textContent.trim(), '1', "User A's rank is as expected");
+      cells[0].textContent.trim(), '1', "Player A's rank is as expected");
     assert.equal(
-      cells[1].textContent.trim(), 'User A',
-      "User A's player display is as expected");
+      cells[1].textContent.trim(), 'Player A',
+      "Player A's username display is as expected");
     assert.equal(
       cells[2].textContent.trim(), '20m',
-      "User A's Chart 1 value is as expected");
+      "Player A's Chart 1 value is as expected");
     assert.equal(
       cells[3].textContent.trim(), '35m',
-      "User A's Chart 2 value is as expected");
+      "Player A's Chart 2 value is as expected");
 
     cells = rows[2].querySelectorAll('td');
     assert.equal(
-      cells[0].textContent.trim(), '2', "User B's rank is as expected");
+      cells[0].textContent.trim(), '2', "Player B's rank is as expected");
     assert.equal(
-      cells[1].textContent.trim(), 'User B',
-      "User B's player display is as expected");
+      cells[1].textContent.trim(), 'Player B',
+      "Player B's username display is as expected");
     assert.equal(
       cells[2].textContent.trim(), '25m',
-      "User B's Chart 1 value is as expected");
+      "Player B's Chart 1 value is as expected");
     assert.equal(
       cells[3].textContent.trim(), '30m',
-      "User B's Chart 2 value is as expected");
+      "Player B's Chart 2 value is as expected");
   });
 
   test("records table can have a blank cell when a player has no record for a non-main chart", async function(assert) {
     this.set('mainChartIdQueryArg', this.chart1.id);
+    this.set('recordRows', [
+      {
+        main_record: {
+          rank: 1, player_username: "Player A", value_display: "20m"},
+        other_records: [{value_display: "35m"}],
+      },
+      {
+        main_record: {
+          rank: 2, player_username: "Player B", value_display: "25m"},
+        other_records: [null],
+      },
+    ]);
 
-    this.userC = createModelInstance(this.server, 'user', {username: 'User C'});
-    this.recordC1 = createModelInstance(this.server, 'record',
-      {value: 27, valueDisplay: "0:27", user: this.userC, chart: this.chart1,
-       rank: 3});
     await render(
       hbs`<ChartRankingGroup
             @chartGroup={{chartGroup}}
-            @mainChartIdQueryArg={{mainChartIdQueryArg}} />`);
+            @mainChartIdQueryArg={{mainChartIdQueryArg}}
+            @recordRows={{recordRows}} />`);
 
     let rows = this.element.querySelectorAll('table.records-table tr');
-    let cells = rows[3].querySelectorAll('td');
+    let cells = rows[2].querySelectorAll('td');
     assert.equal(
-      cells[0].textContent.trim(), '3', "User C's rank is as expected");
+      cells[0].textContent.trim(), '2', "Player B's rank is as expected");
     assert.equal(
-      cells[1].textContent.trim(), 'User C',
-      "User C's player display is as expected");
+      cells[1].textContent.trim(), 'Player B',
+      "Player B's username display is as expected");
     assert.equal(
-      cells[2].textContent.trim(), '27m',
-      "User C's Chart 1 value is as expected");
+      cells[2].textContent.trim(), '25m',
+      "Player B's Chart 1 value is as expected");
     assert.equal(
       cells[3].textContent.trim(), '',
-      "User C's Chart 2 value is as expected");
-  });
-
-  test("records table doesn't show a player who is in the non-main chart, but not in the main chart", async function(assert) {
-    this.set('mainChartIdQueryArg', this.chart1.id);
-
-    this.userC = createModelInstance(this.server, 'user', {username: 'User C'});
-    this.recordC2 = createModelInstance(this.server, 'record',
-      {value: 27, valueDisplay: "27m", user: this.userC, chart: this.chart2,
-       rank: 1});
-    await render(
-      hbs`<ChartRankingGroup
-            @chartGroup={{chartGroup}}
-            @mainChartIdQueryArg={{mainChartIdQueryArg}} />`);
-
-    let rows = this.element.querySelectorAll('table.records-table tr');
-    assert.equal(rows.length, 3, "No row added for User C");
+      "Player B's Chart 2 value is as expected");
   });
 });

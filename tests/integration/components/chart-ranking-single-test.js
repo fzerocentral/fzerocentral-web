@@ -3,7 +3,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { click, render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
-import { createModelInstance, modelAsProperty }
+import { createModelInstance }
   from 'fzerocentral-web/tests/helpers/model-helpers';
 
 module('Integration | Component | chart-ranking-single', function(hooks) {
@@ -13,8 +13,8 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     this.server = startMirage();
     this.store = this.owner.lookup('service:store');
 
-    this.userA = createModelInstance(this.server, 'user', {username: 'User A'});
-    this.userB = createModelInstance(this.server, 'user', {username: 'User B'});
+    this.playerA = createModelInstance(this.server, 'player', {username: 'Player A'});
+    this.playerB = createModelInstance(this.server, 'player', {username: 'Player B'});
     this.game = createModelInstance(this.server, 'game', {name: 'Game 1'});
     this.chartGroup = createModelInstance(
       this.server, 'chart-group',
@@ -30,21 +30,9 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     this.machineFG = createModelInstance(
       this.server, 'filter-group',
       {name: 'Machine', kind: 'select', showByDefault: true});
-    this.blueFalconFilter = createModelInstance(
-      this.server, 'filter',
-      {name: 'Blue Falcon', filterGroup: this.machineFG});
-    this.whiteCatFilter = createModelInstance(
-      this.server, 'filter',
-      {name: 'White Cat', filterGroup: this.machineFG});
     this.settingFG = createModelInstance(
       this.server, 'filter-group',
       {name: 'Setting', kind: 'numeric', showByDefault: false});
-    this.setting30Filter = createModelInstance(
-      this.server, 'filter',
-      {name: '30%', numericValue: 30, filterGroup: this.settingFG});
-    this.setting80Filter = createModelInstance(
-      this.server, 'filter',
-      {name: '80%', numericValue: 80, filterGroup: this.settingFG});
 
     createModelInstance(
       this.server, 'chart-type-filter-group',
@@ -53,20 +41,20 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
       this.server, 'chart-type-filter-group',
       {chartType: this.chartType, filterGroup: this.settingFG});
 
-    this.recordA = createModelInstance(this.server, 'record',
-      {value: 20, valueDisplay: "20m", user: this.userA, chart: this.chart,
-       rank: 1, filters: [this.blueFalconFilter, this.setting30Filter]});
-    this.recordB = createModelInstance(this.server, 'record',
-      {value: 25, valueDisplay: "25m", user: this.userB, chart: this.chart,
-       rank: 2, filters: []});
-
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
     this.set('chart', this.chart);
-    this.set(
-      'records',
-      [this.recordA, this.recordB].map(
-        rec => modelAsProperty(this.store, 'record', rec)));
+    this.set('records', [
+      {rank: 1, player_username: "Player A",
+       player_id: this.playerA.id, value_display: "20m",
+       filters: [
+         {name: "Blue Falcon", filter_group_id: this.machineFG.id},
+         {name: "30%", filter_group_id: this.settingFG.id},
+       ]},
+      {rank: 2, player_username: "Player B",
+       player_id: this.playerB.id, value_display: "25m",
+       filters: []},
+    ]);
     this.set('filterGroups', this.store.query(
         'filterGroup', {chart_type_id: this.chartType.id}));
     this.set('appliedFiltersString', null);
@@ -141,15 +129,15 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     assert.equal(
       cells[0].textContent.trim(), '1', "Record A's rank is as expected");
     assert.equal(
-      cells[1].textContent.trim(), 'User A',
+      cells[1].textContent.trim(), 'Player A',
       "Record A's player is as expected");
     assert.equal(
       cells[2].textContent.trim(), '20m',
       "Record A's value display is as expected");
     assert.equal(
       cells[2].querySelector('a').getAttribute('href'),
-      `/charts/${this.chart.id}/users/${this.userA.id}/history`,
-      "Record A's user-history link is as expected");
+      `/charts/${this.chart.id}/players/${this.playerA.id}/history`,
+      "Record A's player-history link is as expected");
     assert.equal(
       cells[3].textContent.trim(), 'Blue Falcon',
       "Record A's machine filter is as expected");
@@ -168,15 +156,15 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     assert.equal(
       cells[0].textContent.trim(), '2', "Record B's rank is as expected");
     assert.equal(
-      cells[1].textContent.trim(), 'User B',
+      cells[1].textContent.trim(), 'Player B',
       "Record B's player is as expected");
     assert.equal(
       cells[2].textContent.trim(), '25m',
       "Record B's value display is as expected");
     assert.equal(
       cells[2].querySelector('a').getAttribute('href'),
-      `/charts/${this.chart.id}/users/${this.userB.id}/history`,
-      "Record B's user-history link is as expected");
+      `/charts/${this.chart.id}/players/${this.playerB.id}/history`,
+      "Record B's player-history link is as expected");
     assert.equal(
       cells[3].textContent.trim(), '',
       "Record B's machine filter is as expected");

@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 
-export default class ChartsUserHistoryController extends Controller {
+export default class ChartsPlayerHistoryController extends Controller {
   showAllFilterGroups = null;
 
   @computed('model.filterGroups.[]', 'showAllFilterGroups')

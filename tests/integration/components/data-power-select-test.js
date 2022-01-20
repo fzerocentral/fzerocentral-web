@@ -182,10 +182,10 @@ module('Integration | Component | data-power-select', function(hooks) {
     // filtering being implemented in Mirage. However, we'll check that the
     // appropriate request was made to Mirage.
     const queryUrl =
-      `/filters?filter_group_id=${this.machineGroup.id}&name_search=booster`;
+      `/filters/?filter_group_id=${this.machineGroup.id}&name_search=booster`;
     const queryRequest = server.pretender.handledRequests.find((request) => {
       return request.url === queryUrl && request.method === 'GET';
     });
-    assert.ok(queryRequest, 'Choices query is correct');
+    assert.ok(queryRequest, "Expected choices request should be found");
   });
 });

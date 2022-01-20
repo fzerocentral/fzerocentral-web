@@ -1,5 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import fetchMock from 'fetch-mock';
 import { click, currentURL, visit } from '@ember/test-helpers';
 import { selectChoose } from 'ember-power-select/test-support';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
@@ -29,8 +30,8 @@ module('Unit | Route | charts/show', function(hooks) {
     this.server = startMirage();
     this.store = this.owner.lookup('service:store');
 
-    let user1 = createModelInstance(this.server, 'user', {username: "User 1"});
-    let user2 = createModelInstance(this.server, 'user', {username: "User 2"});
+    let player1 = createModelInstance(this.server, 'player', {username: "Player 1"});
+    let player2 = createModelInstance(this.server, 'player', {username: "Player 2"});
     let game = createModelInstance(this.server, 'game', {name: "Game 1"});
     let chartGroup = createModelInstance(
       this.server, 'chart-group',
@@ -51,15 +52,17 @@ module('Unit | Route | charts/show', function(hooks) {
       {name: 'Blue Falcon', filterGroup: this.machineFG});
 
     createModelInstance(this.server, 'record',
-      {value: 20, valueDisplay: "20m", user: user1, chart: this.chart,
+      {value: 20, valueDisplay: "20m", player: player1, chart: this.chart,
        rank: 1, filters: [this.blueFalconFilter]});
     createModelInstance(this.server, 'record',
-      {value: 25, valueDisplay: "25m", user: user2, chart: this.chart,
+      {value: 25, valueDisplay: "25m", player: player2, chart: this.chart,
        rank: 2, filters: []});
   });
 
   hooks.afterEach( function() {
     this.server.shutdown();
+    // Restore fetch() to its native implementation.
+    fetchMock.reset();
   });
 
   test("it exists", function(assert) {
@@ -72,26 +75,25 @@ module('Unit | Route | charts/show', function(hooks) {
     assert.equal(currentURL(), `/charts/${this.chart.id}`, "URL is correct");
   });
 
-  test("makes the expected API request for records", async function(assert){
+  test("should make the expected API request for the ranking", async function(assert){
+    let apiPath = `/charts/${this.chart.id}/ranking/`;
+    let apiExpectedParams = {
+      'filters': '',
+      'page[size]': 1000,
+    }
+
+    // Mock window.fetch(), setting a flag when the API is
+    // called with the expected URL and params.
+    let called = false;
+    fetchMock.get(
+      {url: 'path:' + apiPath, query: apiExpectedParams},
+      () => {called = true; return {data: []};},
+    );
+
     await visit(`/charts/${this.chart.id}`);
 
-    let recordsRequest =
-      this.server.pretender.handledRequests.find((request) => {
-        return (
-          request.url.startsWith('/records?')
-          && request.method === 'GET');
-      });
-    assert.ok(recordsRequest, "Records API call was made");
-
-    let actualParams = getURLSearchParamsHash(recordsRequest.url);
-    let expectedParams = {
-      chart_id: this.chart.id,
-      filters: '',
-      per_page: '1000',
-      ranked_entity: 'user',
-      sort: 'value',
-    };
-    assert.deepEqual(actualParams, expectedParams, "Params were as expected");
+    assert.ok(
+      called, "API call should have been made with expected URL and params");
   });
 
   test("makes the expected API request for filter groups", async function(assert){
@@ -100,7 +102,7 @@ module('Unit | Route | charts/show', function(hooks) {
     let filterGroupsRequest =
       this.server.pretender.handledRequests.find((request) => {
         return (
-          request.url.startsWith('/filter_groups?')
+          request.url.startsWith('/filter_groups/?')
           && request.method === 'GET');
       });
     assert.ok(filterGroupsRequest, "Filter groups API call was made");

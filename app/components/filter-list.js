@@ -2,7 +2,6 @@ import Component from '@glimmer/component';
 
 export default class FilterListComponent extends Component {
 
-  pageNumber = 1;
   searchText = '';
 
   // TODO: If you're not on page 1 and you type some searchText, the page

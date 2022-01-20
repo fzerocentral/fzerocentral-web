@@ -17,25 +17,25 @@ function createFilter(server, name, group, type='choosable', value=null) {
     {name: name, filterGroup: group, usageType: type, numericValue: value});
 }
 
-function createLink(server, implyingFilter, impliedFilter) {
-  return createModelInstance(
-    server, 'filter-implication-link',
-    {implyingFilter: implyingFilter, impliedFilter: impliedFilter});
+function addImplication(implyingFilter, impliedFilter) {
+  let implications = implyingFilter.outgoingFilterImplications.models;
+  implications.push(impliedFilter);
+  implyingFilter.update('outgoingFilterImplications', implications);
 }
 
-function getImplicationLinkButtonByFilter(rootElement, filter, direction) {
-  let list = null;
+function getImplicationList(rootElement, filters, direction) {
+  let list;
   if (direction === 'incoming') {
-    list = rootElement.querySelector('ul.incoming-implication-links-list');
+    list = rootElement.querySelector('div.incoming-implications-list');
   }
   else {
-    list = rootElement.querySelector('ul.outgoing-implication-links-list');
+    list = rootElement.querySelector('div.outgoing-implications-list');
   }
   let buttons = list.querySelectorAll('button.show-filter-detail-button');
-  // Return the first button which has this name; if no match, undefined
-  return Array.from(buttons).find((button) => {
-    return button.textContent.trim() === filter.name;
-  });
+  let implicationNames = [];
+  buttons.forEach(
+    button => {implicationNames.push(button.textContent.trim());});
+  return implicationNames;
 }
 
 
@@ -240,219 +240,158 @@ module('Integration | Component | filter-detail', function(hooks) {
     assert.notOk(formerFilter, "Filter was deleted")
   });
 
-  test("lists the filter implication links in the filter group", async function(assert) {
-    // Add some filter implication links
-    createLink(this.server, this.gsg4Filter, this.titang4Filter);
-    createLink(this.server, this.qcg4Filter, this.titang4Filter);
-    createLink(this.server, this.titang4Filter, this.bCustomBoosterFilter);
+  test("should list outgoing implications for a choosable filter", async function(assert) {
+    // Add some filter implications
+    addImplication(this.gsg4Filter, this.titang4Filter);
+    addImplication(this.gsg4Filter, this.bCustomBoosterFilter);
+    addImplication(this.qcg4Filter, this.titang4Filter);
+
+    this.set('filterId', this.gsg4Filter.id);
+    this.set('filterGroupId', this.machineGroup.id);
+    await render(
+      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
+
+    assert.deepEqual(
+      getImplicationList(this.element, this.gsg4Filter, 'outgoing'),
+      [this.bCustomBoosterFilter.name, this.titang4Filter.name],
+      "Should list outgoing implications of only this filter");
+  });
+
+  test("should list incoming implications for an implied filter", async function(assert) {
+    // Add some filter implications
+    addImplication(this.gsg4Filter, this.titang4Filter);
+    addImplication(this.gsg4Filter, this.bCustomBoosterFilter);
+    addImplication(this.qcg4Filter, this.titang4Filter);
+    addImplication(this.titang4Filter, this.bCustomBoosterFilter);
 
     this.set('filterId', this.titang4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
       hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
-    assert.ok(
-      getImplicationLinkButtonByFilter(
-        this.element, this.gsg4Filter, 'incoming'),
-      "1st expected incoming link is shown");
-    assert.ok(
-      getImplicationLinkButtonByFilter(
-        this.element, this.qcg4Filter, 'incoming'),
-      "2nd expected incoming link is shown");
-    assert.ok(
-      getImplicationLinkButtonByFilter(
-        this.element, this.bCustomBoosterFilter, 'outgoing'),
-      "Expected outgoing link is shown");
+    assert.deepEqual(
+      getImplicationList(this.element, this.titang4Filter, 'incoming'),
+      [this.gsg4Filter.name, this.qcg4Filter.name],
+      "Should list only incoming implications of only this filter");
   });
 
-  test("can create a new filter implication link from the incoming filter", async function(assert) {
-    // Have the component focus on the incoming filter.
+  test("should allow creating an outgoing filter implication", async function(assert) {
     this.set('filterId', this.gsg4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
       hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
-    // On the link creation form, select 'to', select the outgoing filter,
-    // and click create.
+    // Select the filter to imply, and click create.
     let form =
-      this.element.querySelector('.filter-implication-link-create-form');
-    let directionSelect = form.querySelector(
-      'div.link-direction-select .ember-power-select-trigger');
-    await selectChoose(directionSelect, "to");
+      this.element.querySelector('.filter-implication-create-form');
     let filterSelect = form.querySelector(
-      'div.linked-filter-select .ember-power-select-trigger');
+      'div.target-filter-select .ember-power-select-trigger');
     await selectChoose(filterSelect, "Titan -G4 booster");
     let createButton = form.querySelector('.create-button');
     await click(createButton);
 
-    // Link should be created.
-    let links = run(() => this.store.findAll('filter-implication-link'));
-    let newLink = links.find((link) => {
-      return (
-        link.get('implyingFilter').get('name') === "Gallant Star-G4"
-        && link.get('impliedFilter').get('name') === "Titan -G4 booster");
-    });
-    assert.ok(newLink, "Expected link was created");
+    assert.strictEqual(
+      this.element.querySelector(
+        '.filter-implication-create-form .error-message').textContent.trim(),
+      "",
+      "Shouldn't show a creation error");
 
-    // Link should be on the list (list should have been refreshed)
-    assert.ok(
-      getImplicationLinkButtonByFilter(
-        this.element, this.titang4Filter, 'outgoing'),
-      "New link is on the list");
+    let implicationNames = Array.from(
+      this.gsg4Filter.outgoingFilterImplications.models).map(f => f.name);
+    assert.deepEqual(
+      implicationNames, [this.titang4Filter.name],
+      "Expected implication should be created");
+
+    assert.deepEqual(
+      getImplicationList(this.element, this.gsg4Filter, 'outgoing'),
+      [this.titang4Filter.name],
+      "New implication should be on the list");
   });
 
-  test("can create a new filter implication link from the outgoing filter", async function(assert) {
-    // Have the component focus on the outgoing filter.
-    this.set('filterId', this.titang4Filter.id);
-    this.set('filterGroupId', this.machineGroup.id);
-    await render(
-      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
-
-    // On the link creation form, select 'from', select the incoming filter,
-    // and click create.
-    let form =
-      this.element.querySelector('.filter-implication-link-create-form');
-    let directionSelect = form.querySelector(
-      'div.link-direction-select .ember-power-select-trigger');
-    await selectChoose(directionSelect, "from");
-    let filterSelect = form.querySelector(
-      'div.linked-filter-select .ember-power-select-trigger');
-    await selectChoose(filterSelect, "Gallant Star-G4");
-    let createButton = form.querySelector('.create-button');
-    await click(createButton);
-
-    // Link should be created.
-    let links = run(() => this.store.findAll('filter-implication-link'));
-    let newLink = links.find((link) => {
-      return (
-        link.get('implyingFilter').get('name') === "Gallant Star-G4"
-        && link.get('impliedFilter').get('name') === "Titan -G4 booster");
-    });
-    assert.ok(newLink, "Expected link was created");
-
-    // Link should be on the list (list should have been refreshed)
-    assert.ok(
-      getImplicationLinkButtonByFilter(
-        this.element, this.gsg4Filter, 'incoming'),
-      "New link is on the list");
-  });
-
-  test("can delete an outgoing filter implication link", async function(assert) {
-    createLink(this.server, this.gsg4Filter, this.titang4Filter);
+  test("should allow deleting an outgoing filter implication", async function(assert) {
+    addImplication(this.gsg4Filter, this.titang4Filter);
+    addImplication(this.gsg4Filter, this.bCustomBoosterFilter);
 
     this.set('filterId', this.gsg4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
       hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
-    // Select the link from the existing links dropdown. Then delete it.
+    // Select the implication from the existing implications dropdown.
+    // Then delete it.
     let form =
-      this.element.querySelector('.filter-implication-link-delete-form');
-    let linkSelect = form.querySelector(
-      'div.link-select .ember-power-select-trigger');
-    await selectChoose(linkSelect, "to Titan -G4 booster");
+      this.element.querySelector('.filter-implication-delete-form');
+    let implicationSelect = form.querySelector(
+      'div.implication-select .ember-power-select-trigger');
+    await selectChoose(implicationSelect, "Titan -G4 booster");
     let deleteButton = form.querySelector('.delete-button');
     await click(deleteButton);
 
-    // Link should be deleted
-    let links = run(() => this.store.findAll('filter-implication-link'));
-    let newLink = links.find((link) => {
-      return (
-        link.get('implyingFilter').get('name') === "Gallant Star-G4"
-        && link.get('impliedFilter').get('name') === "Titan -G4 booster");
-    });
-    assert.notOk(newLink, "Link does not exist anymore");
+    assert.strictEqual(
+      this.element.querySelector(
+        '.filter-implication-delete-form .error-message').textContent.trim(),
+      "",
+      "Shouldn't show a deletion error");
 
-    // Link should be on the list (list should have been refreshed)
-    assert.notOk(
-      getImplicationLinkButtonByFilter(
-        this.element, this.titang4Filter, 'outgoing'),
-      "Link is no longer the list");
+    let implicationNames = Array.from(
+      this.gsg4Filter.outgoingFilterImplications.models).map(f => f.name);
+    assert.deepEqual(
+      implicationNames, [this.bCustomBoosterFilter.name],
+      "Deleted implication should no longer exist");
+
+    assert.deepEqual(
+      getImplicationList(this.element, this.gsg4Filter, 'outgoing'),
+      [this.bCustomBoosterFilter.name],
+      "Deleted implication should no longer be on the list");
   });
 
-  test("can delete an incoming filter implication link", async function(assert) {
-    createLink(this.server, this.gsg4Filter, this.titang4Filter);
-
-    this.set('filterId', this.titang4Filter.id);
-    this.set('filterGroupId', this.machineGroup.id);
-    await render(
-      hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
-
-    // Select the link from the existing links dropdown. Then delete it.
-    let form =
-      this.element.querySelector('.filter-implication-link-delete-form');
-    let linkSelect = form.querySelector(
-      'div.link-select .ember-power-select-trigger');
-    await selectChoose(linkSelect, "from Gallant Star-G4");
-    let deleteButton = form.querySelector('.delete-button');
-    await click(deleteButton);
-
-    // Link should be deleted
-    let links = run(() => this.store.findAll('filter-implication-link'));
-    let newLink = links.find((link) => {
-      return (
-        link.get('implyingFilter').get('name') === "Gallant Star-G4"
-        && link.get('impliedFilter').get('name') === "Titan -G4 booster");
-    });
-    assert.notOk(newLink, "Link does not exist anymore");
-
-    // Link should be on the list (list should have been refreshed)
-    assert.notOk(
-      getImplicationLinkButtonByFilter(
-        this.element, this.gsg4Filter, 'incoming'),
-      "Link is no longer the list");
-  });
-
-  test("filter buttons change the selected filter", async function(assert) {
-    createLink(this.server, this.gsg4Filter, this.titang4Filter);
+  test("filter buttons should change the selected filter", async function(assert) {
+    addImplication(this.gsg4Filter, this.titang4Filter);
 
     this.set('filterId', this.gsg4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
       hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
-    // Click a button in one of the linked-filters lists
-    let filterButton = getImplicationLinkButtonByFilter(
-      this.element, this.titang4Filter, 'outgoing');
-    await click(filterButton);
+    // Click a button in the outgoing-implications list
+    let buttons = this.element.querySelectorAll(
+      'div.outgoing-implications-list button.show-filter-detail-button');
+    let button = Array.from(buttons).find(
+      b => b.textContent.trim() === this.titang4Filter.name);
+    await click(button);
 
-    // Check that the filter changed
-    assert.equal(this.get('filterId'), this.titang4Filter.id);
+    assert.equal(
+      this.get('filterId'), this.titang4Filter.id,
+      "Selected filter should have changed");
   });
 
-  test("forms are reset when switching the selected filter", async function(assert) {
-    createLink(this.server, this.gsg4Filter, this.titang4Filter);
+  test("forms should be reset when switching the selected filter", async function(assert) {
+    addImplication(this.gsg4Filter, this.titang4Filter);
 
     this.set('filterId', this.gsg4Filter.id);
     this.set('filterGroupId', this.machineGroup.id);
     await render(
       hbs`<FilterDetail @filterId={{filterId}} @filterGroupId={{filterGroupId}} />`);
 
-    // Select choices on the link creation form
-    let linkCreateForm =
-      this.element.querySelector('.filter-implication-link-create-form');
-    let directionSelect = linkCreateForm.querySelector(
-      'div.link-direction-select .ember-power-select-trigger');
-    await selectChoose(directionSelect, "to");
-    let filterSelect = linkCreateForm.querySelector(
-      'div.linked-filter-select .ember-power-select-trigger');
+    // Fill in field(s) on the implication creation form
+    let implicationCreateForm =
+      this.element.querySelector('.filter-implication-create-form');
+    let filterSelect = implicationCreateForm.querySelector(
+      'div.target-filter-select .ember-power-select-trigger');
     await selectChoose(filterSelect, "B custom booster");
     assertPowerSelectCurrentTextEqual(
-      assert, directionSelect, "to",
-      "Direction selection is filled in");
-    assertPowerSelectCurrentTextEqual(
       assert, filterSelect, "B custom booster",
-      "Filter selection is filled in");
+      "Filter selection should be filled in");
 
-    // Select a choice on the link deletion form
-    let linkDeleteForm =
-      this.element.querySelector('.filter-implication-link-delete-form');
-    let linkSelect = linkDeleteForm.querySelector(
-      'div.link-select .ember-power-select-trigger');
-    await selectChoose(linkSelect, "to Titan -G4 booster");
+    // Fill in field(s) on the implication deletion form
+    let implicationDeleteForm =
+      this.element.querySelector('.filter-implication-delete-form');
+    let implicationSelect = implicationDeleteForm.querySelector(
+      'div.implication-select .ember-power-select-trigger');
+    await selectChoose(implicationSelect, "Titan -G4 booster");
     assertPowerSelectCurrentTextEqual(
-      assert, linkSelect, "to Titan -G4 booster",
-      "Link selection is filled in");
+      assert, implicationSelect, "Titan -G4 booster",
+      "Implication selection should be filled in");
 
     // Start editing the filter details
     let editForm = this.element.querySelector('div.filter-edit-form');
@@ -461,40 +400,34 @@ module('Integration | Component | filter-detail', function(hooks) {
     await click(editButton);
     assert.notEqual(
       getComputedStyle(editForm).display, 'none',
-      "Edit form is showing");
+      "Edit form should be showing");
 
-    // Click a button in one of the linked-filters lists
-    let filterButton = getImplicationLinkButtonByFilter(
-      this.element, this.titang4Filter, 'outgoing');
-    await click(filterButton);
+    // Click a button in the outgoing-implications list
+    let buttons = this.element.querySelectorAll(
+      'div.outgoing-implications-list button.show-filter-detail-button');
+    let button = Array.from(buttons).find(
+      b => b.textContent.trim() === this.titang4Filter.name);
+    await click(button);
 
-    // Link creation form should be reset
-    linkCreateForm =
-      this.element.querySelector('.filter-implication-link-create-form');
-    directionSelect = linkCreateForm.querySelector(
-      'div.link-direction-select .ember-power-select-trigger');
-    filterSelect = linkCreateForm.querySelector(
-      'div.linked-filter-select .ember-power-select-trigger');
-    assertPowerSelectCurrentTextEqual(
-      assert, directionSelect, "Not selected",
-      "Direction selection is reset");
+    implicationCreateForm =
+      this.element.querySelector('.filter-implication-create-form');
+    filterSelect = implicationCreateForm.querySelector(
+      'div.target-filter-select .ember-power-select-trigger');
     assertPowerSelectCurrentTextEqual(
       assert, filterSelect, "Not selected",
-      "Filter selection is reset");
+      "Filter selection should be reset");
 
-    // Link deletion form should be reset
-    linkDeleteForm =
-      this.element.querySelector('.filter-implication-link-delete-form');
-    linkSelect = linkDeleteForm.querySelector(
-      'div.link-select .ember-power-select-trigger');
+    implicationDeleteForm =
+      this.element.querySelector('.filter-implication-delete-form');
+    implicationSelect = implicationDeleteForm.querySelector(
+      'div.implication-select .ember-power-select-trigger');
     assertPowerSelectCurrentTextEqual(
-      assert, linkSelect, "Not selected",
-      "Link selection is reset");
+      assert, implicationSelect, "Not selected",
+      "Implication selection should be reset");
 
-    // Filter detail editing should be canceled
     editForm = this.element.querySelector('div.filter-edit-form');
     assert.equal(
       getComputedStyle(editForm).display, 'none',
-      "Edit form is hidden again");
+      "Detail edit form should be hidden again");
   });
 });

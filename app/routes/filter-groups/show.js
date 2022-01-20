@@ -1,3 +1,4 @@
+import { A } from '@ember/array';
 import { action } from '@ember/object';
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
@@ -22,13 +23,13 @@ export default class FilterGroupsShowRoute extends Route {
       filtersChoosable: this.store.query('filter', {
         filter_group_id: params.filter_group_id,
         name_search: params.choosable_filters_name_search,
-        page: params.choosable_filters_page,
+        'page[number]': params.choosable_filters_page,
         usage_type: 'choosable',
       }),
       filtersImplied: this.store.query('filter', {
         filter_group_id: params.filter_group_id,
         name_search: params.implied_filters_name_search,
-        page: params.implied_filters_page,
+        'page[number]': params.implied_filters_page,
         usage_type: 'implied',
       }),
       newFilter: this.store.createRecord('filter'),

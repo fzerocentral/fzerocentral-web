@@ -265,26 +265,29 @@ module('Unit | Route | filter-groups/show', function(hooks) {
       "D body should not be on the list");
   });
 
-  test("choosable filters page buttons should work", async function(assert) {
-    // Mirage should be specifying a page size of 20, so create 21 filters to
+  test("choosable filters list page buttons should work", async function(assert) {
+    // TODO: Upgrade QUnit, then make this test and the following test ('implied' version) use test.each(), which has been added in QUnit 2.16.
+    let filterType = 'choosable';
+
+    // Mirage should be specifying a page size of 10, so create 11 filters to
     // get multiple pages.
-    for (let n = 1; n <= 21; n++) {
-      // Filter 01, Filter 02, ..., Filter 21
+    for (let n = 1; n <= 11; n++) {
+      // Filter 01, Filter 02, ..., Filter 11
       let filterNumber = n.toString().padStart(2, '0');
-      createFilter(this, `Filter ${filterNumber}`, 'choosable');
+      createFilter(this, `Filter ${filterNumber}`, filterType);
     }
 
     await visit(`/filter-groups/${this.filterGroup.id}`);
 
     assert.ok(
-      getFiltersListItemByName(this.element, "Filter 01", 'choosable'),
+      getFiltersListItemByName(this.element, "Filter 01", filterType),
       "Page 1 should have filter 1");
     assert.notOk(
-      getFiltersListItemByName(this.element, "Filter 21", 'choosable'),
-      "Page 1 should not have filter 21");
+      getFiltersListItemByName(this.element, "Filter 11", filterType),
+      "Page 1 should not have filter 11");
 
     let buttons = this.element.querySelectorAll(
-      'div.choosable-filter-list div.page-links button');
+      `div.${filterType}-filter-list div.page-links button`);
 
     // First page-button should go to the next page, 2
     let nextPageButton = buttons[0];
@@ -293,31 +296,35 @@ module('Unit | Route | filter-groups/show', function(hooks) {
     // Check that the filters updated accordingly. We want to make sure the
     // update propagation goes all the way to the filter list getting updated.
     assert.notOk(
-      getFiltersListItemByName(this.element, "Filter 01", 'choosable'),
-      "Page 1 should not have filter 1");
+      getFiltersListItemByName(this.element, "Filter 01", filterType),
+      "Page 2 should not have filter 1");
     assert.ok(
-      getFiltersListItemByName(this.element, "Filter 21", 'choosable'),
-      "Page 1 should have filter 21");
+      getFiltersListItemByName(this.element, "Filter 11", filterType),
+      "Page 2 should have filter 11");
   });
 
-  test("implied filters page buttons should work", async function(assert) {
-    for (let n = 1; n <= 21; n++) {
-      // Filter 01, Filter 02, ..., Filter 21
+  test("implied filters list page buttons should work", async function(assert) {
+    let filterType = 'implied';
+
+    // Mirage should be specifying a page size of 10, so create 11 filters to
+    // get multiple pages.
+    for (let n = 1; n <= 11; n++) {
+      // Filter 01, Filter 02, ..., Filter 11
       let filterNumber = n.toString().padStart(2, '0');
-      createFilter(this, `Filter ${filterNumber}`, 'implied');
+      createFilter(this, `Filter ${filterNumber}`, filterType);
     }
 
     await visit(`/filter-groups/${this.filterGroup.id}`);
 
     assert.ok(
-      getFiltersListItemByName(this.element, "Filter 01", 'implied'),
+      getFiltersListItemByName(this.element, "Filter 01", filterType),
       "Page 1 should have filter 1");
     assert.notOk(
-      getFiltersListItemByName(this.element, "Filter 21", 'implied'),
-      "Page 1 should not have filter 21");
+      getFiltersListItemByName(this.element, "Filter 11", filterType),
+      "Page 1 should not have filter 11");
 
     let buttons = this.element.querySelectorAll(
-      'div.implied-filter-list div.page-links button');
+      `div.${filterType}-filter-list div.page-links button`);
 
     // First page-button should go to the next page, 2
     let nextPageButton = buttons[0];
@@ -326,10 +333,10 @@ module('Unit | Route | filter-groups/show', function(hooks) {
     // Check that the filters updated accordingly. We want to make sure the
     // update propagation goes all the way to the filter list getting updated.
     assert.notOk(
-      getFiltersListItemByName(this.element, "Filter 01", 'implied'),
-      "Page 1 should not have filter 1");
+      getFiltersListItemByName(this.element, "Filter 01", filterType),
+      "Page 2 should not have filter 1");
     assert.ok(
-      getFiltersListItemByName(this.element, "Filter 21", 'implied'),
-      "Page 1 should have filter 21");
+      getFiltersListItemByName(this.element, "Filter 11", filterType),
+      "Page 2 should have filter 11");
   });
 });
