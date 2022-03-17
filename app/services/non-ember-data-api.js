@@ -13,34 +13,47 @@ export default class NonEmberDataApiService extends Service {
     });
   }
 
-  getChartRanking(chartId, _appliedFiltersString) {
-    let appliedFiltersString = _appliedFiltersString || '';
-    let rankingUrl = `/charts/${chartId}/ranking/`
-      + `?filters=${appliedFiltersString}&page[size]=1000`;
+  urlWithQueryParams(baseUrl, queryParams) {
+    for (const [key, value] of queryParams) {
+      if (value === null) {
+        queryParams.delete(key);
+      }
+    }
+    let searchParams = new URLSearchParams(queryParams);
+    return baseUrl + '?' + searchParams;
+  }
+
+  getChartRanking(chartId, appliedFiltersString) {
+    let rankingUrl = this.urlWithQueryParams(
+      `/charts/${chartId}/ranking/`,
+      new Map([['filters', appliedFiltersString], ['page[size]', 1000]]));
     return this.fetchArrayResults(rankingUrl);
   }
 
-  getChartGroupRanking(chartGroupId, mainChartId, _appliedFiltersString) {
-    let appliedFiltersString = _appliedFiltersString || '';
-    let rankingUrl = `/chart_groups/${chartGroupId}/ranking/`
-      + `?main_chart_id=${mainChartId}&filters=${appliedFiltersString}`
-      + `&page[size]=1000`;
+  getChartGroupRanking(chartGroupId, mainChartId, appliedFiltersString) {
+    let rankingUrl = this.urlWithQueryParams(
+      `/chart_groups/${chartGroupId}/ranking/`,
+      new Map([
+        ['main_chart_id', mainChartId], ['filters', appliedFiltersString],
+        ['page[size]', 1000]]));
     return this.fetchArrayResults(rankingUrl);
   }
 
-  getChartTopRecordHistory(chartId, _appliedFiltersString) {
-    let appliedFiltersString = _appliedFiltersString || '';
-    let historyUrl = `/charts/${chartId}/record_history/`
-      + `?improvements=filter&filters=${appliedFiltersString}`
-      + `&page[size]=50`;
+  getChartTopRecordHistory(chartId, appliedFiltersString) {
+    let historyUrl = this.urlWithQueryParams(
+      `/charts/${chartId}/record_history/`,
+      new Map([
+        ['improvements', 'filter'], ['filters', appliedFiltersString],
+        ['page[size]', 50]]));
     return this.fetchArrayResults(historyUrl);
   }
 
-  getChartPlayerHistory(chartId, playerId, _appliedFiltersString) {
-    let appliedFiltersString = _appliedFiltersString || '';
-    let historyUrl = `/charts/${chartId}/record_history/`
-      + `?player_id=${playerId}&filters=${appliedFiltersString}`
-      + `&page[size]=50`;
+  getChartPlayerHistory(chartId, playerId, appliedFiltersString) {
+    let historyUrl = this.urlWithQueryParams(
+      `/charts/${chartId}/record_history/`,
+      new Map([
+        ['player_id', playerId], ['filters', appliedFiltersString],
+        ['page[size]', 50]]));
     return this.fetchArrayResults(historyUrl);
   }
 }

@@ -44,7 +44,6 @@ module('Unit | Route | charts/top-record-history', function(hooks) {
 
     this.apiPath = `/charts/${this.chart.id}/record_history/`;
     this.apiExpectedParams = {
-      filters: '',
       improvements: 'filter',
       'page[size]': '50',
     };

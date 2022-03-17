@@ -78,7 +78,6 @@ module('Unit | Route | charts/show', function(hooks) {
   test("should make the expected API request for the ranking", async function(assert){
     let apiPath = `/charts/${this.chart.id}/ranking/`;
     let apiExpectedParams = {
-      'filters': '',
       'page[size]': 1000,
     }
 

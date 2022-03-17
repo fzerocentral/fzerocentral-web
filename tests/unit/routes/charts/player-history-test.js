@@ -46,7 +46,6 @@ module('Unit | Route | charts/player-history', function(hooks) {
     this.apiPath = `/charts/${this.chart.id}/record_history/`;
     this.apiExpectedParams = {
       player_id: this.player.id,
-      filters: '',
       'page[size]': '50',
     };
   });
