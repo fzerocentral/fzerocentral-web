@@ -4,7 +4,6 @@ import DS from 'ember-data';
 import { action, computed } from '@ember/object';
 
 export default class ChartTypesFilterGroupsController extends Controller {
-  kindOptions = A(['select', 'numeric']);
 
   @computed('model')
   get game() {

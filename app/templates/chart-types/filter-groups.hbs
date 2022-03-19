@@ -91,7 +91,7 @@
 <div class="kind-select">
   <label>Kind</label>
   <PowerSelect
-    @options={{kindOptions}}
+    @options={{@model.newFilterGroup.KIND_OPTIONS}}
     @selected={{@model.newFilterGroup.kind}}
     @onChange={{action (mut @model.newFilterGroup.kind)}}
     @placeholder="Not selected"

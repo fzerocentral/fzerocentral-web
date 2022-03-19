@@ -29,17 +29,19 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
 
     this.machineFG = createModelInstance(
       this.server, 'filter-group',
-      {name: 'Machine', kind: 'select', showByDefault: true});
+      {name: 'Machine', kind: 'select'});
     this.settingFG = createModelInstance(
       this.server, 'filter-group',
-      {name: 'Setting', kind: 'numeric', showByDefault: false});
+      {name: 'Setting', kind: 'numeric'});
 
     createModelInstance(
       this.server, 'chart-type-filter-group',
-      {chartType: this.chartType, filterGroup: this.machineFG});
+      {chartType: this.chartType, filterGroup: this.machineFG,
+       showByDefault: true});
     createModelInstance(
       this.server, 'chart-type-filter-group',
-      {chartType: this.chartType, filterGroup: this.settingFG});
+      {chartType: this.chartType, filterGroup: this.settingFG,
+       showByDefault: false});
 
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
@@ -56,7 +58,9 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
        filters: []},
     ]);
     this.set('filterGroups', this.store.query(
-        'filterGroup', {chart_type_id: this.chartType.id}));
+        'filter-group', {chart_type_id: this.chartType.id}));
+    this.set('ctfgs', this.store.query(
+        'chart-type-filter-group', {chart_type_id: this.chartType.id}));
     this.set('appliedFiltersString', null);
     this.set(
       'updateAppliedFiltersString',
@@ -71,7 +75,7 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     await render(
       hbs`<ChartRankingSingle
             @chart={{chart}} @records={{records}}
-            @filterGroups={{filterGroups}}
+            @filterGroups={{filterGroups}} @ctfgs={{ctfgs}}
             @appliedFiltersString={{appliedFiltersString}}
             @updateAppliedFiltersString={{updateAppliedFiltersString}} />`);
 
@@ -120,7 +124,7 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     await render(
       hbs`<ChartRankingSingle
             @chart={{chart}} @records={{records}}
-            @filterGroups={{filterGroups}}
+            @filterGroups={{filterGroups}} @ctfgs={{ctfgs}}
             @appliedFiltersString={{appliedFiltersString}}
             @updateAppliedFiltersString={{updateAppliedFiltersString}} />`);
 
