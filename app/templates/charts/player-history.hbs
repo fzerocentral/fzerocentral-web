@@ -22,7 +22,7 @@
     {{#each @model.records as |record|}}
       <tr class={{if record.is_improvement "" "non-personal-best"}}>
         <td>
-          <LinkTo @route="records.show" @model={{record}}>{{record.value_display}}</LinkTo>
+          <LinkTo @route="records.show" @model={{record.id}}>{{record.value_display}}</LinkTo>
         </td>
         <td>{{moment-format record.date_achieved "YYYY-MM-DD HH:mm"}}</td>
 

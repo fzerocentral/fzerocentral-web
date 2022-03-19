@@ -9,7 +9,7 @@
   <ul class="chart-type-list plain-bullet-list">
     {{#each @model.chartTypes as |chartType|}}
       <li>
-        <LinkTo @route="chart-types.filter-groups" @model={{chartType}}>
+        <LinkTo @route="chart-types.filter-groups" @model={{chartType.id}}>
           {{chartType.name}}
         </LinkTo>
       </li>

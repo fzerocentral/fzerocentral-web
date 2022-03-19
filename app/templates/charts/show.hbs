@@ -1,6 +1,6 @@
 <h1>{{@model.chart.chartGroup.name}} - {{@model.chart.name}}</h1>
 
-<div><LinkTo @route="charts.record-new" @model={{@model.chart}}>Submit a record</LinkTo></div>
+<div><LinkTo @route="charts.record-new" @model={{@model.chart.id}}>Submit a record</LinkTo></div>
 
 {{#if @model.chart.chartGroup.showChartsTogether}}
   <div>
@@ -11,13 +11,13 @@
 {{/if}}
 
 <div>
-  <LinkTo @route="charts.top-record-history" @model={{@model.chart}}>
+  <LinkTo @route="charts.top-record-history" @model={{@model.chart.id}}>
     View top record history
   </LinkTo>
 </div>
 
 <div>
-  <LinkTo @route="chart-types.filter-groups" @model={{@model.chart.chartType}}>
+  <LinkTo @route="chart-types.filter-groups" @model={{@model.chart.chartType.id}}>
     Edit filter groups
   </LinkTo>
 </div>

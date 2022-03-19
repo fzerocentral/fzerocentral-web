@@ -20,7 +20,7 @@ export default class RecordsShowRoute extends Route {
     let record = this.modelFor(this.routeName).record;
 
     record.save().then(() => {
-      this.transitionTo('charts.show', record.get('chart'));
+      this.transitionTo('charts.show', record.get('chart').id);
     });
   }
 
