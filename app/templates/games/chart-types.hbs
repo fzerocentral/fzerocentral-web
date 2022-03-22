@@ -1,0 +1,65 @@
+<h1>{{@model.game.name}} - Chart types</h1>
+
+{{#if @model.chartTypes}}
+
+  <table class="chart-types">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Format spec</th>
+        <th>Order ascending?</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each @model.chartTypes as |ct|}}
+        <tr>
+          <td>
+            {{ct.name}}
+          </td>
+          <td>
+            {{ct.formatSpec}}
+          </td>
+          <td>
+            {{ct.orderAscending}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <table class="chart-type-filter-group-links">
+    <thead>
+      <tr>
+        <th></th>
+        {{#each @model.filterGroups as |fg|}}
+          <th>
+            {{fg.name}}
+          </th>
+        {{/each}}
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each @model.chartTypes as |ct|}}
+        <tr>
+          <td>
+            {{ct.name}}
+          </td>
+          {{#each @model.filterGroups as |fg|}}
+            <td>
+              {{#if (model-in-array fg ct.filterGroups)}}
+                ●
+              {{/if}}
+            </td>
+          {{/each}}
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+{{else}}
+
+  (No chart types yet)
+
+{{/if}}

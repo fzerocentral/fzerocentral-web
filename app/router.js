@@ -9,6 +9,8 @@ export default class Router extends EmberRouter {
 Router.map(function() {
   this.route('games', function() {
     this.route('show', { path: '/:game_id' });
+    this.route('chart-types', { path: '/:game_id/chart-types' });
+    this.route('filter-groups', { path: '/:game_id/filter-groups' });
     this.route('ladder-new', { path: '/:game_id/ladder-new' });
     this.route('ladders', { path: '/:game_id/ladders' });
   });
@@ -24,10 +26,6 @@ Router.map(function() {
 
   this.route('chart-groups', function() {
     this.route('show', { path: '/:chart_group_id' });
-  });
-
-  this.route('chart-types', function() {
-    this.route('filter-groups', { path: '/:chart_type_id/filter-groups' });
   });
 
   this.route('filter-groups', function() {

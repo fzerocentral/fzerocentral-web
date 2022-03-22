@@ -16,7 +16,7 @@ module('Integration | Component | chart-ranking-group', function(hooks) {
     this.game = createModelInstance(this.server, 'game', {name: 'Game 1'});
     this.chartGroup = createModelInstance(
       this.server, 'chart-group',
-      {name: 'Group 1', game: this.game, show_charts_together: true});
+      {name: 'Group 1', game: this.game, showChartsTogether: true});
     this.chartType = createModelInstance(
       this.server, 'chart-type',
       {name: 'Type 1',

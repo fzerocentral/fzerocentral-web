@@ -19,10 +19,8 @@ export default Component.extend({
     // Fill in entries based on contents of `filters`. There should be at most
     // one filter per filter group.
     this.get('filters').forEach((filter) => {
-      // TODO: This only works if the API records endpoint includes
-      // related-objects `filters`. We need to actually specify those related
-      // objects via an `include` parameter, which should be recognized
-      // on the API side.
+      // The API records response must include related-objects `filters`
+      // in order for this to work.
       obj.set(filter.get('filterGroup').get('id'), filter);
     });
     return obj;

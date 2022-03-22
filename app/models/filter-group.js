@@ -1,11 +1,14 @@
 import { A } from '@ember/array';
-import Model, { attr, hasMany } from '@ember-data/model';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 
 export default class FilterGroupModel extends Model {
   @attr('string') name;
   @attr('string') kind;
   @attr('string') description;
+  @attr('number') orderInGame;
+  @attr('boolean') showByDefault;
 
+  @belongsTo('game') game;
   @hasMany('filter') filters;
   @hasMany('chart-type') chartTypes;
 

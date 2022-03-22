@@ -17,14 +17,12 @@
 </div>
 
 <div>
-  <LinkTo @route="chart-types.filter-groups" @model={{@model.chart.chartType.id}}>
-    Edit filter groups
-  </LinkTo>
+  Chart type: {{@model.chart.chartType.name}}
 </div>
 
 
 <ChartRankingSingle
   @chart={{@model.chart}} @records={{@model.records}}
-  @filterGroups={{@model.filterGroups}} @ctfgs={{@model.ctfgs}}
+  @filterGroups={{@model.filterGroups}}
   @appliedFiltersString={{appliedFiltersString}}
   @updateAppliedFiltersString={{action (mut appliedFiltersString)}} />
