@@ -24,7 +24,8 @@
 
 <div>
   <label>Date achieved</label>
-  <DateField @dateValue={{@model.record.dateAchieved}} />
+  <DateField
+    @updateDateValue={{action (mut @model.record.dateAchieved)}} />
 </div>
 
 <RecordFiltersEdit

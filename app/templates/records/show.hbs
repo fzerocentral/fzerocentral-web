@@ -6,11 +6,13 @@
 </h1>
 
 <div>Player: {{@model.record.player.username}}</div>
-<div>Value: {{@model.record.valueDisplay}}</div>
+<div>Value: {{@model.record.value}}</div>
 
 <div>
   <label>Date achieved</label>
-  <DateField @dateValue={{@model.record.dateAchieved}} />
+  <DateField
+    @initialDateValue={{@model.record.dateAchieved}}
+    @updateDateValue={{action (mut @model.record.dateAchieved)}} />
 </div>
 
 <RecordFiltersEdit

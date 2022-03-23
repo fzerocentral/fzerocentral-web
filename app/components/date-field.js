@@ -1,38 +1,43 @@
-import Component from '@ember/component';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
 import moment from 'moment';
 
-export default Component.extend({
-  dateInput: "",
-  dateValue: null,
+export default class DateFieldComponent extends Component {
+  @tracked dateValue = this.args.initialDateValue || null;
 
   // Date -> String
-  @computed('dateValue')
-  get dateStr() {
-    let value = this.get('dateValue');
-    if (value === null || value === undefined) {
+  dateToStr(date) {
+    if (date === null) {
       return "";
     }
-    return moment(value).format();
-  },
+    return moment(date).format();
+  }
+
+  get dateDisplay() {
+    return this.dateToStr(this.dateValue);
+  }
+
+  get initialDateInputText() {
+    return this.dateToStr(this.args.initialDateValue || null);
+  }
 
   @action
-  onchange() {
+  onchange(event) {
+    let dateInputText = event.target.value;
     // String -> Date
     let momentDate = moment(
-      this.get('dateInput'),
-      ['YYYY-MM-DD', 'YYYY-MM-DDTHH:mm', 'YYYY-MM-DDTHH:mm:ssZ']);
+      dateInputText,
+      ['YYYY-MM-DD', 'YYYY-MM-DDTHH:mm', 'YYYY-MM-DDTHH:mm:ss',
+       'YYYY-MM-DDTHH:mmZ', 'YYYY-MM-DDTHH:mm:ssZ']);
+
     if (momentDate.isValid()) {
-      this.set('dateValue', momentDate.toDate());
+      this.dateValue = momentDate.toDate();
+      this.args.updateDateValue(this.dateValue);
     }
     else {
-      // If not valid, trigger a reset of dateStr
-      this.set('dateValue', this.get('dateValue'));
+      // Simply do not update the date value. Maybe can think of more helpful
+      // behavior here later.
     }
-
-    // Reset dateInput. It's not used for displaying the date after it's
-    // entered. That is, we treat dateInput kind of as if it were part of a
-    // pop-up prompt.
-    this.set('dateInput', "");
   }
-});
+}

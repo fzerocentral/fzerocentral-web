@@ -11,14 +11,20 @@ module('Integration | Component | date-field', function(hooks) {
     // Handle any actions with this.set('myAction', function(val) { ... });
 
     this.set('dateValue', null);
-    await render(hbs`<DateField @dateValue={{dateValue}} />`);
+    await render(
+      hbs`<DateField
+            @initialDateValue={{dateValue}}
+            @updateDateValue={{action (mut dateValue)}} />`);
 
     assert.equal(this.element.textContent.trim(), '');
   });
 
   test('filling the field updates dateValue', async function(assert) {
     this.set('dateValue', null);
-    await render(hbs`<DateField @dateValue={{dateValue}} />`);
+    await render(
+      hbs`<DateField
+            @initialDateValue={{dateValue}}
+            @updateDateValue={{action (mut dateValue)}} />`);
 
     // `await` ensures that the `change` handler gets to run before we move on
     // to the next line of this test.
