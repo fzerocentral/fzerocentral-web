@@ -5,7 +5,7 @@
   <PowerSelect
     @options={{@filterGroups}}
     @selected={{this.selectedFilterGroup}}
-    @onChange={{action (mut this.selectedFilterGroup)}}
+    @onChange={{action this.updateSelectedFilterGroup}}
     @placeholder="Not selected"
     @matchTriggerWidth={{false}}
     as |filterGroup|>
@@ -36,7 +36,7 @@
   Applied filters:
   {{#each this.appliedFilters as |appliedFilter index|}}
     <span class="applied-filter">{{appliedFilter.display}}</span>
-    {{!-- TODO: This remove button should be an image button or CSS-drawn button, not a text button. Also, ideally the button would only show when hovering over the applied filter. --}}
+    {{!-- TODO: This remove button should look better as an image button or CSS-drawn button, instead of a text button. --}}
     <button type="button" class="applied-filter-remove-button" {{action "removeFilter" index}}> x </button>
   {{/each}}
 </div>

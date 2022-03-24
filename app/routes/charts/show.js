@@ -15,7 +15,18 @@ export default class ChartsShowRoute extends Route {
   };
 
   model(params) {
+    // Get the filter IDs from the applied filters string.
+    // split() example: 4-8n-90ge -> ['4', '8', '90', '']
+    // filter() example: ['4', '8', '90', ''] -> ['4', '8', '90']
+    let appliedFilterIds = [];
+    if (params.appliedFiltersString !== null) {
+      appliedFilterIds = params.appliedFiltersString
+        .split(/\D+/).filter(s => s !== '');
+    }
+
     return RSVP.hash({
+      appliedFilterObjs: this.store.query(
+        'filter', {filter_ids: appliedFilterIds.join(',')}),
       chart: this.store.findRecord('chart', params.chart_id),
       filterGroups: this.store.query(
         'filter-group', {chart_id: params.chart_id}),

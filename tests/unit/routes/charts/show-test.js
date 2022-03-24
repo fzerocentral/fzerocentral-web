@@ -122,7 +122,7 @@ module('Unit | Route | charts/show', function(hooks) {
     let filterSelect = getFilterSelect(this);
 
     await selectChoose(filterGroupSelect, 'Machine');
-    await selectChoose(compareMethodSelect, '-');
+    await selectChoose(compareMethodSelect, 'is');
     await selectChoose(filterSelect, 'Blue Falcon');
     await click(`button.add-filter-button`);
 

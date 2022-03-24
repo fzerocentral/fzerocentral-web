@@ -54,12 +54,32 @@ module('Integration | Component | filter-apply-form', function(hooks) {
     this.settingGroupAsProperty =
       modelAsProperty(this.store, 'filterGroup', this.settingGroup);
 
+    let filters = [
+      this.blueFalconFilter, this.whiteCatFilter,
+      this.setting30Filter, this.setting80Filter];
+    this.filterAsMap = f => new Map([
+      ['id', f.id], ['name', f.name],
+      ['filterGroup', new Map([
+        ['id', f.filterGroup.id], ['name', f.filterGroup.name],
+      ])],
+    ]);
+
     // Individual tests can set their property values; these just act as
     // defaults.
     this.set(
       'filterGroups',
       A([this.machineGroupAsProperty, this.settingGroupAsProperty]));
     this.set('appliedFiltersString', null);
+    // In this component test, we don't have query params which bubble up
+    // to a route to subsequently update appliedFilterObjs. So we have to
+    // manually set it here.
+    // This is a bit of a hack; we just set appliedFilterObjs to all of the
+    // possible filters. It's supposed to be just the filters in the
+    // afs, but in this test it's hard to make that work.
+    // TODO: Think of a better way, maybe by having the route not rely on
+    // a separate query to update appliedFilterObjs.
+    this.set(
+      'appliedFilterObjs', filters.map(filter => this.filterAsMap(filter)));
     this.set(
       'updateAppliedFiltersString',
       (s) => this.set('appliedFiltersString', s));
@@ -72,6 +92,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
   test("first dropdown has the filter groups", async function(assert) {
     await render(
       hbs`<FilterApplyForm @filterGroups={{filterGroups}}
+            @appliedFilterObjs={{appliedFilterObjs}}
             @appliedFiltersString={{appliedFiltersString}} />`);
 
     let filterGroupSelect = getFilterGroupSelect(this);
@@ -86,6 +107,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
   test("selecting a filter group fills the second dropdown with relevant compare options", async function(assert) {
     await render(
       hbs`<FilterApplyForm @filterGroups={{filterGroups}}
+            @appliedFilterObjs={{appliedFilterObjs}}
             @appliedFiltersString={{appliedFiltersString}} />`);
 
     let filterGroupSelect = getFilterGroupSelect(this);
@@ -93,25 +115,26 @@ module('Integration | Component | filter-apply-form', function(hooks) {
 
     await selectChoose(filterGroupSelect, 'Machine');
     await assertPowerSelectOptionsEqual(
-      assert, compareMethodSelect, ["-", "NOT"],
+      assert, compareMethodSelect, ["is", "is NOT"],
       "Choice-based filter group: options are as expected");
     assertPowerSelectCurrentTextEqual(
-      assert, compareMethodSelect, "-",
+      assert, compareMethodSelect, "is",
       "Choice-based filter group: default selection is as expected");
 
     // Numeric filter group
     await selectChoose(filterGroupSelect, 'Setting');
     await assertPowerSelectOptionsEqual(
-      assert, compareMethodSelect, ["-", "NOT", ">=", "<="],
+      assert, compareMethodSelect, ["is", "is NOT", ">=", "<="],
       "Numeric filter group: options are as expected");
     assertPowerSelectCurrentTextEqual(
-      assert, compareMethodSelect, "-",
+      assert, compareMethodSelect, "is",
       "Numeric filter group: default selection is as expected");
   });
 
   test("selecting a filter group fills the third dropdown with the group's filter options", async function(assert) {
     await render(
       hbs`<FilterApplyForm @filterGroups={{filterGroups}}
+            @appliedFilterObjs={{appliedFilterObjs}}
             @appliedFiltersString={{appliedFiltersString}} />`);
 
     let filterGroupSelect = getFilterGroupSelect(this);
@@ -137,6 +160,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
   test("changing the filter group resets the other dropdowns as needed", async function(assert) {
     await render(
       hbs`<FilterApplyForm @filterGroups={{filterGroups}}
+            @appliedFilterObjs={{appliedFilterObjs}}
             @appliedFiltersString={{appliedFiltersString}} />`);
 
     let filterGroupSelect = getFilterGroupSelect(this);
@@ -157,7 +181,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
     // Change to a filter group where <= doesn't apply, and 80% doesn't apply
     await selectChoose(filterGroupSelect, 'Machine');
     assertPowerSelectCurrentTextEqual(
-      assert, compareMethodSelect, "-",
+      assert, compareMethodSelect, "is",
       "Compare method should be reset as expected");
     assertPowerSelectCurrentTextEqual(
       assert, filterSelect, "Not selected",
@@ -167,6 +191,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
   test("adding a filter calls updateAppliedFiltersString with an appropriate updated filters string", async function(assert) {
     await render(
       hbs`<FilterApplyForm @filterGroups={{filterGroups}}
+            @appliedFilterObjs={{appliedFilterObjs}}
             @appliedFiltersString={{appliedFiltersString}}
             @updateAppliedFiltersString={{updateAppliedFiltersString}} />`);
 
@@ -175,7 +200,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
     let filterSelect = getFilterSelect(this);
 
     await selectChoose(filterGroupSelect, 'Machine');
-    await selectChoose(compareMethodSelect, '-');
+    await selectChoose(compareMethodSelect, 'is');
     await selectChoose(filterSelect, 'White Cat');
     await click(`button.add-filter-button`);
     let expectedAFString = `${this.whiteCatFilter.id}`;
@@ -184,7 +209,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
       "Works for equality comparison");
 
     await selectChoose(filterGroupSelect, 'Machine');
-    await selectChoose(compareMethodSelect, 'NOT');
+    await selectChoose(compareMethodSelect, 'is NOT');
     await selectChoose(filterSelect, 'Blue Falcon');
     await click(`button.add-filter-button`);
     expectedAFString += `-${this.blueFalconFilter.id}n`;
@@ -218,8 +243,10 @@ module('Integration | Component | filter-apply-form', function(hooks) {
       + `-${this.setting80Filter.id}ge`
       + `-${this.setting30Filter.id}le`;
     this.set('appliedFiltersString', appliedFiltersString);
+
     await render(
       hbs`<FilterApplyForm @filterGroups={{filterGroups}}
+            @appliedFilterObjs={{appliedFilterObjs}}
             @appliedFiltersString={{appliedFiltersString}}
             @updateAppliedFiltersString={{updateAppliedFiltersString}} />`);
 
@@ -242,6 +269,7 @@ module('Integration | Component | filter-apply-form', function(hooks) {
     this.set('appliedFiltersString', appliedFiltersString);
     await render(
       hbs`<FilterApplyForm @filterGroups={{filterGroups}}
+            @appliedFilterObjs={{appliedFilterObjs}}
             @appliedFiltersString={{appliedFiltersString}}
             @updateAppliedFiltersString={{updateAppliedFiltersString}} />`);
 
