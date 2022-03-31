@@ -13,6 +13,27 @@ export default class NonEmberDataApiService extends Service {
     });
   }
 
+  post(url, data) {
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/vnd.api+json',
+      },
+      body: JSON.stringify({'data': data}),
+    }).then(response => response.json());
+  }
+
+  delete(url, data) {
+    return fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/vnd.api+json',
+      },
+      body: JSON.stringify({'data': data}),
+    }).then(response => response.json());
+  }
+
+
   urlWithQueryParams(baseUrl, queryParams) {
     for (const [key, value] of queryParams) {
       if (value === null) {
@@ -22,6 +43,7 @@ export default class NonEmberDataApiService extends Service {
     let searchParams = new URLSearchParams(queryParams);
     return baseUrl + '?' + searchParams;
   }
+
 
   getChartRanking(chartId, appliedFiltersString) {
     let rankingUrl = this.urlWithQueryParams(
@@ -55,5 +77,22 @@ export default class NonEmberDataApiService extends Service {
         ['player_id', playerId], ['filters', appliedFiltersString],
         ['page[size]', 50]]));
     return this.fetchArrayResults(historyUrl);
+  }
+
+
+  createFilterImplication(selectedFilterId, targetFilterId) {
+    let implicationRelationshipUrl =
+      `/filters/${selectedFilterId}/relationships/outgoing_filter_implications/`;
+    return this.post(
+      implicationRelationshipUrl,
+      [{'type': 'filters', 'id': targetFilterId}]);
+  }
+
+  deleteFilterImplication(selectedFilterId, targetFilterId) {
+    let implicationRelationshipUrl =
+      `/filters/${selectedFilterId}/relationships/outgoing_filter_implications/`;
+    return this.delete(
+      implicationRelationshipUrl,
+      [{'type': 'filters', 'id': targetFilterId}]);
   }
 }

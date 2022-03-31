@@ -1,10 +1,10 @@
-import { A } from '@ember/array';
 import { action } from '@ember/object';
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 
 export default class FilterGroupsShowRoute extends Route {
+  @service nonEmberDataApi;
   @service store;
 
   queryParams = {
@@ -12,10 +12,13 @@ export default class FilterGroupsShowRoute extends Route {
     choosable_filters_page: {refreshModel: true},
     implied_filters_name_search: {refreshModel: true},
     implied_filters_page: {refreshModel: true},
+    incomingImplicationsPageNumber: {refreshModel: true},
+    outgoingImplicationsPageNumber: {refreshModel: true},
+    selectedFilterId: {refreshModel: true},
   };
 
   model(params) {
-    return RSVP.hash({
+    let modelHash = {
       chartTypes: this.store.query(
         'chart-type', {filter_group_id: params.filter_group_id}),
       filterGroup: this.store.findRecord(
@@ -32,37 +35,43 @@ export default class FilterGroupsShowRoute extends Route {
         'page[number]': params.implied_filters_page,
         usage_type: 'implied',
       }),
-      newFilter: this.store.createRecord('filter'),
-    });
+
+      incomingImplications: null,
+      outgoingImplications: null,
+      sampleRecordsOfFilter: null,
+      selectedFilter: null,
+    };
+
+    if (params.selectedFilterId !== null) {
+      modelHash = {...modelHash, ...{
+        incomingImplications: this.store.query('filter', {
+          implies_filter_id: params.selectedFilterId,
+          'page[number]': params.incomingImplicationsPageNumber,
+        }),
+        outgoingImplications: this.store.query('filter', {
+          implied_by_filter_id: params.selectedFilterId,
+          'page[number]': params.outgoingImplicationsPageNumber,
+        }),
+        sampleRecordsOfFilter: this.store.query(
+          'record', {filters: params.selectedFilterId, 'page[size]': 1}),
+        selectedFilter: this.store.findRecord(
+          'filter', params.selectedFilterId),
+      }};
+    }
+
+    return RSVP.hash(modelHash);
   }
 
   @action
-  createFilter() {
-    let newFilter = this.modelFor(this.routeName).newFilter;
-    newFilter.set('filterGroup', this.modelFor(this.routeName).filterGroup);
-
-    // Save the filter
-    newFilter.save().then(() => {
-      // Success callback
-      this.controllerFor(this.routeName).set('filterCreateError', null);
-
-      // Refresh the model to reset newFilter.
-      this.refresh();
-    }, (response) => {
-      // Error callback
-      this.controllerFor(this.routeName).set(
-        'filterCreateError', response.errors[0]);
-    });
+  refreshModel() {
+    this.refresh();
   }
 
-  @action
-  willTransition() {
-    // rollbackAttributes() removes the record from the store
-    // if the model 'isNew'
-    this.modelFor(this.routeName).newFilter.rollbackAttributes();
-    // Reset state, else it will persist until the next time we go
-    // to this route
-    this.controllerFor(this.routeName).set('filterCreateError', null);
-    this.controllerFor(this.routeName).set('selectedFilterId', null);
-  }
+  // TODO: Check if needed
+  // @action
+  // willTransition() {
+  //   // Reset state, else it will persist until the next time we go
+  //   // to this route
+  //   this.controllerFor(this.routeName).set('selectedFilterId', null);
+  // }
 }
