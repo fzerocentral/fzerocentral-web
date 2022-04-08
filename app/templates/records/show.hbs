@@ -17,6 +17,7 @@
 
 <RecordFiltersEdit
   @filterGroups={{@model.filterGroups}}
-  @filters={{@model.record.filters}} />
+  @filters={{@model.record.filters}}
+  @selectFilter={{action (select-filter-for-record @model.record)}} />
 
 <div><button type="submit" {{action "saveRecord"}}>Save edits</button></div>

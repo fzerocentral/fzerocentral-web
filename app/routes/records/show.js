@@ -16,15 +16,6 @@ export default class RecordsShowRoute extends Route {
   }
 
   @action
-  saveRecord() {
-    let record = this.modelFor(this.routeName).record;
-
-    record.save().then(() => {
-      this.transitionTo('charts.show', record.get('chart').id);
-    });
-  }
-
-  @action
   willTransition() {
     this.modelFor(this.routeName).record.rollbackAttributes();
   }
