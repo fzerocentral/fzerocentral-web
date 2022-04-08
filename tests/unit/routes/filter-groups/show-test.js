@@ -9,7 +9,7 @@ import { createModelInstance }
 
 
 function getFiltersListItemByName(rootElement, name, type='choosable') {
-  let filtersList = null;
+  let filtersList;
   if (type === 'choosable') {
     filtersList = rootElement.querySelector('div.choosable-filter-list ul');
   }

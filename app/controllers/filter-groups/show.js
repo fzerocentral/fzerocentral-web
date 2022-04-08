@@ -6,7 +6,6 @@ import { errorDisplay } from "../../helpers/error-display";
 import FilterModel from "../../models/filter";
 
 export default class FilterGroupsShowController extends Controller {
-  // TODO: Standardize the naming format
   queryParams = [
     'choosable_filters_name_search',
     'choosable_filters_page',
@@ -28,13 +27,12 @@ export default class FilterGroupsShowController extends Controller {
   @tracked model;
 
   @service store;
+  @service nonEmberDataApi;
 
   @tracked newFilterUsageType = null;
-  filterDeleteError = null;
-  newImplicationTargetFilter = null;
-  implicationCreateError = null;
-  implicationDeletionTargetFilter = null;
-  implicationDeleteError = null;
+  @tracked isEditing = false;
+  @tracked newImplicationTargetFilter = null;
+  @tracked implicationDeletionTargetFilter = null;
 
   FILTER_USAGE_TYPE_OPTIONS = FilterModel.USAGE_TYPE_OPTIONS;
 
@@ -46,6 +44,60 @@ export default class FilterGroupsShowController extends Controller {
       errorDisplay([error]);
   }
 
+  get hasNumericValue() {
+    return this.model.selectedFilter.filterGroup.get('kind') === 'numeric';
+  }
+
+  get filterDeleteError() {
+    return document.getElementById('filter-delete-error').textContent;
+  }
+  set filterDeleteError(error) {
+    document.getElementById('filter-delete-error').textContent =
+      errorDisplay([error]);
+  }
+
+  get filterEditArgs() {
+    let args = {};
+    args.name = document.getElementById('edit-filter-name').value;
+    if (this.hasNumericValue) {
+      args.numericValue =
+        document.getElementById('edit-filter-numeric-value').value;
+    }
+    return args;
+  }
+
+  get filterEditError() {
+    return document.getElementById('filter-edit-error').textContent;
+  }
+  set filterEditError(error) {
+    document.getElementById('filter-edit-error').textContent =
+      errorDisplay([error]);
+  }
+
+  get implicationCreateError() {
+    return document.getElementById('implication-create-error').textContent;
+  }
+  set implicationCreateError(error) {
+    document.getElementById('implication-create-error').textContent =
+      errorDisplay([error]);
+  }
+
+  get implicationDeleteError() {
+    return document.getElementById('implication-delete-error').textContent;
+  }
+  set implicationDeleteError(error) {
+    document.getElementById('implication-delete-error').textContent =
+      errorDisplay([error]);
+  }
+
+  get recordCount() {
+    if (this.model.sampleRecordsOfFilter === null) {return null;}
+
+    // The record count can be retrieved from the pagination headers of
+    // sampleRecords. We're not interested in the records themselves.
+    return this.model.sampleRecordsOfFilter.meta.pagination.count;
+  }
+
   getNewFilterArgs() {
     let args = {
       name: document.getElementById('new-filter-name').value,
@@ -53,6 +105,8 @@ export default class FilterGroupsShowController extends Controller {
       filterGroup: this.model.filterGroup,
     };
     if (this.model.filterGroup.kind === 'numeric') {
+      // Numeric filters are always choosable, not implied
+      args.usageType = 'choosable';
       args.numericValue =
         document.getElementById('new-filter-numeric-value').value;
     }
@@ -115,41 +169,73 @@ export default class FilterGroupsShowController extends Controller {
   }
 
   @action
-  editFilter(filterArgs) {
-    let selectedFilterPromise = this.store.findRecord(
-      'filter', this.selectedFilterId);
+  selectFilter(filterId) {
+    this.selectedFilterId = filterId;
 
-    return selectedFilterPromise.then(selectedFilter => {
-      selectedFilter.set('name', filterArgs.name);
-      selectedFilter.set('numericValue', filterArgs.numericValue);
-
-      selectedFilter.save()
-        .then(() => {
-          // Success.
-          // Refresh the model to update the filter lists.
-          this.send('refreshModel');
-          return null;
-        }, (response) => {
-          // Error callback
-          return response.errors[0];
-        });
-    });
+    // Re-initialize some component state.
+    this.filterEditError = "";
+    this.stopEditingFilter();
   }
 
   @action
-  deleteFilter() {
+  saveFilterEdits() {
     let selectedFilter = this.model.selectedFilter;
 
-    selectedFilter.destroyRecord()
+    selectedFilter.name = this.filterEditArgs.name;
+    selectedFilter.numericValue = this.filterEditArgs.numericValue;
+
+    selectedFilter.save()
     .then(() => {
       // Success; clear the error message.
-      this.filterDeleteError = null;
-      // Clear the active filter ID.
-      this.args.updateFilterId(null);
+      this.filterEditError = "";
+      // Close the edit form.
+      this.stopEditingFilter();
       // Refresh the model to update the filter lists.
       this.send('refreshModel');
     }, (response) => {
       // Error callback
+      this.filterEditError = response.errors[0];
+    });
+  }
+
+  @action
+  startEditingFilter() {
+    this.isEditing = true;
+
+    // Populate fields
+    let selectedFilter = this.model.selectedFilter;
+    document.getElementById('edit-filter-name').value =
+      selectedFilter.get('name');
+    if (this.hasNumericValue) {
+      document.getElementById('edit-filter-numeric-value').value =
+        selectedFilter.get('numericValue');
+    }
+  }
+
+  @action
+  stopEditingFilter() {
+    this.isEditing = false;
+  }
+
+  @action
+  deleteFilter() {
+    let filterToDelete = this.model.selectedFilter;
+
+    // Clear the error message.
+    this.filterDeleteError = "";
+    // Clear the active filter ID. This must be done before deletion, or
+    // the model will make a query with the deleted filter ID, causing an
+    // error.
+    this.selectedFilterId = null;
+
+    filterToDelete.destroyRecord()
+    .then(() => {
+      // Success.
+    }, (response) => {
+      // Error callback.
+      // Set the active filter ID again.
+      this.selectedFilterId = filterToDelete.id;
+      // Set error message.
       this.filterDeleteError = response.errors[0];
     });
   }
@@ -162,17 +248,15 @@ export default class FilterGroupsShowController extends Controller {
       return;
     }
 
-    let selectedFilter = this.model.selectedFilter;
-
     this.nonEmberDataApi.createFilterImplication(
-      selectedFilter.id, this.newImplicationTargetFilter.id)
+      this.model.selectedFilter.id, this.newImplicationTargetFilter.id)
     .then(data => {
       if ('errors' in data) {
         throw new Error(data.errors[0].detail);
       }
 
       // Success; clear the error message.
-      this.implicationCreateError = null;
+      this.implicationCreateError = "";
       // Reset the target-filter field.
       this.newImplicationTargetFilter = null;
       // Refresh the model to update the implications.
@@ -201,7 +285,7 @@ export default class FilterGroupsShowController extends Controller {
       }
 
       // Success; clear the error message.
-      this.implicationDeleteError = null;
+      this.implicationDeleteError = "";
       // Reset the target-filter field.
       this.implicationDeletionTargetFilter = null;
       // Refresh the model to update the implications.

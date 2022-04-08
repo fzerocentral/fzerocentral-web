@@ -4,9 +4,12 @@ import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 
 export default class FilterGroupsShowRoute extends Route {
-  @service nonEmberDataApi;
   @service store;
 
+  // TODO:
+  // 1. These really don't have to be query params, but how to change it?
+  // 2. Make these values reset for the next visit to this page
+  // 3. At least standardize the naming format (snake_case vs. camelCase)
   queryParams = {
     choosable_filters_name_search: {refreshModel: true},
     choosable_filters_page: {refreshModel: true},
@@ -66,12 +69,4 @@ export default class FilterGroupsShowRoute extends Route {
   refreshModel() {
     this.refresh();
   }
-
-  // TODO: Check if needed
-  // @action
-  // willTransition() {
-  //   // Reset state, else it will persist until the next time we go
-  //   // to this route
-  //   this.controllerFor(this.routeName).set('selectedFilterId', null);
-  // }
 }

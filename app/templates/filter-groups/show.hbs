@@ -40,31 +40,149 @@
 
   <div class="filter-detail-section">
     {{#if this.selectedFilterId}}
-      <FilterDetail
-        @filter={{@model.selectedFilter}}
-        @incomingImplications={{@model.incomingImplications}}
-        @incomingImplicationsPageNumber={{this.incomingImplicationsPageNumber}}
-        @outgoingImplications={{@model.outgoingImplications}}
-        @outgoingImplicationsPageNumber={{this.outgoingImplicationsPageNumber}}
-        @sampleRecords={{@model.sampleRecordsOfFilter}}
+      {{#let @model.selectedFilter as |filter|}}
 
-        @updateFilterId={{action (mut this.selectedFilterId)}}
-        @updateIncomingImplicationsPageNumber={{action (mut this.incomingImplicationsPageNumber)}}
-        @updateOutgoingImplicationsPageNumber={{action (mut this.outgoingImplicationsPageNumber)}}
+        <div class="filter-basic-fields {{if this.isEditing "hidden"}}">
+          <h2>{{filter.name}}</h2>
+          {{#if (eq filter.filterGroup.kind "select")}}
+            <div>
+              Type: {{filter.usageType}}
+            </div>
+          {{/if}}
+          {{#if (eq filter.filterGroup.kind "numeric")}}
+            <div>
+              Numeric value: {{filter.numericValue}}
+            </div>
+          {{/if}}
 
-        @editFilter={{action "editFilter"}}
-        @deleteFilter={{action "deleteFilter"}}
+          <div>
+            <button type="button" class="start-editing-filter-button" {{action "startEditingFilter"}}> Edit details </button>
+          </div>
+        </div>
 
-        @implicationCreateError={{this.implicationCreateError}}
-        @newImplicationTargetFilter={{this.newImplicationTargetFilter}}
-        @updateNewImplicationTargetFilter={{action (mut this.newImplicationTargetFilter)}}
-        @createImplication={{action "createImplication"}}
+        <div class="filter-edit-form {{unless this.isEditing "hidden"}}">
+          <div>
+            <label for="edit-filter-name">Name</label>
+            <input
+              type="text" name="name" id="edit-filter-name" />
+          </div>
+          {{#if (eq filter.filterGroup.kind "numeric")}}
+            <div>
+              <label for="edit-filter-numeric-value">Numeric value</label>
+              <input
+                type="number" name="numeric-value" id="edit-filter-numeric-value" />
+            </div>
+          {{/if}}
 
-        @implicationDeleteError={{this.implicationDeleteError}}
-        @implicationDeletionTargetFilter={{this.implicationDeletionTargetFilter}}
-        @doDeleteImplicationNameSearch={{action (mut this.deleteImplicationNameSearch)}}
-        @updateImplicationDeletionTargetFilter={{action (mut this.implicationDeletionTargetFilter)}}
-        @deleteImplication={{action "deleteImplication"}} />
+          <div class="error-message" id="filter-edit-error"></div>
+
+          <div>
+            <button type="button" class="save-button" {{action "saveFilterEdits"}}> Save edits </button>
+            <button type="button" class="cancel-button" {{action "stopEditingFilter"}}> Cancel </button>
+          </div>
+        </div>
+
+
+        {{#if (eq filter.usageType "choosable")}}
+          <div class="record-count">Used by {{this.recordCount}} records</div>
+        {{else}}
+          <div class="record-count">Applies to {{this.recordCount}} records</div>
+        {{/if}}
+
+        <div class="error-message" id="filter-delete-error"></div>
+        <div>
+          <button type="button" class="filter-delete-button" {{action "deleteFilter"}}> Delete this filter </button>
+        </div>
+
+        {{#if (eq filter.filterGroup.kind "select")}}
+          <hr>
+
+          {{#if (eq filter.usageType "implied")}}
+            <div class="incoming-implications-list">
+              <h3>Implied by</h3>
+
+              {{#if (eq @model.incomingImplications.length 0)}}
+                (None)
+              {{else}}
+                {{#each @model.incomingImplications as |implyingFilter|}}
+                  <button type="button" class="show-filter-detail-button" {{action "selectFilter" implyingFilter.id}}>
+                    {{implyingFilter.name}}
+                  </button>
+                {{/each}}
+                <PageNavigation
+                  @pageResults={{@model.incomingImplications}}
+                  @pageNumber={{this.incomingImplicationsPageNumber}}
+                  @updatePageNumber={{action (mut this.incomingImplicationsPageNumber)}} />
+              {{/if}}
+            </div>
+          {{/if}}
+
+          {{#if (eq filter.usageType "choosable")}}
+            <div class="outgoing-implications-list">
+              <h3>Implies</h3>
+
+              {{#if (eq @model.outgoingImplications.length 0)}}
+                (None)
+              {{else}}
+                {{#each @model.outgoingImplications as |impliedFilter|}}
+                  <button type="button" class="show-filter-detail-button" {{action (mut this.selectedFilterId) impliedFilter.id}}>
+                    {{impliedFilter.name}}
+                  </button>
+                {{/each}}
+                <PageNavigation
+                  @pageResults={{@model.outgoingImplications}}
+                  @pageNumber={{this.outgoingImplicationsPageNumber}}
+                  @updatePageNumber={{action (mut this.outgoingImplicationsPageNumber)}} />
+              {{/if}}
+            </div>
+          {{/if}}
+
+          <div class="filter-implication-create-form">
+            <h3>Create an outgoing implication</h3>
+
+            <div class="target-filter-select select-field-wrapper">
+              <FilterSelect
+                @filterGroup={{filter.filterGroup}}
+                @selected={{this.newImplicationTargetFilter}}
+                @onFilterChange={{action (mut this.newImplicationTargetFilter)}} />
+            </div>
+
+            <div class="error-message" id="implication-create-error"></div>
+
+            <div>
+              <button type="button" class="create-button" {{action "createImplication"}}> Create implication </button>
+            </div>
+          </div>
+
+          <div class="filter-implication-delete-form">
+            <h3>Delete an outgoing implication</h3>
+
+            <div class="implication-select select-field-wrapper">
+              <PowerSelect
+                {{! Initial choices }}
+                @options={{@model.outgoingImplications}}
+                @searchEnabled={{true}}
+                {{! Action to run when typing in the search field; should return updated choices }}
+                @search={{action (mut this.deleteImplicationNameSearch)}}
+                @selected={{this.implicationDeletionTargetFilter}}
+                {{! Action to run when selecting a choice }}
+                @onChange={{action (mut this.implicationDeletionTargetFilter)}}
+                @placeholder="Not selected"
+                @matchTriggerWidth={{false}}
+                as |option|>
+                {{option.name}}
+              </PowerSelect>
+            </div>
+
+            <div class="error-message" id="implication-delete-error"></div>
+
+            <div>
+              <button type="button" class="delete-button" {{action "deleteImplication"}}> Delete implication </button>
+            </div>
+          </div>
+        {{/if}}  {{! filterGroup.kind == select }}
+
+      {{/let}}
     {{/if}}
   </div>
 </div>
