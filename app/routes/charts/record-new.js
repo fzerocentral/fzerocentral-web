@@ -3,6 +3,7 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 
+
 export default class ChartsRecordNewRoute extends Route {
   @service store;
 
@@ -16,19 +17,23 @@ export default class ChartsRecordNewRoute extends Route {
     });
   }
 
-  @action
-  saveRecord() {
-    let chart = this.modelFor(this.routeName).chart;
-    let newRecord = this.modelFor(this.routeName).record;
+  afterModel(resolvedModel /*, transition */) {
+    let controller = this.controllerFor(this.routeName);
 
-    newRecord.set('chart', chart);
+    for (let filterGroup of resolvedModel.filterGroups.content) {
+      controller.filterOptionsByGroup.set(
+        filterGroup.id, this.store.query('filter', {
+          filter_group_id: filterGroup.id,
+          usage_type: 'choosable',
+        }));
 
-    if (!newRecord.get('dateAchieved')) {
-      // If no date entered, use the current date.
-      newRecord.set('dateAchieved', new Date());
+      controller.selectedFiltersByGroup.set(filterGroup.id, undefined);
+      // TODO: Set initially-selected filters
+      // controller.selectedFiltersByGroup.set(
+      //   filterGroup.id,
+      //   resolvedModel.record.content.filters.find(
+      //     (filter) => filter.filterGroup.get('id') === filterGroup.id);
     }
-
-    newRecord.save().then(() => this.transitionTo('charts.show', chart.id));
   }
 
   @action
