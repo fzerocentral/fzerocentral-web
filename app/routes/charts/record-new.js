@@ -20,20 +20,18 @@ export default class ChartsRecordNewRoute extends Route {
   afterModel(resolvedModel /*, transition */) {
     let controller = this.controllerFor(this.routeName);
 
-    for (let filterGroup of resolvedModel.filterGroups.content) {
+    resolvedModel.filterGroups.forEach((filterGroup) => {
       controller.filterOptionsByGroup.set(
         filterGroup.id, this.store.query('filter', {
           filter_group_id: filterGroup.id,
           usage_type: 'choosable',
         }));
 
-      controller.selectedFiltersByGroup.set(filterGroup.id, undefined);
-      // TODO: Set initially-selected filters
-      // controller.selectedFiltersByGroup.set(
-      //   filterGroup.id,
-      //   resolvedModel.record.content.filters.find(
-      //     (filter) => filter.filterGroup.get('id') === filterGroup.id);
-    }
+      controller.selectedFiltersByGroup.set(
+        filterGroup.id,
+        resolvedModel.record.filters.find(
+          (filter) => filter.filterGroup.get('id') === filterGroup.id));
+    });
   }
 
   @action

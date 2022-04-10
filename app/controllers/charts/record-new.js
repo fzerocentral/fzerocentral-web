@@ -30,7 +30,7 @@ export default class ChartsRecordNewController extends Controller {
   }
 
   @action
-  saveRecord() {
+  submitRecord() {
     let chart = this.model.chart;
     let newRecord = this.model.record;
 
