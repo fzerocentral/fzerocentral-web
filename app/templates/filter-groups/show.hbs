@@ -141,10 +141,19 @@
             <h3>Create an outgoing implication</h3>
 
             <div class="target-filter-select select-field-wrapper">
-              <FilterSelect
-                @filterGroup={{filter.filterGroup}}
+              <PowerSelect
+                @options={{this.newImplicationTargetOptions}}
+                @searchEnabled={{true}}
+                {{! Action to run when typing in the search field; should make options update }}
+                @search={{action this.doCreateImplicationNameSearch}}
                 @selected={{this.newImplicationTargetFilter}}
-                @onFilterChange={{action (mut this.newImplicationTargetFilter)}} />
+                @onChange={{action (mut this.newImplicationTargetFilter)}}
+                @placeholder="Not selected"
+                @allowClear={{true}}
+                @matchTriggerWidth={{false}}
+                as |filter|>
+                {{filter.name}}
+              </PowerSelect>
             </div>
 
             <div class="error-message" id="implication-create-error"></div>

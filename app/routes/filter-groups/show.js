@@ -65,6 +65,13 @@ export default class FilterGroupsShowRoute extends Route {
     return RSVP.hash(modelHash);
   }
 
+  afterModel(resolvedModel /*, transition */) {
+    let controller = this.controllerFor(this.routeName);
+
+    controller.newImplicationTargetOptions = this.store.query(
+      'filter', {filter_group_id: resolvedModel.filterGroup.id});
+  }
+
   @action
   refreshModel() {
     this.refresh();

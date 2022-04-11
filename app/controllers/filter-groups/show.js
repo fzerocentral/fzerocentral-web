@@ -1,3 +1,4 @@
+import { A } from '@ember/array';
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
@@ -33,6 +34,7 @@ export default class FilterGroupsShowController extends Controller {
   @tracked isEditing = false;
   @tracked newImplicationTargetFilter = null;
   @tracked implicationDeletionTargetFilter = null;
+  @tracked newImplicationTargetOptions = A([]);
 
   FILTER_USAGE_TYPE_OPTIONS = FilterModel.USAGE_TYPE_OPTIONS;
 
@@ -138,6 +140,14 @@ export default class FilterGroupsShowController extends Controller {
   @action
   updateImpliedPage(pageNumber) {
     this.implied_filters_page = pageNumber;
+  }
+
+  @action
+  doCreateImplicationNameSearch(searchText) {
+    return this.store.query('filter', {
+      filter_group_id: this.model.filterGroup.id,
+      name_search: searchText,
+    });
   }
 
   @action
