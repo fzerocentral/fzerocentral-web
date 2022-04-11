@@ -1,10 +1,10 @@
 <div class="filter-apply-form">
   Add filter:
 
-  {{!-- Choice of filter group --}}
+  {{! Choice of filter group }}
   <PowerSelect
     @options={{@filterGroups}}
-    @selected={{this.selectedFilterGroup}}
+    @selected={{@selectedFilterGroup}}
     @onChange={{action this.updateSelectedFilterGroup}}
     @placeholder="Not selected"
     @matchTriggerWidth={{false}}
@@ -12,7 +12,7 @@
     {{filterGroup.name}}
   </PowerSelect>
 
-  {{!-- Choice of is, is not, <=, >= --}}
+  {{! Choice of is, is not, <=, >= }}
   <PowerSelect
     @options={{this.compareOptions}}
     @selected={{this.selectedCompareOption}}
@@ -23,11 +23,20 @@
     {{compareOption.text}}
   </PowerSelect>
 
-  {{!-- Choice of filter from the filter group --}}
-  <FilterSelect
-    @filterGroup={{this.selectedFilterGroup}}
+  {{! Choice of filter from the filter group }}
+  <PowerSelect
+    @options={{@filterOptions}}
+    @searchEnabled={{true}}
+    {{! Action to run when typing in the search field; should make options update }}
+    @search={{action @onSearchTextChange}}
     @selected={{this.selectedFilter}}
-    @onFilterChange={{action (mut this.selectedFilter)}} />
+    @onChange={{action (mut this.selectedFilter)}}
+    @placeholder="Not selected"
+    @allowClear={{true}}
+    @matchTriggerWidth={{false}}
+    as |filter|>
+    {{filter.name}}
+  </PowerSelect>
 
   <button class="add-filter-button" type="submit" {{action "addFilter"}}>Add</button>
 </div>
@@ -36,7 +45,7 @@
   Applied filters:
   {{#each this.appliedFilters as |appliedFilter index|}}
     <span class="applied-filter">{{appliedFilter.display}}</span>
-    {{!-- TODO: This remove button should look better as an image button or CSS-drawn button, instead of a text button. --}}
+    {{! TODO: This remove button should look better as an image button or CSS-drawn button, instead of a text button. }}
     <button type="button" class="applied-filter-remove-button" {{action "removeFilter" index}}> x </button>
   {{/each}}
 </div>

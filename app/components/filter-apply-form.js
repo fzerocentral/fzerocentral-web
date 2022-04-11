@@ -3,10 +3,10 @@ import { action } from '@ember/object';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 
+
 export default class FilterApplyFormComponent extends Component {
   @tracked selectedCompareOption = null;
   @tracked selectedFilter = null;
-  @tracked selectedFilterGroup = null;
 
   get appliedFilterSpecs() {
     let appliedFiltersString = this.args.appliedFiltersString;
@@ -71,7 +71,7 @@ export default class FilterApplyFormComponent extends Component {
   }
 
   get compareOptions() {
-    let group = this.selectedFilterGroup;
+    let group = this.args.selectedFilterGroup;
     if (!group) {
       return A([]);
     }
@@ -132,13 +132,13 @@ export default class FilterApplyFormComponent extends Component {
 
   @action
   updateSelectedFilterGroup(newSelectedFilterGroup) {
-    this.selectedFilterGroup = newSelectedFilterGroup;
+    this.args.controllerUpdateSelectedFilterGroup(newSelectedFilterGroup);
 
     // If selectedFilter is not in the newly selected filter group,
     // reset it to null.
     if (this.selectedFilter) {
       if (this.selectedFilter.get('filterGroup').get('id')
-          !== this.selectedFilterGroup.get('id')) {
+          !== this.args.selectedFilterGroup.get('id')) {
         this.selectedFilter = null;
       }
     }
