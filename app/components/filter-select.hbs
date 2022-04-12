@@ -1,0 +1,30 @@
+{{#if @searchEnabled}}
+
+  <label for="{{@fieldId}}-text">{{@label}}</label>
+  <input type="text"
+    list="{{@fieldId}}-datalist"
+    name="{{@fieldName}}-text"
+    id="{{@fieldId}}-text"
+    data-hidden-field="{{@fieldId}}"
+    placeholder="Enter filter name"
+    {{on "input" this.onTextInput}} >
+  <datalist name="{{@fieldName}}" id="{{@fieldId}}-datalist">
+    {{#each @options as |filter|}}
+      <option value="{{filter.name}}" />
+    {{/each}}
+  </datalist>
+  <input type="hidden" name="{{@fieldName}}" id="{{@fieldId}}"
+    data-text-field="{{@fieldId}}-text">
+
+{{else}}
+
+  <label for="{{@fieldId}}">{{@label}}</label>
+  <select name="{{@fieldName}}" id="{{@fieldId}}">
+    {{#each @options as |filter|}}
+      <option value="{{filter.id}}">
+        {{filter.name}}
+      </option>
+    {{/each}}
+  </select>
+
+{{/if}}

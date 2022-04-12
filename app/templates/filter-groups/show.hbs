@@ -137,58 +137,47 @@
             </div>
           {{/if}}
 
-          <div class="filter-implication-create-form">
-            <h3>Create an outgoing implication</h3>
+          <h3>Create an outgoing implication</h3>
 
-            <div class="target-filter-select select-field-wrapper">
-              <PowerSelect
+          <form id="implication-create-form">
+
+            <div class="select-field-wrapper">
+              <FilterSelect
+                @fieldId="new-implication-target-filter-field"
+                @fieldName="filter"
+                @label="To:"
                 @options={{this.newImplicationTargetOptions}}
-                @searchEnabled={{true}}
-                {{! Action to run when typing in the search field; should make options update }}
-                @search={{action this.doCreateImplicationNameSearch}}
-                @selected={{this.newImplicationTargetFilter}}
-                @onChange={{action (mut this.newImplicationTargetFilter)}}
-                @placeholder="Not selected"
-                @allowClear={{true}}
-                @matchTriggerWidth={{false}}
-                as |filter|>
-                {{filter.name}}
-              </PowerSelect>
+                @updateOptions={{action this.updateNewImplicationTargetOptions}}
+                @searchEnabled={{true}} />
             </div>
 
-            <div class="error-message" id="implication-create-error"></div>
+            <div class="error-message"></div>
 
             <div>
-              <button type="button" class="create-button" {{action "createImplication"}}> Create implication </button>
+              <button type="button" {{action "createImplication"}}> Create implication </button>
             </div>
-          </div>
+          </form>
 
-          <div class="filter-implication-delete-form">
-            <h3>Delete an outgoing implication</h3>
+          <h3>Delete an outgoing implication</h3>
 
-            <div class="implication-select select-field-wrapper">
-              <PowerSelect
-                {{! Initial choices }}
-                @options={{@model.outgoingImplications}}
-                @searchEnabled={{true}}
-                {{! Action to run when typing in the search field; should return updated choices }}
-                @search={{action (mut this.deleteImplicationNameSearch)}}
-                @selected={{this.implicationDeletionTargetFilter}}
-                {{! Action to run when selecting a choice }}
-                @onChange={{action (mut this.implicationDeletionTargetFilter)}}
-                @placeholder="Not selected"
-                @matchTriggerWidth={{false}}
-                as |option|>
-                {{option.name}}
-              </PowerSelect>
+          <form id="implication-delete-form">
+
+            <div class="select-field-wrapper">
+              <FilterSelect
+                @fieldId="delete-implication-target-filter-field"
+                @fieldName="filter"
+                @label=""
+                @options={{this.deleteImplicationTargetOptions}}
+                @updateOptions={{action this.updateDeleteImplicationTargetOptions}}
+                @searchEnabled={{true}} />
             </div>
 
-            <div class="error-message" id="implication-delete-error"></div>
+            <div class="error-message"></div>
 
             <div>
-              <button type="button" class="delete-button" {{action "deleteImplication"}}> Delete implication </button>
+              <button type="button" {{action "deleteImplication"}}> Delete implication </button>
             </div>
-          </div>
+          </form>
         {{/if}}  {{! filterGroup.kind == select }}
 
       {{/let}}
@@ -198,40 +187,40 @@
 
 <hr>
 
-<div class="filter-create-form">
-  <h3>New filter</h3>
+<h3>New filter</h3>
 
+<form id="filter-create-form">
   <div>
     <label for="new-filter-name">Name</label>
     <input type="text" name="name" id="new-filter-name" />
   </div>
 
   {{#if (eq @model.filterGroup.kind "select")}}
-    <div class="type-field select-field-wrapper">
-      <label>Type</label>
-      <PowerSelect
-        @options={{this.FILTER_USAGE_TYPE_OPTIONS}}
-        @selected={{this.newFilterUsageType}}
-        @onChange={{action (mut this.newFilterUsageType)}}
-        @placeholder="Not selected"
-        @matchTriggerWidth={{false}}
-        as |option|>
-        {{option}}
-      </PowerSelect>
+    <div class="select-field-wrapper">
+      <label for="new-filter-usage-type">Type</label>
+      <select name="usage-type" id="new-filter-usage-type"
+       placeholder="Not selected">
+        {{#each this.FILTER_USAGE_TYPE_OPTIONS as |usageTypeOption|}}
+          <option value="{{usageTypeOption}}">
+            {{usageTypeOption}}
+          </option>
+        {{/each}}
+      </select>
     </div>
   {{/if}}
 
   {{#if (eq @model.filterGroup.kind "numeric")}}
     <div>
       <label for="new-filter-numeric-value">Numeric value</label>
-      <input
-        type="number" name="numeric-value" id="new-filter-numeric-value" />
+      <input type="number" name="numeric-value" id="new-filter-numeric-value" />
     </div>
   {{/if}}
 
-  <div class="error-message" id="filter-create-error"></div>
+  <div class="error-message"></div>
 
   <div>
-    <button type="button" class="create-button" {{action "createFilter"}}> Create filter </button>
+    <button type="button" {{action "createFilter"}}>
+      Create filter
+    </button>
   </div>
-</div>
+</form>
