@@ -144,10 +144,8 @@
             <div class="select-field-wrapper">
               <FilterSelect
                 @fieldId="new-implication-target-filter-field"
-                @fieldName="filter"
                 @label="To:"
-                @options={{this.newImplicationTargetOptions}}
-                @updateOptions={{action this.updateNewImplicationTargetOptions}}
+                @controlInstance={{this.newImplicationFilterSelect}}
                 @searchEnabled={{true}} />
             </div>
 
@@ -165,10 +163,8 @@
             <div class="select-field-wrapper">
               <FilterSelect
                 @fieldId="delete-implication-target-filter-field"
-                @fieldName="filter"
                 @label=""
-                @options={{this.deleteImplicationTargetOptions}}
-                @updateOptions={{action this.updateDeleteImplicationTargetOptions}}
+                @controlInstance={{this.deleteImplicationFilterSelect}}
                 @searchEnabled={{true}} />
             </div>
 

@@ -1,30 +1,32 @@
-{{#if @searchEnabled}}
+{{#let @controlInstance.fieldName as |fieldName| }}
 
-  <label for="{{@fieldId}}-text">{{@label}}</label>
-  <input type="text"
-    list="{{@fieldId}}-datalist"
-    name="{{@fieldName}}-text"
-    id="{{@fieldId}}-text"
-    data-hidden-field="{{@fieldId}}"
-    placeholder="Enter filter name"
-    {{on "input" this.onTextInput}} >
-  <datalist name="{{@fieldName}}" id="{{@fieldId}}-datalist">
-    {{#each @options as |filter|}}
-      <option value="{{filter.name}}" />
-    {{/each}}
-  </datalist>
-  <input type="hidden" name="{{@fieldName}}" id="{{@fieldId}}"
-    data-text-field="{{@fieldId}}-text">
+  {{#if @searchEnabled}}
 
-{{else}}
+    <label for="{{@fieldId}}-text">{{@label}}</label>
+    <input type="text"
+      list="{{@fieldId}}-datalist"
+      name="{{fieldName}}-text"
+      id="{{@fieldId}}-text"
+      placeholder="Enter filter name"
+      {{on "input" @controlInstance.onTextInput}} >
+    <datalist name="{{fieldName}}" id="{{@fieldId}}-datalist">
+      {{#each @controlInstance.options as |filter|}}
+        <option value="{{filter.name}}" />
+      {{/each}}
+    </datalist>
+    <input type="hidden" name="{{fieldName}}" id="{{@fieldId}}">
 
-  <label for="{{@fieldId}}">{{@label}}</label>
-  <select name="{{@fieldName}}" id="{{@fieldId}}">
-    {{#each @options as |filter|}}
-      <option value="{{filter.id}}">
-        {{filter.name}}
-      </option>
-    {{/each}}
-  </select>
+  {{else}}
 
-{{/if}}
+    <label for="{{@fieldId}}">{{@label}}</label>
+    <select name="{{fieldName}}" id="{{@fieldId}}">
+      {{#each @controlInstance.options as |filter|}}
+        <option value="{{filter.id}}">
+          {{filter.name}}
+        </option>
+      {{/each}}
+    </select>
+
+  {{/if}}
+
+{{/let}}

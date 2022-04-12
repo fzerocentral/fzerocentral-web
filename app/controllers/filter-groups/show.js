@@ -1,10 +1,12 @@
-import { A } from '@ember/array';
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
+
+import { FilterSelectControl } from "../../components/filter-select";
 import { errorDisplay } from "../../helpers/error-display";
 import FilterModel from "../../models/filter";
+import { getFormField, setFormError } from "../../utils/forms";
 
 
 export default class FilterGroupsShowController extends Controller {
@@ -32,17 +34,18 @@ export default class FilterGroupsShowController extends Controller {
   @service nonEmberDataApi;
 
   @tracked isEditing = false;
-  @tracked newImplicationTargetOptions = A([]);
-  @tracked deleteImplicationTargetOptions = A([]);
 
   FILTER_USAGE_TYPE_OPTIONS = FilterModel.USAGE_TYPE_OPTIONS;
 
-  getFormField(form, fieldName) {
-    return Array.from(form.elements).find(
-      (element) => element.name === fieldName);
-  }
-  setFormError(form, error) {
-    form.querySelector('.error-message').textContent = errorDisplay([error]);
+  constructor(...args) {
+    super(...args);
+
+    this.newImplicationFilterSelect = new FilterSelectControl(
+      'implication-create-form', 'filter',
+      this.getNewImplicationTargetOptions.bind(this));
+    this.deleteImplicationFilterSelect = new FilterSelectControl(
+      'implication-delete-form', 'filter',
+      this.getDeleteImplicationTargetOptions.bind(this));
   }
 
   /* Filter creation */
@@ -54,22 +57,22 @@ export default class FilterGroupsShowController extends Controller {
   getNewFilterArgs() {
     let form = this.filterCreateForm;
     let args = {
-      name: this.getFormField(form, 'name').value,
-      usageType: this.getFormField(form, 'usage-type').value,
+      name: getFormField(form, 'name').value,
+      usageType: getFormField(form, 'usage-type').value,
       filterGroup: this.model.filterGroup,
     };
     if (this.model.filterGroup.kind === 'numeric') {
       // Numeric filters are always choosable, not implied
       args.usageType = 'choosable';
-      args.numericValue = this.getFormField(form, 'numeric-value').value;
+      args.numericValue = getFormField(form, 'numeric-value').value;
     }
     return args;
   }
   clearNewFilterFields() {
     let form = this.filterCreateForm;
-    this.getFormField(form, 'name').value = '';
+    getFormField(form, 'name').value = '';
     if (this.model.filterGroup.kind === 'numeric') {
-      this.getFormField(form, 'numeric-value').value = '';
+      getFormField(form, 'numeric-value').value = '';
     }
   }
 
@@ -80,14 +83,14 @@ export default class FilterGroupsShowController extends Controller {
     newFilter.save()
     .then(() => {
       // Success; clear the error message.
-      this.setFormError(this.filterCreateForm, "");
+      setFormError(this.filterCreateForm, "");
       // Clear the new-filter form fields.
       this.clearNewFilterFields();
       // Refresh the model to update the filter lists.
       this.send('refreshModel');
     }, (response) => {
       // Error callback
-      this.setFormError(this.filterCreateForm, response.errors[0]);
+      setFormError(this.filterCreateForm, response.errors[0]);
       // Remove the record from the store
       newFilter.rollbackAttributes();
     });
@@ -99,102 +102,78 @@ export default class FilterGroupsShowController extends Controller {
 
   /* Implication creation */
 
-  get implicationCreateForm() {
-    return document.getElementById('implication-create-form');
-  }
-
-  @action
-  updateNewImplicationTargetOptions() {
-    let textField = this.getFormField(
-      this.implicationCreateForm, 'filter-text');
-
-    // Update options
-    this.newImplicationTargetOptions = this.store.query('filter', {
+  getNewImplicationTargetOptions(searchText) {
+    return this.store.query('filter', {
       filter_group_id: this.model.filterGroup.id,
-      name_search: textField.value,
+      name_search: searchText,
     });
-
-    // Return promise
-    return this.newImplicationTargetOptions;
   }
 
   @action
   createImplication() {
-    let form = this.implicationCreateForm;
-    let newImplicationTargetId = this.getFormField(form, 'filter').value;
+    let form = this.newImplicationFilterSelect.form;
+    let targetId = this.newImplicationFilterSelect.selectedFilterId;
 
-    if (!newImplicationTargetId) {
-      this.setFormError(
+    if (!targetId) {
+      setFormError(
         form, "Please select the target filter for the implication relation.");
       return;
     }
 
     this.nonEmberDataApi.createFilterImplication(
-      this.model.selectedFilter.id, newImplicationTargetId)
+      this.model.selectedFilter.id, targetId)
     .then(data => {
       if ('errors' in data) {
         throw new Error(data.errors[0].detail);
       }
 
       // Success; clear the error message.
-      this.setFormError(form, "");
+      setFormError(form, "");
       // Reset the target-filter field(s).
-      this.getFormField(form, 'filter-text').value = '';
+      this.newImplicationFilterSelect.clearFilter();
       // Refresh the model to update the implications.
       this.send('refreshModel');
     })
     .catch(error => {
-      this.setFormError(form, error.message);
+      setFormError(form, error.message);
     });
   }
 
   /* Implication deletion */
 
-  get implicationDeleteForm() {
-    return document.getElementById('implication-delete-form');
-  }
-
-  @action
-  updateDeleteImplicationTargetOptions() {
-    let textField = this.getFormField(
-      this.implicationDeleteForm, 'filter-text');
-
-    // Update options
-    this.deleteImplicationTargetOptions = this.store.query('filter', {
+  getDeleteImplicationTargetOptions(searchText) {
+    return this.store.query('filter', {
       implied_by_filter_id: this.selectedFilterId,
-      name_search: textField.value,
+      name_search: searchText,
     });
-
-    // Return promise
-    return this.deleteImplicationTargetOptions;
   }
 
   @action
   deleteImplication() {
-    let form = this.implicationDeleteForm;
-    let deleteImplicationTargetId = this.getFormField(form, 'filter').value;
+    let form = this.deleteImplicationFilterSelect.form;
+    let targetId = this.deleteImplicationFilterSelect.selectedFilterId;
 
-    if (!deleteImplicationTargetId) {
-      this.setFormError(form, "Please select an implication to delete.");
+    if (!targetId) {
+      setFormError(form, "Please select an implication to delete.");
       return;
     }
 
     this.nonEmberDataApi.deleteFilterImplication(
-      this.model.selectedFilter.id, deleteImplicationTargetId)
+      this.model.selectedFilter.id, targetId)
     .then(data => {
       if ('errors' in data) {
         throw new Error(data.errors[0].detail);
       }
 
       // Success; clear the error message.
-      this.setFormError(form, "");
+      setFormError(form, "");
       // Reset the target-filter field(s).
-      this.getFormField(form, 'filter-text').value = '';
+      this.deleteImplicationFilterSelect.clearFilter();
       // Refresh the model to update the implications.
       this.send('refreshModel');
     })
     .catch(error => {
-      this.setFormError(form, error.message);
+      setFormError(form, error.message);
     });
   }
 
