@@ -19,6 +19,14 @@ export class FilterSelectControl {
     this.fieldName = fieldName;
     this.getOptions = getOptions;
     this.options = A([]);
+
+    this.searchEnabled = true;
+  }
+
+  updateSearchEnabled() {
+    this.searchEnabled = (this.options.meta.pagination.count >= 10);
+
+    // TODO: What else to do here?
   }
 
   get form() {
@@ -44,13 +52,31 @@ export class FilterSelectControl {
     throw "Not implemented";
   }
 
+  updateOptions() {
+    let searchText = '';
+    if (this.searchEnabled) {
+      searchText = this.textField.value;
+    }
+
+    this.options = this.getOptions(searchText);
+
+    // If the search was done with no search text, then chances are there's
+    // some kind of re-computation, and we should re-evaluate to see if we
+    // still want autocomplete or not.
+    if (searchText === '') {
+      this.options.then(() => {
+        this.updateSearchEnabled();
+      });
+    }
+
+    // Return promise
+    return this.options;
+  }
+
   @action
   onTextInput() {
-    // Update options
-    this.options = this.getOptions(this.textField.value);
-
-    // When options update, update the hidden field value
-    this.options.then((options) => {
+    // Update options, then update the hidden field value
+    this.updateOptions().then((options) => {
       // Look through the filter options to find a filter with a name that
       // matches the text field.
       let matchingFilter = options.find(
@@ -67,6 +93,13 @@ export class FilterSelectControl {
   }
 
   clearFilter() {
-    this.textField.value = '';
+    if (this.searchEnabled) {
+      // This clears both the text and main fields
+      this.textField.value = '';
+    }
+    else {
+      // There's only a main field
+      this.mainField.value = '';
+    }
   }
 }

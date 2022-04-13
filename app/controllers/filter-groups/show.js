@@ -15,18 +15,12 @@ export default class FilterGroupsShowController extends Controller {
     'choosable_filters_page',
     'implied_filters_name_search',
     'implied_filters_page',
-    'incomingImplicationsPageNumber',
-    'outgoingImplicationsPageNumber',
-    'selectedFilterId',
   ];
 
   @tracked choosable_filters_name_search = '';
   @tracked choosable_filters_page = 1;
   @tracked implied_filters_name_search = '';
   @tracked implied_filters_page = 1;
-  @tracked incomingImplicationsPageNumber = 1;
-  @tracked outgoingImplicationsPageNumber = 1;
-  @tracked selectedFilterId = null;
 
   @tracked model;
 
@@ -34,6 +28,13 @@ export default class FilterGroupsShowController extends Controller {
   @service nonEmberDataApi;
 
   @tracked isEditing = false;
+  @tracked selectedFilterId = null;
+  @tracked selectedFilter = null;
+  @tracked incomingImplicationsPageNumber = 1;
+  @tracked incomingImplications = null;
+  @tracked outgoingImplicationsPageNumber = 1;
+  @tracked outgoingImplications = null;
+  @tracked recordCount = 0;
 
   FILTER_USAGE_TYPE_OPTIONS = FilterModel.USAGE_TYPE_OPTIONS;
 
@@ -46,6 +47,85 @@ export default class FilterGroupsShowController extends Controller {
     this.deleteImplicationFilterSelect = new FilterSelectControl(
       'implication-delete-form', 'filter',
       this.getDeleteImplicationTargetOptions.bind(this));
+  }
+
+  @action
+  updateSelectedFilterId(filterId) {
+    this.selectedFilterId = filterId;
+    this.selectedFilter = this.store.findRecord('filter', filterId);
+
+    if (this.isEditing) {
+      // Re-initialize editing state.
+      this.filterEditError = "";
+      this.stopEditingFilter();
+    }
+
+    // Update filter info which needs API calls.
+    this.incomingImplicationsPageNumber = 1;
+    this.updateIncomingImplications();
+    this.outgoingImplicationsPageNumber = 1;
+    this.updateOutgoingImplications();
+    this.updateSelectedFilterRecordCount();
+    // TODO: Run these updates once they won't cause errors for accessing stuff that's not in DOM yet.
+    // this.newImplicationFilterSelect.updateOptions();
+    // this.deleteImplicationFilterSelect.updateOptions();
+  }
+
+  @action
+  updateChoosableSearchText(inputElement) {
+    this.choosable_filters_name_search = inputElement.target.value;
+  }
+
+  @action
+  updateImpliedSearchText(inputElement) {
+    this.implied_filters_name_search = inputElement.target.value;
+  }
+
+  @action
+  updateChoosablePage(pageNumber) {
+    this.choosable_filters_page = pageNumber;
+  }
+
+  @action
+  updateImpliedPage(pageNumber) {
+    this.implied_filters_page = pageNumber;
+  }
+
+  @action
+  updateIncomingImplicationsPageNumber(pageNumber) {
+    this.incomingImplicationsPageNumber = pageNumber;
+    this.updateIncomingImplications();
+  }
+
+  updateIncomingImplications() {
+    this.incomingImplications = this.store.query('filter', {
+      implies_filter_id: this.selectedFilterId,
+      'page[number]': this.incomingImplicationsPageNumber,
+    });
+  }
+
+  @action
+  updateOutgoingImplicationsPageNumber(pageNumber) {
+    this.outgoingImplicationsPageNumber = pageNumber;
+    this.updateOutgoingImplications();
+  }
+
+  updateOutgoingImplications() {
+    this.outgoingImplications = this.store.query('filter', {
+      implied_by_filter_id: this.selectedFilterId,
+      'page[number]': this.outgoingImplicationsPageNumber,
+    });
+  }
+
+  updateSelectedFilterRecordCount() {
+    this.store.query(
+      'record', {filters: this.selectedFilterId, 'page[size]': 1}
+    )
+    .then((records) => {
+      // The record count can be retrieved from the pagination headers.
+      // We're not interested in the records themselves.
+      this.recordCount = records.meta.pagination.count;
+    })
   }
 
   /* Filter creation */
@@ -97,14 +177,16 @@ export default class FilterGroupsShowController extends Controller {
   }
 
   get hasNumericValue() {
-    return this.model.selectedFilter.filterGroup.get('kind') === 'numeric';
+    return this.model.filterGroup.get('kind') === 'numeric';
   }
 
   /* Implication creation */
 
+  // TODO: This should not include filters already implied by the selected filter
   getNewImplicationTargetOptions(searchText) {
     return this.store.query('filter', {
       filter_group_id: this.model.filterGroup.id,
+      usage_type: 'implied',
       name_search: searchText,
     });
   }
@@ -121,7 +203,7 @@ export default class FilterGroupsShowController extends Controller {
     }
 
     this.nonEmberDataApi.createFilterImplication(
-      this.model.selectedFilter.id, targetId)
+      this.selectedFilterId, targetId)
     .then(data => {
       if ('errors' in data) {
         throw new Error(data.errors[0].detail);
@@ -159,7 +241,7 @@ export default class FilterGroupsShowController extends Controller {
     }
 
     this.nonEmberDataApi.deleteFilterImplication(
-      this.model.selectedFilter.id, targetId)
+      this.selectedFilterId, targetId)
     .then(data => {
       if ('errors' in data) {
         throw new Error(data.errors[0].detail);
@@ -203,51 +285,12 @@ export default class FilterGroupsShowController extends Controller {
       errorDisplay([error]);
   }
 
-  get recordCount() {
-    if (this.model.sampleRecordsOfFilter === null) {return null;}
-
-    // The record count can be retrieved from the pagination headers of
-    // sampleRecords. We're not interested in the records themselves.
-    return this.model.sampleRecordsOfFilter.meta.pagination.count;
-  }
-
-  @action
-  updateChoosableSearchText(inputElement) {
-    this.choosable_filters_name_search = inputElement.target.value;
-  }
-
-  @action
-  updateImpliedSearchText(inputElement) {
-    this.implied_filters_name_search = inputElement.target.value;
-  }
-
-  @action
-  updateChoosablePage(pageNumber) {
-    this.choosable_filters_page = pageNumber;
-  }
-
-  @action
-  updateImpliedPage(pageNumber) {
-    this.implied_filters_page = pageNumber;
-  }
-
-  @action
-  selectFilter(filterId) {
-    this.selectedFilterId = filterId;
-
-    // Re-initialize some component state.
-    this.filterEditError = "";
-    this.stopEditingFilter();
-  }
-
   @action
   saveFilterEdits() {
-    let selectedFilter = this.model.selectedFilter;
+    this.selectedFilter.name = this.filterEditArgs.name;
+    this.selectedFilter.numericValue = this.filterEditArgs.numericValue;
 
-    selectedFilter.name = this.filterEditArgs.name;
-    selectedFilter.numericValue = this.filterEditArgs.numericValue;
-
-    selectedFilter.save()
+    this.selectedFilter.save()
     .then(() => {
       // Success; clear the error message.
       this.filterEditError = "";
@@ -266,12 +309,11 @@ export default class FilterGroupsShowController extends Controller {
     this.isEditing = true;
 
     // Populate fields
-    let selectedFilter = this.model.selectedFilter;
     document.getElementById('edit-filter-name').value =
-      selectedFilter.get('name');
+      this.selectedFilter.get('name');
     if (this.hasNumericValue) {
       document.getElementById('edit-filter-numeric-value').value =
-        selectedFilter.get('numericValue');
+        this.selectedFilter.get('numericValue');
     }
   }
 
@@ -282,14 +324,14 @@ export default class FilterGroupsShowController extends Controller {
 
   @action
   deleteFilter() {
-    let filterToDelete = this.model.selectedFilter;
+    let filterToDelete = this.selectedFilter;
 
     // Clear the error message.
     this.filterDeleteError = "";
     // Clear the active filter ID. This must be done before deletion, or
     // the model will make a query with the deleted filter ID, causing an
     // error.
-    this.selectedFilterId = null;
+    this.selectFilter(null);
 
     filterToDelete.destroyRecord()
     .then(() => {
@@ -297,7 +339,7 @@ export default class FilterGroupsShowController extends Controller {
     }, (response) => {
       // Error callback.
       // Set the active filter ID again.
-      this.selectedFilterId = filterToDelete.id;
+      this.selectFilter(filterToDelete.id);
       // Set error message.
       this.filterDeleteError = response.errors[0];
     });

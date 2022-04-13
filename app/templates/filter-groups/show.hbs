@@ -24,7 +24,7 @@
       @filters={{@model.filtersChoosable}}
       @updatePageNumber={{action this.updateChoosablePage}}
       @updateSearchText={{action this.updateChoosableSearchText}}
-      @updateSelectedFilterId={{action (mut this.selectedFilterId)}} />
+      @updateSelectedFilterId={{action this.updateSelectedFilterId}} />
   </div>
 
   {{#if (eq @model.filterGroup.kind "select")}}
@@ -34,13 +34,13 @@
         @filters={{@model.filtersImplied}}
         @updatePageNumber={{action this.updateImpliedPage}}
         @updateSearchText={{action this.updateImpliedSearchText}}
-        @updateSelectedFilterId={{action (mut this.selectedFilterId)}} />
+        @updateSelectedFilterId={{action this.updateSelectedFilterId}} />
     </div>
   {{/if}}
 
   <div class="filter-detail-section">
     {{#if this.selectedFilterId}}
-      {{#let @model.selectedFilter as |filter|}}
+      {{#let this.selectedFilter as |filter|}}
 
         <div class="filter-basic-fields {{if this.isEditing "hidden"}}">
           <h2>{{filter.name}}</h2>
@@ -101,18 +101,18 @@
             <div class="incoming-implications-list">
               <h3>Implied by</h3>
 
-              {{#if (eq @model.incomingImplications.length 0)}}
+              {{#if (eq this.incomingImplications.length 0)}}
                 (None)
               {{else}}
-                {{#each @model.incomingImplications as |implyingFilter|}}
-                  <button type="button" class="show-filter-detail-button" {{action "selectFilter" implyingFilter.id}}>
+                {{#each this.incomingImplications as |implyingFilter|}}
+                  <button type="button" class="show-filter-detail-button" {{action this.updateSelectedFilterId implyingFilter.id}}>
                     {{implyingFilter.name}}
                   </button>
                 {{/each}}
                 <PageNavigation
-                  @pageResults={{@model.incomingImplications}}
+                  @pageResults={{this.incomingImplications}}
                   @pageNumber={{this.incomingImplicationsPageNumber}}
-                  @updatePageNumber={{action (mut this.incomingImplicationsPageNumber)}} />
+                  @updatePageNumber={{action this.updateIncomingImplicationsPageNumber}} />
               {{/if}}
             </div>
           {{/if}}
@@ -121,18 +121,18 @@
             <div class="outgoing-implications-list">
               <h3>Implies</h3>
 
-              {{#if (eq @model.outgoingImplications.length 0)}}
+              {{#if (eq this.outgoingImplications.length 0)}}
                 (None)
               {{else}}
-                {{#each @model.outgoingImplications as |impliedFilter|}}
-                  <button type="button" class="show-filter-detail-button" {{action (mut this.selectedFilterId) impliedFilter.id}}>
+                {{#each this.outgoingImplications as |impliedFilter|}}
+                  <button type="button" class="show-filter-detail-button" {{action this.updateSelectedFilterId impliedFilter.id}}>
                     {{impliedFilter.name}}
                   </button>
                 {{/each}}
                 <PageNavigation
-                  @pageResults={{@model.outgoingImplications}}
+                  @pageResults={{this.outgoingImplications}}
                   @pageNumber={{this.outgoingImplicationsPageNumber}}
-                  @updatePageNumber={{action (mut this.outgoingImplicationsPageNumber)}} />
+                  @updatePageNumber={{action this.updateOutgoingImplicationsPageNumber}} />
               {{/if}}
             </div>
           {{/if}}
@@ -145,8 +145,7 @@
               <FilterSelect
                 @fieldId="new-implication-target-filter-field"
                 @label="To:"
-                @controlInstance={{this.newImplicationFilterSelect}}
-                @searchEnabled={{true}} />
+                @controlInstance={{this.newImplicationFilterSelect}} />
             </div>
 
             <div class="error-message"></div>
@@ -164,8 +163,7 @@
               <FilterSelect
                 @fieldId="delete-implication-target-filter-field"
                 @label=""
-                @controlInstance={{this.deleteImplicationFilterSelect}}
-                @searchEnabled={{true}} />
+                @controlInstance={{this.deleteImplicationFilterSelect}} />
             </div>
 
             <div class="error-message"></div>
