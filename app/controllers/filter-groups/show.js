@@ -3,7 +3,6 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 
-import { FilterSelectControl } from "../../components/filter-select";
 import { errorDisplay } from "../../helpers/error-display";
 import FilterModel from "../../models/filter";
 import { getFormField, setFormError } from "../../utils/forms";
@@ -25,7 +24,6 @@ export default class FilterGroupsShowController extends Controller {
   @tracked model;
 
   @service store;
-  @service nonEmberDataApi;
 
   @tracked isEditing = false;
   @tracked selectedFilterId = null;
@@ -35,14 +33,6 @@ export default class FilterGroupsShowController extends Controller {
   @tracked recordCount = 0;
 
   FILTER_USAGE_TYPE_OPTIONS = FilterModel.USAGE_TYPE_OPTIONS;
-
-  constructor(...args) {
-    super(...args);
-
-    this.deleteImplicationFilterSelect = new FilterSelectControl(
-      'implication-delete-form', 'filter',
-      this.getDeleteImplicationTargetOptions.bind(this));
-  }
 
   @action
   updateSelectedFilterId(filterId) {
@@ -61,9 +51,6 @@ export default class FilterGroupsShowController extends Controller {
     this.implicationsPageNumber = 1;
     this.updateImplications();
     this.updateSelectedFilterRecordCount();
-
-    setFormError(this.deleteImplicationFilterSelect.form, "");
-    this.deleteImplicationFilterSelect.updateOptions();
   }
 
   @action
@@ -168,44 +155,6 @@ export default class FilterGroupsShowController extends Controller {
 
   get hasNumericValue() {
     return this.model.filterGroup.get('kind') === 'numeric';
-  }
-
-  /* Implication deletion */
-
-  getDeleteImplicationTargetOptions(searchText) {
-    return this.store.query('filter', {
-      implied_by_filter_id: this.selectedFilterId,
-      name_search: searchText,
-    });
-  }
-
-  @action
-  deleteImplication() {
-    let form = this.deleteImplicationFilterSelect.form;
-    let targetId = this.deleteImplicationFilterSelect.selectedFilterId;
-
-    if (!targetId) {
-      setFormError(form, "Please select an implication to delete.");
-      return;
-    }
-
-    this.nonEmberDataApi.deleteFilterImplication(
-      this.selectedFilterId, targetId)
-    .then(data => {
-      if ('errors' in data) {
-        throw new Error(data.errors[0].detail);
-      }
-
-      // Success; clear the error message.
-      setFormError(form, "");
-      // Reset the target-filter field(s).
-      this.deleteImplicationFilterSelect.clearFilter();
-      // Refresh page elements that depend on the implications.
-      this.deleteImplicationFilterSelect.updateOptions();
-    })
-    .catch(error => {
-      setFormError(form, error.message);
-    });
   }
 
   get filterDeleteError() {

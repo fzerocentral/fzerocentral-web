@@ -137,25 +137,14 @@
             </div>
           {{/if}}
 
-          <LinkTo @route="filters.add-implication" @model={{filter.id}}>Add an outgoing implication</LinkTo>
+          <div>
+            <LinkTo @route="filters.add-implication" @model={{filter.id}}>Add an outgoing implication</LinkTo>
+          </div>
 
-          <h3>Delete an outgoing implication</h3>
+          <div>
+            <LinkTo @route="filters.delete-implication" @model={{filter.id}}>Delete an outgoing implication</LinkTo>
+          </div>
 
-          <form id="implication-delete-form">
-
-            <div class="select-field-wrapper">
-              <FilterSelect
-                @fieldId="delete-implication-target-filter-field"
-                @label=""
-                @controlInstance={{this.deleteImplicationFilterSelect}} />
-            </div>
-
-            <div class="error-message"></div>
-
-            <div>
-              <button type="button" {{action "deleteImplication"}}> Delete implication </button>
-            </div>
-          </form>
         {{/if}}  {{! filterGroup.kind == select }}
 
       {{/let}}

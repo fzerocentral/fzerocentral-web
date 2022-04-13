@@ -1,19 +1,17 @@
-import { A } from '@ember/array';
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
-import DS from 'ember-data';
 import { tracked } from '@glimmer/tracking';
 import { FilterSelectControl } from "../../components/filter-select";
 import { setFormError } from "../../utils/forms";
 
 
-export default class FiltersAddImplicationController extends Controller {
+export default class FiltersDeleteImplicationController extends Controller {
   @service store;
   @service nonEmberDataApi;
 
   @tracked model;
-  formId = 'add-implication-form';
+  formId = 'delete-implication-form';
 
   constructor(...args) {
     super(...args);
@@ -30,42 +28,23 @@ export default class FiltersAddImplicationController extends Controller {
     return document.getElementById(this.formId);
   }
 
-  getImpliedTypeFilters(searchText) {
+  getTargetOptions(searchText) {
     return this.store.query('filter', {
-      filter_group_id: this.filterGroup.get('id'),
-      usage_type: 'implied',
+      implied_by_filter_id: this.model.filter.id,
       name_search: searchText,
     });
   }
 
-  getTargetOptions(searchText) {
-    return DS.PromiseArray.create({
-      promise: this.getImpliedTypeFilters(searchText).then((iFilters) => {
-        let targetOptions = A([]);
-        let alreadyImpliedIds = this.model.alreadyImpliedFilters.getEach('id');
-
-        // Options are the implied-type filters in this filter group,
-        // excluding filters that are already implied by this filter
-        iFilters.forEach((iFilter) => {
-          if (alreadyImpliedIds.includes(iFilter.id)) { return; }
-          targetOptions.pushObject(iFilter);
-        })
-        return targetOptions;
-      })
-    });
-  }
-
   @action
-  addImplication() {
+  deleteImplication() {
     let targetId = this.filterSelect.selectedFilterId;
 
     if (!targetId) {
-      setFormError(
-        this.form, "Please select the target filter for implication.");
+      setFormError(this.form, "Please select an implication to delete.");
       return;
     }
 
-    this.nonEmberDataApi.addFilterImplication(
+    this.nonEmberDataApi.deleteFilterImplication(
       this.model.filter.id, targetId)
     .then(data => {
       if ('errors' in data) {
