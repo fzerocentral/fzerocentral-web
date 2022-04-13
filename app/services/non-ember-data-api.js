@@ -80,7 +80,7 @@ export default class NonEmberDataApiService extends Service {
   }
 
 
-  createFilterImplication(selectedFilterId, targetFilterId) {
+  addFilterImplication(selectedFilterId, targetFilterId) {
     let implicationRelationshipUrl =
       `/filters/${selectedFilterId}/relationships/outgoing_filter_implications/`;
     return this.post(

@@ -98,21 +98,21 @@
           <hr>
 
           {{#if (eq filter.usageType "implied")}}
-            <div class="incoming-implications-list">
+            <div class="implications-list">
               <h3>Implied by</h3>
 
-              {{#if (eq this.incomingImplications.length 0)}}
+              {{#if (eq this.implications.length 0)}}
                 (None)
               {{else}}
-                {{#each this.incomingImplications as |implyingFilter|}}
+                {{#each this.implications as |implyingFilter|}}
                   <button type="button" class="show-filter-detail-button" {{action this.updateSelectedFilterId implyingFilter.id}}>
                     {{implyingFilter.name}}
                   </button>
                 {{/each}}
                 <PageNavigation
-                  @pageResults={{this.incomingImplications}}
-                  @pageNumber={{this.incomingImplicationsPageNumber}}
-                  @updatePageNumber={{action this.updateIncomingImplicationsPageNumber}} />
+                  @pageResults={{this.implications}}
+                  @pageNumber={{this.implicationsPageNumber}}
+                  @updatePageNumber={{action this.updateImplicationsPageNumber}} />
               {{/if}}
             </div>
           {{/if}}
@@ -121,39 +121,23 @@
             <div class="outgoing-implications-list">
               <h3>Implies</h3>
 
-              {{#if (eq this.outgoingImplications.length 0)}}
+              {{#if (eq this.implications.length 0)}}
                 (None)
               {{else}}
-                {{#each this.outgoingImplications as |impliedFilter|}}
+                {{#each this.implications as |impliedFilter|}}
                   <button type="button" class="show-filter-detail-button" {{action this.updateSelectedFilterId impliedFilter.id}}>
                     {{impliedFilter.name}}
                   </button>
                 {{/each}}
                 <PageNavigation
-                  @pageResults={{this.outgoingImplications}}
-                  @pageNumber={{this.outgoingImplicationsPageNumber}}
-                  @updatePageNumber={{action this.updateOutgoingImplicationsPageNumber}} />
+                  @pageResults={{this.implications}}
+                  @pageNumber={{this.implicationsPageNumber}}
+                  @updatePageNumber={{action this.updateImplicationsPageNumber}} />
               {{/if}}
             </div>
           {{/if}}
 
-          <h3>Create an outgoing implication</h3>
-
-          <form id="implication-create-form">
-
-            <div class="select-field-wrapper">
-              <FilterSelect
-                @fieldId="new-implication-target-filter-field"
-                @label="To:"
-                @controlInstance={{this.newImplicationFilterSelect}} />
-            </div>
-
-            <div class="error-message"></div>
-
-            <div>
-              <button type="button" {{action "createImplication"}}> Create implication </button>
-            </div>
-          </form>
+          <LinkTo @route="filters.add-implication" @model={{filter.id}}>Add an outgoing implication</LinkTo>
 
           <h3>Delete an outgoing implication</h3>
 

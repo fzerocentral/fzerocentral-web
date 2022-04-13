@@ -13,20 +13,14 @@ export default class FilterSelectComponent extends Component {}
 export class FilterSelectControl {
 
   @tracked options;
+  @tracked searchEnabled;
 
-  constructor(formId, fieldName, getOptions) {
+  constructor(formId, fieldName, getOptions, searchEnabled=false) {
     this.formId = formId;
     this.fieldName = fieldName;
     this.getOptions = getOptions;
     this.options = A([]);
-
-    this.searchEnabled = true;
-  }
-
-  updateSearchEnabled() {
-    this.searchEnabled = (this.options.meta.pagination.count >= 10);
-
-    // TODO: What else to do here?
+    this.searchEnabled = searchEnabled;
   }
 
   get form() {
@@ -44,7 +38,7 @@ export class FilterSelectControl {
 
   /**
    * Gets the filter options as an Ember-Data Promise. Implemented function
-   * should be passed into the constructor.
+   * should be passed into this class's constructor.
    * @param {string} searchText
    * @returns {Promise}
    */
@@ -59,15 +53,6 @@ export class FilterSelectControl {
     }
 
     this.options = this.getOptions(searchText);
-
-    // If the search was done with no search text, then chances are there's
-    // some kind of re-computation, and we should re-evaluate to see if we
-    // still want autocomplete or not.
-    if (searchText === '') {
-      this.options.then(() => {
-        this.updateSearchEnabled();
-      });
-    }
 
     // Return promise
     return this.options;
@@ -95,11 +80,12 @@ export class FilterSelectControl {
   clearFilter() {
     if (this.searchEnabled) {
       // This clears both the text and main fields
+      // (the latter via onTextInput()).
       this.textField.value = '';
     }
     else {
       // There's only a main field
-      this.mainField.value = '';
+      this.mainField.value = null;
     }
   }
 }

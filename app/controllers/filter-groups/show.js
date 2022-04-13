@@ -30,10 +30,8 @@ export default class FilterGroupsShowController extends Controller {
   @tracked isEditing = false;
   @tracked selectedFilterId = null;
   @tracked selectedFilter = null;
-  @tracked incomingImplicationsPageNumber = 1;
-  @tracked incomingImplications = null;
-  @tracked outgoingImplicationsPageNumber = 1;
-  @tracked outgoingImplications = null;
+  @tracked implicationsPageNumber = 1;
+  @tracked implications = null;
   @tracked recordCount = 0;
 
   FILTER_USAGE_TYPE_OPTIONS = FilterModel.USAGE_TYPE_OPTIONS;
@@ -41,9 +39,6 @@ export default class FilterGroupsShowController extends Controller {
   constructor(...args) {
     super(...args);
 
-    this.newImplicationFilterSelect = new FilterSelectControl(
-      'implication-create-form', 'filter',
-      this.getNewImplicationTargetOptions.bind(this));
     this.deleteImplicationFilterSelect = new FilterSelectControl(
       'implication-delete-form', 'filter',
       this.getDeleteImplicationTargetOptions.bind(this));
@@ -54,6 +49,8 @@ export default class FilterGroupsShowController extends Controller {
     this.selectedFilterId = filterId;
     this.selectedFilter = this.store.findRecord('filter', filterId);
 
+    // Initialize/update everything in the filter-detail area.
+
     if (this.isEditing) {
       // Re-initialize editing state.
       this.filterEditError = "";
@@ -61,14 +58,12 @@ export default class FilterGroupsShowController extends Controller {
     }
 
     // Update filter info which needs API calls.
-    this.incomingImplicationsPageNumber = 1;
-    this.updateIncomingImplications();
-    this.outgoingImplicationsPageNumber = 1;
-    this.updateOutgoingImplications();
+    this.implicationsPageNumber = 1;
+    this.updateImplications();
     this.updateSelectedFilterRecordCount();
-    // TODO: Run these updates once they won't cause errors for accessing stuff that's not in DOM yet.
-    // this.newImplicationFilterSelect.updateOptions();
-    // this.deleteImplicationFilterSelect.updateOptions();
+
+    setFormError(this.deleteImplicationFilterSelect.form, "");
+    this.deleteImplicationFilterSelect.updateOptions();
   }
 
   @action
@@ -92,29 +87,24 @@ export default class FilterGroupsShowController extends Controller {
   }
 
   @action
-  updateIncomingImplicationsPageNumber(pageNumber) {
-    this.incomingImplicationsPageNumber = pageNumber;
-    this.updateIncomingImplications();
+  updateImplicationsPageNumber(pageNumber) {
+    this.implicationsPageNumber = pageNumber;
+    this.updateImplications();
   }
 
-  updateIncomingImplications() {
-    this.incomingImplications = this.store.query('filter', {
-      implies_filter_id: this.selectedFilterId,
-      'page[number]': this.incomingImplicationsPageNumber,
-    });
-  }
-
-  @action
-  updateOutgoingImplicationsPageNumber(pageNumber) {
-    this.outgoingImplicationsPageNumber = pageNumber;
-    this.updateOutgoingImplications();
-  }
-
-  updateOutgoingImplications() {
-    this.outgoingImplications = this.store.query('filter', {
-      implied_by_filter_id: this.selectedFilterId,
-      'page[number]': this.outgoingImplicationsPageNumber,
-    });
+  updateImplications() {
+    if (this.selectedFilter.usageType === 'choosable') {
+      this.implications = this.store.query('filter', {
+        implied_by_filter_id: this.selectedFilterId,
+        'page[number]': this.implicationsPageNumber,
+      });
+    }
+    else {
+      this.implications = this.store.query('filter', {
+        implies_filter_id: this.selectedFilterId,
+        'page[number]': this.implicationsPageNumber,
+      });
+    }
   }
 
   updateSelectedFilterRecordCount() {
@@ -180,47 +170,6 @@ export default class FilterGroupsShowController extends Controller {
     return this.model.filterGroup.get('kind') === 'numeric';
   }
 
-  /* Implication creation */
-
-  // TODO: This should not include filters already implied by the selected filter
-  getNewImplicationTargetOptions(searchText) {
-    return this.store.query('filter', {
-      filter_group_id: this.model.filterGroup.id,
-      usage_type: 'implied',
-      name_search: searchText,
-    });
-  }
-
-  @action
-  createImplication() {
-    let form = this.newImplicationFilterSelect.form;
-    let targetId = this.newImplicationFilterSelect.selectedFilterId;
-
-    if (!targetId) {
-      setFormError(
-        form, "Please select the target filter for the implication relation.");
-      return;
-    }
-
-    this.nonEmberDataApi.createFilterImplication(
-      this.selectedFilterId, targetId)
-    .then(data => {
-      if ('errors' in data) {
-        throw new Error(data.errors[0].detail);
-      }
-
-      // Success; clear the error message.
-      setFormError(form, "");
-      // Reset the target-filter field(s).
-      this.newImplicationFilterSelect.clearFilter();
-      // Refresh the model to update the implications.
-      this.send('refreshModel');
-    })
-    .catch(error => {
-      setFormError(form, error.message);
-    });
-  }
-
   /* Implication deletion */
 
   getDeleteImplicationTargetOptions(searchText) {
@@ -251,8 +200,8 @@ export default class FilterGroupsShowController extends Controller {
       setFormError(form, "");
       // Reset the target-filter field(s).
       this.deleteImplicationFilterSelect.clearFilter();
-      // Refresh the model to update the implications.
-      this.send('refreshModel');
+      // Refresh page elements that depend on the implications.
+      this.deleteImplicationFilterSelect.updateOptions();
     })
     .catch(error => {
       setFormError(form, error.message);

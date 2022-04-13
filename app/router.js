@@ -17,10 +17,10 @@ Router.map(function() {
 
   this.route('charts', function() {
     this.route('show', { path: '/:chart_id' });
-    this.route('player-history', { path: '/:chart_id/players/:player_id/history' });
-    this.route('top-record-history', {
-      path: '/:chart_id/top-record-history'
-    });
+    this.route('player-history',
+               { path: '/:chart_id/players/:player_id/history' });
+    this.route('top-record-history',
+               { path: '/:chart_id/top-record-history' });
     this.route('record-new', { path: '/:chart_id/record-new' });
   });
 
@@ -30,6 +30,14 @@ Router.map(function() {
 
   this.route('filter-groups', function() {
     this.route('show', { path: '/:filter_group_id' });
+  });
+
+  this.route('filters', function() {
+    this.route('add-implication',
+               { path: '/:filter_id/add-implication' });
+    this.route('delete-implication',
+               { path: '/:filter_id/delete-implication' });
+    this.route('edit', { path: '/:filter_id/edit' });
   });
 
   this.route('ladders', function() {
