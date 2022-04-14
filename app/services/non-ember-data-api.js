@@ -20,7 +20,15 @@ export default class NonEmberDataApiService extends Service {
         'Content-Type': 'application/vnd.api+json',
       },
       body: JSON.stringify({'data': data}),
-    }).then(response => response.json());
+    }).then((response) => {
+      if (response.status === 204) {
+        // No content
+        return {};
+      }
+      else {
+        return response.json();
+      }
+    });
   }
 
   post(url, data) {
@@ -105,6 +113,11 @@ export default class NonEmberDataApiService extends Service {
       'attributes': attributes,
     };
     return this.patch(filterUrl, data);
+  }
+
+  deleteFilter(filterId) {
+    let filterUrl = `/filters/${filterId}/`;
+    return this.delete(filterUrl, null);
   }
 
   addFilterImplication(selectedFilterId, targetFilterId) {

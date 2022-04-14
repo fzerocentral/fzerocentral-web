@@ -2,80 +2,105 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { errorDisplay } from "../../helpers/error-display";
 
 
 export default class FilterGroupsShowController extends Controller {
-  queryParams = [
-    'choosable_filters_name_search',
-    'choosable_filters_page',
-    'implied_filters_name_search',
-    'implied_filters_page',
-  ];
-
-  @tracked choosable_filters_name_search = '';
-  @tracked choosable_filters_page = 1;
-  @tracked implied_filters_name_search = '';
-  @tracked implied_filters_page = 1;
-
-  @tracked model;
-
+  @service nonEmberDataApi;
   @service store;
 
+  @tracked model;
   @tracked selectedFilterId = null;
   @tracked selectedFilter = null;
-  @tracked implicationsPageNumber = 1;
+  @tracked choosableFilters = null;
+  @tracked choosableFiltersNameSearch = '';
+  @tracked choosableFiltersPage = 1;
+  @tracked impliedFilters = null;
+  @tracked impliedFiltersNameSearch = '';
+  @tracked impliedFiltersPage = 1;
+
   @tracked implications = null;
+  @tracked implicationsPage = 1;
   @tracked recordCount = 0;
 
   @action
   updateSelectedFilterId(filterId) {
     this.selectedFilterId = filterId;
+    if (filterId === null) {
+      this.selectedFilter = null;
+      return;
+    }
+
     this.selectedFilter = this.store.findRecord('filter', filterId);
 
-    // Update filter info which needs API calls.
-    this.implicationsPageNumber = 1;
-    this.updateImplications();
+    // Refresh filter info.
+    this.selectedFilter.then(() => {
+      this.implicationsPage = 1;
+      this.updateImplications();
+    });
     this.updateSelectedFilterRecordCount();
+  }
+
+  updateChoosableFilters() {
+    this.choosableFilters = this.store.query('filter', {
+      filter_group_id: this.model.filterGroup.id,
+      name_search: this.choosableFiltersNameSearch,
+      'page[number]': this.choosableFiltersPage,
+      usage_type: 'choosable',
+    });
+  }
+
+  updateImpliedFilters() {
+    this.impliedFilters = this.store.query('filter', {
+      filter_group_id: this.model.filterGroup.id,
+      name_search: this.impliedFiltersNameSearch,
+      'page[number]': this.impliedFiltersPage,
+      usage_type: 'implied',
+    });
   }
 
   @action
   updateChoosableSearchText(inputElement) {
-    this.choosable_filters_name_search = inputElement.target.value;
+    this.choosableFiltersNameSearch = inputElement.target.value;
+    this.choosableFiltersPage = 1;
+    this.updateChoosableFilters();
   }
 
   @action
   updateImpliedSearchText(inputElement) {
-    this.implied_filters_name_search = inputElement.target.value;
+    this.impliedFiltersNameSearch = inputElement.target.value;
+    this.impliedFiltersPage = 1;
+    this.updateImpliedFilters();
   }
 
   @action
   updateChoosablePage(pageNumber) {
-    this.choosable_filters_page = pageNumber;
+    this.choosableFiltersPage = pageNumber;
+    this.updateChoosableFilters();
   }
 
   @action
   updateImpliedPage(pageNumber) {
-    this.implied_filters_page = pageNumber;
+    this.impliedFiltersPage = pageNumber;
+    this.updateImpliedFilters();
   }
 
   @action
-  updateImplicationsPageNumber(pageNumber) {
-    this.implicationsPageNumber = pageNumber;
+  updateImplicationsPage(pageNumber) {
+    this.implicationsPage = pageNumber;
     this.updateImplications();
   }
 
   updateImplications() {
-    if (this.selectedFilter.usageType === 'choosable') {
+    if (this.selectedFilter.get('usageType') === 'choosable') {
       this.implications = this.store.query('filter', {
         implied_by_filter_id: this.selectedFilterId,
-        'page[number]': this.implicationsPageNumber,
+        'page[number]': this.implicationsPage,
       });
     }
     else {
       this.implications = this.store.query('filter', {
         implies_filter_id: this.selectedFilterId,
-        'page[number]': this.implicationsPageNumber,
+        'page[number]': this.implicationsPage,
       });
     }
   }
@@ -91,34 +116,29 @@ export default class FilterGroupsShowController extends Controller {
     })
   }
 
-  get filterDeleteError() {
-    return document.getElementById('filter-delete-error').textContent;
-  }
   set filterDeleteError(error) {
-    document.getElementById('filter-delete-error').textContent =
-      errorDisplay([error]);
+    document.getElementById('filter-delete-error').textContent = error;
   }
 
   @action
   deleteFilter() {
-    let filterToDelete = this.selectedFilter;
+    this.nonEmberDataApi.deleteFilter(this.selectedFilterId)
+    .then(data => {
+      if ('errors' in data) {
+        let error = data.errors[0];
+        throw new Error(error.detail);
+      }
 
-    // Clear the error message.
-    this.filterDeleteError = "";
-    // Clear the active filter ID. This must be done before deletion, or
-    // the model will make a query with the deleted filter ID, causing an
-    // error.
-    this.selectFilter(null);
-
-    filterToDelete.destroyRecord()
-    .then(() => {
       // Success.
-    }, (response) => {
-      // Error callback.
-      // Set the active filter ID again.
-      this.selectFilter(filterToDelete.id);
-      // Set error message.
-      this.filterDeleteError = response.errors[0];
+      // De-select the filter.
+      this.updateSelectedFilterId(null);
+      this.filterDeleteError = "";
+      // Refresh filter lists.
+      this.updateChoosableFilters();
+      this.updateImpliedFilters();
+    })
+    .catch(error => {
+      this.filterDeleteError = error.message;
     });
   }
 }

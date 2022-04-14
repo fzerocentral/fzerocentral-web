@@ -21,7 +21,7 @@
   <div class="filter-list choosable-filter-list">
     Choosable Filters:
     <FilterList
-      @filters={{@model.filtersChoosable}}
+      @filters={{this.choosableFilters}}
       @updatePageNumber={{action this.updateChoosablePage}}
       @updateSearchText={{action this.updateChoosableSearchText}}
       @updateSelectedFilterId={{action this.updateSelectedFilterId}} />
@@ -31,7 +31,7 @@
     <div class="filter-list implied-filter-list">
       Implied Filters:
       <FilterList
-        @filters={{@model.filtersImplied}}
+        @filters={{this.impliedFilters}}
         @updatePageNumber={{action this.updateImpliedPage}}
         @updateSearchText={{action this.updateImpliedSearchText}}
         @updateSelectedFilterId={{action this.updateSelectedFilterId}} />
@@ -89,14 +89,14 @@
                 {{/each}}
                 <PageNavigation
                   @pageResults={{this.implications}}
-                  @pageNumber={{this.implicationsPageNumber}}
-                  @updatePageNumber={{action this.updateImplicationsPageNumber}} />
+                  @pageNumber={{this.implicationsPage}}
+                  @updatePageNumber={{action this.updateImplicationsPage}} />
               {{/if}}
             </div>
           {{/if}}
 
           {{#if (eq filter.usageType "choosable")}}
-            <div class="outgoing-implications-list">
+            <div class="implications-list">
               <h3>Implies</h3>
 
               {{#if (eq this.implications.length 0)}}
@@ -109,19 +109,19 @@
                 {{/each}}
                 <PageNavigation
                   @pageResults={{this.implications}}
-                  @pageNumber={{this.implicationsPageNumber}}
-                  @updatePageNumber={{action this.updateImplicationsPageNumber}} />
+                  @pageNumber={{this.implicationsPage}}
+                  @updatePageNumber={{action this.updateImplicationsPage}} />
               {{/if}}
             </div>
+
+            <div>
+              <LinkTo @route="filters.add-implication" @model={{filter.id}}>Add an outgoing implication</LinkTo>
+            </div>
+
+            <div>
+              <LinkTo @route="filters.delete-implication" @model={{filter.id}}>Delete an outgoing implication</LinkTo>
+            </div>
           {{/if}}
-
-          <div>
-            <LinkTo @route="filters.add-implication" @model={{filter.id}}>Add an outgoing implication</LinkTo>
-          </div>
-
-          <div>
-            <LinkTo @route="filters.delete-implication" @model={{filter.id}}>Delete an outgoing implication</LinkTo>
-          </div>
 
         {{/if}}  {{! filterGroup.kind == select }}
 

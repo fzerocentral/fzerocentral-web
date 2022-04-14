@@ -4,6 +4,7 @@ export default class PageNavigationComponent extends Component {
 
   get meta() {
     if (!this.args.pageResults) {return null;}
+    if (!this.args.pageResults.isFulfilled) {return null;}
     return this.args.pageResults.get('meta').pagination;
   }
 
