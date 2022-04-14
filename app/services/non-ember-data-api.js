@@ -80,6 +80,33 @@ export default class NonEmberDataApiService extends Service {
   }
 
 
+  createFilter(filterGroupId, attributes) {
+    let createUrl = `/filters/`;
+    let data = {
+      'type': 'filters',
+      'attributes': attributes,
+      'relationships': {
+        'filter-group': {
+          "data": {
+            "type": "filter-groups",
+            "id": filterGroupId,
+          }
+        }
+      }
+    };
+    return this.post(createUrl, data);
+  }
+
+  editFilter(filterId, attributes) {
+    let filterUrl = `/filters/${filterId}/`;
+    let data = {
+      'type': 'filters',
+      'id': filterId,
+      'attributes': attributes,
+    };
+    return this.patch(filterUrl, data);
+  }
+
   addFilterImplication(selectedFilterId, targetFilterId) {
     let implicationRelationshipUrl =
       `/filters/${selectedFilterId}/relationships/outgoing_filter_implications/`;
@@ -94,15 +121,5 @@ export default class NonEmberDataApiService extends Service {
     return this.delete(
       implicationRelationshipUrl,
       [{'type': 'filters', 'id': targetFilterId}]);
-  }
-
-  editFilter(filterId, attributes) {
-    let filterUrl = `/filters/${filterId}/`;
-    let data = {
-      'type': 'filters',
-      'id': filterId,
-      'attributes': attributes,
-    };
-    return this.patch(filterUrl, data);
   }
 }

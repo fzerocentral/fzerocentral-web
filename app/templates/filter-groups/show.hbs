@@ -132,40 +132,4 @@
 
 <hr>
 
-<h3>New filter</h3>
-
-<form id="filter-create-form">
-  <div>
-    <label for="new-filter-name">Name</label>
-    <input type="text" name="name" id="new-filter-name" />
-  </div>
-
-  {{#if (eq @model.filterGroup.kind "select")}}
-    <div class="select-field-wrapper">
-      <label for="new-filter-usage-type">Type</label>
-      <select name="usage-type" id="new-filter-usage-type"
-       placeholder="Not selected">
-        {{#each this.FILTER_USAGE_TYPE_OPTIONS as |usageTypeOption|}}
-          <option value="{{usageTypeOption}}">
-            {{usageTypeOption}}
-          </option>
-        {{/each}}
-      </select>
-    </div>
-  {{/if}}
-
-  {{#if (eq @model.filterGroup.kind "numeric")}}
-    <div>
-      <label for="new-filter-numeric-value">Numeric value</label>
-      <input type="number" name="numeric-value" id="new-filter-numeric-value" />
-    </div>
-  {{/if}}
-
-  <div class="error-message"></div>
-
-  <div>
-    <button type="button" {{action "createFilter"}}>
-      Create filter
-    </button>
-  </div>
-</form>
+<LinkTo @route="filter-groups.filter-new" @model={{@model.filterGroup.id}}>Create new filter</LinkTo>

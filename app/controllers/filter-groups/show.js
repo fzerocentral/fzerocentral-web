@@ -2,10 +2,7 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-
 import { errorDisplay } from "../../helpers/error-display";
-import FilterModel from "../../models/filter";
-import { getFormField, setFormError } from "../../utils/forms";
 
 
 export default class FilterGroupsShowController extends Controller {
@@ -30,8 +27,6 @@ export default class FilterGroupsShowController extends Controller {
   @tracked implicationsPageNumber = 1;
   @tracked implications = null;
   @tracked recordCount = 0;
-
-  FILTER_USAGE_TYPE_OPTIONS = FilterModel.USAGE_TYPE_OPTIONS;
 
   @action
   updateSelectedFilterId(filterId) {
@@ -94,54 +89,6 @@ export default class FilterGroupsShowController extends Controller {
       // We're not interested in the records themselves.
       this.recordCount = records.meta.pagination.count;
     })
-  }
-
-  /* Filter creation */
-
-  get filterCreateForm() {
-    return document.getElementById('filter-create-form');
-  }
-
-  getNewFilterArgs() {
-    let form = this.filterCreateForm;
-    let args = {
-      name: getFormField(form, 'name').value,
-      usageType: getFormField(form, 'usage-type').value,
-      filterGroup: this.model.filterGroup,
-    };
-    if (this.model.filterGroup.kind === 'numeric') {
-      // Numeric filters are always choosable, not implied
-      args.usageType = 'choosable';
-      args.numericValue = getFormField(form, 'numeric-value').value;
-    }
-    return args;
-  }
-  clearNewFilterFields() {
-    let form = this.filterCreateForm;
-    getFormField(form, 'name').value = '';
-    if (this.model.filterGroup.kind === 'numeric') {
-      getFormField(form, 'numeric-value').value = '';
-    }
-  }
-
-  @action
-  createFilter() {
-    let newFilter = this.store.createRecord('filter', this.getNewFilterArgs());
-
-    newFilter.save()
-    .then(() => {
-      // Success; clear the error message.
-      setFormError(this.filterCreateForm, "");
-      // Clear the new-filter form fields.
-      this.clearNewFilterFields();
-      // Refresh the model to update the filter lists.
-      this.send('refreshModel');
-    }, (response) => {
-      // Error callback
-      setFormError(this.filterCreateForm, response.errors[0]);
-      // Remove the record from the store
-      newFilter.rollbackAttributes();
-    });
   }
 
   get filterDeleteError() {

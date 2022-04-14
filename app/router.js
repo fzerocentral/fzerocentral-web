@@ -30,6 +30,7 @@ Router.map(function() {
 
   this.route('filter-groups', function() {
     this.route('show', { path: '/:filter_group_id' });
+    this.route('filter-new', { path: '/:filter_group_id/filter-new' });
   });
 
   this.route('filters', function() {
