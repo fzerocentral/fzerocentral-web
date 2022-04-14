@@ -42,7 +42,7 @@
     {{#if this.selectedFilterId}}
       {{#let this.selectedFilter as |filter|}}
 
-        <div class="filter-basic-fields {{if this.isEditing "hidden"}}">
+        <div class="filter-basic-fields">
           <h2>{{filter.name}}</h2>
           {{#if (eq filter.filterGroup.kind "select")}}
             <div>
@@ -56,29 +56,7 @@
           {{/if}}
 
           <div>
-            <button type="button" class="start-editing-filter-button" {{action "startEditingFilter"}}> Edit details </button>
-          </div>
-        </div>
-
-        <div class="filter-edit-form {{unless this.isEditing "hidden"}}">
-          <div>
-            <label for="edit-filter-name">Name</label>
-            <input
-              type="text" name="name" id="edit-filter-name" />
-          </div>
-          {{#if (eq filter.filterGroup.kind "numeric")}}
-            <div>
-              <label for="edit-filter-numeric-value">Numeric value</label>
-              <input
-                type="number" name="numeric-value" id="edit-filter-numeric-value" />
-            </div>
-          {{/if}}
-
-          <div class="error-message" id="filter-edit-error"></div>
-
-          <div>
-            <button type="button" class="save-button" {{action "saveFilterEdits"}}> Save edits </button>
-            <button type="button" class="cancel-button" {{action "stopEditingFilter"}}> Cancel </button>
+            <LinkTo @route="filters.edit" @model={{filter.id}}>Edit details</LinkTo>
           </div>
         </div>
 

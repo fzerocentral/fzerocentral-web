@@ -13,9 +13,9 @@ export default class NonEmberDataApiService extends Service {
     });
   }
 
-  post(url, data) {
+  postPatchDelete(url, data, method) {
     return fetch(url, {
-      method: 'POST',
+      method: method,
       headers: {
         'Content-Type': 'application/vnd.api+json',
       },
@@ -23,14 +23,14 @@ export default class NonEmberDataApiService extends Service {
     }).then(response => response.json());
   }
 
+  post(url, data) {
+    return this.postPatchDelete(url, data, 'POST');
+  }
+  patch(url, data) {
+    return this.postPatchDelete(url, data, 'PATCH');
+  }
   delete(url, data) {
-    return fetch(url, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/vnd.api+json',
-      },
-      body: JSON.stringify({'data': data}),
-    }).then(response => response.json());
+    return this.postPatchDelete(url, data, 'DELETE');
   }
 
 
@@ -94,5 +94,15 @@ export default class NonEmberDataApiService extends Service {
     return this.delete(
       implicationRelationshipUrl,
       [{'type': 'filters', 'id': targetFilterId}]);
+  }
+
+  editFilter(filterId, attributes) {
+    let filterUrl = `/filters/${filterId}/`;
+    let data = {
+      'type': 'filters',
+      'id': filterId,
+      'attributes': attributes,
+    };
+    return this.patch(filterUrl, data);
   }
 }

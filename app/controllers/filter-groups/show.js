@@ -25,7 +25,6 @@ export default class FilterGroupsShowController extends Controller {
 
   @service store;
 
-  @tracked isEditing = false;
   @tracked selectedFilterId = null;
   @tracked selectedFilter = null;
   @tracked implicationsPageNumber = 1;
@@ -38,14 +37,6 @@ export default class FilterGroupsShowController extends Controller {
   updateSelectedFilterId(filterId) {
     this.selectedFilterId = filterId;
     this.selectedFilter = this.store.findRecord('filter', filterId);
-
-    // Initialize/update everything in the filter-detail area.
-
-    if (this.isEditing) {
-      // Re-initialize editing state.
-      this.filterEditError = "";
-      this.stopEditingFilter();
-    }
 
     // Update filter info which needs API calls.
     this.implicationsPageNumber = 1;
@@ -153,71 +144,12 @@ export default class FilterGroupsShowController extends Controller {
     });
   }
 
-  get hasNumericValue() {
-    return this.model.filterGroup.get('kind') === 'numeric';
-  }
-
   get filterDeleteError() {
     return document.getElementById('filter-delete-error').textContent;
   }
   set filterDeleteError(error) {
     document.getElementById('filter-delete-error').textContent =
       errorDisplay([error]);
-  }
-
-  get filterEditArgs() {
-    let args = {};
-    args.name = document.getElementById('edit-filter-name').value;
-    if (this.hasNumericValue) {
-      args.numericValue =
-        document.getElementById('edit-filter-numeric-value').value;
-    }
-    return args;
-  }
-
-  get filterEditError() {
-    return document.getElementById('filter-edit-error').textContent;
-  }
-  set filterEditError(error) {
-    document.getElementById('filter-edit-error').textContent =
-      errorDisplay([error]);
-  }
-
-  @action
-  saveFilterEdits() {
-    this.selectedFilter.name = this.filterEditArgs.name;
-    this.selectedFilter.numericValue = this.filterEditArgs.numericValue;
-
-    this.selectedFilter.save()
-    .then(() => {
-      // Success; clear the error message.
-      this.filterEditError = "";
-      // Close the edit form.
-      this.stopEditingFilter();
-      // Refresh the model to update the filter lists.
-      this.send('refreshModel');
-    }, (response) => {
-      // Error callback
-      this.filterEditError = response.errors[0];
-    });
-  }
-
-  @action
-  startEditingFilter() {
-    this.isEditing = true;
-
-    // Populate fields
-    document.getElementById('edit-filter-name').value =
-      this.selectedFilter.get('name');
-    if (this.hasNumericValue) {
-      document.getElementById('edit-filter-numeric-value').value =
-        this.selectedFilter.get('numericValue');
-    }
-  }
-
-  @action
-  stopEditingFilter() {
-    this.isEditing = false;
   }
 
   @action
