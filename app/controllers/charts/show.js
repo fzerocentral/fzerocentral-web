@@ -1,6 +1,4 @@
-import { A } from '@ember/array';
 import Controller from '@ember/controller';
-import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 
@@ -13,8 +11,12 @@ export default class ChartsShowController extends Controller {
   appliedFiltersString = null;
 
   @tracked showAllFilterGroups = null;
-  @tracked selectedFilterGroup = null;
-  @tracked filterOptions = A([]);
+
+  constructor(...args) {
+    super(...args);
+
+    this.boundGetFilterOptions = this.getFilterOptions.bind(this);
+  }
 
   get shownFilterGroups() {
     if (this.showAllFilterGroups) {
@@ -25,19 +27,9 @@ export default class ChartsShowController extends Controller {
     }
   }
 
-  @action
-  updateSelectedFilterGroup(newSelectedFilterGroup) {
-    this.selectedFilterGroup = newSelectedFilterGroup;
-
-    this.filterOptions = this.store.query('filter', {
-      filter_group_id: newSelectedFilterGroup.id,
-    })
-  }
-
-  @action
-  onSearchTextChange(searchText) {
-    this.filterOptions = this.store.query('filter', {
-      filter_group_id: this.selectedFilterGroup.id,
+  getFilterOptions(filterGroupId, searchText) {
+    return this.store.query('filter', {
+      filter_group_id: filterGroupId,
       name_search: searchText,
     })
   }

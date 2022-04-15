@@ -2,95 +2,105 @@ import { A } from '@ember/array';
 import { action } from '@ember/object';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
+import { getFormField } from "../utils/forms";
+import { FilterSelectControl } from "./filter-select";
 
 
 export default class FilterApplyFormComponent extends Component {
-  @tracked selectedCompareOption = null;
-  @tracked selectedFilter = null;
+  @tracked selectedFilterGroup = null;
 
-  get appliedFilterSpecs() {
-    let appliedFiltersString = this.args.appliedFiltersString;
-    if (appliedFiltersString === null) {
-      return A([]);
+  constructor(...args) {
+    super(...args);
+
+    this.filterSelect = new FilterSelectControl(
+      this.formId, 'filter', this.getFilterOptions.bind(this));
+  }
+
+  get formId() {
+    return 'filter-apply-form';
+  }
+  get form() {
+    return document.getElementById(this.formId);
+  }
+
+  /* Filter groups */
+
+  @action
+  updateSelectedFilterGroup(event) {
+    let newSelectedFilterGroupId = event.target.value;
+
+    // Set selected filter group and filter options.
+    if (newSelectedFilterGroupId === '') {
+      this.selectedFilterGroup = null;
+      this.filterSelect.updateOptions();
+      return;
     }
+    this.selectedFilterGroup = this.args.filterGroups.findBy(
+      'id', newSelectedFilterGroupId);
+    let promise = this.filterSelect.updateOptions();
 
-    let appliedFilterStrings = appliedFiltersString.split('-');
-    let appliedFilterSpecs = A([]);
-    appliedFilterStrings.forEach((afString) => {
-      let regexMatch = /([0-9]+)([a-zA-Z]*)/.exec(afString);
-      if (regexMatch === null) {
-        // TODO: Should somehow notify the user that an applied filter string
-        // was invalid
-        return;
-      }
-      appliedFilterSpecs.pushObject({
-        filterId: regexMatch[1], typeSuffix: regexMatch[2]});
-    });
-    return appliedFilterSpecs;
+    // Set searchEnabled based on number of filters available.
+    promise.then((filters) => {
+      this.filterSelect.searchEnabled = (
+        filters.meta.pagination.pages > 1);
+    })
+
+    // Reset selected filter / search text.
+    this.filterSelect.clearFilter();
   }
 
-  get appliedFilters() {
-    let appliedFilters = A([]);
-
-    this.appliedFilterSpecs.forEach((afSpec) => {
-      let filterId = afSpec.filterId;
-      let typeSuffix = afSpec.typeSuffix;
-      let filterObj = this.args.appliedFilterObjs.find(
-        f => f.get('id') === filterId);
-      let filterName = filterObj.get('name');
-      let filterGroupName = filterObj.get('filterGroup').get('name');
-      let display = null;
-
-      if (typeSuffix === '') {
-        // No suffix; simple test for filter presence
-        display = `${filterGroupName}: ${filterName}`;
-      }
-      else if (typeSuffix === 'n') {
-        // Negation
-        display = `${filterGroupName}: NOT ${filterName}`;
-      }
-      else if (typeSuffix === 'le') {
-        // Less than or equal to, for numeric filters
-        display = `${filterGroupName}: <= ${filterName}`;
-      }
-      else if (typeSuffix === 'ge') {
-        // Greater than or equal to, for numeric filters
-        display = `${filterGroupName}: >= ${filterName}`;
-      }
-      else {
-        // TODO: Should somehow notify the user that an applied filter
-        // typeSuffix was invalid
-        return;
-      }
-      appliedFilters.pushObject({
-        filterGroup: filterObj.get('filterGroup'),
-        display: display});
-    });
-
-    return appliedFilters;
-  }
+  /* Compare types */
 
   get compareOptions() {
-    let group = this.args.selectedFilterGroup;
+    let group = this.selectedFilterGroup;
     if (!group) {
+      return [];
+    }
+
+    if (group.get('kind') === 'numeric') {
+      return ['is', 'is NOT', '>=', '<='];
+    }
+    else {
+      return ['is', 'is NOT'];
+    }
+  }
+
+  get selectedCompareOption() {
+    return getFormField(this.form, 'compare-option').value;
+  }
+  set selectedCompareOption(value) {
+    getFormField(this.form, 'compare-option').value = value;
+  }
+
+  compareTypeTextToSuffix(text) {
+    let textToSuffix = {
+      'is': '',
+      'is NOT': 'n',
+      '>=': 'ge',
+      '<=': 'le',
+    };
+    return textToSuffix[text];
+  }
+  compareTypeSuffixToText(suffix) {
+    let suffixToText = {
+      '': 'is',
+      'n': 'is NOT',
+      'ge': '>=',
+      'le': '<=',
+    };
+    return suffixToText[suffix];
+  }
+
+  /* Filters */
+
+  getFilterOptions(searchText) {
+    if (!this.selectedFilterGroup) {
       return A([]);
     }
 
-    let compareOptions = A([]);
-    compareOptions.pushObject({text: "is", typeSuffix: ''});
-    compareOptions.pushObject({text: "is NOT", typeSuffix: 'n'});
-    if (group.get('kind') === 'numeric') {
-      compareOptions.pushObject({text: ">=", typeSuffix: 'ge'});
-      compareOptions.pushObject({text: "<=", typeSuffix: 'le'});
-    }
-
-    return compareOptions;
+    return this.args.controllerGetFilterOptions(
+      this.selectedFilterGroup.id, searchText);
   }
-
-  get defaultCompareOption() {
-    return this.compareOptions.find(option => option.text === 'is');
-  }
-
 
   @action
   addFilter() {
@@ -102,9 +112,9 @@ export default class FilterApplyFormComponent extends Component {
     }
 
     // Make a string for the newly added filter
-    let newFilterId = this.selectedFilter.get('id');
+    let newFilterId = this.filterSelect.selectedFilterId;
     let compareOptionTypeSuffix =
-      this.selectedCompareOption.typeSuffix;
+      this.compareTypeTextToSuffix(this.selectedCompareOption);
     let newFilterString = `${newFilterId}${compareOptionTypeSuffix}`;
 
     // Add the new string
@@ -130,32 +140,48 @@ export default class FilterApplyFormComponent extends Component {
     }
   }
 
-  @action
-  updateSelectedFilterGroup(newSelectedFilterGroup) {
-    this.args.controllerUpdateSelectedFilterGroup(newSelectedFilterGroup);
-
-    // If selectedFilter is not in the newly selected filter group,
-    // reset it to null.
-    if (this.selectedFilter) {
-      if (this.selectedFilter.get('filterGroup').get('id')
-          !== this.args.selectedFilterGroup.get('id')) {
-        this.selectedFilter = null;
-      }
+  get appliedFilterSpecs() {
+    let appliedFiltersString = this.args.appliedFiltersString;
+    if (appliedFiltersString === null) {
+      return A([]);
     }
 
-    if (this.selectedCompareOption) {
-      // If selectedCompareOption does not apply to the newly selected
-      // filter group, reset it to default.
-      let matchingOption = this.compareOptions.find(
-        option => option.text === this.selectedCompareOption.text);
-      if (!matchingOption) {
-        this.selectedCompareOption = this.defaultCompareOption;
+    let appliedFilterStrings = appliedFiltersString.split('-');
+    let appliedFilterSpecs = A([]);
+    appliedFilterStrings.forEach((afString) => {
+      let regexMatch = /([0-9]+)([a-zA-Z]*)/.exec(afString);
+      if (regexMatch === null) {
+        // Applied filter string was invalid
+        return;
       }
-    }
-    else {
-      // No compare option is selected yet; set to default to potentially save
-      // the user a click/tap or two.
-      this.selectedCompareOption = this.defaultCompareOption;
-    }
+      appliedFilterSpecs.pushObject({
+        filterId: regexMatch[1], typeSuffix: regexMatch[2]});
+    });
+    return appliedFilterSpecs;
+  }
+
+  get appliedFilters() {
+    let appliedFilters = A([]);
+
+    this.appliedFilterSpecs.forEach((afSpec) => {
+      let compareText = this.compareTypeSuffixToText(afSpec.typeSuffix);
+      let filterObj = this.args.appliedFilterObjs.find(
+        f => f.get('id') === afSpec.filterId);
+      if (!filterObj) {
+        // Perhaps appliedFilterObjs still has to be updated.
+        return;
+      }
+
+      let filterName = filterObj.get('name');
+      let filterGroupName = filterObj.get('filterGroup').get('name');
+      let display = `${filterGroupName} ${compareText} ${filterName}`;
+
+      appliedFilters.push({
+        filterGroup: filterObj.get('filterGroup'),
+        display: display,
+      });
+    });
+
+    return appliedFilters;
   }
 }

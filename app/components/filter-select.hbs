@@ -20,6 +20,9 @@
 
     <label for="{{@fieldId}}">{{@label}}</label>
     <select name="{{fieldName}}" id="{{@fieldId}}">
+      {{#if this.hasEmptyOption}}
+        <option value=""> ----- </option>
+      {{/if}}
       {{#each @controlInstance.options as |filter|}}
         <option value="{{filter.id}}">
           {{filter.name}}

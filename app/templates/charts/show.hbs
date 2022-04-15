@@ -33,10 +33,7 @@
   @appliedFilterObjs={{@model.appliedFilterObjs}}
   @appliedFiltersString={{this.appliedFiltersString}}
   @updateAppliedFiltersString={{action (mut this.appliedFiltersString)}}
-  @selectedFilterGroup={{this.selectedFilterGroup}}
-  @controllerUpdateSelectedFilterGroup={{action this.updateSelectedFilterGroup}}
-  @filterOptions={{this.filterOptions}}
-  @onSearchTextChange={{action this.onSearchTextChange}} />
+  @controllerGetFilterOptions={{this.boundGetFilterOptions}} />
 
 <table class="records-table">
   <thead>

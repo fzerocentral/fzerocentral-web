@@ -25,6 +25,6 @@ export default class FiltersAddImplicationRoute extends Route {
         filters.meta.pagination.pages > 1);
     })
     // Initialize options
-    controller.filterSelect.updateOptions('');
+    controller.filterSelect.updateOptions();
   }
 }

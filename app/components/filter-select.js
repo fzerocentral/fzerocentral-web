@@ -5,7 +5,18 @@ import { tracked } from '@glimmer/tracking';
 import { getFormField } from "../utils/forms";
 
 
-export default class FilterSelectComponent extends Component {}
+export default class FilterSelectComponent extends Component {
+
+  /**
+   * If a select element is used, this determines whether or not there is
+   * an empty choice.
+   * Defaults to false.
+   * @returns {boolean}
+   */
+  get hasEmptyOption() {
+    return this.args.hasEmptyOption ?? false;
+  }
+}
 
 
 /* For some reason, it felt easier to write component-related functionality
