@@ -1,4 +1,5 @@
 import Controller from '@ember/controller';
+import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 
@@ -12,12 +13,6 @@ export default class ChartsShowController extends Controller {
 
   @tracked showAllFilterGroups = null;
 
-  constructor(...args) {
-    super(...args);
-
-    this.boundGetFilterOptions = this.getFilterOptions.bind(this);
-  }
-
   get shownFilterGroups() {
     if (this.showAllFilterGroups) {
       return this.model.filterGroups;
@@ -27,6 +22,7 @@ export default class ChartsShowController extends Controller {
     }
   }
 
+  @action
   getFilterOptions(filterGroupId, searchText) {
     return this.store.query('filter', {
       filter_group_id: filterGroupId,

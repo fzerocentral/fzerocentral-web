@@ -17,7 +17,7 @@ export default class FiltersDeleteImplicationController extends Controller {
     super(...args);
 
     this.filterSelect = new FilterSelectControl(
-      this.formId, 'filter', this.getTargetOptions.bind(this));
+      this.formId, 'filter', this.getTargetOptions);
   }
 
   get filterGroup() {
@@ -28,6 +28,7 @@ export default class FiltersDeleteImplicationController extends Controller {
     return document.getElementById(this.formId);
   }
 
+  @action
   getTargetOptions(searchText) {
     return this.store.query('filter', {
       implied_by_filter_id: this.model.filter.id,

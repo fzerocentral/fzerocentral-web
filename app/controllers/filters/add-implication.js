@@ -19,7 +19,7 @@ export default class FiltersAddImplicationController extends Controller {
     super(...args);
 
     this.filterSelect = new FilterSelectControl(
-      this.formId, 'filter', this.getTargetOptions.bind(this));
+      this.formId, 'filter', this.getTargetOptions);
   }
 
   get filterGroup() {
@@ -38,6 +38,7 @@ export default class FiltersAddImplicationController extends Controller {
     });
   }
 
+  @action
   getTargetOptions(searchText) {
     return DS.PromiseArray.create({
       promise: this.getImpliedTypeFilters(searchText).then((iFilters) => {

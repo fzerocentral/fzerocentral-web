@@ -13,7 +13,7 @@ export default class FilterApplyFormComponent extends Component {
     super(...args);
 
     this.filterSelect = new FilterSelectControl(
-      this.formId, 'filter', this.getFilterOptions.bind(this));
+      this.formId, 'filter', this.getFilterOptions);
   }
 
   get formId() {
@@ -93,6 +93,7 @@ export default class FilterApplyFormComponent extends Component {
 
   /* Filters */
 
+  @action
   getFilterOptions(searchText) {
     if (!this.selectedFilterGroup) {
       return A([]);
