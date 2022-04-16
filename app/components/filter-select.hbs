@@ -7,7 +7,7 @@
       list="{{@fieldId}}-datalist"
       name="{{fieldName}}-text"
       id="{{@fieldId}}-text"
-      placeholder="Enter filter name"
+      placeholder="Enter text to search"
       {{on "input" @controlInstance.onTextInput}} >
     <datalist name="{{fieldName}}" id="{{@fieldId}}-datalist">
       {{#each @controlInstance.options as |filter|}}

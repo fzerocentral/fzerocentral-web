@@ -53,6 +53,12 @@ export default class NonEmberDataApiService extends Service {
   }
 
 
+  /*
+  The following methods get data in a non JSON:API format. These API
+  endpoints exist for convenience so that Ember doesn't have to do too much
+  rearranging of data for certain pages.
+  */
+
   getChartRanking(chartId, appliedFiltersString) {
     let rankingUrl = this.urlWithQueryParams(
       `/charts/${chartId}/ranking/`,
@@ -87,6 +93,13 @@ export default class NonEmberDataApiService extends Service {
     return this.fetchArrayResults(historyUrl);
   }
 
+
+  /*
+  The following methods create, update, and delete resources in a JSON:API
+  standard way. These methods exist because Ember Data is difficult to get
+  working just right for these kinds of endpoints, particularly in terms of
+  rolling back data if the API returns an error.
+  */
 
   createFilter(filterGroupId, attributes) {
     let createUrl = `/filters/`;
@@ -134,5 +147,23 @@ export default class NonEmberDataApiService extends Service {
     return this.delete(
       implicationRelationshipUrl,
       [{'type': 'filters', 'id': targetFilterId}]);
+  }
+
+  createRecord(chartId, attributes, playerId, filterIds) {
+    let createUrl = `/records/`;
+    let filterData = filterIds.map(
+      filterId => {
+        return {'type': 'filters', 'id': filterId};
+      });
+    let data = {
+      'type': 'records',
+      'attributes': attributes,
+      'relationships': {
+        'chart': {'data': {'type': 'charts', 'id': chartId}},
+        'player': {'data': {'type': 'players', 'id': playerId}},
+        'filters': {'data': filterData},
+      },
+    };
+    return this.post(createUrl, data);
   }
 }

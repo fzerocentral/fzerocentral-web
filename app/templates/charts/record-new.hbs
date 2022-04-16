@@ -1,38 +1,40 @@
 <h1>Submit record for: <LinkTo @route="charts.show" @model={{@model.chart.id}}> {{@model.chart.chartGroup.name}} - {{@model.chart.name}}</LinkTo></h1>
 
-<div class="player-select select-field-wrapper">
-  <label>Player</label>
-  {{!-- TODO: Add a search box here --}}
-  <PowerSelect
-    @options={{@model.players}}
-    @selected={{@model.record.player}}
-    @onChange={{action (mut @model.record.player)}}
-    @placeholder="Not selected"
-    @matchTriggerWidth={{false}}
-    as |player|>
-    {{player.username}}
-  </PowerSelect>
-</div>
+<form id="record-form">
 
-<div>
-  <label for="new-record-value">Value</label>
-  {{!-- For now, this is just a simple integer field which doesn't take the chart type's record format into account. --}}
-  <Input
-    @type="text" @value={{@model.record.value}}
-    class="value-input" id="new-record-value" placeholder="Example: 123" />
-</div>
+  <div>
+    <label for="player-select">Player</label>
+    <select name="player" id="player-select">
+      <option value=""> ----- </option>
+      {{#each @model.players as |player|}}
+        <option value="{{player.id}}">
+          {{player.username}}
+        </option>
+      {{/each}}
+    </select>
+  </div>
 
-<div>
-  <label>Date achieved</label>
-  <DateField
-    @updateDateValue={{action (mut @model.record.dateAchieved)}} />
-</div>
+  <div>
+    <label for="value-field">Value</label>
+    {{! For now, this is just a simple integer field which doesn't take the chart type's record format into account. }}
+    <input
+      type="number" name="value"
+      id="value-field" placeholder="Example: 123" />
+  </div>
 
-<RecordFiltersEdit
-  @filterGroups={{@model.filterGroups}}
-  @filterOptions={{this.filterOptionsByGroup}}
-  @selectedFilters={{this.selectedFiltersByGroup}}
-  @selectFilter={{this.selectFilter}}
-  @onSearchTextChange={{this.onSearchTextChange}} />
+  <div>
+    <label>Date achieved</label>
+    <DateField
+      @updateDateValue={{action (mut this.dateAchieved)}} />
+  </div>
 
-<div><button type="submit" {{action "submitRecord"}}>Submit record</button></div>
+  <RecordFiltersEdit
+    @filterGroups={{@model.filterGroups}}
+    @selectedFilters={{this.selectedFiltersByGroup}}
+    @filterSelectControlInstances={{this.filterSelects}} />
+
+  <div class="error-message"></div>
+
+  <div><button type="button" {{action "submitRecord"}}>Submit record</button></div>
+
+</form>

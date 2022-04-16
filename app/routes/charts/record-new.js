@@ -1,7 +1,7 @@
-import { action } from '@ember/object';
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
+import { FilterSelectControl } from "../../components/filter-select";
 
 
 export default class ChartsRecordNewRoute extends Route {
@@ -10,7 +10,6 @@ export default class ChartsRecordNewRoute extends Route {
   model(params) {
     return RSVP.hash({
       chart: this.store.findRecord('chart', params.chart_id),
-      record: this.store.createRecord('record'),
       players: this.store.query('player', {'page[size]': 1000}),
       filterGroups: this.store.query(
         'filterGroup', {chart_id: params.chart_id}),
@@ -21,23 +20,28 @@ export default class ChartsRecordNewRoute extends Route {
     let controller = this.controllerFor(this.routeName);
 
     resolvedModel.filterGroups.forEach((filterGroup) => {
-      controller.filterOptionsByGroup.set(
-        filterGroup.id, this.store.query('filter', {
-          filter_group_id: filterGroup.id,
-          usage_type: 'choosable',
-        }));
+      // Set up filter-select control instance for this filter group.
+      let filterSelect = new FilterSelectControl(
+        controller.formId,
+        `filter-${filterGroup.id}`,
+        // Partial-apply filterGroup.id to this action method.
+        controller.getFilterOptionsForGroup.bind(null, filterGroup.id),
+      );
+      // Initialize options.
+      let promise = filterSelect.updateOptions();
+      // Set searchEnabled based on number of filters available.
+      promise.then((filters) => {
+        filterSelect.searchEnabled = (
+          filters.meta.pagination.pages > 1);
+      })
+      controller.filterSelects[filterGroup.id] = filterSelect;
 
-      controller.selectedFiltersByGroup.set(
-        filterGroup.id,
-        resolvedModel.record.filters.find(
-          (filter) => filter.filterGroup.get('id') === filterGroup.id));
+      // Initialize filter choices (for record editing only).
+      if (resolvedModel.record) {
+        controller.selectedFiltersByGroup[filterGroup.id] =
+          resolvedModel.record.filters.find(
+            (filter) => filter.filterGroup.get('id') === filterGroup.id);
+      }
     });
-  }
-
-  @action
-  willTransition() {
-    // rollbackAttributes() removes the record from the store
-    // if the model 'isNew'
-    this.modelFor(this.routeName).record.rollbackAttributes();
   }
 }

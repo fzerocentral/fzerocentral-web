@@ -9,7 +9,7 @@ export default class RecordsShowController extends ChartsRecordNewController {
     let record = this.model.record;
 
     record.filters = [];
-    for (let filterGroupId of Object.keys(this.selectedFiltersByGroup)) {
+    for (let filterGroupId of this.selectedFiltersByGroup) {
       record.filters.pushObject(this.selectedFiltersByGroup[filterGroupId]);
     }
 

@@ -1,21 +1,9 @@
 {{#each @filterGroups as |filterGroup|}}
-  <div class="filter-group-{{filterGroup.id}}-select select-field-wrapper">
-    <label>{{filterGroup.name}}</label>
-
-    <PowerSelect
-      {{! Dropdown choices }}
-      @options={{get @filterOptions filterGroup.id}}
-      @searchEnabled={{true}}
-      {{! Action to run when typing in the search field; should make options update }}
-      @search={{action @onSearchTextChange filterGroup.id}}
-      @selected={{get @selectedFilters filterGroup.id}}
-      {{! Action to run when selecting an option; should make selected update }}
-      @onChange={{action @selectFilter filterGroup.id}}
-      @placeholder="Not selected"
-      @allowClear={{true}}
-      @matchTriggerWidth={{false}}
-      as |filter|>
-      {{filter.name}}
-    </PowerSelect>
+  <div>
+    <FilterSelect
+      @fieldId="filter-{{filterGroup.id}}-select"
+      @label={{filterGroup.name}}
+      @controlInstance={{get @filterSelectControlInstances filterGroup.id}}
+      @hasEmptyOption={{true}} />
   </div>
 {{/each}}
