@@ -1,20 +1,146 @@
 import { A } from '@ember/array';
-import Component from '@ember/component';
+import { action } from '@ember/object';
 import DS from 'ember-data';
-import { action, computed } from '@ember/object';
-import { inject as service } from '@ember/service';
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { getFormField } from "../utils/forms";
+import { FilterSelectControl } from "./filter-select";
 
-export default Component.extend({
-  appliedFiltersString: null,
-  filterGroups: A([]),
-  selectedCompareOption: null,
-  selectedFilter: null,
-  selectedFilterGroup: null,
-  store: service('store'),
 
-  @computed('appliedFiltersString')
+export default class FilterApplyFormComponent extends Component {
+  @tracked selectedFilterGroup = null;
+
+  constructor(...args) {
+    super(...args);
+
+    this.filterSelect = new FilterSelectControl(
+      this.formId, 'filter', this.getFilterOptions,
+      {hasEmptyOption: true});
+  }
+
+  get formId() {
+    return 'filter-apply-form';
+  }
+  get form() {
+    return document.getElementById(this.formId);
+  }
+
+  /* Filter groups */
+
+  @action
+  updateSelectedFilterGroup(event) {
+    let newSelectedFilterGroupId = event.target.value;
+
+    // Set selected filter group and filter options.
+    if (newSelectedFilterGroupId === '') {
+      this.selectedFilterGroup = null;
+    }
+    else {
+      this.selectedFilterGroup = this.args.filterGroups.findBy(
+        'id', newSelectedFilterGroupId);
+    }
+    this.filterSelect.initializeOptions();
+  }
+
+  /* Compare types */
+
+  get compareOptions() {
+    let group = this.selectedFilterGroup;
+    if (!group) {
+      return [];
+    }
+
+    if (group.get('kind') === 'numeric') {
+      return ['is', 'is NOT', '>=', '<='];
+    }
+    else {
+      return ['is', 'is NOT'];
+    }
+  }
+
+  get selectedCompareOption() {
+    return getFormField(this.form, 'compare-option').value;
+  }
+  set selectedCompareOption(value) {
+    getFormField(this.form, 'compare-option').value = value;
+  }
+
+  compareTypeTextToSuffix(text) {
+    let textToSuffix = {
+      'is': '',
+      'is NOT': 'n',
+      '>=': 'ge',
+      '<=': 'le',
+    };
+    return textToSuffix[text];
+  }
+  compareTypeSuffixToText(suffix) {
+    let suffixToText = {
+      '': 'is',
+      'n': 'is NOT',
+      'ge': '>=',
+      'le': '<=',
+    };
+    return suffixToText[suffix];
+  }
+
+  /* Filters */
+
+  @action
+  getFilterOptions(searchText) {
+    if (!this.selectedFilterGroup) {
+      // PromiseArray that resolves to empty array
+      return DS.PromiseArray.create({
+        promise: new Promise((resolve) => {
+          resolve(A([]));
+        })
+      });
+    }
+
+    return this.args.controllerGetFilterOptions(
+      this.selectedFilterGroup.id, searchText);
+  }
+
+  @action
+  addFilter() {
+    // Get the existing applied-filter strings
+    let filtersString = this.args.appliedFiltersString;
+    let filterStrings = [];
+    if (filtersString !== null) {
+      filterStrings = filtersString.split('-');
+    }
+
+    // Make a string for the newly added filter
+    let newFilterId = this.filterSelect.selectedFilterId;
+    let compareOptionTypeSuffix =
+      this.compareTypeTextToSuffix(this.selectedCompareOption);
+    let newFilterString = `${newFilterId}${compareOptionTypeSuffix}`;
+
+    // Add the new string
+    filterStrings.push(newFilterString);
+    let newAppliedFiltersString = filterStrings.join('-');
+    this.args.updateAppliedFiltersString(newAppliedFiltersString);
+  }
+
+  @action
+  removeFilter(index) {
+    // We're assuming this'll only ever be called with a valid index.
+    let filtersString = this.args.appliedFiltersString;
+    let filterStrings = filtersString.split('-');
+    // Remove 1 element at the specified index.
+    filterStrings.splice(index, 1);
+
+    if (filterStrings.length === 0) {
+      // We expect null, not '', if there's 0 filters applied.
+      this.args.updateAppliedFiltersString(null);
+    }
+    else {
+      this.args.updateAppliedFiltersString(filterStrings.join('-'));
+    }
+  }
+
   get appliedFilterSpecs() {
-    let appliedFiltersString = this.get('appliedFiltersString');
+    let appliedFiltersString = this.args.appliedFiltersString;
     if (appliedFiltersString === null) {
       return A([]);
     }
@@ -24,172 +150,37 @@ export default Component.extend({
     appliedFilterStrings.forEach((afString) => {
       let regexMatch = /([0-9]+)([a-zA-Z]*)/.exec(afString);
       if (regexMatch === null) {
-        // TODO: Should somehow notify the user that an applied filter string
-        // was invalid
+        // Applied filter string was invalid
         return;
       }
       appliedFilterSpecs.pushObject({
         filterId: regexMatch[1], typeSuffix: regexMatch[2]});
     });
     return appliedFilterSpecs;
-  },
+  }
 
-  @computed('appliedFilterSpecs')
   get appliedFilters() {
-    let filterIds = [];
-    this.get('appliedFilterSpecs').forEach((afSpec) => {
-      filterIds.push(afSpec.filterId);
-    });
-    let filtersPromise = this.get('store').query(
-      'filter', {filter_ids: filterIds.join(',')});
+    let appliedFilters = A([]);
 
-    return DS.PromiseArray.create({
-      promise: filtersPromise.then((filters) => {
-        let appliedFilters = A([]);
-
-        this.get('appliedFilterSpecs').forEach((afSpec) => {
-          let filterId = afSpec.filterId;
-          let typeSuffix = afSpec.typeSuffix;
-          let filterInstance = filters.findBy('id', filterId);
-          let filterName = filterInstance.get('name');
-          let filterGroupName = filterInstance.get('filterGroup').get('name');
-          let display = null;
-
-          if (typeSuffix === '') {
-            // No suffix; simple test for filter presence
-            display = `${filterGroupName}: ${filterName}`;
-          }
-          else if (typeSuffix === 'n') {
-            // Negation
-            display = `${filterGroupName}: NOT ${filterName}`;
-          }
-          else if (typeSuffix === 'le') {
-            // Less than or equal to, for numeric filters
-            display = `${filterGroupName}: <= ${filterName}`;
-          }
-          else if (typeSuffix === 'ge') {
-            // Greater than or equal to, for numeric filters
-            display = `${filterGroupName}: >= ${filterName}`;
-          }
-          else {
-            // TODO: Should somehow notify the user that an applied filter
-            // typeSuffix was invalid
-            return;
-          }
-          appliedFilters.pushObject({
-            filterGroup: filterInstance.get('filterGroup'),
-            display: display});
-        });
-
-        return appliedFilters;
-      })
-    });
-  },
-
-  @computed('selectedFilterGroup')
-  get compareOptions() {
-    let group = this.get('selectedFilterGroup');
-    if (!group) {
-      return A([]);
-    }
-
-    let compareOptions = A([]);
-    compareOptions.pushObject({text: "-", typeSuffix: ''});
-    compareOptions.pushObject({text: "NOT", typeSuffix: 'n'});
-    if (group.get('kind') === 'numeric') {
-      compareOptions.pushObject({text: ">=", typeSuffix: 'ge'});
-      compareOptions.pushObject({text: "<=", typeSuffix: 'le'});
-    }
-
-    return compareOptions;
-  },
-
-
-  didUpdate() {
-    // Things to re-check when any attributes update. Only put things here
-    // which can't be done using computed properties (e.g. because we're
-    // dealing an attribute which can also be interactively changed, and
-    // thus can't be a computed property).
-
-    let selectedFilter = this.get('selectedFilter');
-    if (selectedFilter) {
-      let selectedFilterGroup = this.get('selectedFilterGroup');
-      if (selectedFilter.get('filterGroup').get('id')
-          !== selectedFilterGroup.get('id')) {
-        // selectedFilter is not in the current filter group, so reset it.
-        this.set('selectedFilter', null);
+    this.appliedFilterSpecs.forEach((afSpec) => {
+      let compareText = this.compareTypeSuffixToText(afSpec.typeSuffix);
+      let filterObj = this.args.appliedFilterObjs.find(
+        f => f.get('id') === afSpec.filterId);
+      if (!filterObj) {
+        // Perhaps appliedFilterObjs still has to be updated.
+        return;
       }
-    }
 
-    let selectedCompareOption = this.get('selectedCompareOption');
-    let compareOptions = this.get('compareOptions');
-    let defaultCompareOption = compareOptions.find((option) => {
-      return option.text === '-';
-    });
-    if (selectedCompareOption) {
-      let matchingOption = compareOptions.find((option) => {
-        return option.text === selectedCompareOption.text;
+      let filterName = filterObj.get('name');
+      let filterGroupName = filterObj.get('filterGroup').get('name');
+      let display = `${filterGroupName} ${compareText} ${filterName}`;
+
+      appliedFilters.push({
+        filterGroup: filterObj.get('filterGroup'),
+        display: display,
       });
-      if (!matchingOption) {
-        // selectedCompareOption is not in the current options, so reset it
-        // to the default option, which should be available for any
-        // filter group.
-        this.set('selectedCompareOption', defaultCompareOption);
-      }
-    }
-    else {
-      // Set this compare option by default, as opposed to 'Not selected'.
-      // The default is the common case, so this should generally save the
-      // user a bit of time.
-      this.set('selectedCompareOption', defaultCompareOption);
-    }
-  },
+    });
 
-
-  @action
-  addFilter() {
-    // Get the existing applied-filter strings
-    let filtersString = this.get('appliedFiltersString');
-    let filterStrings = [];
-    if (filtersString !== null) {
-      filterStrings = filtersString.split('-');
-    }
-
-    // Make a string for the newly added filter
-    let newFilterId = this.get('selectedFilter').get('id');
-    let compareOptionTypeSuffix =
-      this.get('selectedCompareOption').typeSuffix;
-    let newFilterString = `${newFilterId}${compareOptionTypeSuffix}`;
-
-    // Add the new string
-    filterStrings.push(newFilterString);
-    let newAppliedFiltersString = filterStrings.join('-');
-    this.send('updateAppliedFiltersStringAction', newAppliedFiltersString);
-  },
-
-  @action
-  removeFilter(index) {
-    // We're assuming this'll only ever be called with a valid index.
-    let filtersString = this.get('appliedFiltersString');
-    let filterStrings = filtersString.split('-');
-    // Remove 1 element at the specified index.
-    filterStrings.splice(index, 1);
-
-    if (filterStrings.length === 0) {
-      // We expect null, not '', if there's 0 filters applied.
-      this.set('appliedFiltersString', null);
-    }
-    else {
-      this.set('appliedFiltersString', filterStrings.join('-'));
-    }
-  },
-
-  @action
-  updateAppliedFiltersStringAction() {
-    this.updateAppliedFiltersString(...arguments);
-  },
-
-  updateAppliedFiltersString() {
-    throw new Error('updateAppliedFiltersString must be provided');
-  },
-});
+    return appliedFilters;
+  }
+}

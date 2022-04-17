@@ -24,34 +24,31 @@ module('Unit | Route | charts/record-new', function(hooks) {
 
     this.player = createModelInstance(this.server, 'player', {username: "Player A"});
     let game = createModelInstance(this.server, 'game', {name: "Game 1"});
-    let chartGroup = createModelInstance(
-      this.server, 'chart-group',
-      {name: "Group 1", game: game, show_charts_together: true});
-    let chartType = createModelInstance(
-      this.server, 'chart-type',
-      {name: "Type 1", format_spec: '[{"suffix": "m"}]',
-      order_ascending: true, game: game});
-    this.chart = createModelInstance(
-      this.server, 'chart',
-      {name: "Chart 1", chartType: chartType, chartGroup: chartGroup});
 
     this.machineFG = createModelInstance(
       this.server, 'filter-group',
-      {name: 'Machine', kind: 'select', showByDefault: true});
+      {name: 'Machine', kind: 'select', showByDefault: true,
+       game: game, orderInGame: 1});
     this.blueFalconFilter = createFilter(
       this.server, "Blue Falcon", this.machineFG, 'choosable');
     this.settingFG = createModelInstance(
       this.server, 'filter-group',
-      {name: 'Setting', kind: 'numeric', showByDefault: false});
+      {name: 'Setting', kind: 'numeric', showByDefault: true,
+       game: game, orderInGame: 2});
     this.setting80Filter = createFilter(
       this.server, "80%", this.settingFG, 'choosable', 80);
 
-    createModelInstance(
-      this.server, 'chart-type-filter-group',
-      {chartType: chartType, filterGroup: this.machineFG});
-    createModelInstance(
-      this.server, 'chart-type-filter-group',
-      {chartType: chartType, filterGroup: this.settingFG});
+    let chartGroup = createModelInstance(
+      this.server, 'chart-group',
+      {name: "Group 1", game: game, showChartsTogether: true});
+    let chartType = createModelInstance(
+      this.server, 'chart-type',
+      {name: "Type 1", formatSpec: '[{"suffix": "m"}]',
+       orderAscending: true, game: game,
+       filterGroups: [this.machineFG, this.settingFG]});
+    this.chart = createModelInstance(
+      this.server, 'chart',
+      {name: "Chart 1", chartType: chartType, chartGroup: chartGroup});
   });
 
   hooks.afterEach( function() {

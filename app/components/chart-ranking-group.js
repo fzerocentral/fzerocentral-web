@@ -1,53 +1,46 @@
 import { A } from '@ember/array';
-import Component from '@ember/component';
-import { computed } from '@ember/object';
+import Component from '@glimmer/component';
 
-export default Component.extend({
-  chartGroup: null,
-  mainChartIdQueryArg: null,
+export default class ChartRankingGroupComponent extends Component {
 
-  @computed('chartGroup.charts')
   get charts() {
-    let charts = this.get('chartGroup').get('charts');
+    let charts = this.args.chartGroup.get('charts');
     if (charts === undefined) {
       return A([]);
     }
     else {
       return charts;
     }
-  },
+  }
 
-  @computed('charts', 'mainChartIdQueryArg')
   get mainChartId() {
-    if (this.get('mainChartIdQueryArg')) {
+    if (this.args.mainChartIdQueryArg) {
       // Main chart has been specified.
-      return this.get('mainChartIdQueryArg');
+      return this.args.mainChartIdQueryArg;
     }
 
-    if (this.get('charts').length > 0) {
+    if (this.charts.length > 0) {
       // Main chart has not been specified, so use the first chart.
-      return this.get('charts').objectAt(0).get('id');
+      return this.charts.objectAt(0).id;
     }
 
     // No charts specified yet, so all we can return is null.
     return null;
-  },
+  }
 
-  @computed('charts', 'mainChartId')
   get mainChart() {
-    if (this.get('mainChartId') === null) {
+    if (this.mainChartId === null) {
       return null;
     }
 
-    return this.get('charts').findBy('id', this.get('mainChartId'));
-  },
+    return this.charts.findBy('id', this.mainChartId);
+  }
 
   // Array of charts other than the mainChart.
-  @computed('charts', 'mainChartId')
   get otherCharts() {
     let notMainChart = (chart) => {
-      return chart.id !== this.get('mainChartId');
+      return chart.id !== this.mainChartId;
     };
-    return this.get('charts').filter(notMainChart);
-  },
-});
+    return this.charts.filter(notMainChart);
+  }
+}

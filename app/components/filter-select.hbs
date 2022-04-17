@@ -1,14 +1,29 @@
-{{!-- Dropdown of filters which satisfy `params` and whose names contain the search box contents. Only shows the first page of results from the API, so the search box may be needed to narrow down results. --}}
-<DataPowerSelect
-  @modelName="filter"
-  @params={{this.params}}
-  @searchEnabled={{true}}
-  @queryKey="name_search"
-  @selected={{@selected}}
-  @onChange={{@onFilterChange}}
-  @placeholder="Not selected"
-  @allowClear={{true}}
-  @matchTriggerWidth={{false}}
-  as |filter|>
-  {{filter.name}}
-</DataPowerSelect>
+{{#let @controlInstance.baseFieldName as |baseFieldName| }}
+
+  {{! Search-enabled version }}
+  <span hidden={{if (not @controlInstance.searchEnabled) "hidden"}}>
+
+    <label for="{{@baseFieldId}}-text">{{@label}}</label>
+    <input type="text"
+        list="{{@baseFieldId}}-datalist"
+        name="{{baseFieldName}}-text"
+        id="{{@baseFieldId}}-text"
+        placeholder="Enter text to search"
+        {{on "input" @controlInstance.onTextInput}} >
+    <datalist id="{{@baseFieldId}}-datalist"></datalist>
+    <input type="hidden"
+        name="{{baseFieldName}}-hidden"
+        id="{{@baseFieldId}}-hidden">
+
+  </span>
+
+  {{! Plain dropdown version }}
+  <span hidden={{if @controlInstance.searchEnabled "hidden"}}>
+
+    <label for="{{@baseFieldId}}-select">{{@label}}</label>
+    <select name="{{baseFieldName}}-select"
+        id="{{@baseFieldId}}-select"></select>
+
+  </span>
+
+{{/let}}

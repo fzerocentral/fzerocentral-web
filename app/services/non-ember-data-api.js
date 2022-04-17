@@ -13,34 +13,187 @@ export default class NonEmberDataApiService extends Service {
     });
   }
 
-  getChartRanking(chartId, _appliedFiltersString) {
-    let appliedFiltersString = _appliedFiltersString || '';
-    let rankingUrl = `/charts/${chartId}/ranking/`
-      + `?filters=${appliedFiltersString}&page[size]=1000`;
+  postPatchDelete(url, data, method) {
+    return fetch(url, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/vnd.api+json',
+      },
+      body: JSON.stringify({'data': data}),
+    }).then((response) => {
+      if (response.status === 204) {
+        // No content
+        return {};
+      }
+      else {
+        return response.json();
+      }
+    });
+  }
+
+  post(url, data) {
+    return this.postPatchDelete(url, data, 'POST');
+  }
+  patch(url, data) {
+    return this.postPatchDelete(url, data, 'PATCH');
+  }
+  delete(url, data) {
+    return this.postPatchDelete(url, data, 'DELETE');
+  }
+
+
+  urlWithQueryParams(baseUrl, queryParams) {
+    for (const [key, value] of queryParams) {
+      if (value === null) {
+        queryParams.delete(key);
+      }
+    }
+    let searchParams = new URLSearchParams(queryParams);
+    return baseUrl + '?' + searchParams;
+  }
+
+
+  /*
+  The following methods get data in a non JSON:API format. These API
+  endpoints exist for convenience so that Ember doesn't have to do too much
+  rearranging of data for certain pages.
+  */
+
+  getChartRanking(chartId, appliedFiltersString) {
+    let rankingUrl = this.urlWithQueryParams(
+      `/charts/${chartId}/ranking/`,
+      new Map([['filters', appliedFiltersString], ['page[size]', 1000]]));
     return this.fetchArrayResults(rankingUrl);
   }
 
-  getChartGroupRanking(chartGroupId, mainChartId, _appliedFiltersString) {
-    let appliedFiltersString = _appliedFiltersString || '';
-    let rankingUrl = `/chart_groups/${chartGroupId}/ranking/`
-      + `?main_chart_id=${mainChartId}&filters=${appliedFiltersString}`
-      + `&page[size]=1000`;
+  getChartGroupRanking(chartGroupId, mainChartId, appliedFiltersString) {
+    let rankingUrl = this.urlWithQueryParams(
+      `/chart_groups/${chartGroupId}/ranking/`,
+      new Map([
+        ['main_chart_id', mainChartId], ['filters', appliedFiltersString],
+        ['page[size]', 1000]]));
     return this.fetchArrayResults(rankingUrl);
   }
 
-  getChartTopRecordHistory(chartId, _appliedFiltersString) {
-    let appliedFiltersString = _appliedFiltersString || '';
-    let historyUrl = `/charts/${chartId}/record_history/`
-      + `?improvements=filter&filters=${appliedFiltersString}`
-      + `&page[size]=50`;
+  getChartTopRecordHistory(chartId, appliedFiltersString) {
+    let historyUrl = this.urlWithQueryParams(
+      `/charts/${chartId}/record_history/`,
+      new Map([
+        ['improvements', 'filter'], ['filters', appliedFiltersString],
+        ['page[size]', 50]]));
     return this.fetchArrayResults(historyUrl);
   }
 
-  getChartPlayerHistory(chartId, playerId, _appliedFiltersString) {
-    let appliedFiltersString = _appliedFiltersString || '';
-    let historyUrl = `/charts/${chartId}/record_history/`
-      + `?player_id=${playerId}&filters=${appliedFiltersString}`
-      + `&page[size]=50`;
+  getChartPlayerHistory(chartId, playerId, appliedFiltersString) {
+    let historyUrl = this.urlWithQueryParams(
+      `/charts/${chartId}/record_history/`,
+      new Map([
+        ['player_id', playerId], ['filters', appliedFiltersString],
+        ['page[size]', 50]]));
     return this.fetchArrayResults(historyUrl);
+  }
+
+
+  /*
+  The following methods create, update, and delete resources in a JSON:API
+  standard way. These methods exist because Ember Data is difficult to get
+  working just right for these kinds of endpoints, particularly in terms of
+  rolling back data if the API returns an error.
+  */
+
+  createFilter(filterGroupId, attributes) {
+    let createUrl = `/filters/`;
+    let data = {
+      'type': 'filters',
+      'attributes': attributes,
+      'relationships': {
+        'filter-group': {
+          "data": {
+            "type": "filter-groups",
+            "id": filterGroupId,
+          }
+        }
+      }
+    };
+    return this.post(createUrl, data);
+  }
+
+  editFilter(filterId, attributes) {
+    let filterUrl = `/filters/${filterId}/`;
+    let data = {
+      'type': 'filters',
+      'id': filterId,
+      'attributes': attributes,
+    };
+    return this.patch(filterUrl, data);
+  }
+
+  deleteFilter(filterId) {
+    let filterUrl = `/filters/${filterId}/`;
+    return this.delete(filterUrl, null);
+  }
+
+  addFilterImplication(selectedFilterId, targetFilterId) {
+    let implicationRelationshipUrl =
+      `/filters/${selectedFilterId}/relationships/outgoing_filter_implications/`;
+    return this.post(
+      implicationRelationshipUrl,
+      [{'type': 'filters', 'id': targetFilterId}]);
+  }
+
+  deleteFilterImplication(selectedFilterId, targetFilterId) {
+    let implicationRelationshipUrl =
+      `/filters/${selectedFilterId}/relationships/outgoing_filter_implications/`;
+    return this.delete(
+      implicationRelationshipUrl,
+      [{'type': 'filters', 'id': targetFilterId}]);
+  }
+
+  createLadder(gameId, chartGroupId, attributes) {
+    let createUrl = `/ladders/`;
+    let data = {
+      'type': 'ladders',
+      'attributes': attributes,
+      'relationships': {
+        'chart-group': {'data': {'type': 'chart-groups', 'id': chartGroupId}},
+        'game': {'data': {'type': 'games', 'id': gameId}},
+      },
+    };
+    return this.post(createUrl, data);
+  }
+
+  createRecord(chartId, attributes, playerId, filterIds) {
+    let createUrl = `/records/`;
+    let filterData = filterIds.map(
+      filterId => {
+        return {'type': 'filters', 'id': filterId};
+      });
+    let data = {
+      'type': 'records',
+      'attributes': attributes,
+      'relationships': {
+        'chart': {'data': {'type': 'charts', 'id': chartId}},
+        'player': {'data': {'type': 'players', 'id': playerId}},
+        'filters': {'data': filterData},
+      },
+    };
+    return this.post(createUrl, data);
+  }
+
+  editRecord(recordId, attributes, filterIds) {
+    let editUrl = `/records/${recordId}/`;
+    let filterData = filterIds.map(
+      filterId => {
+        return {'type': 'filters', 'id': filterId};
+      });
+    let data = {
+      'type': 'records',
+      'id': recordId,
+      'attributes': attributes,
+      'relationships': {
+        'filters': {'data': filterData},
+      },
+    };
+    return this.patch(editUrl, data);
   }
 }

@@ -1,0 +1,8 @@
+{{!-- For now, this is just a simple string field. Could be made into a more human-friendly date widget later. --}}
+<input
+  type="text" value={{this.initialDateInputText}}
+  onchange={{action "onchange"}}
+  size="30" class="date-input"
+  placeholder="Examples: 2018-10-16, 2018-10-16T16:27, 2018-10-16T16:27:02-07:00" />
+{{!-- This displays the currently-set date string. --}}
+{{this.dateDisplay}}

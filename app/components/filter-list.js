@@ -1,10 +1,15 @@
 import Component from '@glimmer/component';
+import { action } from '@ember/object';
+
 
 export default class FilterListComponent extends Component {
 
-  searchText = '';
+  @action
+  onSearchTextChange(event) {
+    // Reset the page number, since new search results may have less pages
+    // than previous search results.
+    this.args.updatePageNumber(1);
 
-  // TODO: If you're not on page 1 and you type some searchText, the page
-  // number won't reset, so the results may appear blank. It's not that
-  // intrusive, but would be nice to fix.
+    this.args.updateSearchText(event.target.value);
+  }
 }

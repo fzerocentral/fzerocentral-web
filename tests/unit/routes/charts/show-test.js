@@ -35,7 +35,7 @@ module('Unit | Route | charts/show', function(hooks) {
     let game = createModelInstance(this.server, 'game', {name: "Game 1"});
     let chartGroup = createModelInstance(
       this.server, 'chart-group',
-      {name: "Group 1", game: game, show_charts_together: true});
+      {name: "Group 1", game: game, showChartsTogether: true});
     let chartType = createModelInstance(
       this.server, 'chart-type',
       {name: "Type 1", format_spec: '[{"suffix": "m"}]',
@@ -46,7 +46,8 @@ module('Unit | Route | charts/show', function(hooks) {
 
     this.machineFG = createModelInstance(
       this.server, 'filter-group',
-      {name: 'Machine', kind: 'select', showByDefault: true});
+      {name: 'Machine', kind: 'select', showByDefault: true,
+       game: game, orderInGame: 1});
     this.blueFalconFilter = createModelInstance(
       this.server, 'filter',
       {name: 'Blue Falcon', filterGroup: this.machineFG});
@@ -78,7 +79,6 @@ module('Unit | Route | charts/show', function(hooks) {
   test("should make the expected API request for the ranking", async function(assert){
     let apiPath = `/charts/${this.chart.id}/ranking/`;
     let apiExpectedParams = {
-      'filters': '',
       'page[size]': 1000,
     }
 
@@ -122,7 +122,7 @@ module('Unit | Route | charts/show', function(hooks) {
     let filterSelect = getFilterSelect(this);
 
     await selectChoose(filterGroupSelect, 'Machine');
-    await selectChoose(compareMethodSelect, '-');
+    await selectChoose(compareMethodSelect, 'is');
     await selectChoose(filterSelect, 'Blue Falcon');
     await click(`button.add-filter-button`);
 

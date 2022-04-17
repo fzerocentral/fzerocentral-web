@@ -1,5 +1,5 @@
-import { A } from '@ember/array';
 import Model, { attr, belongsTo } from '@ember-data/model';
+
 
 export default class LadderModel extends Model {
   @attr('string') name;
@@ -10,5 +10,5 @@ export default class LadderModel extends Model {
   @belongsTo('chart-group') chartGroup;
   @belongsTo('game') game;
 
-  get KIND_OPTIONS() {return A(['main', 'side']);}
+  static KIND_OPTIONS = ['main', 'side'];
 }

@@ -5,7 +5,7 @@
 <ul>
   {{#each @model.mainLadders as |ladder|}}
     <li>
-      <LinkTo @route="ladders.show" @model={{ladder}}>
+      <LinkTo @route="ladders.show" @model={{ladder.id}}>
         {{ladder.name}}
       </LinkTo>
     </li>
@@ -15,7 +15,7 @@
 <ul>
   {{#each @model.sideLadders as |ladder|}}
     <li>
-      <LinkTo @route="ladders.show" @model={{ladder}}>
+      <LinkTo @route="ladders.show" @model={{ladder.id}}>
         {{ladder.name}}
       </LinkTo>
     </li>
@@ -24,18 +24,16 @@
 
 <h2>Admin</h2>
 
-<LinkTo @route="games.ladders" @model={{@model.game}}> Ladders admin </LinkTo>
-
-<h3>Chart Types</h3>
-
 <ul>
-  {{#each @model.chartTypes as |chartType|}}
-    <li>
-      <LinkTo @route="chart-types.filter-groups" @model={{chartType}}>
-        {{chartType.name}}
-      </LinkTo>
-    </li>
-  {{/each}}
+  <li>
+    <LinkTo @route="games.chart-types" @model={{@model.game.id}}> Chart types admin </LinkTo>
+  </li>
+  <li>
+    <LinkTo @route="games.filter-groups" @model={{@model.game.id}}> Filter groups admin </LinkTo>
+  </li>
+  <li>
+    <LinkTo @route="games.ladders" @model={{@model.game.id}}> Ladders admin </LinkTo>
+  </li>
 </ul>
 
 <h2>Charts</h2>

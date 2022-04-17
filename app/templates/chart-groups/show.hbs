@@ -1,10 +1,10 @@
-<h1>{{@model.game.name}} - {{@model.name}}</h1>
+<h1>{{@model.chartGroup.game.name}} - {{@model.chartGroup.name}}</h1>
 
-{{#if @model.showChartsTogether}}
+{{#if @model.chartGroup.showChartsTogether}}
   <ChartRankingGroup
-    @chartGroup={{@model}}
-    @mainChartIdQueryArg={{mainChartId}}
-    @recordRows={{recordRows}} />
+    @chartGroup={{@model.chartGroup}}
+    @mainChartIdQueryArg={{this.mainChartId}}
+    @recordRows={{@model.recordRows}} />
 {{else}}
-  <ChartGroupContents @cg={{@model}} @root={{true}} />
+  <ChartGroupContents @cg={{@model.chartGroup}} @root={{true}} />
 {{/if}}

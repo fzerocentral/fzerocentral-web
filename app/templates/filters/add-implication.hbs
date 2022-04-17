@@ -1,0 +1,16 @@
+<h1>{{@model.filter.name}} - Add an outgoing implication</h1>
+
+<form id="add-implication-form">
+  <div>
+    <FilterSelect
+      @baseFieldId="target-filter"
+      @label="To:"
+      @controlInstance={{this.filterSelect}} />
+  </div>
+
+  <div class="error-message"></div>
+
+  <div>
+    <button type="button" {{action "addImplication"}}> Add implication </button>
+  </div>
+</form>

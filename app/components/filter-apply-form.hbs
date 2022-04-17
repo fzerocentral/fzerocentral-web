@@ -1,0 +1,39 @@
+<form id="filter-apply-form">
+  Add filter:
+
+  {{! Choice of filter group }}
+  <select name="filter-group"
+      {{on "change" this.updateSelectedFilterGroup}} >
+    <option value=""> ----- </option>
+    {{#each @filterGroups as |filterGroup|}}
+      <option value="{{filterGroup.id}}">
+        {{filterGroup.name}}
+      </option>
+    {{/each}}
+  </select>
+
+  {{! Choice of is, is not, <=, >= }}
+  <select name="compare-option">
+    {{#each this.compareOptions as |compareOption|}}
+      <option value="{{filterGroup.id}}">
+        {{compareOption}}
+      </option>
+    {{/each}}
+  </select>
+
+  {{! Choice of filter from the filter group }}
+  <FilterSelect
+    @baseFieldId="filter"
+    @label=""
+    @controlInstance={{this.filterSelect}} />
+
+  <button type="button" {{action "addFilter"}}>Add</button>
+</form>
+
+<div>
+  Applied filters:
+  {{#each this.appliedFilters as |appliedFilter index|}}
+    <span class="applied-filter">{{appliedFilter.display}}</span>
+    <button type="button" class="applied-filter-remove-button" {{action "removeFilter" index}}> x </button>
+  {{/each}}
+</div>

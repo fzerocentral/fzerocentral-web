@@ -1,0 +1,41 @@
+<h1>{{@model.game.name}} - Filter groups</h1>
+
+{{#if @model.filterGroups}}
+
+  <table class="filter-groups">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Kind</th>
+        <th>Show by default on rankings?</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each @model.filterGroups as |fg|}}
+        <tr>
+          <td>
+            <LinkTo @route="filter-groups.show" @model={{fg.id}}>
+              {{fg.name}}
+            </LinkTo>
+          </td>
+          <td>
+            {{fg.kind}}
+          </td>
+          <td>
+            {{fg.showByDefault}}
+          </td>
+          <td>
+            {{fg.description}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+{{else}}
+
+  (No filter groups yet)
+
+{{/if}}

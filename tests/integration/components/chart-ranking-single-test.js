@@ -16,30 +16,27 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
     this.playerA = createModelInstance(this.server, 'player', {username: 'Player A'});
     this.playerB = createModelInstance(this.server, 'player', {username: 'Player B'});
     this.game = createModelInstance(this.server, 'game', {name: 'Game 1'});
-    this.chartGroup = createModelInstance(
-      this.server, 'chart-group',
-      {name: 'Group 1', game: this.game, show_charts_together: true});
-    this.chartType = createModelInstance(
-      this.server, 'chart-type',
-      {name: 'Type 1', format_spec: '[{"suffix": "m"}]',
-       order_ascending: true, game: this.game});
-    this.chart = createModelInstance(this.server, 'chart',
-      {name: 'Chart 1', chartType: this.chartType,
-       chartGroup: this.chartGroup});
 
     this.machineFG = createModelInstance(
       this.server, 'filter-group',
-      {name: 'Machine', kind: 'select', showByDefault: true});
+      {name: 'Machine', kind: 'select', showByDefault: true,
+       game: this.game, orderInGame: 1});
     this.settingFG = createModelInstance(
       this.server, 'filter-group',
-      {name: 'Setting', kind: 'numeric', showByDefault: false});
+      {name: 'Setting', kind: 'numeric', showByDefault: false,
+       game: this.game, orderInGame: 2});
 
-    createModelInstance(
-      this.server, 'chart-type-filter-group',
-      {chartType: this.chartType, filterGroup: this.machineFG});
-    createModelInstance(
-      this.server, 'chart-type-filter-group',
-      {chartType: this.chartType, filterGroup: this.settingFG});
+    this.chartGroup = createModelInstance(
+      this.server, 'chart-group',
+      {name: 'Group 1', game: this.game, showChartsTogether: true});
+    this.chartType = createModelInstance(
+      this.server, 'chart-type',
+      {name: 'Type 1', format_spec: '[{"suffix": "m"}]',
+       order_ascending: true, game: this.game,
+       filterGroups: [this.machineFG, this.settingFG]});
+    this.chart = createModelInstance(this.server, 'chart',
+      {name: 'Chart 1', chartType: this.chartType,
+       chartGroup: this.chartGroup});
 
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
@@ -55,8 +52,7 @@ module('Integration | Component | chart-ranking-single', function(hooks) {
        player_id: this.playerB.id, value_display: "25m",
        filters: []},
     ]);
-    this.set('filterGroups', this.store.query(
-        'filterGroup', {chart_type_id: this.chartType.id}));
+    this.set('filterGroups', [this.machineFG, this.settingFG]);
     this.set('appliedFiltersString', null);
     this.set(
       'updateAppliedFiltersString',

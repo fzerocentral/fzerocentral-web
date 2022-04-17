@@ -1,8 +1,8 @@
 <table class="ladders">
   <thead>
     <tr>
-      <th>Order</th>
       <th>Name</th>
+      <th>Filter spec</th>
     </tr>
   </thead>
 
@@ -10,15 +10,12 @@
     {{#each @ladders as |ladder|}}
       <tr>
         <td>
-          <Input
-            @type="text" @value={{ladder.orderInGameAndKind}}
-            onchange={{action "onOrderChange" ladder}}
-            size="2" class="order-input" />
-        </td>
-        <td>
           <LinkTo @route="ladders.show" @model={{ladder.id}}>
             {{ladder.name}}
           </LinkTo>
+        </td>
+        <td>
+          {{ladder.filterSpec}}
         </td>
       </tr>
     {{/each}}

@@ -9,7 +9,7 @@ import { createModelInstance }
 
 
 function getFiltersListItemByName(rootElement, name, type='choosable') {
-  let filtersList = null;
+  let filtersList;
   if (type === 'choosable') {
     filtersList = rootElement.querySelector('div.choosable-filter-list ul');
   }
@@ -48,10 +48,12 @@ module('Unit | Route | filter-groups/show', function(hooks) {
 
     this.filterGroup = createModelInstance(
       this.server, 'filter-group',
-      {name: "Machine", kind: 'select', showByDefault: true});
+      {name: "Machine", kind: 'select', showByDefault: true,
+       game: this.game, orderInGame: 1});
     this.numericFilterGroup = createModelInstance(
       this.server, 'filter-group',
-      {name: "Setting", kind: 'numeric', showByDefault: true});
+      {name: "Setting", kind: 'numeric', showByDefault: false,
+       game: this.game, orderInGame: 2});
   });
 
   hooks.afterEach( function() {
@@ -71,38 +73,38 @@ module('Unit | Route | filter-groups/show', function(hooks) {
   });
 
   test("lists the chart types that use the filter group", async function(assert) {
-    // We'll have 2 chart types using the filter group, and 1 chart type not
-    // using it.
-    this.chartType1 = createModelInstance(
-      this.server, 'chart-type',
-      {name: "Type 1", format_spec: '[{"suffix": "m"}]',
-      order_ascending: true, game: this.game});
-    this.chartType2 = createModelInstance(
-      this.server, 'chart-type',
-      {name: "Type 2", format_spec: '[{"suffix": "pts"}]',
-      order_ascending: true, game: this.game});
-    this.otherChartType = createModelInstance(
-      this.server, 'chart-type',
-      {name: "Other Type", format_spec: '[{"suffix": "km"}]',
-      order_ascending: true, game: this.game});
-
-    createModelInstance(
-      this.server, 'chart-type-filter-group',
-      {chartType: this.chartType1, filterGroup: this.filterGroup,
-       orderInChartType: 1, showByDefault: true});
-    createModelInstance(
-      this.server, 'chart-type-filter-group',
-      {chartType: this.chartType2, filterGroup: this.filterGroup,
-       orderInChartType: 1, showByDefault: true});
+    // Reconfigure this Mirage endpoint specifically for this test.
+    this.server.pretender.get('/chart_types/', (request) => {
+      assert.deepEqual(
+        request.queryParams, {filter_group_id: this.filterGroup.id},
+        "Chart types endpoint should be called with expected params");
+      let body = {
+        data: [
+          {
+            'type': 'chart-types',
+            'id': '1',
+            'attributes': {
+              'name': "Type 1",
+            },
+          },
+          {
+            'type': 'chart-types',
+            'id': '2',
+            'attributes': {
+              'name': "Type 2",
+            },
+          },
+        ]
+      };
+      return [200, {}, JSON.stringify(body)];
+    });
 
     await visit(`/filter-groups/${this.filterGroup.id}`);
 
     let chartTypesList = this.element.querySelector('ul.chart-type-list');
     let listItems = chartTypesList.querySelectorAll('li');
-    // We use `sort()` to be order-agnostic.
     let listItemsTexts = Array.from(listItems)
-      .map(listItem => listItem.querySelector('a').textContent.trim())
-      .sort();
+      .map(listItem => listItem.textContent.trim());
     assert.deepEqual(
       listItemsTexts, ["Type 1", "Type 2"],
       "Listed chart types are as expected");

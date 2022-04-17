@@ -1,6 +1,6 @@
 <h1>{{@model.chart.chartGroup.name}} - {{@model.chart.name}}</h1>
 
-<div><LinkTo @route="charts.record-new" @model={{@model.chart}}>Submit a record</LinkTo></div>
+<div><LinkTo @route="charts.record-new" @model={{@model.chart.id}}>Submit a record</LinkTo></div>
 
 {{#if @model.chart.chartGroup.showChartsTogether}}
   <div>
@@ -11,20 +11,60 @@
 {{/if}}
 
 <div>
-  <LinkTo @route="charts.top-record-history" @model={{@model.chart}}>
+  <LinkTo @route="charts.top-record-history" @model={{@model.chart.id}}>
     View top record history
   </LinkTo>
 </div>
 
 <div>
-  <LinkTo @route="chart-types.filter-groups" @model={{@model.chart.chartType}}>
-    Edit filter groups
-  </LinkTo>
+  Chart type: {{@model.chart.chartType.name}}
 </div>
 
 
-<ChartRankingSingle
-  @chart={{@model.chart}} @records={{@model.records}}
+<div>
+  <input
+      type="checkbox" name="show-all-filter-groups"
+      id="show-all-filter-groups-checkbox"
+      {{on "change" this.updateShowAllFilterGroups}} />
+  <label for="show-all-filter-groups-checkbox">Show all filter groups</label>
+</div>
+
+<FilterApplyForm
   @filterGroups={{@model.filterGroups}}
-  @appliedFiltersString={{appliedFiltersString}}
-  @updateAppliedFiltersString={{action (mut appliedFiltersString)}} />
+  @appliedFilterObjs={{@model.appliedFilterObjs}}
+  @appliedFiltersString={{this.appliedFiltersString}}
+  @updateAppliedFiltersString={{action (mut this.appliedFiltersString)}}
+  @controllerGetFilterOptions={{this.getFilterOptions}} />
+
+<table class="records-table">
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Player</th>
+      <th>Record</th>
+      {{#each this.shownFilterGroups as |filterGroup|}}
+        <th>{{filterGroup.name}}</th>
+      {{/each}}
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each @model.records as |record|}}
+      <tr>
+        <td>{{record.rank}}</td>
+        <td>{{record.player_username}}</td>
+        <td>
+          <LinkTo @route="charts.player-history" @models={{array @model.chart.id record.player_id}}>
+            {{record.value_display}}
+          </LinkTo>
+        </td>
+
+        {{#each this.shownFilterGroups as |filterGroup|}}
+          <td>
+            {{get (find-filter-of-group record.filters filterGroup.id) "name"}}
+          </td>
+        {{/each}}
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

@@ -7,8 +7,6 @@ export default class GamesShowRoute extends Route {
 
   model(params) {
     return RSVP.hash({
-      chartTypes: this.store.query(
-        'chart-type', {game_id: params.game_id}),
       game: this.store.findRecord('game', params.game_id),
       mainLadders: this.store.query(
         'ladder', {game_id: params.game_id, kind: 'main'}),

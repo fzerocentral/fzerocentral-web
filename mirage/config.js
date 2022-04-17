@@ -62,14 +62,6 @@ export default function() {
       chartTypes = chartTypes.filter(
         chartType => chartType.gameId === request.queryParams.game_id);
     }
-    if (Object.prototype.hasOwnProperty.call(request.queryParams, 'filter_group_id')) {
-      chartTypes = chartTypes.filter(
-        chartType => schema.chartTypeFilterGroups.findBy({
-          chartTypeId: chartType.id,
-          filterGroupId: request.queryParams.filter_group_id
-        })
-      );
-    }
 
     return chartTypes;
   });
@@ -78,103 +70,16 @@ export default function() {
     return schema.chartTypes.find(request.params.id);
   });
 
-  this.get('/chart_type_filter_groups', (schema, request) => {
-    if (Object.prototype.hasOwnProperty.call(request.queryParams, 'chart_type_id')) {
-      let chartType = schema.chartTypes.find(
-        request.queryParams.chart_type_id);
-      return schema.chartTypeFilterGroups.where({chartTypeId: chartType.id});
-    }
-    else {
-      return schema.chartTypeFilterGroups.all();
-    }
-  });
-
-  this.post('/chart_type_filter_groups', (schema, request) => {
-    let requestJSON = JSON.parse(request.requestBody);
-    let data = requestJSON.data;
-    let order = 1;
-    if (Object.prototype.hasOwnProperty.call(data.attributes, 'order-in-chart-type')) {
-      order = data.attributes['order-in-chart-type'];
-    }
-    let showByDefault = false;
-    if (Object.prototype.hasOwnProperty.call(data.attributes, 'show-by-default')) {
-      showByDefault = data.attributes['show-by-default'];
-    }
-    let chartTypeId = data.relationships['chart-type'].data.id;
-    let filterGroupId = data.relationships['filter-group'].data.id;
-    let ctfg = schema.chartTypeFilterGroups.create({
-      chartTypeId: chartTypeId, filterGroupId: filterGroupId,
-      orderInChartType: order, showByDefault: showByDefault});
-    return ctfg;
-  });
-
-  this.patch('/chart_type_filter_groups/:id', (schema, request) => {
-    let requestJSON = JSON.parse(request.requestBody);
-    let data = requestJSON.data;
-    let ctfg = schema.chartTypeFilterGroups.find(request.params.id);
-    let args = {};
-    if (Object.prototype.hasOwnProperty.call(data.attributes, 'order-in-chart-type')) {
-      args.orderInChartType = data.attributes['order-in-chart-type'];
-    }
-    if (Object.prototype.hasOwnProperty.call(data.attributes, 'show-by-default')) {
-      args.showByDefault = data.attributes['show-by-default'];
-    }
-    ctfg.update(args);
-    return ctfg;
-  });
-
-  this.delete('/chart_type_filter_groups/:id', (schema, request) => {
-    let ctfg = schema.chartTypeFilterGroups.find(request.params.id);
-    ctfg.destroy();
-  });
-
   this.get('/filter_groups', (schema, request) => {
     if (Object.prototype.hasOwnProperty.call(request.queryParams, 'chart_type_id')) {
-      if (request.queryParams.chart_type_id === '') {
-        // FGs without a CT. We'll implement this very naively, so don't give
-        // Mirage too many FGs in this case...
-        let filterGroups = schema.filterGroups.none();
-        schema.filterGroups.all().models.forEach((filterGroup) => {
-          if (schema.chartTypeFilterGroups.where({
-              filterGroupId: filterGroup.id}).length === 0) {
-            filterGroups.add(filterGroup);
-          }
-        });
-
-        return filterGroups;
-      }
-      else {
-        // FGs of a particular CT
-        let chartType = schema.chartTypes.find(
-          request.queryParams.chart_type_id);
-        let ctfgs = schema.chartTypeFilterGroups.where(
-          {chartTypeId: chartType.id});
-        let filterGroups = schema.filterGroups.none();
-        ctfgs.models.forEach((ctfg) => {
-          filterGroups.add(schema.filterGroups.find(ctfg.filterGroupId));
-        });
-        return filterGroups;
-      }
+      // FGs linked to a particular chart type
+      return schema.filterGroups.where(
+        {chartTypeId: request.queryParams.chart_type_id});
     }
     else if (Object.prototype.hasOwnProperty.call(request.queryParams, 'game_id')) {
       // FGs of a particular game
-      let chartTypes = schema.chartTypes.where(
+      return schema.filterGroups.where(
         {gameId: request.queryParams.game_id});
-      let filterGroups = schema.filterGroups.none();
-      let seenFilterGroupIds = new Set();
-      chartTypes.models.forEach((chartType) => {
-        let ctfgs = schema.chartTypeFilterGroups.where(
-          {chartTypeId: chartType.id});
-        ctfgs.models.forEach((ctfg) => {
-          let filterGroup = schema.filterGroups.find(ctfg.filterGroupId);
-          if (seenFilterGroupIds.has(filterGroup.id)) {
-            return;
-          }
-          filterGroups.add(filterGroup);
-          seenFilterGroupIds.add(filterGroup.id);
-        });
-      });
-      return filterGroups;
     }
     else {
       // All FGs

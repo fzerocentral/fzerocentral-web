@@ -1,9 +1,10 @@
-import { action } from '@ember/object';
-import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
+import ChartsRecordNewRoute from "../charts/record-new";
 
-export default class RecordsShowRoute extends Route {
+
+// Extends record-new.
+export default class RecordsShowRoute extends ChartsRecordNewRoute {
   @service store;
 
   model(params) {
@@ -13,19 +14,5 @@ export default class RecordsShowRoute extends Route {
       filterGroups: this.store.query(
         'filterGroup', {record_id: params.record_id}),
     });
-  }
-
-  @action
-  saveRecord() {
-    let record = this.modelFor(this.routeName).record;
-
-    record.save().then(() => {
-      this.transitionTo('charts.show', record.get('chart'));
-    });
-  }
-
-  @action
-  willTransition() {
-    this.modelFor(this.routeName).record.rollbackAttributes();
   }
 }
