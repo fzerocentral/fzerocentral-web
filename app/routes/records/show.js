@@ -3,6 +3,7 @@ import RSVP from 'rsvp';
 import ChartsRecordNewRoute from "../charts/record-new";
 
 
+// Extends record-new.
 export default class RecordsShowRoute extends ChartsRecordNewRoute {
   @service store;
 

@@ -166,4 +166,21 @@ export default class NonEmberDataApiService extends Service {
     };
     return this.post(createUrl, data);
   }
+
+  editRecord(recordId, attributes, filterIds) {
+    let editUrl = `/records/${recordId}/`;
+    let filterData = filterIds.map(
+      filterId => {
+        return {'type': 'filters', 'id': filterId};
+      });
+    let data = {
+      'type': 'records',
+      'id': recordId,
+      'attributes': attributes,
+      'relationships': {
+        'filters': {'data': filterData},
+      },
+    };
+    return this.patch(editUrl, data);
+  }
 }

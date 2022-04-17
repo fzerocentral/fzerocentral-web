@@ -21,27 +21,25 @@ export default class ChartsRecordNewRoute extends Route {
 
     resolvedModel.filterGroups.forEach((filterGroup) => {
       // Set up filter-select control instance for this filter group.
+      let initialFilter = null;
+      if (resolvedModel.record) {
+        // Editing an existing record; initial value is the record's
+        // existing filter, if any.
+        initialFilter = resolvedModel.record.filters.find(
+          (filter) => filter.filterGroup.get('id') === filterGroup.id);
+      }
+
       let filterSelect = new FilterSelectControl(
         controller.formId,
         `filter-${filterGroup.id}`,
         // Partial-apply filterGroup.id to this action method.
         controller.getFilterOptionsForGroup.bind(null, filterGroup.id),
+        {hasEmptyOption: true,
+         initialFilter: initialFilter},
       );
-      // Initialize options.
-      let promise = filterSelect.updateOptions();
-      // Set searchEnabled based on number of filters available.
-      promise.then((filters) => {
-        filterSelect.searchEnabled = (
-          filters.meta.pagination.pages > 1);
-      })
-      controller.filterSelects[filterGroup.id] = filterSelect;
 
-      // Initialize filter choices (for record editing only).
-      if (resolvedModel.record) {
-        controller.selectedFiltersByGroup[filterGroup.id] =
-          resolvedModel.record.filters.find(
-            (filter) => filter.filterGroup.get('id') === filterGroup.id);
-      }
+      filterSelect.initializeOptions();
+      controller.filterSelects[filterGroup.id] = filterSelect;
     });
   }
 }

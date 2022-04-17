@@ -1,35 +1,29 @@
-{{#let @controlInstance.fieldName as |fieldName| }}
+{{#let @controlInstance.baseFieldName as |baseFieldName| }}
 
-  {{#if @controlInstance.searchEnabled}}
+  {{! Search-enabled version }}
+  <span hidden={{if (not @controlInstance.searchEnabled) "hidden"}}>
 
-    <label for="{{@fieldId}}-text">{{@label}}</label>
+    <label for="{{@baseFieldId}}-text">{{@label}}</label>
     <input type="text"
-      list="{{@fieldId}}-datalist"
-      name="{{fieldName}}-text"
-      id="{{@fieldId}}-text"
-      placeholder="Enter text to search"
-      {{on "input" @controlInstance.onTextInput}} >
-    <datalist name="{{fieldName}}" id="{{@fieldId}}-datalist">
-      {{#each @controlInstance.options as |filter|}}
-        <option value="{{filter.name}}" />
-      {{/each}}
-    </datalist>
-    <input type="hidden" name="{{fieldName}}" id="{{@fieldId}}">
+        list="{{@baseFieldId}}-datalist"
+        name="{{baseFieldName}}-text"
+        id="{{@baseFieldId}}-text"
+        placeholder="Enter text to search"
+        {{on "input" @controlInstance.onTextInput}} >
+    <datalist id="{{@baseFieldId}}-datalist"></datalist>
+    <input type="hidden"
+        name="{{baseFieldName}}-hidden"
+        id="{{@baseFieldId}}-hidden">
 
-  {{else}}
+  </span>
 
-    <label for="{{@fieldId}}">{{@label}}</label>
-    <select name="{{fieldName}}" id="{{@fieldId}}">
-      {{#if this.hasEmptyOption}}
-        <option value=""> ----- </option>
-      {{/if}}
-      {{#each @controlInstance.options as |filter|}}
-        <option value="{{filter.id}}">
-          {{filter.name}}
-        </option>
-      {{/each}}
-    </select>
+  {{! Plain dropdown version }}
+  <span hidden={{if @controlInstance.searchEnabled "hidden"}}>
 
-  {{/if}}
+    <label for="{{@baseFieldId}}-select">{{@label}}</label>
+    <select name="{{baseFieldName}}-select"
+        id="{{@baseFieldId}}-select"></select>
+
+  </span>
 
 {{/let}}

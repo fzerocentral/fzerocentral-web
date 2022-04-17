@@ -23,10 +23,9 @@
 
   {{! Choice of filter from the filter group }}
   <FilterSelect
-    @fieldId="filter-field"
+    @baseFieldId="filter"
     @label=""
-    @controlInstance={{this.filterSelect}}
-    @hasEmptyOption={{true}} />
+    @controlInstance={{this.filterSelect}} />
 
   <button type="button" {{action "addFilter"}}>Add</button>
 </form>

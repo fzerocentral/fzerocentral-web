@@ -5,21 +5,25 @@
   </LinkTo>
 </h1>
 
-<div>Player: {{@model.record.player.username}}</div>
-<div>Value: {{@model.record.value}}</div>
+<form id="record-form">
 
-<div>
-  <label>Date achieved</label>
-  <DateField
-    @initialDateValue={{@model.record.dateAchieved}}
-    @updateDateValue={{action (mut @model.record.dateAchieved)}} />
-</div>
+  <div>Player: {{@model.record.player.username}}</div>
+  <div>Value: {{@model.record.value}}</div>
 
-<RecordFiltersEdit
-  @filterGroups={{@model.filterGroups}}
-  @filterOptions={{this.filterOptionsByGroup}}
-  @selectedFilters={{this.selectedFiltersByGroup}}
-  @selectFilter={{this.selectFilter}}
-  @onSearchTextChange={{this.onSearchTextChange}} />
+  <div>
+    <label>Date achieved</label>
+    <DateField
+      @initialDateValue={{@model.record.dateAchieved}}
+      @updateDateValue={{action (mut this.dateAchieved)}} />
+  </div>
 
-<div><button type="submit" {{action "saveRecordEdits"}}>Save edits</button></div>
+  <RecordFiltersEdit
+    @filterGroups={{@model.filterGroups}}
+    @selectedFilters={{this.selectedFiltersByGroup}}
+    @filterSelectControlInstances={{this.filterSelects}} />
+
+  <div class="error-message"></div>
+
+  <div><button type="button" {{action "saveRecordEdits"}}>Save edits</button></div>
+
+</form>

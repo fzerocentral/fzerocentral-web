@@ -13,7 +13,8 @@ export default class FilterApplyFormComponent extends Component {
     super(...args);
 
     this.filterSelect = new FilterSelectControl(
-      this.formId, 'filter', this.getFilterOptions);
+      this.formId, 'filter', this.getFilterOptions,
+      {hasEmptyOption: true});
   }
 
   get formId() {
