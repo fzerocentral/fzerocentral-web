@@ -59,16 +59,14 @@ export default class FilterGroupsShowController extends Controller {
   }
 
   @action
-  updateChoosableSearchText(inputElement) {
-    this.choosableFiltersNameSearch = inputElement.target.value;
-    this.choosableFiltersPage = 1;
+  updateChoosableSearchText(searchText) {
+    this.choosableFiltersNameSearch = searchText;
     this.updateChoosableFilters();
   }
 
   @action
-  updateImpliedSearchText(inputElement) {
-    this.impliedFiltersNameSearch = inputElement.target.value;
-    this.impliedFiltersPage = 1;
+  updateImpliedSearchText(searchText) {
+    this.impliedFiltersNameSearch = searchText;
     this.updateImpliedFilters();
   }
 

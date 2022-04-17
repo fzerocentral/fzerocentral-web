@@ -10,12 +10,8 @@
 
 <div>
   Search:
-  <Input
-    @type="text"
-    @value={{this.searchText}}
-    {{on "input" @updateSearchText}}
-    class="search-input"
-  />
+  <input type="text" name="filter-search"
+      {{on "input" this.onSearchTextChange}} />
 </div>
 
 <PageNavigation
