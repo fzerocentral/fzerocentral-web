@@ -1,43 +1,51 @@
-<h1>Create ladder for: <LinkTo @route="games.ladders" @model={{@model.game.id}}> {{@model.game.name}} </LinkTo></h1>
+<h1>
+  Create ladder for:
+  <LinkTo @route="games.ladders" @model={{@model.game.id}}>
+    {{@model.game.name}}
+  </LinkTo>
+</h1>
 
-<div>
-  <label for="ladder-name">Name</label>
-  <Input
-    @type="text" @value={{@model.ladder.name}}
-    class="name-input" id="ladder-name" />
-</div>
+<form id="create-ladder-form">
+  <div>
+    <label for="ladder-name">Name</label>
+    <input type="text" name="name" id="ladder-name" />
+  </div>
 
-<div class="kind-select select-field-wrapper">
-  <label>Kind</label>
-  <PowerSelect
-    @options={{@model.ladder.KIND_OPTIONS}}
-    @selected={{@model.ladder.kind}}
-    @onChange={{action (mut @model.ladder.kind)}}
-    @placeholder="Not selected"
-    @matchTriggerWidth={{false}}
-    as |kind|>
-    {{kind}}
-  </PowerSelect>
-</div>
+  <div>
+    <label for="kind-field">Kind</label>
+    <select name="kind" id="kind-field"
+     placeholder="Not selected">
+      {{#each this.KIND_OPTIONS as |kindOption|}}
+        <option value="{{kindOption}}">
+          {{kindOption}}
+        </option>
+      {{/each}}
+    </select>
+  </div>
 
-<div>
-  <label for="ladder-filter-spec">Filter specification</label>
-  <Input
-    @type="text" @value={{@model.ladder.filterSpec}}
-    class="filter-spec-input" id="ladder-filter-spec" />
-</div>
+  <div>
+    <label for="ladder-filter-spec">Filter specification</label>
+    <input type="text" name="filter-spec" id="ladder-filter-spec"
+     placeholder="Example: 4-12n-35ge" />
+  </div>
 
-<div class="chart-group-select select-field-wrapper">
-  <label>Chart group</label>
-  <PowerSelect
-    @options={{@model.chartGroups}}
-    @selected={{@model.ladder.chartGroup}}
-    @onChange={{action (mut @model.ladder.chartGroup)}}
-    @placeholder="Not selected"
-    @matchTriggerWidth={{false}}
-    as |chartGroup|>
-    {{chartGroup.name}}
-  </PowerSelect>
-</div>
+  <div>
+    <label for="chart-group-field">Chart group</label>
+    <select name="chart-group" id="chart-group-field"
+     placeholder="Not selected">
+      {{#each @model.chartGroups as |chartGroup|}}
+        <option value="{{chartGroup.id}}">
+          {{chartGroup.name}}
+        </option>
+      {{/each}}
+    </select>
+  </div>
 
-<div><button type="submit" {{action "saveLadder"}}>Save ladder</button></div>
+  <div class="error-message"></div>
+
+  <div>
+    <button type="button" {{action "createLadder"}}>
+      Create ladder
+    </button>
+  </div>
+</form>

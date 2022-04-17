@@ -149,6 +149,19 @@ export default class NonEmberDataApiService extends Service {
       [{'type': 'filters', 'id': targetFilterId}]);
   }
 
+  createLadder(gameId, chartGroupId, attributes) {
+    let createUrl = `/ladders/`;
+    let data = {
+      'type': 'ladders',
+      'attributes': attributes,
+      'relationships': {
+        'chart-group': {'data': {'type': 'chart-groups', 'id': chartGroupId}},
+        'game': {'data': {'type': 'games', 'id': gameId}},
+      },
+    };
+    return this.post(createUrl, data);
+  }
+
   createRecord(chartId, attributes, playerId, filterIds) {
     let createUrl = `/records/`;
     let filterData = filterIds.map(
