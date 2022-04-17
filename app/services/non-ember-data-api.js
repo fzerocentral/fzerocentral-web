@@ -101,6 +101,11 @@ export default class NonEmberDataApiService extends Service {
   rolling back data if the API returns an error.
   */
 
+  deleteResource(resourceType, resourceId) {
+    let deleteUrl = `/${resourceType}/${resourceId}/`;
+    return this.delete(deleteUrl, null);
+  }
+
   createFilter(filterGroupId, attributes) {
     let createUrl = `/filters/`;
     let data = {
@@ -126,11 +131,6 @@ export default class NonEmberDataApiService extends Service {
       'attributes': attributes,
     };
     return this.patch(filterUrl, data);
-  }
-
-  deleteFilter(filterId) {
-    let filterUrl = `/filters/${filterId}/`;
-    return this.delete(filterUrl, null);
   }
 
   addFilterImplication(selectedFilterId, targetFilterId) {

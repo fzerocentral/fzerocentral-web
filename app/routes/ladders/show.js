@@ -1,18 +1,14 @@
-import { action } from '@ember/object';
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
+import RSVP from 'rsvp';
+
 
 export default class LaddersShowRoute extends Route {
-  @action
-  deleteLadder() {
-    if (window.confirm("Are you sure you want to delete this ladder?")) {
-      let ladder = this.modelFor(this.routeName);
-      let gameId = ladder.get('game.id');
+  @service store;
 
-      // Delete the ladder.
-      ladder.destroyRecord().then(() => {
-        // Redirect to ladders for this game.
-        this.transitionTo('games.ladders', gameId);
-      });
-    }
+  model(params) {
+    return RSVP.hash({
+      ladder: this.store.findRecord('ladder', params.ladder_id),
+    });
   }
 }

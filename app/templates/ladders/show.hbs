@@ -1,10 +1,16 @@
-<h1><LinkTo @route="games.ladders" @model={{@model.game.id}}> {{@model.game.name}} </LinkTo> - {{@model.name}} Ladder</h1>
+<h1>
+  <LinkTo @route="games.ladders" @model={{@model.ladder.game.id}}>
+    {{@model.ladder.game.name}}
+  </LinkTo>
+  - {{@model.ladder.name}} Ladder
+</h1>
 
 <ul>
-  <li>Kind: {{@model.kind}}</li>
-  <li>Filters: {{@model.filterSpec}}</li>
-  <li>Applies to: {{@model.chartGroup.name}}</li>
+  <li>Kind: {{@model.ladder.kind}}</li>
+  <li>Filters: {{@model.ladder.filterSpec}}</li>
+  <li>Applies to: {{@model.ladder.chartGroup.name}}</li>
 </ul>
 
-{{!-- TODO: This button would go better on a 'ladder edit' page, not on the show page. --}}
-<button type="button" class="delete-button" {{action "deleteLadder"}}> Delete ladder </button>
+<div class="error-message" id="ladder-delete-error"></div>
+{{! TODO: Make this link debug-only. }}
+<button type="button" {{on "click" this.deleteLadder}}> Delete ladder </button>
