@@ -1,5 +1,6 @@
 import { A } from '@ember/array';
 import { action } from '@ember/object';
+import DS from 'ember-data';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { getFormField } from "../utils/forms";
@@ -33,21 +34,12 @@ export default class FilterApplyFormComponent extends Component {
     // Set selected filter group and filter options.
     if (newSelectedFilterGroupId === '') {
       this.selectedFilterGroup = null;
-      this.filterSelect.updateOptions();
-      return;
     }
-    this.selectedFilterGroup = this.args.filterGroups.findBy(
-      'id', newSelectedFilterGroupId);
-    let promise = this.filterSelect.updateOptions();
-
-    // Set searchEnabled based on number of filters available.
-    promise.then((filters) => {
-      this.filterSelect.searchEnabled = (
-        filters.meta.pagination.pages > 1);
-    })
-
-    // Reset selected filter / search text.
-    this.filterSelect.clearFilter();
+    else {
+      this.selectedFilterGroup = this.args.filterGroups.findBy(
+        'id', newSelectedFilterGroupId);
+    }
+    this.filterSelect.initializeOptions();
   }
 
   /* Compare types */
@@ -97,7 +89,12 @@ export default class FilterApplyFormComponent extends Component {
   @action
   getFilterOptions(searchText) {
     if (!this.selectedFilterGroup) {
-      return A([]);
+      // PromiseArray that resolves to empty array
+      return DS.PromiseArray.create({
+        promise: new Promise((resolve) => {
+          resolve(A([]));
+        })
+      });
     }
 
     return this.args.controllerGetFilterOptions(

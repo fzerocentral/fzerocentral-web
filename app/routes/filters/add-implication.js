@@ -18,13 +18,6 @@ export default class FiltersAddImplicationRoute extends Route {
   setupController(controller, model) {
     super.setupController(controller, model);
 
-    // Set searchEnabled based on number of implied filters available
-    let promise = controller.getImpliedTypeFilters('');
-    promise.then((filters) => {
-      controller.filterSelect.searchEnabled = (
-        filters.meta.pagination.pages > 1);
-    })
-    // Initialize options
-    controller.filterSelect.updateOptions();
+    controller.filterSelect.initializeOptions();
   }
 }

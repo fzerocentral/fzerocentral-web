@@ -15,7 +15,6 @@ export default class FiltersDeleteImplicationRoute extends Route {
   setupController(controller, model) {
     super.setupController(controller, model);
 
-    // Initialize options
-    controller.filterSelect.updateOptions();
+    controller.filterSelect.initializeOptions();
   }
 }

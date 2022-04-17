@@ -102,7 +102,12 @@ export class FilterSelectControl {
   initializeOptions() {
     this.updateOptions().then((filters) => {
       // Set searchEnabled based on number of filters available.
-      this.searchEnabled = filters.meta.pagination.pages > 1;
+      if (filters.meta) {
+        this.searchEnabled = filters.meta.pagination.pages > 1;
+      }
+      else {
+        this.searchEnabled = false;
+      }
       // Set the initial value (defaults to null or undefined).
       this.setFilter(this.initialFilter);
     })
@@ -143,6 +148,6 @@ export class FilterSelectControl {
     if (this.searchEnabled) {
       this.textField.value = '';
     }
-    this.mainField.value = null;
+    this.mainField.value = '';
   }
 }
