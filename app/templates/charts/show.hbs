@@ -22,10 +22,11 @@
 
 
 <div>
-  <Input
-    @type="checkbox" @checked={{this.showAllFilterGroups}}
-    name="showAllFilterGroups" id="showAllFilterGroupsCheckbox" />
-  <label for="showAllFilterGroupsCheckbox">Show all filter groups</label>
+  <input
+      type="checkbox" name="show-all-filter-groups"
+      id="show-all-filter-groups-checkbox"
+      {{on "change" this.updateShowAllFilterGroups}} />
+  <label for="show-all-filter-groups-checkbox">Show all filter groups</label>
 </div>
 
 <FilterApplyForm

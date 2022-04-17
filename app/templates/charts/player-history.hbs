@@ -1,10 +1,11 @@
 <h1>{{@model.player.username}}'s history for {{@model.chart.chartGroup.name}} - {{@model.chart.name}}</h1>
 
 <div>
-  <Input
-    @type="checkbox" @checked={{showAllFilterGroups}}
-    name="showAllFilterGroups" id="showAllFilterGroupsCheckbox" />
-  <label for="showAllFilterGroupsCheckbox">Show all filter groups</label>
+  <input
+      type="checkbox" name="show-all-filter-groups"
+      id="show-all-filter-groups-checkbox"
+      {{on "change" this.updateShowAllFilterGroups}} />
+  <label for="show-all-filter-groups-checkbox">Show all filter groups</label>
 </div>
 
 <table class="records-table">
@@ -12,7 +13,7 @@
     <tr>
       <th>Record</th>
       <th>Date</th>
-      {{#each shownFilterGroups as |filterGroup|}}
+      {{#each this.shownFilterGroups as |filterGroup|}}
         <th>{{filterGroup.name}}</th>
       {{/each}}
     </tr>
@@ -26,7 +27,7 @@
         </td>
         <td>{{moment-format record.date_achieved "YYYY-MM-DD HH:mm"}}</td>
 
-        {{#each shownFilterGroups as |filterGroup|}}
+        {{#each this.shownFilterGroups as |filterGroup|}}
           <td>
             {{get (find-filter-of-group record.filters filterGroup.id) "name"}}
           </td>

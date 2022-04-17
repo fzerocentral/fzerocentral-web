@@ -1,12 +1,18 @@
 import Controller from '@ember/controller';
-import { computed } from '@ember/object';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+
 
 export default class ChartsTopRecordHistoryController extends Controller {
-  showAllFilterGroups = null;
+  @tracked showAllFilterGroups = false;
 
-  @computed('model.filterGroups.[]', 'showAllFilterGroups')
+  @action
+  updateShowAllFilterGroups(event) {
+    this.showAllFilterGroups = event.target.checked;
+  }
+
   get shownFilterGroups() {
-    if (this.get('showAllFilterGroups')) {
+    if (this.showAllFilterGroups) {
       return this.model.filterGroups;
     }
     else {

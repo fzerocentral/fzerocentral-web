@@ -11,7 +11,12 @@ export default class ChartsShowController extends Controller {
   }];
   appliedFiltersString = null;
 
-  @tracked showAllFilterGroups = null;
+  @tracked showAllFilterGroups = false;
+
+  @action
+  updateShowAllFilterGroups(event) {
+    this.showAllFilterGroups = event.target.checked;
+  }
 
   get shownFilterGroups() {
     if (this.showAllFilterGroups) {
