@@ -12,7 +12,7 @@ Router.map(function() {
     this.route('chart-types', { path: '/:game_id/chart-types' });
     this.route('filter-groups', { path: '/:game_id/filter-groups' });
     this.route('ladder-new', { path: '/:game_id/ladder-new' });
-    this.route('ladders', { path: '/:game_id/ladders' });
+    this.route('ladders-manage', { path: '/:game_id/ladders-manage' });
   });
 
   this.route('charts', function() {

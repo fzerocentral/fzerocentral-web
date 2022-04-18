@@ -1,5 +1,5 @@
 <h1>
-  <LinkTo @route="games.ladders" @model={{@model.ladder.game.id}}>
+  <LinkTo @route="games.show" @model={{@model.ladder.game.id}}>
     {{@model.ladder.game.name}}
   </LinkTo>
   - {{@model.ladder.name}} Ladder
@@ -10,7 +10,3 @@
   <li>Filters: {{@model.ladder.filterSpec}}</li>
   <li>Applies to: {{@model.ladder.chartGroup.name}}</li>
 </ul>
-
-<div class="error-message" id="ladder-delete-error"></div>
-{{! TODO: Make this link debug-only. }}
-<button type="button" {{on "click" this.deleteLadder}}> Delete ladder </button>
