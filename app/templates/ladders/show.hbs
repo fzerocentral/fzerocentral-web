@@ -6,7 +6,36 @@
 </h1>
 
 <ul>
-  <li>Kind: {{@model.ladder.kind}}</li>
   <li>Filters: {{@model.ladder.filterSpec}}</li>
   <li>Applies to: {{@model.ladder.chartGroup.name}}</li>
 </ul>
+
+<table class="records-table">
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Player</th>
+      <th>Last active</th>
+      <th>Average finish</th>
+      <th>SR/PR</th>
+        {{#each firstEntry.totals as |totalHash|}}
+          <th>{{get totalHash "name"}}</th>
+        {{/each}}
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each @model.ranking as |entry|}}
+      <tr>
+        <td>{{entry.rank}}</td>
+        <td>{{entry.player_username}}</td>
+        <td>{{entry.last_active_display}}</td>
+        <td>{{entry.af_display}}</td>
+        <td>{{entry.srpr_display}}</td>
+        {{#each entry.totals as |totalHash|}}
+          <td>{{totalHash.value}}</td>
+        {{/each}}
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

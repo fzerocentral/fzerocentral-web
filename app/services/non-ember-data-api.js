@@ -93,6 +93,11 @@ export default class NonEmberDataApiService extends Service {
     return this.fetchArrayResults(historyUrl);
   }
 
+  getLadderRanking(ladderId) {
+    let rankingUrl = `/ladders/${ladderId}/ranking/`
+    return this.fetchArrayResults(rankingUrl);
+  }
+
 
   /*
   The following methods create, update, and delete resources in a JSON:API
