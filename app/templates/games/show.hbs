@@ -1,26 +1,52 @@
 <h1>{{@model.game.name}}</h1>
 
-<h2>Ladders</h2>
+<h2>Main Ladders</h2>
 
-<ul>
-  {{#each @model.mainLadders as |ladder|}}
-    <li>
-      <LinkTo @route="ladders.show" @model={{ladder.id}}>
-        {{ladder.name}}
-      </LinkTo>
-    </li>
-  {{/each}}
-</ul>
+<table>
+  <tbody>
+    {{#each @model.mainLadders as |ladder|}}
+      <tr>
+        <td>
+          {{ladder.name}}
+        </td>
+        <td>
+          <LinkTo @route="ladders.show" @model={{ladder.id}}>
+            Rankings
+          </LinkTo>
+        </td>
+        <td>
+          <LinkTo @route="ladders.charts" @model={{ladder.id}}>
+            Charts
+          </LinkTo>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
 
-<ul>
-  {{#each @model.sideLadders as |ladder|}}
-    <li>
-      <LinkTo @route="ladders.show" @model={{ladder.id}}>
-        {{ladder.name}}
-      </LinkTo>
-    </li>
-  {{/each}}
-</ul>
+<h2>Side Ladders</h2>
+
+<table>
+  <tbody>
+    {{#each @model.sideLadders as |ladder|}}
+      <tr>
+        <td>
+          {{ladder.name}}
+        </td>
+        <td>
+          <LinkTo @route="ladders.show" @model={{ladder.id}}>
+            Rankings
+          </LinkTo>
+        </td>
+        <td>
+          <LinkTo @route="ladders.charts" @model={{ladder.id}}>
+            Charts
+          </LinkTo>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
 
 <h2>Admin</h2>
 
@@ -34,12 +60,4 @@
   <li>
     <LinkTo @route="games.ladders-manage" @model={{@model.game.id}}> Ladders admin </LinkTo>
   </li>
-</ul>
-
-<h2>Charts</h2>
-
-<ul class="chart-group-listing">
-  {{#each @model.topLevelChartGroups as |chartGroup|}}
-    <li><ChartGroupContents @cg={{chartGroup}} @root={{false}} /></li>
-  {{/each}}
 </ul>

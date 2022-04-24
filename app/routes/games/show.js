@@ -12,8 +12,6 @@ export default class GamesShowRoute extends Route {
         'ladder', {game_id: params.game_id, kind: 'main'}),
       sideLadders: this.store.query(
         'ladder', {game_id: params.game_id, kind: 'side'}),
-      topLevelChartGroups: this.store.query(
-        'chart-group', {game_id: params.game_id, parent_group_id: null})
     });
   }
 }

@@ -43,6 +43,7 @@ Router.map(function() {
 
   this.route('ladders', function() {
     this.route('show', { path: '/:ladder_id' });
+    this.route('charts', { path: '/:ladder_id/charts' });
   });
 
   this.route('records', function() {

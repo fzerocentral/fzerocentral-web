@@ -59,6 +59,11 @@ export default class NonEmberDataApiService extends Service {
   rearranging of data for certain pages.
   */
 
+  getChartHierarchy(chartGroupId) {
+    let url = `/chart_groups/${chartGroupId}/hierarchy/`
+    return this.fetchArrayResults(url);
+  }
+
   getChartRanking(chartId, appliedFiltersString) {
     let rankingUrl = this.urlWithQueryParams(
       `/charts/${chartId}/ranking/`,
