@@ -13,7 +13,7 @@
   <ul class="chart-group-listing">
     {{#each @item.items as |subItem|}}
       <li>
-        <ChartGroupContents @item={{subItem}} />
+        <ChartGroupContents @item={{subItem}} @ladder={{@ladder}} />
       </li>
     {{/each}}
   </ul>
@@ -22,7 +22,9 @@
 
   {{! Chart }}
 
-  <LinkTo @route="charts.show" @model={{@item.chart_id}}>
+  <LinkTo
+      @route="charts.show" @model={{@item.chart_id}}
+      @query={{hash ladderId=@ladder.id}}>
     {{@item.name}}
   </LinkTo>
 

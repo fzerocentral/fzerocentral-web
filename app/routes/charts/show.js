@@ -30,8 +30,9 @@ export default class ChartsShowRoute extends Route {
       chart: this.store.findRecord('chart', params.chart_id),
       filterGroups: this.store.query(
         'filter-group', {chart_id: params.chart_id}),
+      ladder: this.store.findRecord('ladder', params.ladderId),
       records: this.nonEmberDataApi.getChartRanking(
-        params.chart_id, params.appliedFiltersString),
+        params.chart_id, params.ladderId, params.appliedFiltersString),
     });
   }
 }

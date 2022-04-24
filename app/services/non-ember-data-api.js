@@ -64,10 +64,14 @@ export default class NonEmberDataApiService extends Service {
     return this.fetchArrayResults(url);
   }
 
-  getChartRanking(chartId, appliedFiltersString) {
+  getChartRanking(chartId, ladderId, appliedFiltersString) {
     let rankingUrl = this.urlWithQueryParams(
       `/charts/${chartId}/ranking/`,
-      new Map([['filters', appliedFiltersString], ['page[size]', 1000]]));
+      new Map([
+        ['ladder_id', ladderId],
+        ['filters', appliedFiltersString],
+        ['page[size]', 1000],
+      ]));
     return this.fetchArrayResults(rankingUrl);
   }
 

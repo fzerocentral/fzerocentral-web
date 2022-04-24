@@ -3,7 +3,7 @@
 <ul class="chart-group-listing">
   {{#each this.chartHierarchy as |item|}}
     <li>
-      <ChartGroupContents @item={{item}} />
+      <ChartGroupContents @item={{item}} @ladder={{@model.ladder}} />
     </li>
   {{/each}}
 </ul>

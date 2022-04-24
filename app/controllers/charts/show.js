@@ -4,11 +4,13 @@ import { tracked } from '@glimmer/tracking';
 
 
 export default class ChartsShowController extends Controller {
-  queryParams = [{
+  queryParams = [
+    'ladderId',
     // On the Ember side this is `appliedFiltersString`; going out to the API
     // side we'll use `filters`.
-    appliedFiltersString: 'filters'
-  }];
+    {appliedFiltersString: 'filters'},
+  ];
+  ladderId = null;
   appliedFiltersString = null;
 
   @tracked showAllFilterGroups = false;
