@@ -31,6 +31,8 @@ export default class ChartsShowRoute extends Route {
       filterGroups: this.store.query(
         'filter-group', {chart_id: params.chart_id}),
       ladder: this.store.findRecord('ladder', params.ladderId),
+      ladderFilterObjs: this.store.query(
+        'filter', {ladder_id: params.ladderId}),
       records: this.nonEmberDataApi.getChartRanking(
         params.chart_id, params.ladderId, params.appliedFiltersString),
     });

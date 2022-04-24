@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { filterSpecStrToDisplays } from "../../utils/filter-specs";
 
 
 export default class ChartsShowController extends Controller {
@@ -18,6 +19,11 @@ export default class ChartsShowController extends Controller {
   @action
   updateShowAllFilterGroups(event) {
     this.showAllFilterGroups = event.target.checked;
+  }
+
+  get ladderFilterDisplays() {
+    return filterSpecStrToDisplays(
+      this.model.ladder.filterSpec, this.model.ladderFilterObjs);
   }
 
   get shownFilterGroups() {

@@ -20,10 +20,9 @@
 
 <div>
   {{@model.ladder.name}} ladder's filters:
-  {{!--
-  {{#each this.appliedFilters as |appliedFilter index|}}
-    <span class="applied-filter">{{appliedFilter.display}}</span>
-  {{/each}}--}}
+  {{#each this.ladderFilterDisplays as |display|}}
+    <span class="applied-filter">{{display}}</span>
+  {{/each}}
 </div>
 
 <FilterApplyForm
