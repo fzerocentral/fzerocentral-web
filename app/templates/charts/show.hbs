@@ -5,10 +5,27 @@
 
   <div id="filter-controls">
 
+    <form id="switch-ladder-form">
+      Change ladder:
+      <select name="ladder"
+          {{on "change" this.goToLadder}} >
+        {{#each @model.chartLadders as |ladder|}}
+          <option
+              value="{{ladder.id}}"
+              selected={{if (eq ladder.id this.ladderId) "selected"}}
+          >
+            {{ladder.name}}
+          </option>
+        {{/each}}
+      </select>
+    </form>
+
     <div>
-      {{@model.ladder.name}} ladder's filters:
+      Ladder's filters:
       {{#each this.ladderFilterDisplays as |display|}}
         <span class="applied-filter">{{display}}</span>
+      {{else}}
+        (None)
       {{/each}}
     </div>
 

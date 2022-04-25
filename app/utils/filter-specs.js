@@ -49,8 +49,8 @@ function specItemToDisplay(specItem, filterInstances) {
 }
 
 
-function filterSpecStrToItems(specStr) {
-  if (specStr === null) {
+export function filterSpecStrToItems(specStr) {
+  if (specStr === null || specStr === '') {
     return [];
   }
 

@@ -13,7 +13,7 @@ export default class ChartsShowController extends Controller {
     // side we'll use `filters`.
     {appliedFiltersString: 'filters'},
   ];
-  ladderId = null;
+  @tracked ladderId = null;
   appliedFiltersString = null;
 
   @service router;
@@ -87,5 +87,15 @@ export default class ChartsShowController extends Controller {
         filters: this.appliedFiltersString,
       }},
     );
+  }
+
+  get destinationLadderId() {
+    let form = document.getElementById('switch-ladder-form');
+    return getFormField(form, 'ladder').value;
+  }
+
+  @action
+  goToLadder() {
+    this.ladderId = this.destinationLadderId;
   }
 }
