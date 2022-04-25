@@ -1,43 +1,111 @@
-<h1>{{@model.ladder.name}} - {{@model.chart.chartGroup.name}} - {{@model.chart.name}}</h1>
+<h2>{{@model.ladder.game.name}} - {{@model.ladder.name}}</h2>
+<h1>{{@model.chart.chartGroup.name}} - {{@model.chart.name}}</h1>
 
-<div><LinkTo @route="charts.record-new" @model={{@model.chart.id}}>Submit a record</LinkTo></div>
+<div class="equal-two-column-container">
 
-{{#if @model.chart.chartGroup.showChartsTogether}}
-  <div>
-    <LinkTo
-        @route="chart-groups.show" @model={{@model.chart.chartGroup.id}}
-        @query={{hash mainChartId=@model.chart.id}}>
-      View all charts for {{@model.chart.chartGroup.name}}
-    </LinkTo>
+  <div id="filter-controls">
+
+    <div>
+      {{@model.ladder.name}} ladder's filters:
+      {{#each this.ladderFilterDisplays as |display|}}
+        <span class="applied-filter">{{display}}</span>
+      {{/each}}
+    </div>
+
+    <FilterApplyForm
+      @filterGroups={{@model.filterGroups}}
+      @appliedFilterObjs={{@model.appliedFilterObjs}}
+      @appliedFiltersString={{this.appliedFiltersString}}
+      @updateAppliedFiltersString={{action (mut this.appliedFiltersString)}}
+      @controllerGetFilterOptions={{this.getFilterOptions}} />
+
+    <div>
+      <input
+          type="checkbox" name="show-all-filter-groups"
+          id="show-all-filter-groups-checkbox"
+          {{on "change" this.updateShowAllFilterGroups}} />
+      <label for="show-all-filter-groups-checkbox">Show all filter groups</label>
+    </div>
+
   </div>
-{{/if}}
 
-<div>
-  <LinkTo @route="charts.top-record-history" @model={{@model.chart.id}}>
-    View top record history
-  </LinkTo>
-</div>
+  <div id="chart-related-navigation">
 
-<div>
-  {{@model.ladder.name}} ladder's filters:
-  {{#each this.ladderFilterDisplays as |display|}}
-    <span class="applied-filter">{{display}}</span>
-  {{/each}}
-</div>
+    <div><LinkTo @route="charts.record-new" @model={{@model.chart.id}}>Submit a record</LinkTo></div>
 
-<FilterApplyForm
-  @filterGroups={{@model.filterGroups}}
-  @appliedFilterObjs={{@model.appliedFilterObjs}}
-  @appliedFiltersString={{this.appliedFiltersString}}
-  @updateAppliedFiltersString={{action (mut this.appliedFiltersString)}}
-  @controllerGetFilterOptions={{this.getFilterOptions}} />
+    <div>
+      <LinkTo @route="charts.top-record-history" @model={{@model.chart.id}}>
+        View top record history
+      </LinkTo>
+    </div>
 
-<div>
-  <input
-      type="checkbox" name="show-all-filter-groups"
-      id="show-all-filter-groups-checkbox"
-      {{on "change" this.updateShowAllFilterGroups}} />
-  <label for="show-all-filter-groups-checkbox">Show all filter groups</label>
+    <hr class="short">
+
+    <div>
+      <LinkTo @route="ladders.charts" @model={{@model.ladder.id}}>
+        ⮝⮝ All charts for {{@model.ladder.name}} ladder
+      </LinkTo>
+    </div>
+
+    {{#if @model.chart.chartGroup.showChartsTogether}}
+      <div>
+        <LinkTo
+            @route="chart-groups.show" @model={{@model.chart.chartGroup.id}}
+            @query={{hash mainChartId=@model.chart.id}}>
+          ⮝ {{@model.chart.chartGroup.name}}
+        </LinkTo>
+
+        {{#each this.chartsInGroup as |chart|}}
+          {{#if (eq @model.chart.id chart.id)}}
+            | {{chart.name}}
+          {{else}}
+            |
+            <LinkTo
+                @route="charts.show" @model={{chart.id}}
+                @query={{hash ladderId=this.ladderId filters=this.appliedFiltersString}}>
+              {{chart.name}}
+            </LinkTo>
+          {{/if}}
+        {{/each}}
+      </div>
+    {{/if}}
+
+    <form id="chart-navigation-form">
+
+      {{#if this.previousChart}}
+        <LinkTo
+            @route="charts.show" @model={{this.previousChart.id}}
+            @query={{hash ladderId=this.ladderId filters=this.appliedFiltersString}}
+            title="{{this.previousChart.chartGroup.name}} - {{this.previousChart.name}}">
+          ⮜
+        </LinkTo>
+      {{/if}}
+
+      <select name="chart"
+          {{on "change" this.goToChart}} >
+        {{#each @model.ladderCharts as |chart|}}
+          <option
+              value="{{chart.id}}"
+              selected={{if (eq chart.id @model.chart.id) "selected"}}
+          >
+            {{chart.chartGroup.name}} - {{chart.name}}
+          </option>
+        {{/each}}
+      </select>
+
+      {{#if this.nextChart}}
+        <LinkTo
+            @route="charts.show" @model={{this.nextChart.id}}
+            @query={{hash ladderId=this.ladderId filters=this.appliedFiltersString}}
+            title="{{this.nextChart.chartGroup.name}} - {{this.nextChart.name}}">
+          ⮞
+        </LinkTo>
+      {{/if}}
+
+    </form>
+
+  </div>
+
 </div>
 
 <table class="records-table">

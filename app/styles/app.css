@@ -28,6 +28,18 @@ ul.plain-bullet-list {
   margin-left: 30px;
 }
 
+div.equal-two-column-container {
+  display: flex;
+  gap: 20px;
+}
+div.equal-two-column-container > div {
+  flex-basis: 50%;
+}
+
+hr.short {
+  max-width: 200px;
+}
+
 div.filter-section {
   display: flex;
 }

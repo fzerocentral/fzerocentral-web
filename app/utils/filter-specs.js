@@ -65,7 +65,7 @@ function filterSpecItemsToStr(specItems) {
     // Invalid item
     return null;
   }
-  if (!specItemStrs) {
+  if (specItemStrs.length === 0) {
     // 0 items
     return null;
   }

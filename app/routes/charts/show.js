@@ -25,9 +25,12 @@ export default class ChartsShowRoute extends Route {
     }
 
     return RSVP.hash({
+      chart: this.store.findRecord('chart', params.chart_id),
+      ladderCharts: this.store.query(
+        'chart', {ladder_id: params.ladderId, 'page[size]': 1000}),
+
       appliedFilterObjs: this.store.query(
         'filter', {filter_ids: appliedFilterIds.join(',')}),
-      chart: this.store.findRecord('chart', params.chart_id),
       filterGroups: this.store.query(
         'filter-group', {chart_id: params.chart_id}),
       ladder: this.store.findRecord('ladder', params.ladderId),
