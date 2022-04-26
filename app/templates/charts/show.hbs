@@ -36,13 +36,29 @@
       @updateAppliedFiltersString={{action (mut this.appliedFiltersString)}}
       @controllerGetFilterOptions={{this.getFilterOptions}} />
 
-    <div>
-      <input
-          type="checkbox" name="show-all-filter-groups"
-          id="show-all-filter-groups-checkbox"
-          {{on "change" this.updateShowAllFilterGroups}} />
-      <label for="show-all-filter-groups-checkbox">Show all filter groups</label>
-    </div>
+    {{#if this.chartGroup.showChartsTogether}}
+      <div>
+        Columns to show:
+        <input type="radio" id="column-option-fgs"
+            name="column-option" value="filter-groups"
+            {{on "change" this.onColumnOptionChange}} >
+        <label for="column-option-fgs">Filter groups</label>
+        <input type="radio" id="column-option-ocs"
+            name="column-option" value="other-charts"
+            {{on "change" this.onColumnOptionChange}} >
+        <label for="column-option-ocs">Other charts</label>
+      </div>
+    {{/if}}
+
+    {{#if (eq this.columnOption "filter-groups") }}
+      <div>
+        <input
+            type="checkbox" name="show-all-filter-groups"
+            id="show-all-filter-groups-checkbox"
+            {{on "change" this.updateShowAllFilterGroups}} />
+        <label for="show-all-filter-groups-checkbox">Show all filter groups</label>
+      </div>
+    {{/if}}
 
   </div>
 
@@ -126,9 +142,20 @@
       <th>Rank</th>
       <th>Player</th>
       <th>Record</th>
-      {{#each this.shownFilterGroups as |filterGroup|}}
-        <th>{{filterGroup.name}}</th>
-      {{/each}}
+
+      {{#if (eq this.columnOption "filter-groups") }}
+
+        {{#each this.shownFilterGroups as |filterGroup|}}
+          <th>{{filterGroup.name}}</th>
+        {{/each}}
+
+      {{else if (eq this.columnOption "other-charts") }}
+
+        {{#each this.currentCgOtherCharts as |chart| }}
+          <th>{{chart.name}}</th>
+        {{/each}}
+
+      {{/if}}
     </tr>
   </thead>
 
@@ -138,16 +165,36 @@
         <td>{{record.rank}}</td>
         <td>{{record.player_username}}</td>
         <td>
-          <LinkTo @route="charts.player-history" @models={{array @model.chart.id record.player_id}}>
+          <LinkTo
+              @route="charts.player-history"
+              @models={{array @model.chart.id record.player_id}} >
             {{record.value_display}}
           </LinkTo>
         </td>
 
-        {{#each this.shownFilterGroups as |filterGroup|}}
-          <td>
-            {{get (find-filter-of-group record.filters filterGroup.id) "name"}}
-          </td>
-        {{/each}}
+        {{#if (eq this.columnOption "filter-groups") }}
+
+          {{#each this.shownFilterGroups as |filterGroup| }}
+            <td>
+              {{get (find-filter-of-group record.filters filterGroup.id) "name"}}
+            </td>
+          {{/each}}
+
+        {{else if (eq this.columnOption "other-charts") }}
+
+          {{#each this.currentCgOtherCharts as |otherChart| }}
+            {{#let (get (get this.otherRecords otherChart.id) record.player_id) as |otherRecord| }}
+              <td>
+                <LinkTo
+                    @route="charts.player-history"
+                    @models={{array otherChart.id record.player_id}} >
+                  {{otherRecord.value_display}}
+                </LinkTo>
+              </td>
+            {{/let}}
+          {{/each}}
+
+        {{/if}}
       </tr>
     {{/each}}
   </tbody>

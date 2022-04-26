@@ -18,12 +18,15 @@ export default class ChartsShowController extends Controller {
 
   @service router;
 
+  @tracked columnOption = null;
   @tracked showAllFilterGroups = false;
 
   @tracked chartNavigationChoices = [];
   @tracked chartNavigationPrevious = null;
   @tracked chartNavigationNext = null;
   @tracked currentCgCharts = [];
+  @tracked currentCgOtherCharts = [];
+  @tracked otherRecords = {};
 
   @action
   updateShowAllFilterGroups(event) {
@@ -54,6 +57,11 @@ export default class ChartsShowController extends Controller {
 
   get chartGroup() {
     return this.model.chart.chartGroup;
+  }
+
+  @action
+  onColumnOptionChange(event) {
+    this.columnOption = event.target.value;
   }
 
   get chartLinkQueryParams() {

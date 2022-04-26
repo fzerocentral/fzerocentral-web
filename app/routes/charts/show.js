@@ -45,6 +45,8 @@ export default class ChartsShowRoute extends Route {
   afterModel(resolvedModel /*, transition */) {
     let controller = this.controllerFor(this.routeName);
 
+    // Chart navigation
+
     if (resolvedModel.chart.chartGroup.get('showChartsTogether')) {
       // Chart navigation primarily goes from one leaf chart group to another.
       // 'Leaf' chart groups sit directly above charts, not above other
@@ -52,6 +54,7 @@ export default class ChartsShowRoute extends Route {
       let currentChart = resolvedModel.chart;
       let ladderLeafGroups = [];
       let currentCgCharts = [];
+      let currentCgOtherCharts = [];
       let currentCgIndex;
       let lastGroupId = null;
       let leafGroupHash;
@@ -76,6 +79,9 @@ export default class ChartsShowRoute extends Route {
 
         if (groupId === currentChart.chartGroup.get('id')) {
           currentCgCharts.push(chart);
+          if (chart.id !== currentChart.id) {
+            currentCgOtherCharts.push(chart);
+          }
           currentCgIndex = ladderLeafGroups.length - 1;
         }
       })
@@ -95,6 +101,7 @@ export default class ChartsShowRoute extends Route {
           controller.chartNavigationChoices[currentCgIndex + 1];
       }
       controller.currentCgCharts = currentCgCharts;
+      controller.currentCgOtherCharts = currentCgOtherCharts;
     }
     else {
       // Chart navigation treats charts individually, ignoring groups.
@@ -123,6 +130,22 @@ export default class ChartsShowRoute extends Route {
         controller.chartNavigationNext =
           controller.chartNavigationChoices[currentChartIndex + 1];
       }
+    }
+
+    // Other records in the same chart group
+
+    let modelParams = this.paramsFor(this.routeName);
+
+    if (resolvedModel.chart.chartGroup.get('showChartsTogether')) {
+      let playerIds = [];
+      resolvedModel.records.forEach(record => {
+        playerIds.push(record.player_id);
+      });
+      let currentChart = resolvedModel.chart;
+
+      controller.otherRecords = this.nonEmberDataApi.getChartOtherRecords(
+        currentChart.id, playerIds,
+        modelParams.ladderId, modelParams.appliedFiltersString);
     }
   }
 }

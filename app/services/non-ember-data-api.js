@@ -13,6 +13,14 @@ export default class NonEmberDataApiService extends Service {
     });
   }
 
+  fetchObjectResults(url) {
+    return DS.PromiseObject.create({
+      promise: fetch(url)
+        .then(response => response.json())
+        .then(responseJson => responseJson.data)
+    });
+  }
+
   postPatchDelete(url, data, method) {
     return fetch(url, {
       method: method,
@@ -75,13 +83,16 @@ export default class NonEmberDataApiService extends Service {
     return this.fetchArrayResults(rankingUrl);
   }
 
-  getChartGroupRanking(chartGroupId, mainChartId, appliedFiltersString) {
-    let rankingUrl = this.urlWithQueryParams(
-      `/chart_groups/${chartGroupId}/ranking/`,
+  getChartOtherRecords(chartId, playerIds, ladderId, appliedFiltersString) {
+    let url = this.urlWithQueryParams(
+      `/charts/${chartId}/other_records/`,
       new Map([
-        ['main_chart_id', mainChartId], ['filters', appliedFiltersString],
-        ['page[size]', 1000]]));
-    return this.fetchArrayResults(rankingUrl);
+        ['player_ids', playerIds.join(',')],
+        ['ladder_id', ladderId],
+        ['filters', appliedFiltersString],
+        ['page[size]', 1000],
+      ]));
+    return this.fetchObjectResults(url);
   }
 
   getChartTopRecordHistory(chartId, appliedFiltersString) {
