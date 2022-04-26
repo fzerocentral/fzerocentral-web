@@ -41,4 +41,88 @@ export default class ChartsShowRoute extends Route {
         params.chart_id, params.ladderId, params.appliedFiltersString),
     });
   }
+
+  afterModel(resolvedModel /*, transition */) {
+    let controller = this.controllerFor(this.routeName);
+
+    if (resolvedModel.chart.chartGroup.get('showChartsTogether')) {
+      // Chart navigation primarily goes from one leaf chart group to another.
+      // 'Leaf' chart groups sit directly above charts, not above other
+      // chart groups. (Term refers to a computer-science tree's leaf nodes)
+      let currentChart = resolvedModel.chart;
+      let ladderLeafGroups = [];
+      let currentCgCharts = [];
+      let currentCgIndex;
+      let lastGroupId = null;
+      let leafGroupHash;
+      resolvedModel.ladderCharts.forEach(chart => {
+        let groupId = chart.chartGroup.get('id');
+        if (groupId !== lastGroupId) {
+          leafGroupHash = {
+            group: chart.chartGroup,
+            // Corresponding chart is the chart of this group that
+            // has the same name as the current chart. Or if no such chart
+            // is found, we use the first chart of the group (as set here).
+            correspondingChart: chart,
+          };
+          ladderLeafGroups.push(leafGroupHash);
+          lastGroupId = groupId;
+        }
+
+        if (chart.name === currentChart.name) {
+          // This is the corresponding chart.
+          leafGroupHash.correspondingChart = chart;
+        }
+
+        if (groupId === currentChart.chartGroup.get('id')) {
+          currentCgCharts.push(chart);
+          currentCgIndex = ladderLeafGroups.length - 1;
+        }
+      })
+
+      controller.chartNavigationChoices = ladderLeafGroups.map(hash => {
+        return {
+          chart: hash.correspondingChart,
+          display: hash.group.get('name'),
+        }
+      });
+      if (currentCgIndex > 0) {
+        controller.chartNavigationPrevious =
+          controller.chartNavigationChoices[currentCgIndex - 1];
+      }
+      if (currentCgIndex < ladderLeafGroups.length - 1) {
+        controller.chartNavigationNext =
+          controller.chartNavigationChoices[currentCgIndex + 1];
+      }
+      controller.currentCgCharts = currentCgCharts;
+    }
+    else {
+      // Chart navigation treats charts individually, ignoring groups.
+      let currentChart = resolvedModel.chart;
+      let ladderCharts = [];
+      let currentChartIndex;
+      resolvedModel.ladderCharts.forEach(chart => {
+        ladderCharts.push(chart);
+
+        if (chart.id === currentChart.id) {
+          currentChartIndex = ladderCharts.length - 1;
+        }
+      })
+
+      controller.chartNavigationChoices = ladderCharts.map(chart => {
+        return {
+          chart: chart,
+          display: `${chart.chartGroup.get('name')} - ${chart.name}`,
+        }
+      });
+      if (currentChartIndex > 0) {
+        controller.chartNavigationPrevious =
+          controller.chartNavigationChoices[currentChartIndex - 1];
+      }
+      if (currentChartIndex < ladderCharts.length - 1) {
+        controller.chartNavigationNext =
+          controller.chartNavigationChoices[currentChartIndex + 1];
+      }
+    }
+  }
 }

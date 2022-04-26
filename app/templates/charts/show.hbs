@@ -1,5 +1,5 @@
 <h2>{{@model.ladder.game.name}} - {{@model.ladder.name}}</h2>
-<h1>{{@model.chart.chartGroup.name}} - {{@model.chart.name}}</h1>
+<h1>{{this.chartGroup.name}} - {{@model.chart.name}}</h1>
 
 <div class="equal-two-column-container">
 
@@ -64,24 +64,18 @@
       </LinkTo>
     </div>
 
-    {{#if @model.chart.chartGroup.showChartsTogether}}
+    {{#if this.chartGroup.showChartsTogether}}
       <div>
-        <LinkTo
-            @route="chart-groups.show" @model={{@model.chart.chartGroup.id}}
-            @query={{hash mainChartId=@model.chart.id}}>
-          ⮝ {{@model.chart.chartGroup.name}}
-        </LinkTo>
-
-        {{#each this.chartsInGroup as |chart|}}
+        {{#each this.currentCgCharts as |chart|}}
           {{#if (eq @model.chart.id chart.id)}}
-            | {{chart.name}}
+            {{chart.name}} |
           {{else}}
-            |
             <LinkTo
                 @route="charts.show" @model={{chart.id}}
                 @query={{hash ladderId=this.ladderId filters=this.appliedFiltersString}}>
               {{chart.name}}
             </LinkTo>
+            |
           {{/if}}
         {{/each}}
       </div>
@@ -89,32 +83,33 @@
 
     <form id="chart-navigation-form">
 
-      {{#if this.previousChart}}
+      {{#if this.chartNavigationPrevious}}
         <LinkTo
-            @route="charts.show" @model={{this.previousChart.id}}
-            @query={{hash ladderId=this.ladderId filters=this.appliedFiltersString}}
-            title="{{this.previousChart.chartGroup.name}} - {{this.previousChart.name}}">
+            @route="charts.show" @model={{this.chartNavigationPrevious.chart.id}}
+            @query={{this.chartLinkQueryParams}}
+            title={{this.chartNavigationPrevious.display}}>
           ⮜
         </LinkTo>
       {{/if}}
 
       <select name="chart"
           {{on "change" this.goToChart}} >
-        {{#each @model.ladderCharts as |chart|}}
+        {{#each this.chartNavigationChoices as |navChoice|}}
           <option
-              value="{{chart.id}}"
-              selected={{if (eq chart.id @model.chart.id) "selected"}}
+              value="{{navChoice.chart.id}}"
+              {{! TODO: After changing charts once, the initial selection fails to get set. }}
+              selected={{if (eq navChoice.chart.id @model.chart.id) "selected"}}
           >
-            {{chart.chartGroup.name}} - {{chart.name}}
+            {{navChoice.display}}
           </option>
         {{/each}}
       </select>
 
-      {{#if this.nextChart}}
+      {{#if this.chartNavigationNext}}
         <LinkTo
-            @route="charts.show" @model={{this.nextChart.id}}
-            @query={{hash ladderId=this.ladderId filters=this.appliedFiltersString}}
-            title="{{this.nextChart.chartGroup.name}} - {{this.nextChart.name}}">
+            @route="charts.show" @model={{this.chartNavigationNext.chart.id}}
+            @query={{this.chartLinkQueryParams}}
+            title={{this.chartNavigationNext.display}}>
           ⮞
         </LinkTo>
       {{/if}}

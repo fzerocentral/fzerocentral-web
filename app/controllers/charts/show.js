@@ -20,6 +20,11 @@ export default class ChartsShowController extends Controller {
 
   @tracked showAllFilterGroups = false;
 
+  @tracked chartNavigationChoices = [];
+  @tracked chartNavigationPrevious = null;
+  @tracked chartNavigationNext = null;
+  @tracked currentCgCharts = [];
+
   @action
   updateShowAllFilterGroups(event) {
     this.showAllFilterGroups = event.target.checked;
@@ -47,30 +52,15 @@ export default class ChartsShowController extends Controller {
     })
   }
 
-  get chartsInGroup() {
-    if (!this.model.ladderCharts) {return null;}
-    let chartGroupId = this.model.chart.chartGroup.get('id');
-    return this.model.ladderCharts.filter(
-      chart => chart.chartGroup.get('id') === chartGroupId);
+  get chartGroup() {
+    return this.model.chart.chartGroup;
   }
 
-  get previousChart() {
-    if (!this.model.ladderCharts) {return null;}
-    let thisChartIndex = this.model.ladderCharts.indexOf(this.model.chart);
-    if (thisChartIndex === 0) {
-      // First chart in ladder
-      return null;
+  get chartLinkQueryParams() {
+    return {
+      ladderId: this.ladderId,
+      filters: this.appliedFiltersString,
     }
-    return this.model.ladderCharts.objectAt(thisChartIndex - 1);
-  }
-  get nextChart() {
-    if (!this.model.ladderCharts) {return null;}
-    let thisChartIndex = this.model.ladderCharts.indexOf(this.model.chart);
-    if (thisChartIndex === this.model.ladderCharts.length - 1) {
-      // Last chart in ladder
-      return null;
-    }
-    return this.model.ladderCharts.objectAt(thisChartIndex + 1);
   }
 
   get destinationChartId() {
@@ -82,10 +72,7 @@ export default class ChartsShowController extends Controller {
   goToChart() {
     this.router.transitionTo(
       'charts.show', this.destinationChartId,
-      {queryParams: {
-        ladderId: this.ladderId,
-        filters: this.appliedFiltersString,
-      }},
+      {queryParams: this.chartLinkQueryParams},
     );
   }
 
