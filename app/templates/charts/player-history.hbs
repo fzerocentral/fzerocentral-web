@@ -1,4 +1,15 @@
-<h1>{{@model.player.username}}'s history for {{@model.chart.chartGroup.name}} - {{@model.chart.name}}</h1>
+<h2>
+  <LinkTo
+      @route="charts.show" @model={{@model.chart.id}}
+      @query={{this.chartLinkQueryParams}} >
+    {{@model.chart.chartGroup.name}} - {{@model.chart.name}}
+  </LinkTo>
+</h2>
+<h1>{{@model.player.username}}'s record history</h1>
+
+<LadderAndFilterControls
+    @extraFiltersString={{this.appliedFiltersString}}
+    @manager={{this.ladderAndFilterControls}} />
 
 <div>
   <input

@@ -145,7 +145,8 @@
         <td>
           <LinkTo
               @route="charts.player-history"
-              @models={{array @model.chart.id record.player_id}} >
+              @models={{array @model.chart.id record.player_id}}
+              @query={{this.historyLinkQueryParams}} >
             {{record.value_display}}
           </LinkTo>
         </td>
@@ -165,7 +166,8 @@
               <td>
                 <LinkTo
                     @route="charts.player-history"
-                    @models={{array otherChart.id record.player_id}} >
+                    @models={{array otherChart.id record.player_id}}
+                    @query={{this.historyLinkQueryParams}} >
                   {{otherRecord.value_display}}
                 </LinkTo>
               </td>
