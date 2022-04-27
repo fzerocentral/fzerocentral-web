@@ -151,7 +151,6 @@ export default class ChartsShowRoute extends Route {
       resolvedModel.ladderFilterObjs,
       resolvedModel.chartLadders,
       controller.updateLadderId,
-      modelParams.appliedFiltersString,
       resolvedModel.filterGroups,
       resolvedModel.appliedFilterObjs,
       controller.getFilterOptions,

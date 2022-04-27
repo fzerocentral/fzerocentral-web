@@ -43,13 +43,11 @@ export default class ChartsTopRecordHistoryRoute extends Route {
 
     // Controls component
 
-    let modelParams = this.paramsFor(this.routeName);
     controller.ladderAndFilterControls = new LadderAndFilterControlsManager(
       resolvedModel.ladder,
       resolvedModel.ladderFilterObjs,
       resolvedModel.chartLadders,
       controller.updateLadderId,
-      modelParams.appliedFiltersString,
       resolvedModel.filterGroups,
       resolvedModel.appliedFilterObjs,
       controller.getFilterOptions,

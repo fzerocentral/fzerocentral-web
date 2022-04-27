@@ -28,6 +28,13 @@ export default class ChartsTopRecordHistoryController extends Controller {
     }
   }
 
+  get chartLinkQueryParams() {
+    return {
+      ladderId: this.ladderId,
+      filters: this.appliedFiltersString,
+    }
+  }
+
   @action
   getFilterOptions(filterGroupId, searchText) {
     return this.store.query('filter', {

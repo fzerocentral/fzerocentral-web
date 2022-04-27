@@ -17,12 +17,12 @@
   <input
       type="checkbox" name="show-filter-controls"
       id="show-filter-controls-checkbox"
-      checked={{if @manager.showFilterControls "checked"}}
-      {{on "change" @manager.onShowFilterControlsInput}} />
+      checked={{if this.showFilterControls "checked"}}
+      {{on "change" this.onShowFilterControlsInput}} />
   <label for="show-filter-controls-checkbox">Show filter controls</label>
 </div>
 
-{{#if @manager.showFilterControls}}
+{{#if this.showFilterControls}}
 
   <div>
     Ladder's filters:
@@ -36,7 +36,7 @@
   <FilterApplyForm
     @filterGroups={{@manager.filterGroups}}
     @appliedFilterObjs={{@manager.extraFilterObjs}}
-    @appliedFiltersString={{@manager.extraFiltersString}}
+    @appliedFiltersString={{@extraFiltersString}}
     @updateAppliedFiltersString={{@manager.updateExtraFiltersString}}
     @controllerGetFilterOptions={{@manager.getFilterOptions}} />
 

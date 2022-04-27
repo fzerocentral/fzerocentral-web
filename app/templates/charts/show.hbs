@@ -5,7 +5,9 @@
 
   <div id="filter-and-column-controls">
 
-    <LadderAndFilterControls @manager={{this.ladderAndFilterControls}} />
+    <LadderAndFilterControls
+        @extraFiltersString={{this.appliedFiltersString}}
+        @manager={{this.ladderAndFilterControls}} />
 
     {{#if this.chartGroup.showChartsTogether}}
       <form id="column-option-form">
