@@ -5,49 +5,7 @@
 
   <div id="filter-and-column-controls">
 
-    <form id="switch-ladder-form">
-      Change ladder:
-      <select name="ladder"
-          {{on "change" this.goToLadder}} >
-        {{#each @model.chartLadders as |ladder|}}
-          <option
-              value="{{ladder.id}}"
-              selected={{if (eq ladder.id this.ladderId) "selected"}}
-          >
-            {{ladder.name}}
-          </option>
-        {{/each}}
-      </select>
-    </form>
-
-    <div>
-      <input
-          type="checkbox" name="show-filter-controls"
-          id="show-filter-controls-checkbox"
-          checked={{if this.showFilterControls "checked"}}
-          {{on "change" this.onShowFilterControlsInput}} />
-      <label for="show-filter-controls-checkbox">Show filter controls</label>
-    </div>
-
-    {{#if this.showFilterControls}}
-
-      <div>
-        Ladder's filters:
-        {{#each this.ladderFilterDisplays as |display|}}
-          <span class="applied-filter">{{display}}</span>
-        {{else}}
-          (None)
-        {{/each}}
-      </div>
-
-      <FilterApplyForm
-        @filterGroups={{@model.filterGroups}}
-        @appliedFilterObjs={{@model.appliedFilterObjs}}
-        @appliedFiltersString={{this.appliedFiltersString}}
-        @updateAppliedFiltersString={{action (mut this.appliedFiltersString)}}
-        @controllerGetFilterOptions={{this.getFilterOptions}} />
-
-    {{/if}}
+    <LadderAndFilterControls @manager={{this.ladderAndFilterControls}} />
 
     {{#if this.chartGroup.showChartsTogether}}
       <form id="column-option-form">

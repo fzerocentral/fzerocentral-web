@@ -2,6 +2,9 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import { filterSpecStrToItems } from "../../utils/filter-specs";
+import {
+  LadderAndFilterControlsManager
+} from "../../components/ladder-and-filter-controls";
 
 
 export default class ChartsShowRoute extends Route {
@@ -140,5 +143,19 @@ export default class ChartsShowRoute extends Route {
         currentChart.id,
         modelParams.ladderId, modelParams.appliedFiltersString);
     }
+
+    // Controls component
+
+    controller.ladderAndFilterControls = new LadderAndFilterControlsManager(
+      resolvedModel.ladder,
+      resolvedModel.ladderFilterObjs,
+      resolvedModel.chartLadders,
+      controller.updateLadderId,
+      modelParams.appliedFiltersString,
+      resolvedModel.filterGroups,
+      resolvedModel.appliedFilterObjs,
+      controller.getFilterOptions,
+      controller.updateAppliedFiltersString,
+    );
   }
 }

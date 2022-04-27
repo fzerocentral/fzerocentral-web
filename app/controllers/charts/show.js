@@ -2,7 +2,6 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { filterSpecStrToDisplays } from "../../utils/filter-specs";
 import { getFormValue } from "../../utils/forms";
 
 
@@ -15,13 +14,12 @@ export default class ChartsShowController extends Controller {
     {columnOption: 'columns'},
   ];
   @tracked ladderId = null;
-  appliedFiltersString = null;
+  @tracked appliedFiltersString = null;
   @tracked columnOption = 'filter-groups';
 
   @service router;
 
-  // Show filter controls initially if there are any applied filters.
-  @tracked showFilterControls = (this.appliedFiltersString !== null);
+  @tracked ladderAndFilterControls;
   @tracked showAllFilterGroups = false;
 
   @tracked chartNavigationChoices = [];
@@ -32,17 +30,8 @@ export default class ChartsShowController extends Controller {
   @tracked otherRecords = {};
 
   @action
-  onShowFilterControlsInput(event) {
-    this.showFilterControls = event.target.checked;
-  }
-  @action
   onShowAllFilterGroupsInput(event) {
     this.showAllFilterGroups = event.target.checked;
-  }
-
-  get ladderFilterDisplays() {
-    return filterSpecStrToDisplays(
-      this.model.ladder.filterSpec, this.model.ladderFilterObjs);
   }
 
   get shownFilterGroups() {
@@ -92,13 +81,13 @@ export default class ChartsShowController extends Controller {
     );
   }
 
-  get destinationLadderId() {
-    let form = document.getElementById('switch-ladder-form');
-    return getFormValue(form, 'ladder');
+  @action
+  updateLadderId(newId) {
+    this.ladderId = newId;
   }
 
   @action
-  goToLadder() {
-    this.ladderId = this.destinationLadderId;
+  updateAppliedFiltersString(newString) {
+    this.appliedFiltersString = newString;
   }
 }
