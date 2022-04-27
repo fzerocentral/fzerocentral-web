@@ -120,7 +120,7 @@ export default class FilterGroupsShowController extends Controller {
 
   @action
   deleteFilter() {
-    this.nonEmberDataApi.deleteFilter(this.selectedFilterId)
+    this.nonEmberDataApi.deleteResource('filters', this.selectedFilterId)
     .then(data => {
       if ('errors' in data) {
         let error = data.errors[0];

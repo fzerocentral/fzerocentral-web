@@ -1,0 +1,43 @@
+<form id="switch-ladder-form">
+  Change ladder:
+  <select name="ladder"
+      {{on "change" @manager.switchLadder}} >
+    {{#each @manager.ladderOptions as |ladder|}}
+      <option
+          value="{{ladder.id}}"
+          selected={{if (eq ladder.id @manager.ladder.id) "selected"}}
+      >
+        {{ladder.name}}
+      </option>
+    {{/each}}
+  </select>
+</form>
+
+<div>
+  <input
+      type="checkbox" name="show-filter-controls"
+      id="show-filter-controls-checkbox"
+      checked={{if this.showFilterControls "checked"}}
+      {{on "change" this.onShowFilterControlsInput}} />
+  <label for="show-filter-controls-checkbox">Show filter controls</label>
+</div>
+
+{{#if this.showFilterControls}}
+
+  <div>
+    Ladder's filters:
+    {{#each @manager.ladderFilterDisplays as |display|}}
+      <span class="applied-filter">{{display}}</span>
+    {{else}}
+      (None)
+    {{/each}}
+  </div>
+
+  <FilterApplyForm
+    @filterGroups={{@manager.filterGroups}}
+    @appliedFilterObjs={{@manager.extraFilterObjs}}
+    @appliedFiltersString={{@extraFiltersString}}
+    @updateAppliedFiltersString={{@manager.updateExtraFiltersString}}
+    @controllerGetFilterOptions={{@manager.getFilterOptions}} />
+
+{{/if}}

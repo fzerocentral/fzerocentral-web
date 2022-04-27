@@ -1,19 +1,34 @@
-{{#unless @root}}
-  <LinkTo @route="chart-groups.show" @model={{@cg.id}}>{{@cg.name}}</LinkTo>
-{{/unless}}
+{{#if @item.chart_group_id}}
 
-<ul class="chart-group-listing">
-  {{#each @cg.childGroups as |cg2|}}
-    <li>
-      <ChartGroupContents @cg={{cg2}} @root={{false}} />
-    </li>
-  {{/each}}
-</ul>
+  {{! Chart group }}
 
-<ul class="chart-group-listing">
-  {{#each @cg.charts as |chart|}}
-    <li>
-      <LinkTo @route="charts.show" @model={{chart.id}}>{{chart.name}}</LinkTo>
-    </li>
-  {{/each}}
-</ul>
+  {{#if @item.show_charts_together}}
+    {{! Link to first chart in group, with column option set to other charts }}
+    <LinkTo
+        @route="charts.show" @model={{get (get @item.items 0) "chart_id"}}
+        @query={{hash ladderId=@ladder.id columns="other-charts"}}>
+      {{@item.name}}
+    </LinkTo>
+  {{else}}
+    {{@item.name}}
+  {{/if}}
+
+  <ul class="chart-group-listing">
+    {{#each @item.items as |subItem|}}
+      <li>
+        <ChartGroupContents @item={{subItem}} @ladder={{@ladder}} />
+      </li>
+    {{/each}}
+  </ul>
+
+{{else}}
+
+  {{! Chart }}
+
+  <LinkTo
+      @route="charts.show" @model={{@item.chart_id}}
+      @query={{hash ladderId=@ladder.id}}>
+    {{@item.name}}
+  </LinkTo>
+
+{{/if}}

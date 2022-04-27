@@ -13,10 +13,10 @@
   </select>
 
   {{! Choice of is, is not, <=, >= }}
-  <select name="compare-option">
-    {{#each this.compareOptions as |compareOption|}}
-      <option value="{{filterGroup.id}}">
-        {{compareOption}}
+  <select name="modifier">
+    {{#each this.modifierOptions as |modifierOption|}}
+      <option value="{{modifierOption.code}}">
+        {{modifierOption.display}}
       </option>
     {{/each}}
   </select>
@@ -27,13 +27,17 @@
     @label=""
     @controlInstance={{this.filterSelect}} />
 
-  <button type="button" {{action "addFilter"}}>Add</button>
+  <button type="button" {{on "click" this.addFilter}}>Add</button>
 </form>
 
 <div>
-  Applied filters:
-  {{#each this.appliedFilters as |appliedFilter index|}}
-    <span class="applied-filter">{{appliedFilter.display}}</span>
-    <button type="button" class="applied-filter-remove-button" {{action "removeFilter" index}}> x </button>
+  Added filters:
+  {{#each this.addedFilterDisplays as |addedFilterDisplay index|}}
+    <span class="applied-filter">{{addedFilterDisplay}}</span>
+    <button
+        type="button" class="applied-filter-remove-button"
+        {{on "click" (fn this.removeFilter index)}}>
+      x
+    </button>
   {{/each}}
 </div>

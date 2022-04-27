@@ -13,6 +13,14 @@ export default class NonEmberDataApiService extends Service {
     });
   }
 
+  fetchObjectResults(url) {
+    return DS.PromiseObject.create({
+      promise: fetch(url)
+        .then(response => response.json())
+        .then(responseJson => responseJson.data)
+    });
+  }
+
   postPatchDelete(url, data, method) {
     return fetch(url, {
       method: method,
@@ -59,38 +67,58 @@ export default class NonEmberDataApiService extends Service {
   rearranging of data for certain pages.
   */
 
-  getChartRanking(chartId, appliedFiltersString) {
+  getChartHierarchy(chartGroupId) {
+    let url = `/chart_groups/${chartGroupId}/hierarchy/`
+    return this.fetchArrayResults(url);
+  }
+
+  getChartRanking(chartId, ladderId, appliedFiltersString) {
     let rankingUrl = this.urlWithQueryParams(
       `/charts/${chartId}/ranking/`,
-      new Map([['filters', appliedFiltersString], ['page[size]', 1000]]));
+      new Map([
+        ['ladder_id', ladderId],
+        ['filters', appliedFiltersString],
+        ['page[size]', 1000],
+      ]));
     return this.fetchArrayResults(rankingUrl);
   }
 
-  getChartGroupRanking(chartGroupId, mainChartId, appliedFiltersString) {
-    let rankingUrl = this.urlWithQueryParams(
-      `/chart_groups/${chartGroupId}/ranking/`,
+  getChartOtherRecords(chartId, ladderId, appliedFiltersString) {
+    let url = this.urlWithQueryParams(
+      `/charts/${chartId}/other_records/`,
       new Map([
-        ['main_chart_id', mainChartId], ['filters', appliedFiltersString],
-        ['page[size]', 1000]]));
+        ['ladder_id', ladderId],
+        ['filters', appliedFiltersString],
+        ['page[size]', 1000],
+      ]));
+    return this.fetchObjectResults(url);
+  }
+
+  getChartTopRecordHistory(chartId, ladderId, appliedFiltersString) {
+    let historyUrl = this.urlWithQueryParams(
+      `/charts/${chartId}/record_history/`,
+      new Map([
+        ['improvements', 'filter'],
+        ['ladder_id', ladderId],
+        ['filters', appliedFiltersString],
+        ['page[size]', 100]]));
+    return this.fetchArrayResults(historyUrl);
+  }
+
+  getChartPlayerHistory(chartId, playerId, ladderId, appliedFiltersString) {
+    let historyUrl = this.urlWithQueryParams(
+      `/charts/${chartId}/record_history/`,
+      new Map([
+        ['player_id', playerId],
+        ['ladder_id', ladderId],
+        ['filters', appliedFiltersString],
+        ['page[size]', 100]]));
+    return this.fetchArrayResults(historyUrl);
+  }
+
+  getLadderRanking(ladderId) {
+    let rankingUrl = `/ladders/${ladderId}/ranking/`
     return this.fetchArrayResults(rankingUrl);
-  }
-
-  getChartTopRecordHistory(chartId, appliedFiltersString) {
-    let historyUrl = this.urlWithQueryParams(
-      `/charts/${chartId}/record_history/`,
-      new Map([
-        ['improvements', 'filter'], ['filters', appliedFiltersString],
-        ['page[size]', 50]]));
-    return this.fetchArrayResults(historyUrl);
-  }
-
-  getChartPlayerHistory(chartId, playerId, appliedFiltersString) {
-    let historyUrl = this.urlWithQueryParams(
-      `/charts/${chartId}/record_history/`,
-      new Map([
-        ['player_id', playerId], ['filters', appliedFiltersString],
-        ['page[size]', 50]]));
-    return this.fetchArrayResults(historyUrl);
   }
 
 
@@ -100,6 +128,11 @@ export default class NonEmberDataApiService extends Service {
   working just right for these kinds of endpoints, particularly in terms of
   rolling back data if the API returns an error.
   */
+
+  deleteResource(resourceType, resourceId) {
+    let deleteUrl = `/${resourceType}/${resourceId}/`;
+    return this.delete(deleteUrl, null);
+  }
 
   createFilter(filterGroupId, attributes) {
     let createUrl = `/filters/`;
@@ -126,11 +159,6 @@ export default class NonEmberDataApiService extends Service {
       'attributes': attributes,
     };
     return this.patch(filterUrl, data);
-  }
-
-  deleteFilter(filterId) {
-    let filterUrl = `/filters/${filterId}/`;
-    return this.delete(filterUrl, null);
   }
 
   addFilterImplication(selectedFilterId, targetFilterId) {

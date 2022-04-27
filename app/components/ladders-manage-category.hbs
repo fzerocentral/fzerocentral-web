@@ -3,6 +3,8 @@
     <tr>
       <th>Name</th>
       <th>Filter spec</th>
+      <th>Chart group</th>
+      <th></th>
     </tr>
   </thead>
 
@@ -16,6 +18,14 @@
         </td>
         <td>
           {{ladder.filterSpec}}
+        </td>
+        <td>
+          {{ladder.chartGroup.name}}
+        </td>
+        <td>
+          <button type="button" {{on "click" (fn @deleteLadder ladder.id)}}>
+            Delete
+          </button>
         </td>
       </tr>
     {{/each}}

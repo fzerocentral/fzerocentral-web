@@ -5,6 +5,12 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { getFormField } from "../utils/forms";
 import { FilterSelectControl } from "./filter-select";
+import {
+  addFilterSpecItem,
+  filterSpecStrToDisplays,
+  Modifier,
+  removeFilterSpecItem,
+} from "../utils/filter-specs";
 
 
 export default class FilterApplyFormComponent extends Component {
@@ -42,46 +48,29 @@ export default class FilterApplyFormComponent extends Component {
     this.filterSelect.initializeOptions();
   }
 
-  /* Compare types */
+  /* Filter-application modifiers */
 
-  get compareOptions() {
+  get modifierOptions() {
     let group = this.selectedFilterGroup;
     if (!group) {
       return [];
     }
 
     if (group.get('kind') === 'numeric') {
-      return ['is', 'is NOT', '>=', '<='];
+      return [
+        Modifier.Equal, Modifier.NotEqual,
+        Modifier.GreaterOrEqual, Modifier.LessOrEqual];
     }
     else {
-      return ['is', 'is NOT'];
+      return [Modifier.Equal, Modifier.NotEqual];
     }
   }
 
-  get selectedCompareOption() {
-    return getFormField(this.form, 'compare-option').value;
+  get selectedModifier() {
+    return getFormField(this.form, 'modifier').value;
   }
-  set selectedCompareOption(value) {
-    getFormField(this.form, 'compare-option').value = value;
-  }
-
-  compareTypeTextToSuffix(text) {
-    let textToSuffix = {
-      'is': '',
-      'is NOT': 'n',
-      '>=': 'ge',
-      '<=': 'le',
-    };
-    return textToSuffix[text];
-  }
-  compareTypeSuffixToText(suffix) {
-    let suffixToText = {
-      '': 'is',
-      'n': 'is NOT',
-      'ge': '>=',
-      'le': '<=',
-    };
-    return suffixToText[suffix];
+  set selectedModifier(value) {
+    getFormField(this.form, 'modifier').value = value;
   }
 
   /* Filters */
@@ -103,84 +92,22 @@ export default class FilterApplyFormComponent extends Component {
 
   @action
   addFilter() {
-    // Get the existing applied-filter strings
-    let filtersString = this.args.appliedFiltersString;
-    let filterStrings = [];
-    if (filtersString !== null) {
-      filterStrings = filtersString.split('-');
-    }
-
-    // Make a string for the newly added filter
-    let newFilterId = this.filterSelect.selectedFilterId;
-    let compareOptionTypeSuffix =
-      this.compareTypeTextToSuffix(this.selectedCompareOption);
-    let newFilterString = `${newFilterId}${compareOptionTypeSuffix}`;
-
-    // Add the new string
-    filterStrings.push(newFilterString);
-    let newAppliedFiltersString = filterStrings.join('-');
-    this.args.updateAppliedFiltersString(newAppliedFiltersString);
+    let newStr = addFilterSpecItem(
+      this.args.appliedFiltersString,
+      this.filterSelect.selectedFilterId,
+      this.selectedModifier,
+    )
+    this.args.updateAppliedFiltersString(newStr);
   }
 
   @action
   removeFilter(index) {
-    // We're assuming this'll only ever be called with a valid index.
-    let filtersString = this.args.appliedFiltersString;
-    let filterStrings = filtersString.split('-');
-    // Remove 1 element at the specified index.
-    filterStrings.splice(index, 1);
-
-    if (filterStrings.length === 0) {
-      // We expect null, not '', if there's 0 filters applied.
-      this.args.updateAppliedFiltersString(null);
-    }
-    else {
-      this.args.updateAppliedFiltersString(filterStrings.join('-'));
-    }
+    let newStr = removeFilterSpecItem(this.args.appliedFiltersString, index);
+    this.args.updateAppliedFiltersString(newStr);
   }
 
-  get appliedFilterSpecs() {
-    let appliedFiltersString = this.args.appliedFiltersString;
-    if (appliedFiltersString === null) {
-      return A([]);
-    }
-
-    let appliedFilterStrings = appliedFiltersString.split('-');
-    let appliedFilterSpecs = A([]);
-    appliedFilterStrings.forEach((afString) => {
-      let regexMatch = /([0-9]+)([a-zA-Z]*)/.exec(afString);
-      if (regexMatch === null) {
-        // Applied filter string was invalid
-        return;
-      }
-      appliedFilterSpecs.pushObject({
-        filterId: regexMatch[1], typeSuffix: regexMatch[2]});
-    });
-    return appliedFilterSpecs;
-  }
-
-  get appliedFilters() {
-    let appliedFilters = A([]);
-
-    this.appliedFilterSpecs.forEach((afSpec) => {
-      let compareText = this.compareTypeSuffixToText(afSpec.typeSuffix);
-      let filterObj = this.args.appliedFilterObjs.find(
-        f => f.get('id') === afSpec.filterId);
-      if (!filterObj) {
-        // Perhaps appliedFilterObjs still has to be updated.
-        return;
-      }
-
-      let filterName = filterObj.get('name');
-      let filterGroupName = filterObj.get('filterGroup').get('name');
-      let display = `${filterGroupName} ${compareText} ${filterName}`;
-
-      appliedFilters.push({
-        filterGroup: filterObj.get('filterGroup'),
-        display: display,
-      });
-    });
-
-    return appliedFilters;
+  get addedFilterDisplays() {
+    return filterSpecStrToDisplays(
+      this.args.appliedFiltersString, this.args.appliedFilterObjs);
   }
 }

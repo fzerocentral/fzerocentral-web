@@ -69,7 +69,7 @@
 
         <div class="error-message" id="filter-delete-error"></div>
         <div>
-          <button type="button" class="filter-delete-button" {{action "deleteFilter"}}> Delete this filter </button>
+          <button type="button" {{on "click" this.deleteFilter}}> Delete this filter </button>
         </div>
 
         {{#if (eq filter.filterGroup.kind "select")}}

@@ -1,10 +1,41 @@
-<h1><LinkTo @route="games.ladders" @model={{@model.game.id}}> {{@model.game.name}} </LinkTo> - {{@model.name}} Ladder</h1>
+<h1>
+  <LinkTo @route="games.show" @model={{@model.ladder.game.id}}>
+    {{@model.ladder.game.name}}
+  </LinkTo>
+  - {{@model.ladder.name}} Ladder
+</h1>
 
 <ul>
-  <li>Kind: {{@model.kind}}</li>
-  <li>Filters: {{@model.filterSpec}}</li>
-  <li>Applies to: {{@model.chartGroup.name}}</li>
+  <li>Filters: {{@model.ladder.filterSpec}}</li>
+  <li>Applies to: {{@model.ladder.chartGroup.name}}</li>
 </ul>
 
-{{!-- TODO: This button would go better on a 'ladder edit' page, not on the show page. --}}
-<button type="button" class="delete-button" {{action "deleteLadder"}}> Delete ladder </button>
+<table class="records-table">
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Player</th>
+      <th>Last active</th>
+      <th>Average finish</th>
+      <th>SR/PR</th>
+        {{#each firstEntry.totals as |totalHash|}}
+          <th>{{get totalHash "name"}}</th>
+        {{/each}}
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each @model.ranking as |entry|}}
+      <tr>
+        <td>{{entry.rank}}</td>
+        <td>{{entry.player_username}}</td>
+        <td>{{entry.last_active_display}}</td>
+        <td>{{entry.af_display}}</td>
+        <td>{{entry.srpr_display}}</td>
+        {{#each entry.totals as |totalHash|}}
+          <td>{{totalHash.value}}</td>
+        {{/each}}
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

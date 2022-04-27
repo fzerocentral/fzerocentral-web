@@ -1,0 +1,9 @@
+<h1>{{@model.ladder.game.name}} - {{@model.ladder.name}} - Charts</h1>
+
+<ul class="chart-group-listing">
+  {{#each this.chartHierarchy as |item|}}
+    <li>
+      <ChartGroupContents @item={{item}} @ladder={{@model.ladder}} />
+    </li>
+  {{/each}}
+</ul>

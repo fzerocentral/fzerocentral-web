@@ -37,7 +37,7 @@ export default class GamesLadderNewController extends Controller {
 
       // Success.
       this.target.transitionTo(
-        'games.ladders', this.model.game.id);
+        'games.ladders-manage', this.model.game.id);
     })
     .catch(error => {
       setFormError(this.form, error.message);

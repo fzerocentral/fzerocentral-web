@@ -4,10 +4,10 @@ import RSVP from 'rsvp';
 import {
   LadderAndFilterControlsManager
 } from "../../components/ladder-and-filter-controls";
-import {filterSpecStrToItems} from "../../utils/filter-specs";
+import { filterSpecStrToItems } from "../../utils/filter-specs";
 
 
-export default class ChartsPlayerHistoryRoute extends Route {
+export default class ChartsTopRecordHistoryRoute extends Route {
   @service nonEmberDataApi;
   @service store;
 
@@ -33,10 +33,8 @@ export default class ChartsPlayerHistoryRoute extends Route {
       ladderFilterObjs: this.store.query(
         'filter', {ladder_id: params.ladderId}),
 
-      player: this.store.findRecord('player', params.player_id),
-      records: this.nonEmberDataApi.getChartPlayerHistory(
-        params.chart_id, params.player_id,
-        params.ladderId, params.appliedFiltersString),
+      records: this.nonEmberDataApi.getChartTopRecordHistory(
+        params.chart_id, params.ladderId, params.appliedFiltersString),
     });
   }
 

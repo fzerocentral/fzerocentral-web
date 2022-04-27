@@ -3,7 +3,7 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 
-export default class ChartsPlayerHistoryController extends Controller {
+export default class ChartsTopRecordHistoryController extends Controller {
   queryParams = [
     'ladderId',
     {appliedFiltersString: 'filters'},

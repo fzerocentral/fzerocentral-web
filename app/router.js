@@ -12,15 +12,15 @@ Router.map(function() {
     this.route('chart-types', { path: '/:game_id/chart-types' });
     this.route('filter-groups', { path: '/:game_id/filter-groups' });
     this.route('ladder-new', { path: '/:game_id/ladder-new' });
-    this.route('ladders', { path: '/:game_id/ladders' });
+    this.route('ladders-manage', { path: '/:game_id/ladders-manage' });
   });
 
   this.route('charts', function() {
     this.route('show', { path: '/:chart_id' });
     this.route('player-history',
                { path: '/:chart_id/players/:player_id/history' });
-    this.route('top-record-history',
-               { path: '/:chart_id/top-record-history' });
+    this.route('site-record-history',
+               { path: '/:chart_id/site-record-history' });
     this.route('record-new', { path: '/:chart_id/record-new' });
   });
 
@@ -43,6 +43,7 @@ Router.map(function() {
 
   this.route('ladders', function() {
     this.route('show', { path: '/:ladder_id' });
+    this.route('charts', { path: '/:ladder_id/charts' });
   });
 
   this.route('records', function() {
