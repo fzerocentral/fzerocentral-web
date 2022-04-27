@@ -3,7 +3,10 @@
   {{! Chart group }}
 
   {{#if @item.show_charts_together}}
-    <LinkTo @route="chart-groups.show" @model={{@item.chart_group_id}}>
+    {{! Link to first chart in group, with column option set to other charts }}
+    <LinkTo
+        @route="charts.show" @model={{get (get @item.items 0) "chart_id"}}
+        @query={{hash ladderId=@ladder.id columns="other-charts"}}>
       {{@item.name}}
     </LinkTo>
   {{else}}

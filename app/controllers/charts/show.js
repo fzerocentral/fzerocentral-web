@@ -3,7 +3,7 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { filterSpecStrToDisplays } from "../../utils/filter-specs";
-import { getFormField } from "../../utils/forms";
+import { getFormValue } from "../../utils/forms";
 
 
 export default class ChartsShowController extends Controller {
@@ -12,13 +12,14 @@ export default class ChartsShowController extends Controller {
     // On the Ember side this is `appliedFiltersString`; going out to the API
     // side we'll use `filters`.
     {appliedFiltersString: 'filters'},
+    {columnOption: 'columns'},
   ];
   @tracked ladderId = null;
   appliedFiltersString = null;
+  @tracked columnOption = 'filter-groups';
 
   @service router;
 
-  @tracked columnOption = null;
   @tracked showAllFilterGroups = false;
 
   @tracked chartNavigationChoices = [];
@@ -60,7 +61,7 @@ export default class ChartsShowController extends Controller {
   }
 
   @action
-  onColumnOptionChange(event) {
+  onColumnOptionInput(event) {
     this.columnOption = event.target.value;
   }
 
@@ -68,12 +69,13 @@ export default class ChartsShowController extends Controller {
     return {
       ladderId: this.ladderId,
       filters: this.appliedFiltersString,
+      columns: this.columnOption,
     }
   }
 
   get destinationChartId() {
     let form = document.getElementById('chart-navigation-form');
-    return getFormField(form, 'chart').value;
+    return getFormValue(form, 'chart');
   }
 
   @action
@@ -86,7 +88,7 @@ export default class ChartsShowController extends Controller {
 
   get destinationLadderId() {
     let form = document.getElementById('switch-ladder-form');
-    return getFormField(form, 'ladder').value;
+    return getFormValue(form, 'ladder');
   }
 
   @action

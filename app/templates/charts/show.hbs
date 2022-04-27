@@ -37,17 +37,19 @@
       @controllerGetFilterOptions={{this.getFilterOptions}} />
 
     {{#if this.chartGroup.showChartsTogether}}
-      <div>
+      <form id="column-option-form">
         Columns to show:
         <input type="radio" id="column-option-fgs"
             name="column-option" value="filter-groups"
-            {{on "change" this.onColumnOptionChange}} >
+            checked={{if (eq "filter-groups" this.columnOption) "checked"}}
+            {{on "change" this.onColumnOptionInput}} >
         <label for="column-option-fgs">Filter groups</label>
         <input type="radio" id="column-option-ocs"
             name="column-option" value="other-charts"
-            {{on "change" this.onColumnOptionChange}} >
+            checked={{if (eq "other-charts" this.columnOption) "checked"}}
+            {{on "change" this.onColumnOptionInput}} >
         <label for="column-option-ocs">Other charts</label>
-      </div>
+      </form>
     {{/if}}
 
     {{#if (eq this.columnOption "filter-groups") }}
@@ -88,7 +90,7 @@
           {{else}}
             <LinkTo
                 @route="charts.show" @model={{chart.id}}
-                @query={{hash ladderId=this.ladderId filters=this.appliedFiltersString}}>
+                @query={{this.chartLinkQueryParams}}>
               {{chart.name}}
             </LinkTo>
             |
