@@ -1,7 +1,7 @@
 import { errorDisplay } from "../helpers/error-display";
 
 
-// TODO: Replace this with getFormValue() and a setFormValue(), because
+// TODO: Replace this with getFormValue() and setFormValue(), because
 //  this doesn't work or make sense with radio inputs, and usages all
 //  amount to getting/setting the form value.
 //  A function to get all form values using FormData would also be good.
@@ -22,6 +22,22 @@ export function getFormValue(form, fieldName) {
   }
   else {
     return field.value;
+  }
+}
+
+export function setFormValue(form, fieldName, value) {
+  let formElements = Array.from(form.elements);
+  let field = formElements.find(
+    (element) => element.name === fieldName);
+
+  if (field.type === 'radio') {
+    let fields = document.querySelectorAll(`input[name="${fieldName}"]`);
+    fields.forEach(field => {
+      field.checked = (field.value === value);
+    });
+  }
+  else {
+    field.value = value;
   }
 }
 

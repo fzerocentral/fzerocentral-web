@@ -44,6 +44,7 @@ export default class ChartsShowRoute extends Route {
 
   afterModel(resolvedModel /*, transition */) {
     let controller = this.controllerFor(this.routeName);
+    let currentChart = resolvedModel.chart;
 
     // Chart navigation
 
@@ -51,7 +52,6 @@ export default class ChartsShowRoute extends Route {
       // Chart navigation primarily goes from one leaf chart group to another.
       // 'Leaf' chart groups sit directly above charts, not above other
       // chart groups. (Term refers to a computer-science tree's leaf nodes)
-      let currentChart = resolvedModel.chart;
       let ladderLeafGroups = [];
       let currentCgCharts = [];
       let currentCgOtherCharts = [];
@@ -105,7 +105,6 @@ export default class ChartsShowRoute extends Route {
     }
     else {
       // Chart navigation treats charts individually, ignoring groups.
-      let currentChart = resolvedModel.chart;
       let ladderCharts = [];
       let currentChartIndex;
       resolvedModel.ladderCharts.forEach(chart => {
@@ -137,8 +136,6 @@ export default class ChartsShowRoute extends Route {
     let modelParams = this.paramsFor(this.routeName);
 
     if (resolvedModel.chart.chartGroup.get('showChartsTogether')) {
-      let currentChart = resolvedModel.chart;
-
       controller.otherRecords = this.nonEmberDataApi.getChartOtherRecords(
         currentChart.id,
         modelParams.ladderId, modelParams.appliedFiltersString);

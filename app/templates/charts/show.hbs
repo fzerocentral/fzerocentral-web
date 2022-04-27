@@ -116,7 +116,7 @@
         {{#each this.chartNavigationChoices as |navChoice|}}
           <option
               value="{{navChoice.chart.id}}"
-              {{! TODO: After changing charts once, the initial selection fails to get set. }}
+              {{! TODO: After changing charts once, the initial selection reverts back to the top of the dropdown. Don't know how to fix it. Setting to the correct value in afterModel() appeared to be too early to help anything. }}
               selected={{if (eq navChoice.chart.id @model.chart.id) "selected"}}
           >
             {{navChoice.display}}
