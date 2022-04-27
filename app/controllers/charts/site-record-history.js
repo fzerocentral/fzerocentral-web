@@ -4,6 +4,14 @@ import { tracked } from '@glimmer/tracking';
 
 
 export default class ChartsTopRecordHistoryController extends Controller {
+  queryParams = [
+    'ladderId',
+    {appliedFiltersString: 'filters'},
+  ];
+  @tracked ladderId = null;
+  @tracked appliedFiltersString = null;
+
+  @tracked ladderAndFilterControls;
   @tracked showAllFilterGroups = false;
 
   @action
@@ -18,5 +26,23 @@ export default class ChartsTopRecordHistoryController extends Controller {
     else {
       return this.model.filterGroups.filterBy('showByDefault', true);
     }
+  }
+
+  @action
+  getFilterOptions(filterGroupId, searchText) {
+    return this.store.query('filter', {
+      filter_group_id: filterGroupId,
+      name_search: searchText,
+    })
+  }
+
+  @action
+  updateLadderId(newId) {
+    this.ladderId = newId;
+  }
+
+  @action
+  updateAppliedFiltersString(newString) {
+    this.appliedFiltersString = newString;
   }
 }

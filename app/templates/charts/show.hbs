@@ -41,7 +41,9 @@
     <div><LinkTo @route="charts.record-new" @model={{@model.chart.id}}>Submit a record</LinkTo></div>
 
     <div>
-      <LinkTo @route="charts.site-record-history" @model={{@model.chart.id}}>
+      <LinkTo
+          @route="charts.site-record-history" @model={{@model.chart.id}}
+          @query={{this.historyLinkQueryParams}} >
         View site record history
       </LinkTo>
     </div>

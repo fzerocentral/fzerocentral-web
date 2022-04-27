@@ -94,21 +94,25 @@ export default class NonEmberDataApiService extends Service {
     return this.fetchObjectResults(url);
   }
 
-  getChartTopRecordHistory(chartId, appliedFiltersString) {
+  getChartTopRecordHistory(chartId, ladderId, appliedFiltersString) {
     let historyUrl = this.urlWithQueryParams(
       `/charts/${chartId}/record_history/`,
       new Map([
-        ['improvements', 'filter'], ['filters', appliedFiltersString],
-        ['page[size]', 50]]));
+        ['improvements', 'filter'],
+        ['ladder_id', ladderId],
+        ['filters', appliedFiltersString],
+        ['page[size]', 100]]));
     return this.fetchArrayResults(historyUrl);
   }
 
-  getChartPlayerHistory(chartId, playerId, appliedFiltersString) {
+  getChartPlayerHistory(chartId, playerId, ladderId, appliedFiltersString) {
     let historyUrl = this.urlWithQueryParams(
       `/charts/${chartId}/record_history/`,
       new Map([
-        ['player_id', playerId], ['filters', appliedFiltersString],
-        ['page[size]', 50]]));
+        ['player_id', playerId],
+        ['ladder_id', ladderId],
+        ['filters', appliedFiltersString],
+        ['page[size]', 100]]));
     return this.fetchArrayResults(historyUrl);
   }
 

@@ -67,6 +67,12 @@ export default class ChartsShowController extends Controller {
       columns: this.columnOption,
     }
   }
+  get historyLinkQueryParams() {
+    return {
+      ladderId: this.ladderId,
+      filters: this.appliedFiltersString,
+    }
+  }
 
   get destinationChartId() {
     let form = document.getElementById('chart-navigation-form');
