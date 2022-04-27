@@ -30,7 +30,7 @@ export default class ChartsShowController extends Controller {
   @tracked otherRecords = {};
 
   @action
-  updateShowAllFilterGroups(event) {
+  onShowAllFilterGroupsInput(event) {
     this.showAllFilterGroups = event.target.checked;
   }
 

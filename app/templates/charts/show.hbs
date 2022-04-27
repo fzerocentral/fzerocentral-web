@@ -57,7 +57,8 @@
         <input
             type="checkbox" name="show-all-filter-groups"
             id="show-all-filter-groups-checkbox"
-            {{on "change" this.updateShowAllFilterGroups}} />
+            checked={{if this.showAllFilterGroups "checked"}}
+            {{on "change" this.onShowAllFilterGroupsInput}} />
         <label for="show-all-filter-groups-checkbox">Show all filter groups</label>
       </div>
     {{/if}}
