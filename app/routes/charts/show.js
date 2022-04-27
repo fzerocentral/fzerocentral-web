@@ -137,14 +137,10 @@ export default class ChartsShowRoute extends Route {
     let modelParams = this.paramsFor(this.routeName);
 
     if (resolvedModel.chart.chartGroup.get('showChartsTogether')) {
-      let playerIds = [];
-      resolvedModel.records.forEach(record => {
-        playerIds.push(record.player_id);
-      });
       let currentChart = resolvedModel.chart;
 
       controller.otherRecords = this.nonEmberDataApi.getChartOtherRecords(
-        currentChart.id, playerIds,
+        currentChart.id,
         modelParams.ladderId, modelParams.appliedFiltersString);
     }
   }
