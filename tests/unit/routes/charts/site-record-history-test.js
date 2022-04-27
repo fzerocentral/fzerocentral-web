@@ -6,7 +6,7 @@ import { click, visit } from "@ember/test-helpers";
 import { createModelInstance }
   from 'fzerocentral-web/tests/helpers/model-helpers';
 
-module('Unit | Route | charts/top-record-history', function(hooks) {
+module('Unit | Route | charts/site-record-history', function(hooks) {
   setupTest(hooks);
 
   hooks.beforeEach( function() {
@@ -51,7 +51,7 @@ module('Unit | Route | charts/top-record-history', function(hooks) {
   });
 
   test('it exists', function(assert) {
-    let route = this.owner.lookup('route:charts/top-record-history');
+    let route = this.owner.lookup('route:charts/site-record-history');
     assert.ok(route);
   });
 
@@ -64,7 +64,7 @@ module('Unit | Route | charts/top-record-history', function(hooks) {
       () => {called = true; return {data: []};},
     );
 
-    await visit(`/charts/${this.chart.id}/top-record-history`);
+    await visit(`/charts/${this.chart.id}/site-record-history`);
 
     assert.ok(
       called, "API call should have been made with expected URL and params");
@@ -84,7 +84,7 @@ module('Unit | Route | charts/top-record-history', function(hooks) {
       },
     );
 
-    await visit(`/charts/${this.chart.id}/top-record-history`);
+    await visit(`/charts/${this.chart.id}/site-record-history`);
 
     let rows = this.element.querySelectorAll('table.records-table tr');
     let [playerCell, valueCell, dateCell] = rows[1].querySelectorAll('td');
@@ -108,7 +108,7 @@ module('Unit | Route | charts/top-record-history', function(hooks) {
   });
 
   test("records table should have one column per shown filter group", async function(assert) {
-    await visit(`/charts/${this.chart.id}/top-record-history`);
+    await visit(`/charts/${this.chart.id}/site-record-history`);
 
     let firstRow = this.element.querySelectorAll('table.records-table tr')[0];
     let tableColumnHeaders =

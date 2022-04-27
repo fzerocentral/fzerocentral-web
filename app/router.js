@@ -19,8 +19,8 @@ Router.map(function() {
     this.route('show', { path: '/:chart_id' });
     this.route('player-history',
                { path: '/:chart_id/players/:player_id/history' });
-    this.route('top-record-history',
-               { path: '/:chart_id/top-record-history' });
+    this.route('site-record-history',
+               { path: '/:chart_id/site-record-history' });
     this.route('record-new', { path: '/:chart_id/record-new' });
   });
 
