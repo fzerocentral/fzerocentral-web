@@ -3,7 +3,7 @@
 
 <div class="equal-two-column-container">
 
-  <div id="filter-controls">
+  <div id="filter-and-column-controls">
 
     <form id="switch-ladder-form">
       Change ladder:
@@ -21,20 +21,33 @@
     </form>
 
     <div>
-      Ladder's filters:
-      {{#each this.ladderFilterDisplays as |display|}}
-        <span class="applied-filter">{{display}}</span>
-      {{else}}
-        (None)
-      {{/each}}
+      <input
+          type="checkbox" name="show-filter-controls"
+          id="show-filter-controls-checkbox"
+          checked={{if this.showFilterControls "checked"}}
+          {{on "change" this.onShowFilterControlsInput}} />
+      <label for="show-filter-controls-checkbox">Show filter controls</label>
     </div>
 
-    <FilterApplyForm
-      @filterGroups={{@model.filterGroups}}
-      @appliedFilterObjs={{@model.appliedFilterObjs}}
-      @appliedFiltersString={{this.appliedFiltersString}}
-      @updateAppliedFiltersString={{action (mut this.appliedFiltersString)}}
-      @controllerGetFilterOptions={{this.getFilterOptions}} />
+    {{#if this.showFilterControls}}
+
+      <div>
+        Ladder's filters:
+        {{#each this.ladderFilterDisplays as |display|}}
+          <span class="applied-filter">{{display}}</span>
+        {{else}}
+          (None)
+        {{/each}}
+      </div>
+
+      <FilterApplyForm
+        @filterGroups={{@model.filterGroups}}
+        @appliedFilterObjs={{@model.appliedFilterObjs}}
+        @appliedFiltersString={{this.appliedFiltersString}}
+        @updateAppliedFiltersString={{action (mut this.appliedFiltersString)}}
+        @controllerGetFilterOptions={{this.getFilterOptions}} />
+
+    {{/if}}
 
     {{#if this.chartGroup.showChartsTogether}}
       <form id="column-option-form">

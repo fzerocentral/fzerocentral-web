@@ -20,6 +20,8 @@ export default class ChartsShowController extends Controller {
 
   @service router;
 
+  // Show filter controls initially if there are any applied filters.
+  @tracked showFilterControls = (this.appliedFiltersString !== null);
   @tracked showAllFilterGroups = false;
 
   @tracked chartNavigationChoices = [];
@@ -29,6 +31,10 @@ export default class ChartsShowController extends Controller {
   @tracked currentCgOtherCharts = [];
   @tracked otherRecords = {};
 
+  @action
+  onShowFilterControlsInput(event) {
+    this.showFilterControls = event.target.checked;
+  }
   @action
   onShowAllFilterGroupsInput(event) {
     this.showAllFilterGroups = event.target.checked;
