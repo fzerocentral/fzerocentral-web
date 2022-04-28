@@ -1,27 +1,7 @@
+/* General */
+
 div.error-message {
   color: red;
-}
-
-span.applied-filter {
-  background-color: #bbbbee;
-  border-radius: 3px;
-  padding: 0 2px;
-  margin: 0 5px;
-}
-
-table.records-table {
-  border-collapse: collapse;
-}
-table.records-table td, table.records-table th {
-  border: 1px solid black;
-  padding: 2px;
-}
-table.records-table tr.non-personal-best {
-  color: #888888;
-}
-
-ul.chart-group-listing {
-  margin-left: 10px;
 }
 
 ul.plain-bullet-list {
@@ -39,6 +19,102 @@ div.equal-two-column-container > div {
 hr.short {
   max-width: 200px;
 }
+
+
+/* Site header */
+
+div#fzc-header {
+  display: flex;
+  align-items: center;
+  position: relative;  /* Ensure the under-logo text can be absolute positioned */
+  background-image: linear-gradient(to bottom, rgb(1, 5, 60), rgb(35, 35, 123));
+}
+div#fzc-header > * {
+  flex-shrink: 0;  /* Don't allow elements to shrink */
+}
+div#fzc-header > img.logo-image {
+  padding-right: 30px;
+}
+
+/* Text below logo */
+div.under-logo-text {
+  position: absolute;
+  left: 235px;
+  top: 65px;
+
+  text-align: center;
+  text-shadow: 1px 5px 2px black;
+  font-family: Verdana, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  font-style: italic;
+  color: rgb(220, 220, 220);
+}
+
+/* Game selector */
+div#game-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+div#game-selector > div {
+  display: flex;
+}
+
+/* Social media buttons bar */
+div#button-bar,
+div.home-page-box-header-bar {
+  background-image: linear-gradient(
+    to bottom,
+    hsl(0, -1%, 70%),
+    hsl(0, -1%, 60%) 10%,
+    white 40%,
+    white 60%,
+    hsl(0, -1%, 50%) 90%,
+    hsl(0, -1%, 60%));
+}
+
+div#button-bar {
+  display: flex;
+  height: 30px;
+  align-items: center;
+  padding-left: 10px;
+  gap: 15px;
+}
+div#button-bar > a {
+  line-height: 1;
+}
+
+
+/* Chart listings */
+
+ul.chart-group-listing {
+  margin-left: 10px;
+}
+
+
+/* Records pages */
+
+table.records-table {
+  border-collapse: collapse;
+}
+table.records-table td, table.records-table th {
+  border: 1px solid black;
+  padding: 2px;
+}
+table.records-table tr.non-personal-best {
+  color: #888888;
+}
+
+span.applied-filter {
+  background-color: #bbbbee;
+  border-radius: 3px;
+  padding: 0 2px;
+  margin: 0 5px;
+}
+
+
+/* Filter management */
 
 div.filter-section {
   display: flex;
