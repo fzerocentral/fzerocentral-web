@@ -21,6 +21,11 @@ https://github.com/stefanpenner/ember-moment/blob/master/CHANGELOG.md
 https://github.com/jasonmit/ember-cli-moment-shim/releases
 https://github.com/moment/moment/blob/develop/CHANGELOG.md
 
+ember-page-title
+Set <title> content for each individual route, via a {{page-title}} template helper. Officially recommended, as seen here:
+https://guides.emberjs.com/v4.3.0/accessibility/page-template-considerations/
+https://github.com/ember-cli/ember-page-title/blob/master/addon/CHANGELOG.md
+
 ember-sinon-qunit
 ember-window-mock
 Testing window.confirm() functionality and similar.
