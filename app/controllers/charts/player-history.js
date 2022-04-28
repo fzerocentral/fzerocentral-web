@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import config from '../../config/environment';
 
 
 export default class ChartsPlayerHistoryController extends Controller {
@@ -10,6 +11,8 @@ export default class ChartsPlayerHistoryController extends Controller {
   ];
   @tracked ladderId = null;
   @tracked appliedFiltersString = null;
+
+  devMode = config.APP.devMode;
 
   @tracked ladderAndFilterControls;
   @tracked showAllFilterGroups = false;
