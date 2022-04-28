@@ -40,7 +40,13 @@
 
   <div id="chart-related-navigation">
 
-    <div><LinkTo @route="charts.record-new" @model={{@model.chart.id}}>Submit a record</LinkTo></div>
+    {{#if this.devMode}}
+      <div><LinkTo @route="charts.record-new" @model={{@model.chart.id}}>
+        Submit a record
+      </LinkTo></div>
+    {{else}}
+      <div><s>Submit a record (not available yet)</s></div>
+    {{/if}}
 
     <div>
       <LinkTo

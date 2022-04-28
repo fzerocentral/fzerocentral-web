@@ -48,16 +48,18 @@
   </tbody>
 </table>
 
-<h2>Admin</h2>
+{{#if this.devMode}}
+  <h2>Admin</h2>
 
-<ul>
-  <li>
-    <LinkTo @route="games.chart-types" @model={{@model.game.id}}> Chart types admin </LinkTo>
-  </li>
-  <li>
-    <LinkTo @route="games.filter-groups" @model={{@model.game.id}}> Filter groups admin </LinkTo>
-  </li>
-  <li>
-    <LinkTo @route="games.ladders-manage" @model={{@model.game.id}}> Ladders admin </LinkTo>
-  </li>
-</ul>
+  <ul>
+    <li>
+      <LinkTo @route="games.chart-types" @model={{@model.game.id}}> Chart types admin </LinkTo>
+    </li>
+    <li>
+      <LinkTo @route="games.filter-groups" @model={{@model.game.id}}> Filter groups admin </LinkTo>
+    </li>
+    <li>
+      <LinkTo @route="games.ladders-manage" @model={{@model.game.id}}> Ladders admin </LinkTo>
+    </li>
+  </ul>
+{{/if}}
