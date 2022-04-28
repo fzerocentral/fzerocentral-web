@@ -2,7 +2,13 @@
   <div class="menu">
     <LinkTo @route="index">
       <h1>
-        <em>F-Zero Central</em>
+        <em>
+          {{#if this.devMode}}
+            F-Zero Central (Development)
+          {{else}}
+            F-Zero Central
+          {{/if}}
+        </em>
       </h1>
     </LinkTo>
     <div class="links">
