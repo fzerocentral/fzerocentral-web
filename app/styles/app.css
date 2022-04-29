@@ -1,5 +1,44 @@
 /* General */
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: Helvetica, "Verdana", "Courier New", Arial, sans-serif;
+  background-color: hsl(240, 56%, 31%);
+}
+th, td, p {
+  font-family: "Verdana", "Courier New", Arial, Helvetica, sans-serif;
+}
+p {
+  margin-bottom: 15px;
+}
+a:link,a:active,a:visited {
+  color: hsl(209, 41%, 41%);
+}
+a:hover {
+  text-decoration: underline;
+  color: hsl(205, 22%, 59%);
+}
+hr {
+  height: 0;
+  border: solid #D1D7DC 0;
+  border-top-width: 1px;
+}
+h1, h2 {
+  font-weight: bold;
+  font-size: 22px;
+  font-family: "Verdana", Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  line-height: 1.2;
+}
+
+div.body {
+  background-color: hsl(240, 56%, 31%);
+}
+
 div.error-message {
   color: red;
 }
@@ -39,16 +78,16 @@ div#fzc-header > img.logo-image {
 /* Text below logo */
 div.under-logo-text {
   position: absolute;
-  left: 235px;
+  left: 220px;
   top: 65px;
-
+  width: 180px;
   text-align: center;
+}
+div.under-logo-text > h2 {
   text-shadow: 1px 5px 2px black;
-  font-family: Verdana, sans-serif;
-  font-size: 12px;
-  font-weight: bold;
-  font-style: italic;
-  color: rgb(220, 220, 220);
+  font-size: 16px;
+  line-height: 1.8;
+  color: hsl(0, 0%, 86%);
 }
 
 /* Game selector */
@@ -83,6 +122,51 @@ div#button-bar {
 }
 div#button-bar > a {
   line-height: 1;
+}
+
+
+/* Home page */
+
+div#home-page-column-container {
+  display: flex;
+}
+
+div.home-page-box {
+  margin: 15px 8px;
+}
+div.home-page-box-header-bar {
+  border-radius: 10px 10px 0 0;
+  padding: 3px 0 3px 8px;
+  box-shadow: 4px 4px 8px 0 hsla(0, -1%, -1%, 0.6);
+}
+div.home-page-box-header-bar.welcome-box {
+  background-color: hsl(0,0%,92%);
+  background-image: none;
+}
+div.home-page-box-body, div.home-page-box-without-header {
+  background-color: white;
+  font-family: Verdana, sans-serif;
+  font-size: 0.8em;
+
+  padding: 8px;
+  box-shadow: 4px 4px 8px 0 hsla(0, -1%, -1%, 0.6);
+}
+div.home-page-box-body {
+  border-radius: 0 0 10px 10px;
+}
+div.home-page-box-without-header {
+  border-radius: 10px;
+}
+div.home-page-box-body.links {
+  line-height: 2.0em;
+}
+div.home-page-box-body.links > a,
+div.home-page-box-body.news > a {
+  text-decoration: none;
+}
+div.home-page-box-body.links > a:hover,
+div.home-page-box-body.news > a:hover {
+  text-decoration: underline;
 }
 
 
