@@ -13,7 +13,7 @@
     {{@item.name}}
   {{/if}}
 
-  <ul class="chart-group-listing">
+  <ul>
     {{#each @item.items as |subItem|}}
       <li>
         <ChartGroupContents @item={{subItem}} @ladder={{@ladder}} />

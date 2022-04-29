@@ -1,6 +1,6 @@
 {{page-title (concat this.chartGroup.name " - " @model.chart.name) }}
 
-<div class="scoreboard-page-header">
+<div class="general-content-box">
 
   <h2>{{@model.ladder.game.name}} - {{@model.ladder.name}}</h2>
   <h1>{{this.chartGroup.name}} - {{@model.chart.name}}</h1>
@@ -64,7 +64,7 @@
 
       <div>
         <LinkTo @route="ladders.charts" @model={{@model.ladder.id}}>
-          ⮝⮝ All charts for {{@model.ladder.name}} ladder
+          ⮝ Chart list for {{@model.ladder.name}} ladder
         </LinkTo>
       </div>
 

@@ -9,6 +9,7 @@
 body {
   font-family: "Verdana", Arial, Helvetica, sans-serif;
   background-color: hsl(240, 56%, 31%);
+  margin: 5px;
 }
 p {
   margin-bottom: 15px;
@@ -20,6 +21,9 @@ a:link,a:active,a:visited {
 a:hover {
   text-decoration: underline;
   color: hsl(205, 22%, 59%);
+}
+ul {
+  padding-left: 40px;
 }
 hr {
   height: 0;
@@ -51,8 +55,17 @@ div.error-message {
   color: red;
 }
 
-ul.plain-bullet-list {
-  margin-left: 30px;
+.general-content-box {
+  background-color: hsl(0, 0%, 95%);
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0;
+}
+.general-content-box div {
+  line-height: 1.5;
+}
+.general-content-box h1, .general-content-box h2 {
+  text-align: center;
 }
 
 div.equal-two-column-container {
@@ -177,29 +190,10 @@ div.home-page-box-body.news > a:hover {
 }
 
 
-/* Chart listings */
-
-ul.chart-group-listing {
-  margin-left: 10px;
-}
-
-
 /* Records/rankings */
 
-.scoreboard-page-header {
-  background-color: hsl(0, 0%, 97%);
-  border-radius: 10px;
-  padding: 10px;
-  margin: 10px;
-}
-.scoreboard-page-header div {
-  line-height: 1.5;
-}
-.scoreboard-page-header h1, .scoreboard-page-header h2 {
-  text-align: center;
-}
-
 .scoreboard {
+  margin: 10px 0;
   text-align: left;
   width: 100%;
   border: 1px black solid;
@@ -211,13 +205,18 @@ ul.chart-group-listing {
 .scoreboard tbody tr:nth-child(2n + 1) td { background-color: hsl(0, 0%, 90%);  }
 .scoreboard tbody tr:nth-child(2n) td { background-color: hsl(0, 0%, 97%);  }
 
-/* Rounded table corners */
-.scoreboard thead th:first-child { border-radius: 10px 0 0 0; }
-.scoreboard thead th:last-child { border-radius: 0 10px 0 0; }
-.scoreboard tbody tr:last-child td:first-child { border-radius: 0 0 0 10px; }
-.scoreboard tbody tr:last-child td:last-child{ border-radius: 0 0 10px 0; }
+/* Rounded table corners.
+   Since we define backgrounds at the cell level, the border radius
+   also has to be defined at the cell level to make the corners rounded.
+   We assume that the first row must have th's and the last row must have td's.
+   However, we don't assume what is or isn't thead / tbody / tfoot.
+ */
+.scoreboard tr:first-child th:first-child { border-top-left-radius: 10px; }
+.scoreboard tr:first-child th:last-child { border-top-right-radius: 10px; }
+.scoreboard tr:last-child td:first-child { border-bottom-left-radius: 10px; }
+.scoreboard tr:last-child td:last-child{ border-bottom-right-radius: 10px; }
 
-.scoreboard thead th {
+.scoreboard th {
   background: linear-gradient(0deg,
                 hsl(0, 0%, 39%) 0%,
                 white 40%,

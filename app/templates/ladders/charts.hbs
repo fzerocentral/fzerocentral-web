@@ -1,11 +1,16 @@
 {{page-title (concat @model.ladder.name " ladder: Charts") }}
 
-<h1>{{@model.ladder.game.name}} - {{@model.ladder.name}} - Charts</h1>
+<div class="general-content-box">
+  <h2>{{@model.ladder.game.name}}</h2>
+  <h1>{{@model.ladder.name}} ladder: Charts</h1>
+</div>
 
-<ul class="chart-group-listing">
-  {{#each this.chartHierarchy as |item|}}
-    <li>
-      <ChartGroupContents @item={{item}} @ladder={{@model.ladder}} />
-    </li>
-  {{/each}}
-</ul>
+<div class="general-content-box">
+  <ul>
+    {{#each this.chartHierarchy as |item|}}
+      <li>
+        <ChartGroupContents @item={{item}} @ladder={{@model.ladder}} />
+      </li>
+    {{/each}}
+  </ul>
+</div>

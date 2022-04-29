@@ -1,11 +1,16 @@
 {{page-title (concat @model.game.name ": Home") }}
 
-<h1>{{@model.game.name}}</h1>
+<div class="general-content-box">
+  <h1>{{@model.game.name}}</h1>
+</div>
 
-<h2>Main Ladders</h2>
-
-<table>
+<!-- This piggybacks off the scoreboard table style for now, but this will likely change when we add more info for each ladder (leaders, active players, your times). -->
+<table class="scoreboard">
   <tbody>
+    <tr>
+      <th colspan="3">Main Ladders</th>
+    </tr>
+
     {{#each @model.mainLadders as |ladder|}}
       <tr>
         <td>
@@ -23,13 +28,11 @@
         </td>
       </tr>
     {{/each}}
-  </tbody>
-</table>
 
-<h2>Side Ladders</h2>
+    <tr>
+      <th colspan="3">Side Ladders</th>
+    </tr>
 
-<table>
-  <tbody>
     {{#each @model.sideLadders as |ladder|}}
       <tr>
         <td>
@@ -51,17 +54,19 @@
 </table>
 
 {{#if this.devMode}}
-  <h2>Admin</h2>
+  <div class="general-content-box">
+    <h2>Admin</h2>
 
-  <ul>
-    <li>
-      <LinkTo @route="games.chart-types" @model={{@model.game.id}}> Chart types admin </LinkTo>
-    </li>
-    <li>
-      <LinkTo @route="games.filter-groups" @model={{@model.game.id}}> Filter groups admin </LinkTo>
-    </li>
-    <li>
-      <LinkTo @route="games.ladders-manage" @model={{@model.game.id}}> Ladders admin </LinkTo>
-    </li>
-  </ul>
+    <ul>
+      <li>
+        <LinkTo @route="games.chart-types" @model={{@model.game.id}}> Chart types admin </LinkTo>
+      </li>
+      <li>
+        <LinkTo @route="games.filter-groups" @model={{@model.game.id}}> Filter groups admin </LinkTo>
+      </li>
+      <li>
+        <LinkTo @route="games.ladders-manage" @model={{@model.game.id}}> Ladders admin </LinkTo>
+      </li>
+    </ul>
+  </div>
 {{/if}}
