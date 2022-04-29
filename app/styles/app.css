@@ -187,13 +187,23 @@ div.home-page-box-without-header {
 div.home-page-box-body.links {
   line-height: 2.0em;
 }
-div.home-page-box-body.links > a,
-div.home-page-box-body.news > a {
-  text-decoration: none;
+
+
+/* Chart navigation */
+ul.horizontal-charts-list {
+  display: flex;
+  list-style: none;
 }
-div.home-page-box-body.links > a:hover,
-div.home-page-box-body.news > a:hover {
-  text-decoration: underline;
+ul.horizontal-charts-list li {
+  border-left: 2px solid gray;
+  padding: 0 5px;
+}
+ul.horizontal-charts-list li:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+ul.horizontal-charts-list.inline {
+  padding: 0;
 }
 
 

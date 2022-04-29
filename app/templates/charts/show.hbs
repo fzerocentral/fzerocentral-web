@@ -69,26 +69,23 @@
       </div>
 
       {{#if this.chartGroup.showChartsTogether}}
-        <div>
-          {{#each this.currentCgCharts as |chart index|}}
-            {{#if (gt index 0) }}
-              {{! Not the first chart; add a separator }}
-              |
-            {{/if}}
-
-            {{#if (eq @model.chart.id chart.id)}}
-              {{! Current chart }}
-              {{chart.name}}
-            {{else}}
-              {{! Not current chart; make it a link }}
-              <LinkTo
-                  @route="charts.show" @model={{chart.id}}
-                  @query={{this.chartLinkQueryParams}}>
+        <ul class="horizontal-charts-list inline">
+          {{#each this.currentCgCharts as |chart| }}
+            <li>
+              {{#if (eq @model.chart.id chart.id) }}
+                {{! Current chart }}
                 {{chart.name}}
-              </LinkTo>
-            {{/if}}
+              {{else}}
+                {{! Not current chart; make it a link }}
+                <LinkTo
+                    @route="charts.show" @model={{chart.id}}
+                    @query={{this.chartLinkQueryParams}}>
+                  {{chart.name}}
+                </LinkTo>
+              {{/if}}
+            </li>
           {{/each}}
-        </div>
+        </ul>
       {{/if}}
 
       <form id="chart-navigation-form">
