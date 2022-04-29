@@ -4,18 +4,17 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-size: small;
 }
 body {
-  font-family: Helvetica, "Verdana", "Courier New", Arial, sans-serif;
+  font-family: "Verdana", Arial, Helvetica, sans-serif;
   background-color: hsl(240, 56%, 31%);
-}
-th, td, p {
-  font-family: "Verdana", "Courier New", Arial, Helvetica, sans-serif;
 }
 p {
   margin-bottom: 15px;
 }
 a:link,a:active,a:visited {
+  text-decoration: none;
   color: hsl(209, 41%, 41%);
 }
 a:hover {
@@ -27,16 +26,25 @@ hr {
   border: solid #D1D7DC 0;
   border-top-width: 1px;
 }
+
 h1, h2 {
   font-weight: bold;
-  font-size: 22px;
   font-family: "Verdana", Arial, Helvetica, sans-serif;
-  text-decoration: none;
-  line-height: 1.2;
+  line-height: 1.5;
+}
+h1 {
+  font-size: x-large;
+}
+h2 {
+  font-size: large;
 }
 
 div.body {
   background-color: hsl(240, 56%, 31%);
+}
+
+div.small-section {
+  margin: 10px 0;
 }
 
 div.error-message {
@@ -146,7 +154,6 @@ div.home-page-box-header-bar.welcome-box {
 div.home-page-box-body, div.home-page-box-without-header {
   background-color: white;
   font-family: Verdana, sans-serif;
-  font-size: 0.8em;
 
   padding: 8px;
   box-shadow: 4px 4px 8px 0 hsla(0, -1%, -1%, 0.6);
@@ -177,21 +184,83 @@ ul.chart-group-listing {
 }
 
 
-/* Records pages */
+/* Records/rankings */
 
-table.records-table {
-  border-collapse: collapse;
+.scoreboard-page-header {
+  background-color: hsl(0, 0%, 97%);
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
 }
-table.records-table td, table.records-table th {
-  border: 1px solid black;
-  padding: 2px;
+.scoreboard-page-header div {
+  line-height: 1.5;
 }
-table.records-table tr.non-personal-best {
-  color: #888888;
+.scoreboard-page-header h1, .scoreboard-page-header h2 {
+  text-align: center;
+}
+
+.scoreboard {
+  text-align: left;
+  width: 100%;
+  border: 1px black solid;
+  border-radius: 10px;
+  border-spacing: 0;
+}
+
+/* Body rows with alternating colors */
+.scoreboard tbody tr:nth-child(2n + 1) td { background-color: hsl(0, 0%, 90%);  }
+.scoreboard tbody tr:nth-child(2n) td { background-color: hsl(0, 0%, 97%);  }
+
+/* Rounded table corners */
+.scoreboard thead th:first-child { border-radius: 10px 0 0 0; }
+.scoreboard thead th:last-child { border-radius: 0 10px 0 0; }
+.scoreboard tbody tr:last-child td:first-child { border-radius: 0 0 0 10px; }
+.scoreboard tbody tr:last-child td:last-child{ border-radius: 0 0 10px 0; }
+
+.scoreboard thead th {
+  background: linear-gradient(0deg,
+                hsl(0, 0%, 39%) 0%,
+                white 40%,
+                white 60%,
+                hsl(0, 0%, 39%) 100%
+              );
+  height: 26px;
+  font-weight: bold;
+  padding: 5px 10px;
+}
+
+/* This stuff would apply if column headers were clickable to change sorting */
+/*
+.scoreboard thead th:hover {
+  background: linear-gradient(0deg,
+                hsl(0, 41%, 33%) 0%,
+                white 40%,
+                white 60%,
+                hsl(0, 41%, 33%) 100%
+              );
+}
+.scoreboard thead a { display: block; text-align: center; }
+.scoreboard thead a:hover { color: black; }
+*/
+
+/* Column borders */
+.scoreboard tbody td:nth-child(n+2) {
+  border-left: 1px hsl(0, 0%, 65%) solid;
+}
+
+.scoreboard tbody td {
+  padding: 5px;
+}
+
+.scoreboard tr.non-personal-best {
+  color: hsl(0, 0%, 53%);
+}
+span.non-personal-best-explainer {
+  color: hsl(0, 0%, 53%);
 }
 
 span.applied-filter {
-  background-color: #bbbbee;
+  background-color: hsl(240, 60%, 83%);
   border-radius: 3px;
   padding: 0 2px;
   margin: 0 5px;

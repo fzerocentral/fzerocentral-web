@@ -1,128 +1,138 @@
 {{page-title (concat this.chartGroup.name " - " @model.chart.name) }}
 
-<h2>{{@model.ladder.game.name}} - {{@model.ladder.name}}</h2>
-<h1>{{this.chartGroup.name}} - {{@model.chart.name}}</h1>
+<div class="scoreboard-page-header">
 
-<div class="equal-two-column-container">
+  <h2>{{@model.ladder.game.name}} - {{@model.ladder.name}}</h2>
+  <h1>{{this.chartGroup.name}} - {{@model.chart.name}}</h1>
 
-  <div id="filter-and-column-controls">
+  <div class="equal-two-column-container">
 
-    <LadderAndFilterControls
-        @extraFiltersString={{this.appliedFiltersString}}
-        @manager={{this.ladderAndFilterControls}} />
+    <div id="filter-and-column-controls">
 
-    {{#if this.chartGroup.showChartsTogether}}
-      <form id="column-option-form">
-        Columns to show:
-        <input type="radio" id="column-option-fgs"
-            name="column-option" value="filter-groups"
-            checked={{if (eq "filter-groups" this.columnOption) "checked"}}
-            {{on "change" this.onColumnOptionInput}} >
-        <label for="column-option-fgs">Filter groups</label>
-        <input type="radio" id="column-option-ocs"
-            name="column-option" value="other-charts"
-            checked={{if (eq "other-charts" this.columnOption) "checked"}}
-            {{on "change" this.onColumnOptionInput}} >
-        <label for="column-option-ocs">Other charts</label>
-      </form>
-    {{/if}}
+      <LadderAndFilterControls
+          @extraFiltersString={{this.appliedFiltersString}}
+          @manager={{this.ladderAndFilterControls}} />
 
-    {{#if (eq this.columnOption "filter-groups") }}
+      {{#if this.chartGroup.showChartsTogether}}
+        <form id="column-option-form">
+          Columns to show:
+          <input type="radio" id="column-option-fgs"
+              name="column-option" value="filter-groups"
+              checked={{if (eq "filter-groups" this.columnOption) "checked"}}
+              {{on "change" this.onColumnOptionInput}} >
+          <label for="column-option-fgs">Filter groups</label>
+          <input type="radio" id="column-option-ocs"
+              name="column-option" value="other-charts"
+              checked={{if (eq "other-charts" this.columnOption) "checked"}}
+              {{on "change" this.onColumnOptionInput}} >
+          <label for="column-option-ocs">Other charts</label>
+        </form>
+      {{/if}}
+
+      {{#if (eq this.columnOption "filter-groups") }}
+        <div>
+          <input
+              type="checkbox" name="show-all-filter-groups"
+              id="show-all-filter-groups-checkbox"
+              checked={{if this.showAllFilterGroups "checked"}}
+              {{on "change" this.onShowAllFilterGroupsInput}} />
+          <label for="show-all-filter-groups-checkbox">Show all filter groups</label>
+        </div>
+      {{/if}}
+
+    </div>
+
+    <div id="chart-related-navigation">
+
+      {{#if this.devMode}}
+        <div><LinkTo @route="charts.record-new" @model={{@model.chart.id}}>
+          Submit a record
+        </LinkTo></div>
+      {{else}}
+        <div><s>Submit a record (not available yet)</s></div>
+      {{/if}}
+
       <div>
-        <input
-            type="checkbox" name="show-all-filter-groups"
-            id="show-all-filter-groups-checkbox"
-            checked={{if this.showAllFilterGroups "checked"}}
-            {{on "change" this.onShowAllFilterGroupsInput}} />
-        <label for="show-all-filter-groups-checkbox">Show all filter groups</label>
+        <LinkTo
+            @route="charts.site-record-history" @model={{@model.chart.id}}
+            @query={{this.historyLinkQueryParams}} >
+          View site record history
+        </LinkTo>
       </div>
-    {{/if}}
 
-  </div>
+      <hr class="short">
 
-  <div id="chart-related-navigation">
-
-    {{#if this.devMode}}
-      <div><LinkTo @route="charts.record-new" @model={{@model.chart.id}}>
-        Submit a record
-      </LinkTo></div>
-    {{else}}
-      <div><s>Submit a record (not available yet)</s></div>
-    {{/if}}
-
-    <div>
-      <LinkTo
-          @route="charts.site-record-history" @model={{@model.chart.id}}
-          @query={{this.historyLinkQueryParams}} >
-        View site record history
-      </LinkTo>
-    </div>
-
-    <hr class="short">
-
-    <div>
-      <LinkTo @route="ladders.charts" @model={{@model.ladder.id}}>
-        ⮝⮝ All charts for {{@model.ladder.name}} ladder
-      </LinkTo>
-    </div>
-
-    {{#if this.chartGroup.showChartsTogether}}
       <div>
-        {{#each this.currentCgCharts as |chart|}}
-          {{#if (eq @model.chart.id chart.id)}}
-            {{chart.name}} |
-          {{else}}
-            <LinkTo
-                @route="charts.show" @model={{chart.id}}
-                @query={{this.chartLinkQueryParams}}>
+        <LinkTo @route="ladders.charts" @model={{@model.ladder.id}}>
+          ⮝⮝ All charts for {{@model.ladder.name}} ladder
+        </LinkTo>
+      </div>
+
+      {{#if this.chartGroup.showChartsTogether}}
+        <div>
+          {{#each this.currentCgCharts as |chart index|}}
+            {{#if (gt index 0) }}
+              {{! Not the first chart; add a separator }}
+              |
+            {{/if}}
+
+            {{#if (eq @model.chart.id chart.id)}}
+              {{! Current chart }}
               {{chart.name}}
-            </LinkTo>
-            |
-          {{/if}}
-        {{/each}}
-      </div>
-    {{/if}}
-
-    <form id="chart-navigation-form">
-
-      {{#if this.chartNavigationPrevious}}
-        <LinkTo
-            @route="charts.show" @model={{this.chartNavigationPrevious.chart.id}}
-            @query={{this.chartLinkQueryParams}}
-            title={{this.chartNavigationPrevious.display}}>
-          ⮜
-        </LinkTo>
+            {{else}}
+              {{! Not current chart; make it a link }}
+              <LinkTo
+                  @route="charts.show" @model={{chart.id}}
+                  @query={{this.chartLinkQueryParams}}>
+                {{chart.name}}
+              </LinkTo>
+            {{/if}}
+          {{/each}}
+        </div>
       {{/if}}
 
-      <select name="chart"
-          {{on "change" this.goToChart}} >
-        {{#each this.chartNavigationChoices as |navChoice|}}
-          <option
-              value="{{navChoice.chart.id}}"
-              {{! TODO: After changing charts once, the initial selection reverts back to the top of the dropdown. Don't know how to fix it. Setting to the correct value in afterModel() appeared to be too early to help anything. }}
-              selected={{if (eq navChoice.chart.id @model.chart.id) "selected"}}
-          >
-            {{navChoice.display}}
-          </option>
-        {{/each}}
-      </select>
+      <form id="chart-navigation-form">
 
-      {{#if this.chartNavigationNext}}
-        <LinkTo
-            @route="charts.show" @model={{this.chartNavigationNext.chart.id}}
-            @query={{this.chartLinkQueryParams}}
-            title={{this.chartNavigationNext.display}}>
-          ⮞
-        </LinkTo>
-      {{/if}}
+        {{#if this.chartNavigationPrevious}}
+          <LinkTo
+              @route="charts.show" @model={{this.chartNavigationPrevious.chart.id}}
+              @query={{this.chartLinkQueryParams}}
+              title={{this.chartNavigationPrevious.display}}>
+            ⮜
+          </LinkTo>
+        {{/if}}
 
-    </form>
+        <select name="chart"
+            {{on "change" this.goToChart}} >
+          {{#each this.chartNavigationChoices as |navChoice|}}
+            <option
+                value="{{navChoice.chart.id}}"
+                {{! TODO: After changing charts once, the initial selection reverts back to the top of the dropdown. Don't know how to fix it. Setting to the correct value in afterModel() appeared to be too early to help anything. }}
+                selected={{if (eq navChoice.chart.id @model.chart.id) "selected"}}
+            >
+              {{navChoice.display}}
+            </option>
+          {{/each}}
+        </select>
+
+        {{#if this.chartNavigationNext}}
+          <LinkTo
+              @route="charts.show" @model={{this.chartNavigationNext.chart.id}}
+              @query={{this.chartLinkQueryParams}}
+              title={{this.chartNavigationNext.display}}>
+            ⮞
+          </LinkTo>
+        {{/if}}
+
+      </form>
+
+    </div>
 
   </div>
 
 </div>
 
-<table class="records-table">
+<table class="scoreboard">
   <thead>
     <tr>
       <th>Rank</th>

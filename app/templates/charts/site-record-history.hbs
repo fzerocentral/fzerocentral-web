@@ -1,27 +1,29 @@
 {{page-title "Site record history"}}
 
-<h2>
+<div class="scoreboard-page-header">
+
   <LinkTo
       @route="charts.show" @model={{@model.chart.id}}
       @query={{this.chartLinkQueryParams}} >
-    {{@model.chart.chartGroup.name}} - {{@model.chart.name}}
+    <h2>{{@model.chart.chartGroup.name}} - {{@model.chart.name}}</h2>
   </LinkTo>
-</h2>
-<h1>Site record history</h1>
+  <h1>Site record history</h1>
 
-<LadderAndFilterControls
-    @extraFiltersString={{this.appliedFiltersString}}
-    @manager={{this.ladderAndFilterControls}} />
+  <LadderAndFilterControls
+      @extraFiltersString={{this.appliedFiltersString}}
+      @manager={{this.ladderAndFilterControls}} />
 
-<div>
-  <input
-      type="checkbox" name="show-all-filter-groups"
-      id="show-all-filter-groups-checkbox"
-      {{on "change" this.updateShowAllFilterGroups}} />
-  <label for="show-all-filter-groups-checkbox">Show all filter groups</label>
+  <div>
+    <input
+        type="checkbox" name="show-all-filter-groups"
+        id="show-all-filter-groups-checkbox"
+        {{on "change" this.updateShowAllFilterGroups}} />
+    <label for="show-all-filter-groups-checkbox">Show all filter groups</label>
+  </div>
+
 </div>
 
-<table class="records-table">
+<table class="scoreboard">
   <thead>
     <tr>
       <th>Player</th>

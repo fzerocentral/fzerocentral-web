@@ -1,24 +1,19 @@
 {{page-title (concat @model.ladder.name " ladder: Home") }}
 
-<h1>
+<div class="scoreboard-page-header">
   <LinkTo @route="games.show" @model={{@model.ladder.game.id}}>
-    {{@model.ladder.game.name}}
+    <h2>{{@model.ladder.game.name}}</h2>
   </LinkTo>
-  - {{@model.ladder.name}} Ladder
-</h1>
+  <h1>{{@model.ladder.name}} Ladder</h1>
+</div>
 
-<ul>
-  <li>Filters: {{@model.ladder.filterSpec}}</li>
-  <li>Applies to: {{@model.ladder.chartGroup.name}}</li>
-</ul>
-
-<table class="records-table">
+<table class="scoreboard">
   <thead>
     <tr>
       <th>Rank</th>
       <th>Player</th>
       <th>Last active</th>
-      <th>Average finish</th>
+      <th>Avg finish</th>
       <th>SR/PR</th>
         {{#each firstEntry.totals as |totalHash|}}
           <th>{{get totalHash "name"}}</th>
