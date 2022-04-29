@@ -42,24 +42,33 @@
 
   </div>
 
-  <!-- Bar for social media icons (and perhaps more later) -->
-  <div id="button-bar">
-    <a href="https://twitter.com/fzerocentral">
-      <img src="{{rootURL}}assets/images/social/twitter.png" alt="Twitter" title="Twitter" />
-    </a>
-    <a href="https://www.facebook.com/fzerocentral/">
-      <img src="{{rootURL}}assets/images/social/facebook.png" alt="Facebook" title="Facebook" />
-    </a>
-    <a href="https://www.youtube.com/user/fzerocentralorg">
-      <img src="{{rootURL}}assets/images/social/youtube.png" alt="YouTube" title="YouTube" />
-    </a>
-    <a href="https://www.twitch.tv/fzerocentral">
-      <img src="{{rootURL}}assets/images/social/twitch.png" alt="Twitch" title="Twitch" />
-    </a>
-  </div>
-
   <div class="body">
     {{outlet}}
   </div>
+
+  <footer>
+
+    <menu>
+      <div>
+        <a href="{{this.indexUrl}}">F-Zero Central Home</a>
+      </div>
+
+      <div id="social-icons">
+        <a href="https://twitter.com/fzerocentral">
+          <img src="{{rootURL}}assets/images/social/twitter.png" alt="Twitter" title="Twitter" />
+        </a>
+        <a href="https://www.facebook.com/fzerocentral/">
+          <img src="{{rootURL}}assets/images/social/facebook.png" alt="Facebook" title="Facebook" />
+        </a>
+        <a href="https://www.youtube.com/user/fzerocentralorg">
+          <img src="{{rootURL}}assets/images/social/youtube.png" alt="YouTube" title="YouTube" />
+        </a>
+        <a href="https://www.twitch.tv/fzerocentral">
+          <img src="{{rootURL}}assets/images/social/twitch.png" alt="Twitch" title="Twitch" />
+        </a>
+      </div>
+    </menu>
+
+  </footer>
 
 </div>
