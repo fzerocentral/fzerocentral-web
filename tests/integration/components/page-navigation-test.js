@@ -2,10 +2,10 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { click, render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import DS from 'ember-data';
+import { PromiseObject } from '@ember-data/store';
 
 function createPageResults(metaPagination) {
-  return DS.PromiseObject.create({
+  return PromiseObject.create({
     promise: Promise.resolve().then(() => {
       return { meta: { pagination: metaPagination } };
     }),

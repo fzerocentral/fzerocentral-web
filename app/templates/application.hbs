@@ -17,7 +17,7 @@
     <!-- Header image on left (logo + MV ships) -->
     <img
       class='logo-image'
-      src='{{rootURL}}assets/images/header.png'
+      src='{{this.rootURL}}assets/images/header.png'
       alt='F-Zero Central'
       usemap='#fzerotop-map'
     />
@@ -34,20 +34,20 @@
 
     <!-- Game selector -->
     <div id='game-selector'>
-      <img src='{{rootURL}}assets/images/game_selector/choose_game.gif' />
+      <img src='{{this.rootURL}}assets/images/game_selector/choose_game.gif' alt="Choose game">
       <div>
         {{#each (array 'climax' 'gpl' 'mv' 'x' 'gx' 'snes') as |game|}}
           {{#if (eq game 'gx')}}
             {{! Hardcoded ID for now... ideally we'd be able to get games by a short name (like 'gx') instead of a number ID later. }}
             <LinkTo @route='games.show' @model='1'>
               <img
-                src='{{rootURL}}assets/images/game_selector/unselected_{{game}}.gif'
+                src='{{this.rootURL}}assets/images/game_selector/unselected_{{game}}.gif'
                 alt='{{game}}'
               />
             </LinkTo>
           {{else}}
             <img
-              src='{{rootURL}}assets/images/game_selector/unselected_{{game}}.gif'
+              src='{{this.rootURL}}assets/images/game_selector/unselected_{{game}}.gif'
               alt='{{game}}'
               style='filter: saturate(0%);'
             />
@@ -72,28 +72,28 @@
       <div id='social-icons'>
         <a href='https://twitter.com/fzerocentral'>
           <img
-            src='{{rootURL}}assets/images/social/twitter.png'
+            src='{{this.rootURL}}assets/images/social/twitter.png'
             alt='Twitter'
             title='Twitter'
           />
         </a>
         <a href='https://www.facebook.com/fzerocentral/'>
           <img
-            src='{{rootURL}}assets/images/social/facebook.png'
+            src='{{this.rootURL}}assets/images/social/facebook.png'
             alt='Facebook'
             title='Facebook'
           />
         </a>
         <a href='https://www.youtube.com/user/fzerocentralorg'>
           <img
-            src='{{rootURL}}assets/images/social/youtube.png'
+            src='{{this.rootURL}}assets/images/social/youtube.png'
             alt='YouTube'
             title='YouTube'
           />
         </a>
         <a href='https://www.twitch.tv/fzerocentral'>
           <img
-            src='{{rootURL}}assets/images/social/twitch.png'
+            src='{{this.rootURL}}assets/images/social/twitch.png'
             alt='Twitch'
             title='Twitch'
           />

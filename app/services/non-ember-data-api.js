@@ -1,10 +1,10 @@
-import DS from 'ember-data';
+import { PromiseArray, PromiseObject } from '@ember-data/store';
 import Service from '@ember/service';
 
 /* API calls that don't fit Ember Data's constraints. */
 export default class NonEmberDataApiService extends Service {
   fetchArrayResults(url) {
-    return DS.PromiseArray.create({
+    return PromiseArray.create({
       promise: fetch(url)
         .then((response) => response.json())
         .then((responseJson) => responseJson.data),
@@ -12,7 +12,7 @@ export default class NonEmberDataApiService extends Service {
   }
 
   fetchObjectResults(url) {
-    return DS.PromiseObject.create({
+    return PromiseObject.create({
       promise: fetch(url)
         .then((response) => response.json())
         .then((responseJson) => responseJson.data),

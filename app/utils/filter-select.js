@@ -1,9 +1,6 @@
 import { action } from '@ember/object';
-import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { getFormField } from '../utils/forms';
-
-export default class FilterSelectComponent extends Component {}
+import { getFormField } from './forms';
 
 /* For some reason, it felt easier to write component-related functionality
  in a separate class from the component itself. */
@@ -54,7 +51,7 @@ export class FilterSelectControl {
    * @param {string} searchText
    * @returns {Promise}
    */
-  getOptions(searchText) {
+  getOptions() {
     // eslint-disable-line no-unused-vars
     throw 'Not implemented';
   }

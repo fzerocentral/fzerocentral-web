@@ -42,6 +42,8 @@ module('Integration | Component | filter-select', function (hooks) {
   });
 
   test('should tolerate null filterGroup', async function (assert) {
+    assert.expect(1);
+
     this.set('filterGroup', null);
 
     // Use `onAnyFilterChange` when onAnyFilterChange is a property.
@@ -66,6 +68,8 @@ module('Integration | Component | filter-select', function (hooks) {
   });
 
   test('initializes selection to placeholder text', async function (assert) {
+    assert.expect(1);
+
     await render(hbs`
       <FilterSelect
         @filterGroup={{filterGroup}}
@@ -83,6 +87,8 @@ module('Integration | Component | filter-select', function (hooks) {
   });
 
   test('can change filter', async function (assert) {
+    assert.expect(1);
+
     await render(hbs`
       <FilterSelect
         @filterGroup={{filterGroup}}
@@ -107,6 +113,8 @@ module('Integration | Component | filter-select', function (hooks) {
   });
 
   test('can clear selection', async function (assert) {
+    assert.expect(1);
+
     await render(hbs`
       <FilterSelect
         @filterGroup={{filterGroup}}

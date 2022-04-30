@@ -43,6 +43,8 @@ module('Unit | Route | games/ladder-new', function (hooks) {
   });
 
   test('limits chart group choices to the current game', async function (assert) {
+    assert.expect(1);
+
     await visit(`/games/${this.game.id}/ladder-new`);
 
     let select = this.element.querySelector(

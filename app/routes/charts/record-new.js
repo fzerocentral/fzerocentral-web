@@ -1,7 +1,7 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
-import { FilterSelectControl } from '../../components/filter-select';
+import { FilterSelectControl } from '../../utils/filter-select';
 
 export default class ChartsRecordNewRoute extends Route {
   @service store;

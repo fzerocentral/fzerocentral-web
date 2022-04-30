@@ -2,9 +2,9 @@ import { A } from '@ember/array';
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
-import DS from 'ember-data';
+import { PromiseArray } from '@ember-data/store';
 import { tracked } from '@glimmer/tracking';
-import { FilterSelectControl } from '../../components/filter-select';
+import { FilterSelectControl } from '../../utils/filter-select';
 import { setFormError } from '../../utils/forms';
 
 export default class FiltersAddImplicationController extends Controller {
@@ -42,7 +42,7 @@ export default class FiltersAddImplicationController extends Controller {
 
   @action
   getTargetOptions(searchText) {
-    return DS.PromiseArray.create({
+    return PromiseArray.create({
       promise: this.getImpliedTypeFilters(searchText).then((iFilters) => {
         let targetOptions = A([]);
         let alreadyImpliedIds = this.model.alreadyImpliedFilters.getEach('id');

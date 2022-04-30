@@ -80,6 +80,8 @@ module('Unit | Route | filter-groups/show', function (hooks) {
   });
 
   test('lists the chart types that use the filter group', async function (assert) {
+    assert.expect(1);
+
     // Reconfigure this Mirage endpoint specifically for this test.
     this.server.pretender.get('/chart_types/', (request) => {
       assert.deepEqual(
@@ -310,7 +312,7 @@ module('Unit | Route | filter-groups/show', function (hooks) {
   });
 
   test('choosable filters list page buttons should work', async function (assert) {
-    // TODO: Upgrade QUnit, then make this test and the following test ('implied' version) use test.each(), which has been added in QUnit 2.16.
+    // TODO: Upgrade QUnit, then make this test and the 'implied' version use test.each(), which has been added in QUnit 2.16.
     let filterType = 'choosable';
 
     // Mirage should be specifying a page size of 10, so create 11 filters to

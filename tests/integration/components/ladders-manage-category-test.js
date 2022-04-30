@@ -18,6 +18,7 @@ module('Integration | Component | ladders-manage-category', function (hooks) {
 
     // Without setupRouter(), LinkTo nodes won't have an href attribute
     // in tests. https://stackoverflow.com/questions/32130798/
+    // eslint-disable-next-line ember/no-private-routing-service
     this.owner.lookup('router:main').setupRouter();
 
     // Create ladders out of order, to ensure that display order doesn't
@@ -51,6 +52,8 @@ module('Integration | Component | ladders-manage-category', function (hooks) {
   });
 
   test('ladder details should render as expected', async function (assert) {
+    assert.expect(1);
+
     await render(hbs`<LaddersManageCategory @ladders={{ladders}} />`);
 
     let ladderRows = this.element.querySelectorAll(

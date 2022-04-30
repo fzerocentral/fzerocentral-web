@@ -120,6 +120,8 @@ module('Integration | Component | filter-apply-form', function (hooks) {
   });
 
   test('first dropdown has the filter groups', async function (assert) {
+    assert.expect(1);
+
     await render(
       hbs`<FilterApplyForm @filterGroups={{filterGroups}}
             @appliedFilterObjs={{appliedFilterObjs}}
@@ -142,6 +144,8 @@ module('Integration | Component | filter-apply-form', function (hooks) {
   });
 
   test('selecting a filter group fills the second dropdown with relevant compare options', async function (assert) {
+    assert.expect(1);
+
     await render(
       hbs`<FilterApplyForm @filterGroups={{filterGroups}}
             @appliedFilterObjs={{appliedFilterObjs}}
@@ -182,6 +186,8 @@ module('Integration | Component | filter-apply-form', function (hooks) {
   });
 
   test("selecting a filter group fills the third dropdown with the group's filter options", async function (assert) {
+    assert.expect(1);
+
     await render(
       hbs`<FilterApplyForm @filterGroups={{filterGroups}}
             @appliedFilterObjs={{appliedFilterObjs}}
@@ -221,6 +227,8 @@ module('Integration | Component | filter-apply-form', function (hooks) {
   });
 
   test('changing the filter group resets the other dropdowns as needed', async function (assert) {
+    assert.expect(1);
+
     await render(
       hbs`<FilterApplyForm @filterGroups={{filterGroups}}
             @appliedFilterObjs={{appliedFilterObjs}}

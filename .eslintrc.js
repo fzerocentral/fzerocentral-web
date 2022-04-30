@@ -22,7 +22,9 @@ module.exports = {
   env: {
     browser: true,
   },
-  rules: {},
+  rules: {
+    'ember/no-controller-access-in-routes': 'off',
+  },
   overrides: [
     // node files
     {

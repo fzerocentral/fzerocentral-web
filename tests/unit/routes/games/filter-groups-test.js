@@ -174,6 +174,8 @@ module('Unit | Route | games/filter-groups', function (hooks) {
   });
 
   test('should have the correct filter group details', async function (assert) {
+    assert.expect(1);
+
     await visit(`/games/${this.game.id}/filter-groups`);
 
     assertTableContents(
