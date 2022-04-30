@@ -84,10 +84,14 @@ export default class ChartsShowController extends Controller {
 
   @action
   goToChart() {
-    this.router.transitionTo(
-      'charts.show', this.destinationChartId,
-      {queryParams: this.chartLinkQueryParams},
-    );
+    // The chart dropdown doesn't get reset to the current chart if we use
+    // transitionTo(). Couldn't figure out how to fix that, so using
+    // window.location instead.
+    window.location.assign(
+      this.router.urlFor(
+        'charts.show', this.destinationChartId,
+        {queryParams: this.chartLinkQueryParams},
+      ));
   }
 
   @action

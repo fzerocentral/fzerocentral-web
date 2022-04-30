@@ -76,12 +76,12 @@
                 {{! Current chart }}
                 {{chart.name}}
               {{else}}
-                {{! Not current chart; make it a link }}
-                <LinkTo
+                {{! Not current chart; make it a link. Ember transition makes it slower (about 2x?) and breaks the chart dropdown, so we use a regular link. }}
+                <BasicLink
                     @route="charts.show" @model={{chart.id}}
                     @query={{this.chartLinkQueryParams}}>
                   {{chart.name}}
-                </LinkTo>
+                </BasicLink>
               {{/if}}
             </li>
           {{/each}}
@@ -91,12 +91,13 @@
       <form id="chart-navigation-form">
 
         {{#if this.chartNavigationPrevious}}
-          <LinkTo
+          {{! Ember transition is slower (about 2x?) than a regular link and breaks the chart dropdown. }}
+          <BasicLink
               @route="charts.show" @model={{this.chartNavigationPrevious.chart.id}}
               @query={{this.chartLinkQueryParams}}
               title={{this.chartNavigationPrevious.display}}>
             ⮜
-          </LinkTo>
+          </BasicLink>
         {{/if}}
 
         <select name="chart"
@@ -104,7 +105,6 @@
           {{#each this.chartNavigationChoices as |navChoice|}}
             <option
                 value="{{navChoice.chart.id}}"
-                {{! TODO: After changing charts once, the initial selection reverts back to the top of the dropdown. Don't know how to fix it. Setting to the correct value in afterModel() appeared to be too early to help anything. }}
                 selected={{if (eq navChoice.chart.id @model.chart.id) "selected"}}
             >
               {{navChoice.display}}
@@ -113,12 +113,12 @@
         </select>
 
         {{#if this.chartNavigationNext}}
-          <LinkTo
+          <BasicLink
               @route="charts.show" @model={{this.chartNavigationNext.chart.id}}
               @query={{this.chartLinkQueryParams}}
               title={{this.chartNavigationNext.display}}>
             ⮞
-          </LinkTo>
+          </BasicLink>
         {{/if}}
 
       </form>
