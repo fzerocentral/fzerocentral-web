@@ -5,6 +5,15 @@
     <h2>{{@model.ladder.game.name}}</h2>
   </LinkTo>
   <h1>{{@model.ladder.name}} Ladder</h1>
+
+  <div class="small-section">
+    Ladder filters:
+    {{#each this.ladderFilterDisplays as |display|}}
+      <span class="applied-filter">{{display}}</span>
+    {{else}}
+      (None)
+    {{/each}}
+  </div>
 </div>
 
 <table class="scoreboard">
