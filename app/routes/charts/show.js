@@ -29,7 +29,8 @@ export default class ChartsShowRoute extends Route {
         'ladder', {chart_id: params.chart_id}),
       filterGroups: this.store.query(
         'filter-group', {chart_id: params.chart_id}),
-      ladder: this.store.findRecord('ladder', params.ladderId),
+      ladder: this.store.findRecord(
+        'ladder', params.ladderId, {include: 'game'}),
       ladderFilterObjs: this.store.query(
         'filter', {ladder_id: params.ladderId}),
 
