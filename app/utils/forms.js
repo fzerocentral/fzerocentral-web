@@ -1,5 +1,4 @@
-import { errorDisplay } from "../helpers/error-display";
-
+import { errorDisplay } from '../helpers/error-display';
 
 // TODO: Replace this with getFormValue() and setFormValue(), because
 //  this doesn't work or make sense with radio inputs, and usages all
@@ -7,36 +6,34 @@ import { errorDisplay } from "../helpers/error-display";
 //  A function to get all form values using FormData would also be good.
 export function getFormField(form, fieldName) {
   return Array.from(form.elements).find(
-    (element) => element.name === fieldName);
+    (element) => element.name === fieldName
+  );
 }
 
 export function getFormValue(form, fieldName) {
   let formElements = Array.from(form.elements);
-  let field = formElements.find(
-    (element) => element.name === fieldName);
+  let field = formElements.find((element) => element.name === fieldName);
 
   if (field.type === 'radio') {
     let checkedField = formElements.find(
-      (element) => element.name === fieldName && element.checked);
+      (element) => element.name === fieldName && element.checked
+    );
     return checkedField.value;
-  }
-  else {
+  } else {
     return field.value;
   }
 }
 
 export function setFormValue(form, fieldName, value) {
   let formElements = Array.from(form.elements);
-  let field = formElements.find(
-    (element) => element.name === fieldName);
+  let field = formElements.find((element) => element.name === fieldName);
 
   if (field.type === 'radio') {
     let fields = document.querySelectorAll(`input[name="${fieldName}"]`);
-    fields.forEach(field => {
-      field.checked = (field.value === value);
+    fields.forEach((field) => {
+      field.checked = field.value === value;
     });
-  }
-  else {
+  } else {
     field.value = value;
   }
 }

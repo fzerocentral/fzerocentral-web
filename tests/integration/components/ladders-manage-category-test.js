@@ -4,14 +4,15 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
-import { createModelInstance, modelAsProperty }
-  from 'fzerocentral-web/tests/helpers/model-helpers';
+import {
+  createModelInstance,
+  modelAsProperty,
+} from 'fzerocentral-web/tests/helpers/model-helpers';
 
-
-module('Integration | Component | ladders-manage-category', function(hooks) {
+module('Integration | Component | ladders-manage-category', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach( function() {
+  hooks.beforeEach(function () {
     this.server = startMirage();
     this.store = this.owner.lookup('service:store');
 
@@ -21,12 +22,18 @@ module('Integration | Component | ladders-manage-category', function(hooks) {
 
     // Create ladders out of order, to ensure that display order doesn't
     // depend on creation order.
-    this.ladder2 = createModelInstance(
-      this.server, 'ladder', {orderInGameAndKind: 2, name: 'Ladder 2 name'});
-    this.ladder1 = createModelInstance(
-      this.server, 'ladder', {orderInGameAndKind: 1, name: 'Ladder 1 name'});
-    this.ladder3 = createModelInstance(
-      this.server, 'ladder', {orderInGameAndKind: 3, name: 'Ladder 3 name'});
+    this.ladder2 = createModelInstance(this.server, 'ladder', {
+      orderInGameAndKind: 2,
+      name: 'Ladder 2 name',
+    });
+    this.ladder1 = createModelInstance(this.server, 'ladder', {
+      orderInGameAndKind: 1,
+      name: 'Ladder 1 name',
+    });
+    this.ladder3 = createModelInstance(this.server, 'ladder', {
+      orderInGameAndKind: 3,
+      name: 'Ladder 3 name',
+    });
 
     // Set template property
     this.set(
@@ -35,21 +42,27 @@ module('Integration | Component | ladders-manage-category', function(hooks) {
         modelAsProperty(this.store, 'ladder', this.ladder1),
         modelAsProperty(this.store, 'ladder', this.ladder2),
         modelAsProperty(this.store, 'ladder', this.ladder3),
-      ]));
+      ])
+    );
   });
 
-  hooks.afterEach( function() {
+  hooks.afterEach(function () {
     this.server.shutdown();
   });
 
-  test('ladder details should render as expected', async function(assert) {
+  test('ladder details should render as expected', async function (assert) {
     await render(hbs`<LaddersManageCategory @ladders={{ladders}} />`);
 
     let ladderRows = this.element.querySelectorAll(
-      'table.ladders > tbody > tr');
+      'table.ladders > tbody > tr'
+    );
 
-    let assertLadderDetails = function(
-        ladderRow, expectedOrder, expectedName, expectedHref) {
+    let assertLadderDetails = function (
+      ladderRow,
+      expectedOrder,
+      expectedName,
+      expectedHref
+    ) {
       let cells = ladderRow.querySelectorAll('td');
       let order = cells[0].querySelector('input').value;
       let anchor = cells[1].querySelector('a');
@@ -61,11 +74,23 @@ module('Integration | Component | ladders-manage-category', function(hooks) {
     };
 
     assertLadderDetails(
-      ladderRows[0], '1', 'Ladder 1 name', `/ladders/${this.ladder1.id}`);
+      ladderRows[0],
+      '1',
+      'Ladder 1 name',
+      `/ladders/${this.ladder1.id}`
+    );
     assertLadderDetails(
-      ladderRows[1], '2', 'Ladder 2 name', `/ladders/${this.ladder2.id}`);
+      ladderRows[1],
+      '2',
+      'Ladder 2 name',
+      `/ladders/${this.ladder2.id}`
+    );
     assertLadderDetails(
-      ladderRows[2], '3', 'Ladder 3 name', `/ladders/${this.ladder3.id}`);
+      ladderRows[2],
+      '3',
+      'Ladder 3 name',
+      `/ladders/${this.ladder3.id}`
+    );
   });
 
   // Trying to test changing the ladder order encounters the error

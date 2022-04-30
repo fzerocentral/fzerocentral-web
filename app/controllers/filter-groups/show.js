@@ -3,7 +3,6 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 
-
 export default class FilterGroupsShowController extends Controller {
   @service nonEmberDataApi;
   @service store;
@@ -94,8 +93,7 @@ export default class FilterGroupsShowController extends Controller {
         implied_by_filter_id: this.selectedFilterId,
         'page[number]': this.implicationsPage,
       });
-    }
-    else {
+    } else {
       this.implications = this.store.query('filter', {
         implies_filter_id: this.selectedFilterId,
         'page[number]': this.implicationsPage,
@@ -104,14 +102,13 @@ export default class FilterGroupsShowController extends Controller {
   }
 
   updateSelectedFilterRecordCount() {
-    this.store.query(
-      'record', {filters: this.selectedFilterId, 'page[size]': 1}
-    )
-    .then((records) => {
-      // The record count can be retrieved from the pagination headers.
-      // We're not interested in the records themselves.
-      this.recordCount = records.meta.pagination.count;
-    })
+    this.store
+      .query('record', { filters: this.selectedFilterId, 'page[size]': 1 })
+      .then((records) => {
+        // The record count can be retrieved from the pagination headers.
+        // We're not interested in the records themselves.
+        this.recordCount = records.meta.pagination.count;
+      });
   }
 
   set filterDeleteError(error) {
@@ -120,23 +117,24 @@ export default class FilterGroupsShowController extends Controller {
 
   @action
   deleteFilter() {
-    this.nonEmberDataApi.deleteResource('filters', this.selectedFilterId)
-    .then(data => {
-      if ('errors' in data) {
-        let error = data.errors[0];
-        throw new Error(error.detail);
-      }
+    this.nonEmberDataApi
+      .deleteResource('filters', this.selectedFilterId)
+      .then((data) => {
+        if ('errors' in data) {
+          let error = data.errors[0];
+          throw new Error(error.detail);
+        }
 
-      // Success.
-      // De-select the filter.
-      this.updateSelectedFilterId(null);
-      this.filterDeleteError = "";
-      // Refresh filter lists.
-      this.updateChoosableFilters();
-      this.updateImpliedFilters();
-    })
-    .catch(error => {
-      this.filterDeleteError = error.message;
-    });
+        // Success.
+        // De-select the filter.
+        this.updateSelectedFilterId(null);
+        this.filterDeleteError = '';
+        // Refresh filter lists.
+        this.updateChoosableFilters();
+        this.updateImpliedFilters();
+      })
+      .catch((error) => {
+        this.filterDeleteError = error.message;
+      });
   }
 }

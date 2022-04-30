@@ -1,8 +1,7 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
-import { FilterSelectControl } from "../../components/filter-select";
-
+import { FilterSelectControl } from '../../components/filter-select';
 
 export default class ChartsRecordNewRoute extends Route {
   @service store;
@@ -10,9 +9,10 @@ export default class ChartsRecordNewRoute extends Route {
   model(params) {
     return RSVP.hash({
       chart: this.store.findRecord('chart', params.chart_id),
-      players: this.store.query('player', {'page[size]': 1000}),
-      filterGroups: this.store.query(
-        'filterGroup', {chart_id: params.chart_id}),
+      players: this.store.query('player', { 'page[size]': 1000 }),
+      filterGroups: this.store.query('filterGroup', {
+        chart_id: params.chart_id,
+      }),
     });
   }
 
@@ -26,7 +26,8 @@ export default class ChartsRecordNewRoute extends Route {
         // Editing an existing record; initial value is the record's
         // existing filter, if any.
         initialFilter = resolvedModel.record.filters.find(
-          (filter) => filter.filterGroup.get('id') === filterGroup.id);
+          (filter) => filter.filterGroup.get('id') === filterGroup.id
+        );
       }
 
       let filterSelect = new FilterSelectControl(
@@ -34,8 +35,7 @@ export default class ChartsRecordNewRoute extends Route {
         `filter-${filterGroup.id}`,
         // Partial-apply filterGroup.id to this action method.
         controller.getFilterOptionsForGroup.bind(null, filterGroup.id),
-        {hasEmptyOption: true,
-         initialFilter: initialFilter},
+        { hasEmptyOption: true, initialFilter: initialFilter }
       );
 
       filterSelect.initializeOptions();

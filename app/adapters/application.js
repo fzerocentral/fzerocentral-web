@@ -3,7 +3,6 @@ import { pluralize } from 'ember-inflector';
 import { underscore } from '@ember/string';
 import ENV from 'fzerocentral-web/config/environment';
 
-
 export default class ApplicationAdapter extends JSONAPIAdapter {
   namespace = ENV.APP.apiNamespace;
 

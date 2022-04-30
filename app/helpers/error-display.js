@@ -8,7 +8,9 @@ import { helper } from '@ember/component/helper';
  */
 export function errorDisplay(params) {
   let [error] = params;
-  if (error === null) { return null; }
+  if (error === null) {
+    return null;
+  }
 
   if (error.constructor === String) {
     // Error string
@@ -16,7 +18,7 @@ export function errorDisplay(params) {
   }
 
   // If we're here, we're assuming a JSON API response body
-  let prefix = "";
+  let prefix = '';
 
   if (error.source) {
     let pointer = error.source.pointer;
@@ -33,9 +35,10 @@ export function errorDisplay(params) {
         // Dashes -> spaces
         let attributeDisplay = attributeName.replace(/-/g, ' ');
         // Capitalize first letter
-        attributeDisplay = attributeDisplay.charAt(0).toUpperCase()
-          + attributeDisplay.substring(1);
-        prefix = attributeDisplay + " ";
+        attributeDisplay =
+          attributeDisplay.charAt(0).toUpperCase() +
+          attributeDisplay.substring(1);
+        prefix = attributeDisplay + ' ';
       }
     }
   }

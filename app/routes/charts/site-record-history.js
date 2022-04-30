@@ -1,11 +1,8 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
-import {
-  LadderAndFilterControlsManager
-} from "../../components/ladder-and-filter-controls";
-import { filterSpecStrToItems } from "../../utils/filter-specs";
-
+import { LadderAndFilterControlsManager } from '../../components/ladder-and-filter-controls';
+import { filterSpecStrToItems } from '../../utils/filter-specs';
 
 export default class ChartsTopRecordHistoryRoute extends Route {
   @service nonEmberDataApi;
@@ -13,28 +10,33 @@ export default class ChartsTopRecordHistoryRoute extends Route {
 
   queryParams = {
     // Re-run the model hook if these query params change.
-    appliedFiltersString: {refreshModel: true},
-    ladderId: {refreshModel: true},
+    appliedFiltersString: { refreshModel: true },
+    ladderId: { refreshModel: true },
   };
 
   model(params) {
     let items = filterSpecStrToItems(params.appliedFiltersString);
-    let appliedFilterIds = items.map(item => item.filterId);
+    let appliedFilterIds = items.map((item) => item.filterId);
 
     return RSVP.hash({
-      appliedFilterObjs: this.store.query(
-        'filter', {filter_ids: appliedFilterIds.join(',')}),
+      appliedFilterObjs: this.store.query('filter', {
+        filter_ids: appliedFilterIds.join(','),
+      }),
       chart: this.store.findRecord('chart', params.chart_id),
-      chartLadders: this.store.query(
-        'ladder', {chart_id: params.chart_id}),
-      filterGroups: this.store.query(
-        'filter-group', {chart_id: params.chart_id}),
+      chartLadders: this.store.query('ladder', { chart_id: params.chart_id }),
+      filterGroups: this.store.query('filter-group', {
+        chart_id: params.chart_id,
+      }),
       ladder: this.store.findRecord('ladder', params.ladderId),
-      ladderFilterObjs: this.store.query(
-        'filter', {ladder_id: params.ladderId}),
+      ladderFilterObjs: this.store.query('filter', {
+        ladder_id: params.ladderId,
+      }),
 
       records: this.nonEmberDataApi.getChartTopRecordHistory(
-        params.chart_id, params.ladderId, params.appliedFiltersString),
+        params.chart_id,
+        params.ladderId,
+        params.appliedFiltersString
+      ),
     });
   }
 
@@ -51,7 +53,7 @@ export default class ChartsTopRecordHistoryRoute extends Route {
       resolvedModel.filterGroups,
       resolvedModel.appliedFilterObjs,
       controller.getFilterOptions,
-      controller.updateAppliedFiltersString,
+      controller.updateAppliedFiltersString
     );
   }
 }

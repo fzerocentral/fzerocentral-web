@@ -1,11 +1,8 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
-import {
-  LadderAndFilterControlsManager
-} from "../../components/ladder-and-filter-controls";
-import { filterSpecStrToItems } from "../../utils/filter-specs";
-
+import { LadderAndFilterControlsManager } from '../../components/ladder-and-filter-controls';
+import { filterSpecStrToItems } from '../../utils/filter-specs';
 
 export default class ChartsShowRoute extends Route {
   @service nonEmberDataApi;
@@ -13,36 +10,41 @@ export default class ChartsShowRoute extends Route {
 
   queryParams = {
     // Re-run the model hook if these query params change.
-    appliedFiltersString: {refreshModel: true},
-    ladderId: {refreshModel: true},
+    appliedFiltersString: { refreshModel: true },
+    ladderId: { refreshModel: true },
   };
 
   model(params) {
     let items = filterSpecStrToItems(params.appliedFiltersString);
-    let appliedFilterIds = items.map(item => item.filterId);
+    let appliedFilterIds = items.map((item) => item.filterId);
 
     return RSVP.hash({
-      appliedFilterObjs: this.store.query(
-        'filter', {filter_ids: appliedFilterIds.join(',')}),
+      appliedFilterObjs: this.store.query('filter', {
+        filter_ids: appliedFilterIds.join(','),
+      }),
       chart: this.store.findRecord('chart', params.chart_id),
-      chartLadders: this.store.query(
-        'ladder', {chart_id: params.chart_id}),
-      filterGroups: this.store.query(
-        'filter-group', {chart_id: params.chart_id}),
-      ladder: this.store.findRecord(
-        'ladder', params.ladderId, {include: 'game'}),
-      ladderFilterObjs: this.store.query(
-        'filter', {ladder_id: params.ladderId}),
+      chartLadders: this.store.query('ladder', { chart_id: params.chart_id }),
+      filterGroups: this.store.query('filter-group', {
+        chart_id: params.chart_id,
+      }),
+      ladder: this.store.findRecord('ladder', params.ladderId, {
+        include: 'game',
+      }),
+      ladderFilterObjs: this.store.query('filter', {
+        ladder_id: params.ladderId,
+      }),
 
-      ladderCharts: this.store.query(
-        'chart', {
-          ladder_id: params.ladderId,
-          // Include some chart group details to avoid extra queries.
-          include: 'chart_group',
-          'page[size]': 1000,
-        }),
+      ladderCharts: this.store.query('chart', {
+        ladder_id: params.ladderId,
+        // Include some chart group details to avoid extra queries.
+        include: 'chart_group',
+        'page[size]': 1000,
+      }),
       records: this.nonEmberDataApi.getChartRanking(
-        params.chart_id, params.ladderId, params.appliedFiltersString),
+        params.chart_id,
+        params.ladderId,
+        params.appliedFiltersString
+      ),
     });
   }
 
@@ -62,7 +64,7 @@ export default class ChartsShowRoute extends Route {
       let currentCgIndex;
       let lastGroupId = null;
       let leafGroupHash;
-      resolvedModel.ladderCharts.forEach(chart => {
+      resolvedModel.ladderCharts.forEach((chart) => {
         let groupId = chart.chartGroup.get('id');
         if (groupId !== lastGroupId) {
           leafGroupHash = {
@@ -88,13 +90,13 @@ export default class ChartsShowRoute extends Route {
           }
           currentCgIndex = ladderLeafGroups.length - 1;
         }
-      })
+      });
 
-      controller.chartNavigationChoices = ladderLeafGroups.map(hash => {
+      controller.chartNavigationChoices = ladderLeafGroups.map((hash) => {
         return {
           chart: hash.correspondingChart,
           display: hash.group.get('name'),
-        }
+        };
       });
       if (currentCgIndex > 0) {
         controller.chartNavigationPrevious =
@@ -106,24 +108,23 @@ export default class ChartsShowRoute extends Route {
       }
       controller.currentCgCharts = currentCgCharts;
       controller.currentCgOtherCharts = currentCgOtherCharts;
-    }
-    else {
+    } else {
       // Chart navigation treats charts individually, ignoring groups.
       let ladderCharts = [];
       let currentChartIndex;
-      resolvedModel.ladderCharts.forEach(chart => {
+      resolvedModel.ladderCharts.forEach((chart) => {
         ladderCharts.push(chart);
 
         if (chart.id === currentChart.id) {
           currentChartIndex = ladderCharts.length - 1;
         }
-      })
+      });
 
-      controller.chartNavigationChoices = ladderCharts.map(chart => {
+      controller.chartNavigationChoices = ladderCharts.map((chart) => {
         return {
           chart: chart,
           display: `${chart.chartGroup.get('name')} - ${chart.name}`,
-        }
+        };
       });
       if (currentChartIndex > 0) {
         controller.chartNavigationPrevious =
@@ -142,7 +143,9 @@ export default class ChartsShowRoute extends Route {
     if (resolvedModel.chart.chartGroup.get('showChartsTogether')) {
       controller.otherRecords = this.nonEmberDataApi.getChartOtherRecords(
         currentChart.id,
-        modelParams.ladderId, modelParams.appliedFiltersString);
+        modelParams.ladderId,
+        modelParams.appliedFiltersString
+      );
     }
 
     // Controls component
@@ -155,7 +158,7 @@ export default class ChartsShowRoute extends Route {
       resolvedModel.filterGroups,
       resolvedModel.appliedFilterObjs,
       controller.getFilterOptions,
-      controller.updateAppliedFiltersString,
+      controller.updateAppliedFiltersString
     );
   }
 }

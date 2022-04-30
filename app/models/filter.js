@@ -1,6 +1,5 @@
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 
-
 export default class FilterModel extends Model {
   @attr('string') name;
   @attr('string') usageType;
@@ -11,9 +10,13 @@ export default class FilterModel extends Model {
   @hasMany('record') records;
 
   @hasMany('filter', {
-    inverse: 'incomingFilterImplications'}) outgoingFilterImplications;
+    inverse: 'incomingFilterImplications',
+  })
+  outgoingFilterImplications;
   @hasMany('filter', {
-    inverse: 'outgoingFilterImplications'}) incomingFilterImplications;
+    inverse: 'outgoingFilterImplications',
+  })
+  incomingFilterImplications;
 
   static USAGE_TYPE_OPTIONS = ['choosable', 'implied'];
 }

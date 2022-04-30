@@ -4,9 +4,8 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import DS from 'ember-data';
 import { tracked } from '@glimmer/tracking';
-import { FilterSelectControl } from "../../components/filter-select";
-import { setFormError } from "../../utils/forms";
-
+import { FilterSelectControl } from '../../components/filter-select';
+import { setFormError } from '../../utils/forms';
 
 export default class FiltersAddImplicationController extends Controller {
   @service store;
@@ -19,7 +18,10 @@ export default class FiltersAddImplicationController extends Controller {
     super(...args);
 
     this.filterSelect = new FilterSelectControl(
-      this.formId, 'filter', this.getTargetOptions);
+      this.formId,
+      'filter',
+      this.getTargetOptions
+    );
   }
 
   get filterGroup() {
@@ -48,11 +50,13 @@ export default class FiltersAddImplicationController extends Controller {
         // Options are the implied-type filters in this filter group,
         // excluding filters that are already implied by this filter
         iFilters.forEach((iFilter) => {
-          if (alreadyImpliedIds.includes(iFilter.id)) { return; }
+          if (alreadyImpliedIds.includes(iFilter.id)) {
+            return;
+          }
           targetOptions.pushObject(iFilter);
-        })
+        });
         return targetOptions;
-      })
+      }),
     });
   }
 
@@ -62,23 +66,27 @@ export default class FiltersAddImplicationController extends Controller {
 
     if (!targetId) {
       setFormError(
-        this.form, "Please select the target filter for implication.");
+        this.form,
+        'Please select the target filter for implication.'
+      );
       return;
     }
 
-    this.nonEmberDataApi.addFilterImplication(
-      this.model.filter.id, targetId)
-    .then(data => {
-      if ('errors' in data) {
-        throw new Error(data.errors[0].detail);
-      }
+    this.nonEmberDataApi
+      .addFilterImplication(this.model.filter.id, targetId)
+      .then((data) => {
+        if ('errors' in data) {
+          throw new Error(data.errors[0].detail);
+        }
 
-      // Success.
-      this.target.transitionTo(
-        'filter-groups.show', this.filterGroup.get('id'));
-    })
-    .catch(error => {
-      setFormError(this.form, error.message);
-    });
+        // Success.
+        this.target.transitionTo(
+          'filter-groups.show',
+          this.filterGroup.get('id')
+        );
+      })
+      .catch((error) => {
+        setFormError(this.form, error.message);
+      });
   }
 }

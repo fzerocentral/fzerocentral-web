@@ -1,6 +1,5 @@
-import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
-
+import Component from '@glimmer/component';
+import { inject as service } from '@ember/service';
 
 /* Link without a custom click action, meaning it's a basic HTML link and
    doesn't use Ember transitions. This can help when transitions seem to make
@@ -11,11 +10,11 @@ export default class LinkComponent extends Component {
   get href() {
     const args = [this.args.route];
 
-    if ("model" in this.args) {
+    if ('model' in this.args) {
       args.push(this.args.model);
     }
 
-    if ("query" in this.args) {
+    if ('query' in this.args) {
       args.push({
         queryParams: this.args.query,
       });

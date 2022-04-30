@@ -1,13 +1,11 @@
 import { action } from '@ember/object';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { filterSpecStrToDisplays } from "../utils/filter-specs";
-
+import { filterSpecStrToDisplays } from '../utils/filter-specs';
 
 export default class LadderAndFilterControlsComponent extends Component {
-
   // Show filter controls initially if there are any extra filters.
-  @tracked showFilterControls = (this.args.extraFiltersString !== null);
+  @tracked showFilterControls = this.args.extraFiltersString !== null;
 
   @action
   onShowFilterControlsInput(event) {
@@ -15,19 +13,17 @@ export default class LadderAndFilterControlsComponent extends Component {
   }
 }
 
-
 export class LadderAndFilterControlsManager {
-
   constructor(
-      ladder,
-      ladderFilterObjs,
-      ladderOptions,
-      updateLadderId,
-      filterGroups,
-      extraFilterObjs,
-      getFilterOptions,
-      updateExtraFiltersString) {
-
+    ladder,
+    ladderFilterObjs,
+    ladderOptions,
+    updateLadderId,
+    filterGroups,
+    extraFilterObjs,
+    getFilterOptions,
+    updateExtraFiltersString
+  ) {
     this.ladder = ladder;
     this.ladderFilterObjs = ladderFilterObjs;
     this.ladderOptions = ladderOptions;
@@ -47,6 +43,8 @@ export class LadderAndFilterControlsManager {
 
   get ladderFilterDisplays() {
     return filterSpecStrToDisplays(
-      this.ladder.filterSpec, this.ladderFilterObjs);
+      this.ladder.filterSpec,
+      this.ladderFilterObjs
+    );
   }
 }

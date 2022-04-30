@@ -7,12 +7,11 @@ export default class GameChartTypesRoute extends Route {
 
   model(params) {
     return RSVP.hash({
-      chartTypes: this.store.query(
-        'chart-type', {game_id: params.game_id}),
-      filterGroups: this.store.query(
-        'filter-group', {game_id: params.game_id}),
-      game: this.store.findRecord(
-        'game', params.game_id),
+      chartTypes: this.store.query('chart-type', { game_id: params.game_id }),
+      filterGroups: this.store.query('filter-group', {
+        game_id: params.game_id,
+      }),
+      game: this.store.findRecord('game', params.game_id),
     });
   }
 }

@@ -14,5 +14,7 @@ export default class FilterGroupModel extends Model {
 
   // The group's filters should be multiple
   // choice selected, or entered as a number
-  get KIND_OPTIONS() {return A(['select', 'numeric']);}
+  get KIND_OPTIONS() {
+    return A(['select', 'numeric']);
+  }
 }

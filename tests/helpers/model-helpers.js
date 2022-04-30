@@ -1,4 +1,4 @@
-import { run } from "@ember/runloop";
+import { run } from '@ember/runloop';
 
 export function createModelInstance(server, modelName, args) {
   // This helper function doesn't really save any typing, but it's more about

@@ -4,42 +4,44 @@ import { setupTest } from 'ember-qunit';
 import { run } from '@ember/runloop';
 import { click, visit } from '@ember/test-helpers';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
-import { createModelInstance }
-  from 'fzerocentral-web/tests/helpers/model-helpers';
+import { createModelInstance } from 'fzerocentral-web/tests/helpers/model-helpers';
 
-
-module('Unit | Route | ladders/show', function(hooks) {
+module('Unit | Route | ladders/show', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach( function() {
+  hooks.beforeEach(function () {
     this.server = startMirage();
     this.store = this.owner.lookup('service:store');
 
-    this.game = createModelInstance(
-      this.server, 'game', {name: 'Game 1'});
-    this.chartGroup = createModelInstance(
-      this.server, 'chart-group',
-      {name: "Group 1", game: this.game});
+    this.game = createModelInstance(this.server, 'game', { name: 'Game 1' });
+    this.chartGroup = createModelInstance(this.server, 'chart-group', {
+      name: 'Group 1',
+      game: this.game,
+    });
   });
 
-  hooks.afterEach( function() {
+  hooks.afterEach(function () {
     this.server.shutdown();
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     let route = this.owner.lookup('route:ladders/show');
     assert.ok(route);
   });
 
-  test('can delete a ladder', async function(assert) {
+  test('can delete a ladder', async function (assert) {
     // Automatically confirm any window confirmations.
     let confirmFalseStub = sinon.stub(window, 'confirm');
     confirmFalseStub.returns(true);
 
-    let ladderToDelete = createModelInstance(
-      this.server, 'ladder', {
-        game: this.game, kind: 'main', chartGroup: this.chartGroup,
-        orderInGameAndKind: 1, name: 'Main ladder', filterSpec: '2-3n'});
+    let ladderToDelete = createModelInstance(this.server, 'ladder', {
+      game: this.game,
+      kind: 'main',
+      chartGroup: this.chartGroup,
+      orderInGameAndKind: 1,
+      name: 'Main ladder',
+      filterSpec: '2-3n',
+    });
 
     await visit(`/ladders/${ladderToDelete.id}`);
 

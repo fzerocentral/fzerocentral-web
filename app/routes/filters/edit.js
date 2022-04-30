@@ -2,7 +2,6 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 
-
 export default class FiltersEditRoute extends Route {
   @service store;
 

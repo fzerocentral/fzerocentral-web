@@ -46,7 +46,7 @@ module.exports = function (environment) {
     // requests.
     // https://github.com/samselikoff/ember-cli-mirage/issues/1200
     ENV['ember-cli-mirage'] = {
-      trackRequests: true
+      trackRequests: true,
     };
 
     // keep test console output quieter

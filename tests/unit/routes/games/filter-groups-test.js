@@ -2,11 +2,8 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { currentURL, visit } from '@ember/test-helpers';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
-import { createModelInstance }
-  from 'fzerocentral-web/tests/helpers/model-helpers';
-import { getURLSearchParamsHash }
-  from 'fzerocentral-web/tests/helpers/route-helpers';
-
+import { createModelInstance } from 'fzerocentral-web/tests/helpers/model-helpers';
+import { getURLSearchParamsHash } from 'fzerocentral-web/tests/helpers/route-helpers';
 
 function collapseWhitespace(text) {
   // Collapse consecutive whitespace characters into a single space. Trim
@@ -14,11 +11,10 @@ function collapseWhitespace(text) {
   return text.replace(/\s+/g, ' ').trim();
 }
 
-
 function assertHTMLEqual(assert, element, expectedHTML, message) {
   let basicElement = element.cloneNode(true);
   // Remove ember-generated ids and classes from all anchor elements.
-  basicElement.querySelectorAll('a').forEach(anchorElement => {
+  basicElement.querySelectorAll('a').forEach((anchorElement) => {
     // Remove any ember-generated id.
     if (anchorElement.id.startsWith('ember')) {
       anchorElement.removeAttribute('id');
@@ -40,7 +36,6 @@ function assertHTMLEqual(assert, element, expectedHTML, message) {
   assert.equal(elementHTML, expectedHTML, message);
 }
 
-
 function assertTableContents(assert, tableElement, expectedContents) {
   let rowElements = tableElement.querySelectorAll('tr');
 
@@ -50,113 +45,161 @@ function assertTableContents(assert, tableElement, expectedContents) {
 
     for (let [colIndex, cellElement] of Array.from(cellElements).entries()) {
       assertHTMLEqual(
-        assert, cellElement, expectedRow[colIndex],
-        `Content of Row ${rowIndex}, Col ${colIndex} should be as expected`)
+        assert,
+        cellElement,
+        expectedRow[colIndex],
+        `Content of Row ${rowIndex}, Col ${colIndex} should be as expected`
+      );
     }
 
     assert.equal(
-      cellElements.length, expectedRow.length,
-      `Row ${rowIndex} should have the expected number of cells`);
+      cellElements.length,
+      expectedRow.length,
+      `Row ${rowIndex} should have the expected number of cells`
+    );
   }
 
   assert.equal(
-    rowElements.length, expectedContents.length,
-    `Table should have the expected number of rows`);
+    rowElements.length,
+    expectedContents.length,
+    `Table should have the expected number of rows`
+  );
 }
 
-
-module('Unit | Route | games/filter-groups', function(hooks) {
+module('Unit | Route | games/filter-groups', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach( function() {
+  hooks.beforeEach(function () {
     this.server = startMirage();
     this.store = this.owner.lookup('service:store');
 
-    this.game = createModelInstance(this.server, 'game', {name: "Game 1"});
-    this.otherGame = createModelInstance(this.server, 'game', {name: "Other"});
-    this.chartType1 = createModelInstance(
-      this.server, 'chart-type',
-      {name: "Type 1", format_spec: '[{"suffix": "m"}]',
-      order_ascending: true, game: this.game});
-    this.chartType2 = createModelInstance(
-      this.server, 'chart-type',
-      {name: "Type 2", format_spec: '[{"suffix": "pts"}]',
-      order_ascending: true, game: this.game});
-    this.otherChartType = createModelInstance(
-      this.server, 'chart-type',
-      {name: "Other Type", format_spec: '[{"suffix": "km"}]',
-      order_ascending: true, game: this.otherGame});
+    this.game = createModelInstance(this.server, 'game', { name: 'Game 1' });
+    this.otherGame = createModelInstance(this.server, 'game', {
+      name: 'Other',
+    });
+    this.chartType1 = createModelInstance(this.server, 'chart-type', {
+      name: 'Type 1',
+      format_spec: '[{"suffix": "m"}]',
+      order_ascending: true,
+      game: this.game,
+    });
+    this.chartType2 = createModelInstance(this.server, 'chart-type', {
+      name: 'Type 2',
+      format_spec: '[{"suffix": "pts"}]',
+      order_ascending: true,
+      game: this.game,
+    });
+    this.otherChartType = createModelInstance(this.server, 'chart-type', {
+      name: 'Other Type',
+      format_spec: '[{"suffix": "km"}]',
+      order_ascending: true,
+      game: this.otherGame,
+    });
 
-    this.filterGroupA = createModelInstance(
-      this.server, 'filter-group',
-      {name: 'Group A', kind: 'select', showByDefault: true,
-       game: this.game, orderInGame: 1});
-    this.filterGroupB = createModelInstance(
-      this.server, 'filter-group',
-      {name: 'Group B', kind: 'select', showByDefault: true,
-       game: this.game, orderInGame: 2});
-    this.filterGroupC = createModelInstance(
-      this.server, 'filter-group',
-      {name: 'Group C', kind: 'select', showByDefault: false,
-       // Different game
-       game: this.otherGame, orderInGame: 3});
-    this.filterGroupD = createModelInstance(
-      this.server, 'filter-group',
-      {name: 'Group D', kind: 'select', showByDefault: false,
-       game: this.game, orderInGame: 4});
+    this.filterGroupA = createModelInstance(this.server, 'filter-group', {
+      name: 'Group A',
+      kind: 'select',
+      showByDefault: true,
+      game: this.game,
+      orderInGame: 1,
+    });
+    this.filterGroupB = createModelInstance(this.server, 'filter-group', {
+      name: 'Group B',
+      kind: 'select',
+      showByDefault: true,
+      game: this.game,
+      orderInGame: 2,
+    });
+    this.filterGroupC = createModelInstance(this.server, 'filter-group', {
+      name: 'Group C',
+      kind: 'select',
+      showByDefault: false,
+      // Different game
+      game: this.otherGame,
+      orderInGame: 3,
+    });
+    this.filterGroupD = createModelInstance(this.server, 'filter-group', {
+      name: 'Group D',
+      kind: 'select',
+      showByDefault: false,
+      game: this.game,
+      orderInGame: 4,
+    });
   });
 
-  hooks.afterEach( function() {
+  hooks.afterEach(function () {
     this.server.shutdown();
   });
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     let route = this.owner.lookup('route:games/filter-groups');
-    assert.ok(route, "Route exists");
+    assert.ok(route, 'Route exists');
   });
 
-  test("can be visited", async function(assert){
+  test('can be visited', async function (assert) {
     await visit(`/games/${this.game.id}/filter-groups`);
     assert.equal(
-      currentURL(), `/games/${this.game.id}/filter-groups`,
-      "URL is correct");
+      currentURL(),
+      `/games/${this.game.id}/filter-groups`,
+      'URL is correct'
+    );
   });
 
-  test("should make the expected API request for filter groups", async function(assert){
+  test('should make the expected API request for filter groups', async function (assert) {
     await visit(`/games/${this.game.id}/filter-groups`);
 
-    let gameFGsRequest =
-      this.server.pretender.handledRequests.find((request) => {
+    let gameFGsRequest = this.server.pretender.handledRequests.find(
+      (request) => {
         let params = getURLSearchParamsHash(request.url);
         return (
-          request.url.startsWith('/filter_groups/?')
-          && Object.prototype.hasOwnProperty.call(params, 'game_id')
-          && request.method === 'GET');
-      });
+          request.url.startsWith('/filter_groups/?') &&
+          Object.prototype.hasOwnProperty.call(params, 'game_id') &&
+          request.method === 'GET'
+        );
+      }
+    );
     assert.ok(
       gameFGsRequest,
-      "API call was made for filter groups in this game");
+      'API call was made for filter groups in this game'
+    );
     let actualParams = getURLSearchParamsHash(gameFGsRequest.url);
     let expectedParams = {
       game_id: this.game.id,
     };
     assert.deepEqual(
-      actualParams, expectedParams, "Call params were as expected");
+      actualParams,
+      expectedParams,
+      'Call params were as expected'
+    );
   });
 
-  test("should have the correct filter group details", async function(assert){
+  test('should have the correct filter group details', async function (assert) {
     await visit(`/games/${this.game.id}/filter-groups`);
 
     assertTableContents(
-      assert, this.element.querySelector('table.filter-groups'),
+      assert,
+      this.element.querySelector('table.filter-groups'),
       [
-        ["Name", "Kind", "Show by default on rankings?", "Description"],
-        [`<a href="/filter-groups/${this.filterGroupA.id}"> Group A </a>`,
-         "select", "true", ""],
-        [`<a href="/filter-groups/${this.filterGroupB.id}"> Group B </a>`,
-         "select", "true", ""],
-        [`<a href="/filter-groups/${this.filterGroupD.id}"> Group D </a>`,
-         "select", "false", ""],
-      ]);
+        ['Name', 'Kind', 'Show by default on rankings?', 'Description'],
+        [
+          `<a href="/filter-groups/${this.filterGroupA.id}"> Group A </a>`,
+          'select',
+          'true',
+          '',
+        ],
+        [
+          `<a href="/filter-groups/${this.filterGroupB.id}"> Group B </a>`,
+          'select',
+          'true',
+          '',
+        ],
+        [
+          `<a href="/filter-groups/${this.filterGroupD.id}"> Group D </a>`,
+          'select',
+          'false',
+          '',
+        ],
+      ]
+    );
   });
 });
