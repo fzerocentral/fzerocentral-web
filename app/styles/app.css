@@ -1,31 +1,66 @@
+/* General */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: small;
+}
+body {
+  font-family: "Verdana", Arial, Helvetica, sans-serif;
+  background-color: hsl(240, 56%, 31%);
+  margin: 5px;
+}
+p {
+  margin-bottom: 15px;
+}
+a:link,a:active,a:visited {
+  text-decoration: none;
+  color: hsl(209, 41%, 41%);
+}
+a:hover {
+  text-decoration: underline;
+  color: hsl(205, 22%, 59%);
+}
+ul {
+  padding-left: 40px;
+}
+
+h1, h2 {
+  font-weight: bold;
+  font-family: "Verdana", Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+}
+h1 {
+  font-size: x-large;
+}
+h2 {
+  font-size: large;
+}
+
+div.body {
+  background-color: hsl(240, 56%, 31%);
+}
+
+div.small-section {
+  margin: 10px 0;
+}
+
 div.error-message {
   color: red;
 }
 
-span.applied-filter {
-  background-color: #bbbbee;
-  border-radius: 3px;
-  padding: 0 2px;
-  margin: 0 5px;
+.general-content-box {
+  background-color: hsl(0, 0%, 95%);
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0;
 }
-
-table.records-table {
-  border-collapse: collapse;
+.general-content-box div {
+  line-height: 1.5;
 }
-table.records-table td, table.records-table th {
-  border: 1px solid black;
-  padding: 2px;
-}
-table.records-table tr.non-personal-best {
-  color: #888888;
-}
-
-ul.chart-group-listing {
-  margin-left: 10px;
-}
-
-ul.plain-bullet-list {
-  margin-left: 30px;
+.general-content-box h1, .general-content-box h2 {
+  text-align: center;
 }
 
 div.equal-two-column-container {
@@ -39,6 +74,216 @@ div.equal-two-column-container > div {
 hr.short {
   max-width: 200px;
 }
+
+
+/* Site header */
+
+div#fzc-header {
+  display: flex;
+  align-items: center;
+  position: relative;  /* Ensure the under-logo text can be absolute positioned */
+  background-image: linear-gradient(
+    to bottom,
+    hsl(236, 97%, 12%),
+    hsl(240, 56%, 31%) 97%,
+    /* This should draw a horizontal line at the bottom of the header, coming
+       'out of' the MV ships image, so that the page content can start
+       immediately below. */
+    hsl(0, 0%, 30%) 98%,
+    hsl(0, 0%, 60%));
+}
+div#fzc-header > * {
+  flex-shrink: 0;  /* Don't allow elements to shrink */
+}
+div#fzc-header > img.logo-image {
+  padding-right: 30px;
+}
+
+/* Text below logo */
+div.under-logo-text {
+  position: absolute;
+  left: 220px;
+  top: 65px;
+  width: 180px;
+  text-align: center;
+}
+div.under-logo-text > h2 {
+  text-shadow: 1px 5px 2px black;
+  font-size: 16px;
+  line-height: 1.8;
+  color: hsl(0, 0%, 86%);
+}
+
+/* Game selector */
+div#game-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+div#game-selector > div {
+  display: flex;
+}
+
+
+/* Footer */
+
+footer {
+  margin-top: 100px;
+  padding: 20px 60px;
+  background-color: hsl(240, 50%, 80%);
+  display: flex;
+}
+footer menu div {
+  line-height: 1.8;
+}
+#social-icons {
+  margin-top: 20px;
+}
+#social-icons a {
+  margin-right: 10px;
+  text-decoration: none;
+}
+
+
+/* Home page */
+
+div#home-page-column-container {
+  display: flex;
+}
+
+div.home-page-box {
+  margin: 15px 8px;
+}
+div.home-page-box-header-bar {
+  border-radius: 10px 10px 0 0;
+  padding: 3px 0 3px 8px;
+  box-shadow: 4px 4px 8px 0 hsla(0, -1%, -1%, 0.6);
+  background-image: linear-gradient(
+    to bottom,
+    hsl(0, -1%, 70%),
+    hsl(0, -1%, 60%) 10%,
+    white 40%,
+    white 60%,
+    hsl(0, -1%, 50%) 90%,
+    hsl(0, -1%, 60%));
+}
+div.home-page-box-header-bar.welcome-box {
+  background-color: hsl(0,0%,92%);
+  background-image: none;
+}
+div.home-page-box-body, div.home-page-box-without-header {
+  background-color: white;
+  font-family: Verdana, sans-serif;
+
+  padding: 8px;
+  box-shadow: 4px 4px 8px 0 hsla(0, -1%, -1%, 0.6);
+}
+div.home-page-box-body {
+  border-radius: 0 0 10px 10px;
+}
+div.home-page-box-without-header {
+  border-radius: 10px;
+}
+div.home-page-box-body.links {
+  line-height: 2.0em;
+}
+
+
+/* Chart navigation */
+ul.horizontal-charts-list {
+  display: flex;
+  list-style: none;
+}
+ul.horizontal-charts-list li {
+  border-left: 2px solid gray;
+  padding: 0 5px;
+}
+ul.horizontal-charts-list li:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+ul.horizontal-charts-list.inline {
+  padding: 0;
+}
+
+
+/* Records/rankings */
+
+.scoreboard {
+  margin: 10px 0;
+  text-align: left;
+  width: 100%;
+  border: 1px black solid;
+  border-radius: 10px;
+  border-spacing: 0;
+}
+
+/* Body rows with alternating colors */
+.scoreboard tbody tr:nth-child(2n + 1) td { background-color: hsl(0, 0%, 90%);  }
+.scoreboard tbody tr:nth-child(2n) td { background-color: hsl(0, 0%, 97%);  }
+
+/* Rounded table corners.
+   Since we define backgrounds at the cell level, the border radius
+   also has to be defined at the cell level to make the corners rounded.
+   We assume that the first row must have th's and the last row must have td's.
+   However, we don't assume what is or isn't thead / tbody / tfoot.
+ */
+.scoreboard tr:first-child th:first-child { border-top-left-radius: 10px; }
+.scoreboard tr:first-child th:last-child { border-top-right-radius: 10px; }
+.scoreboard tr:last-child td:first-child { border-bottom-left-radius: 10px; }
+.scoreboard tr:last-child td:last-child{ border-bottom-right-radius: 10px; }
+
+.scoreboard th {
+  background: linear-gradient(0deg,
+                hsl(0, 0%, 39%) 0%,
+                white 40%,
+                white 60%,
+                hsl(0, 0%, 39%) 100%
+              );
+  height: 26px;
+  font-weight: bold;
+  padding: 5px 10px;
+}
+
+/* This stuff would apply if column headers were clickable to change sorting */
+/*
+.scoreboard thead th:hover {
+  background: linear-gradient(0deg,
+                hsl(0, 41%, 33%) 0%,
+                white 40%,
+                white 60%,
+                hsl(0, 41%, 33%) 100%
+              );
+}
+.scoreboard thead a { display: block; text-align: center; }
+.scoreboard thead a:hover { color: black; }
+*/
+
+/* Column borders */
+.scoreboard tbody td:nth-child(n+2) {
+  border-left: 1px hsl(0, 0%, 65%) solid;
+}
+
+.scoreboard tbody td {
+  padding: 5px;
+}
+
+.scoreboard tr.non-personal-best {
+  color: hsl(0, 0%, 53%);
+}
+span.non-personal-best-explainer {
+  color: hsl(0, 0%, 53%);
+}
+
+span.applied-filter {
+  background-color: hsl(270, 50%, 85%);
+  border-radius: 3px;
+  padding: 0 2px;
+  margin: 0 5px;
+}
+
+
+/* Filter management */
 
 div.filter-section {
   display: flex;

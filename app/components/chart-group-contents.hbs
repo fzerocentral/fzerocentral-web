@@ -13,7 +13,7 @@
     {{@item.name}}
   {{/if}}
 
-  <ul class="chart-group-listing">
+  <ul class={{if @item.show_charts_together "horizontal-charts-list"}}>
     {{#each @item.items as |subItem|}}
       <li>
         <ChartGroupContents @item={{subItem}} @ladder={{@ladder}} />

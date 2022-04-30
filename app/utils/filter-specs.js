@@ -1,8 +1,8 @@
 export const Modifier = {
-  Equal: {code: '', display: ''},
-  NotEqual: {code: 'n', display: 'NOT'},
-  GreaterOrEqual: {code: 'ge', display: '>='},
-  LessOrEqual: {code: 'le', display: '<='},
+  Equal: {code: '', display: '=', shortDisplay: ''},
+  NotEqual: {code: 'n', display: 'NOT', shortDisplay: 'NOT'},
+  GreaterOrEqual: {code: 'ge', display: '>=', shortDisplay: '>='},
+  LessOrEqual: {code: 'le', display: '<=', shortDisplay: '<='},
 };
 
 
@@ -45,7 +45,7 @@ function specItemToDisplay(specItem, filterInstances) {
 
   let filterName = filterObj.get('name');
   let filterGroupName = filterObj.get('filterGroup').get('name');
-  return `${filterGroupName}: ${specItem.modifier.display} ${filterName}`;
+  return `${filterGroupName}: ${specItem.modifier.shortDisplay} ${filterName}`;
 }
 
 

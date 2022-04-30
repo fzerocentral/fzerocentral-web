@@ -1,7 +1,0 @@
-<h1>Games</h1>
-
-<ul class="results">
-  {{#each @model as |game|}}
-    <li><LinkTo @route="games.show" @model={{game.id}}>{{game.name}}</LinkTo></li>
-  {{/each}}
-</ul>

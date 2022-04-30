@@ -1,17 +1,74 @@
 <div class="container">
-  <div class="menu">
-    <LinkTo @route="index">
-      <h1>
-        <em>F-Zero Central</em>
-      </h1>
-    </LinkTo>
-    <div class="links">
-      <LinkTo @route="games">
-        Games
-      </LinkTo>
+
+  <!-- This imagemap applies to the F-ZEROCENTRAL logo on the header image. -->
+  <map name="fzerotop-map">
+    <area shape="rect" alt="Home Page" coords="0,0,350,38" href="{{this.indexUrl}}">
+  </map>
+
+  <div id="fzc-header">
+
+    <!-- Header image on left (logo + MV ships) -->
+    <img class="logo-image" src="{{rootURL}}assets/images/header.png"
+        alt="F-Zero Central" usemap="#fzerotop-map">
+
+    <!-- FZC Next site status -->
+    <div class="under-logo-text">
+      <h2>FZC Next</h2>
+      {{#if this.devMode}}
+        <h2>Development mode</h2>
+      {{else}}
+        <h2>Demo version</h2>
+      {{/if}}
     </div>
+
+    <!-- Game selector -->
+    <div id="game-selector">
+      <img src="{{rootURL}}assets/images/game_selector/choose_game.gif">
+      <div>
+        {{#each (array 'climax' 'gpl' 'mv' 'x' 'gx' 'snes') as |game| }}
+          {{#if (eq game 'gx') }}
+            {{! Hardcoded ID for now... ideally we'd be able to get games by a short name (like 'gx') instead of a number ID later. }}
+            <LinkTo @route="games.show" @model="1">
+              <img src="{{rootURL}}assets/images/game_selector/unselected_{{game}}.gif"
+                  alt="{{game}}">
+            </LinkTo>
+          {{else}}
+            <img src="{{rootURL}}assets/images/game_selector/unselected_{{ game }}.gif"
+                alt="{{game}}" style="filter: saturate(0%);">
+          {{/if}}
+        {{/each}}
+      </div>
+    </div>
+
   </div>
+
   <div class="body">
     {{outlet}}
   </div>
+
+  <footer>
+
+    <menu>
+      <div>
+        <a href="{{this.indexUrl}}">F-Zero Central Home</a>
+      </div>
+
+      <div id="social-icons">
+        <a href="https://twitter.com/fzerocentral">
+          <img src="{{rootURL}}assets/images/social/twitter.png" alt="Twitter" title="Twitter" />
+        </a>
+        <a href="https://www.facebook.com/fzerocentral/">
+          <img src="{{rootURL}}assets/images/social/facebook.png" alt="Facebook" title="Facebook" />
+        </a>
+        <a href="https://www.youtube.com/user/fzerocentralorg">
+          <img src="{{rootURL}}assets/images/social/youtube.png" alt="YouTube" title="YouTube" />
+        </a>
+        <a href="https://www.twitch.tv/fzerocentral">
+          <img src="{{rootURL}}assets/images/social/twitch.png" alt="Twitch" title="Twitch" />
+        </a>
+      </div>
+    </menu>
+
+  </footer>
+
 </div>

@@ -21,9 +21,10 @@ https://github.com/stefanpenner/ember-moment/blob/master/CHANGELOG.md
 https://github.com/jasonmit/ember-cli-moment-shim/releases
 https://github.com/moment/moment/blob/develop/CHANGELOG.md
 
-ember-power-select
-Ember-powered HTML select elements. Base Ember supports input elements, but not select.
-https://github.com/cibernox/ember-power-select/blob/master/CHANGELOG.md
+ember-page-title
+Set <title> content for each individual route, via a {{page-title}} template helper. Officially recommended, as seen here:
+https://guides.emberjs.com/v4.3.0/accessibility/page-template-considerations/
+https://github.com/ember-cli/ember-page-title/blob/master/addon/CHANGELOG.md
 
 ember-sinon-qunit
 ember-window-mock
@@ -32,7 +33,7 @@ https://github.com/elwayman02/ember-sinon-qunit/releases
 https://github.com/kaliber5/ember-window-mock/releases
 
 ember-truth-helpers
-Without this, Handlebars doesn't give a way to use boolean logic in templates. In order words, you'd better hope "if x" is the only thing you ever need. Even "if !x" needs a package like this.
+Without this, Handlebars doesn't give a way to use boolean logic in templates other than "if x" and "unless x". This package provides and, or, equals, etc.
 
 
 

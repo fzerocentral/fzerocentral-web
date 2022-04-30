@@ -10,6 +10,8 @@ export default class LaddersShowRoute extends Route {
   model(params) {
     return RSVP.hash({
       ladder: this.store.findRecord('ladder', params.ladder_id),
+      ladderFilterObjs: this.store.query(
+        'filter', {ladder_id: params.ladder_id}),
       ranking: this.nonEmberDataApi.getLadderRanking(params.ladder_id),
     });
   }
