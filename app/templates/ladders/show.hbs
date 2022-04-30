@@ -1,22 +1,22 @@
-{{page-title (concat @model.ladder.name " ladder: Home") }}
+{{page-title (concat @model.ladder.name ' ladder: Home')}}
 
-<div class="general-content-box">
-  <LinkTo @route="games.show" @model={{@model.ladder.game.id}}>
+<div class='general-content-box'>
+  <LinkTo @route='games.show' @model={{@model.ladder.game.id}}>
     <h2>{{@model.ladder.game.name}}</h2>
   </LinkTo>
   <h1>{{@model.ladder.name}} Ladder</h1>
 
-  <div class="small-section">
+  <div class='small-section'>
     Ladder filters:
     {{#each this.ladderFilterDisplays as |display|}}
-      <span class="applied-filter">{{display}}</span>
+      <span class='applied-filter'>{{display}}</span>
     {{else}}
       (None)
     {{/each}}
   </div>
 </div>
 
-<table class="scoreboard">
+<table class='scoreboard'>
   <thead>
     <tr>
       <th>Rank</th>
@@ -24,9 +24,9 @@
       <th>Last active</th>
       <th>Avg finish</th>
       <th>SR/PR</th>
-        {{#each firstEntry.totals as |totalHash|}}
-          <th>{{get totalHash "name"}}</th>
-        {{/each}}
+      {{#each firstEntry.totals as |totalHash|}}
+        <th>{{get totalHash 'name'}}</th>
+      {{/each}}
     </tr>
   </thead>
 

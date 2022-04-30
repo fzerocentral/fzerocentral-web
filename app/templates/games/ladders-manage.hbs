@@ -1,5 +1,5 @@
 <h1>
-  <LinkTo @route="games.show" @model={{@model.game.id}}>
+  <LinkTo @route='games.show' @model={{@model.game.id}}>
     {{@model.game.name}}
   </LinkTo>
   - Manage Ladders
@@ -7,11 +7,12 @@
 
 <h2>Main ladders</h2>
 
-<div class="main-ladders">
+<div class='main-ladders'>
   {{#if @model.mainLadders}}
     <LaddersManageCategory
-     @ladders={{@model.mainLadders}}
-     @deleteLadder={{this.deleteLadder}} />
+      @ladders={{@model.mainLadders}}
+      @deleteLadder={{this.deleteLadder}}
+    />
   {{else}}
     (No main ladders)
   {{/if}}
@@ -19,18 +20,19 @@
 
 <h2>Side ladders</h2>
 
-<div class="side-ladders">
+<div class='side-ladders'>
   {{#if @model.sideLadders}}
     <LaddersManageCategory
-     @ladders={{@model.sideLadders}}
-     @deleteLadder={{this.deleteLadder}} />
+      @ladders={{@model.sideLadders}}
+      @deleteLadder={{this.deleteLadder}}
+    />
   {{else}}
     (No side ladders)
   {{/if}}
 </div>
 
-<div class="error-message" id="ladder-delete-error"></div>
+<div class='error-message' id='ladder-delete-error'></div>
 
-<LinkTo @route="games.ladder-new" @model={{@model.game.id}}>
+<LinkTo @route='games.ladder-new' @model={{@model.game.id}}>
   Create ladder
 </LinkTo>

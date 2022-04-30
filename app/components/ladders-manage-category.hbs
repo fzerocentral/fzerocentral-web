@@ -1,4 +1,4 @@
-<table class="ladders">
+<table class='ladders'>
   <thead>
     <tr>
       <th>Name</th>
@@ -12,7 +12,7 @@
     {{#each @ladders as |ladder|}}
       <tr>
         <td>
-          <LinkTo @route="ladders.show" @model={{ladder.id}}>
+          <LinkTo @route='ladders.show' @model={{ladder.id}}>
             {{ladder.name}}
           </LinkTo>
         </td>
@@ -23,7 +23,7 @@
           {{ladder.chartGroup.name}}
         </td>
         <td>
-          <button type="button" {{on "click" (fn @deleteLadder ladder.id)}}>
+          <button type='button' {{on 'click' (fn @deleteLadder ladder.id)}}>
             Delete
           </button>
         </td>

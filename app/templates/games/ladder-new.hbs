@@ -1,22 +1,21 @@
 <h1>
   Create ladder for:
-  <LinkTo @route="games.ladders-manage" @model={{@model.game.id}}>
+  <LinkTo @route='games.ladders-manage' @model={{@model.game.id}}>
     {{@model.game.name}}
   </LinkTo>
 </h1>
 
-<form id="create-ladder-form">
+<form id='create-ladder-form'>
   <div>
-    <label for="ladder-name">Name</label>
-    <input type="text" name="name" id="ladder-name" />
+    <label for='ladder-name'>Name</label>
+    <input type='text' name='name' id='ladder-name' />
   </div>
 
   <div>
-    <label for="kind-field">Kind</label>
-    <select name="kind" id="kind-field"
-     placeholder="Not selected">
+    <label for='kind-field'>Kind</label>
+    <select name='kind' id='kind-field' placeholder='Not selected'>
       {{#each this.KIND_OPTIONS as |kindOption|}}
-        <option value="{{kindOption}}">
+        <option value='{{kindOption}}'>
           {{kindOption}}
         </option>
       {{/each}}
@@ -24,27 +23,34 @@
   </div>
 
   <div>
-    <label for="ladder-filter-spec">Filter specification</label>
-    <input type="text" name="filter-spec" id="ladder-filter-spec"
-     placeholder="Example: 4-12n-35ge" />
+    <label for='ladder-filter-spec'>Filter specification</label>
+    <input
+      type='text'
+      name='filter-spec'
+      id='ladder-filter-spec'
+      placeholder='Example: 4-12n-35ge'
+    />
   </div>
 
   <div>
-    <label for="chart-group-field">Chart group</label>
-    <select name="chart-group" id="chart-group-field"
-     placeholder="Not selected">
+    <label for='chart-group-field'>Chart group</label>
+    <select
+      name='chart-group'
+      id='chart-group-field'
+      placeholder='Not selected'
+    >
       {{#each @model.chartGroups as |chartGroup|}}
-        <option value="{{chartGroup.id}}">
+        <option value='{{chartGroup.id}}'>
           {{chartGroup.name}}
         </option>
       {{/each}}
     </select>
   </div>
 
-  <div class="error-message"></div>
+  <div class='error-message'></div>
 
   <div>
-    <button type="button" {{action "createLadder"}}>
+    <button type='button' {{action 'createLadder'}}>
       Create ladder
     </button>
   </div>

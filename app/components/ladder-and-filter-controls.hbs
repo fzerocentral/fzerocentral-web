@@ -1,11 +1,10 @@
-<form id="switch-ladder-form">
+<form id='switch-ladder-form'>
   Change ladder:
-  <select name="ladder"
-      {{on "change" @manager.switchLadder}} >
+  <select name='ladder' {{on 'change' @manager.switchLadder}}>
     {{#each @manager.ladderOptions as |ladder|}}
       <option
-          value="{{ladder.id}}"
-          selected={{if (eq ladder.id @manager.ladder.id) "selected"}}
+        value='{{ladder.id}}'
+        selected={{if (eq ladder.id @manager.ladder.id) 'selected'}}
       >
         {{ladder.name}}
       </option>
@@ -15,11 +14,13 @@
 
 <div>
   <input
-      type="checkbox" name="show-filter-controls"
-      id="show-filter-controls-checkbox"
-      checked={{if this.showFilterControls "checked"}}
-      {{on "change" this.onShowFilterControlsInput}} />
-  <label for="show-filter-controls-checkbox">Show filter controls</label>
+    type='checkbox'
+    name='show-filter-controls'
+    id='show-filter-controls-checkbox'
+    checked={{if this.showFilterControls 'checked'}}
+    {{on 'change' this.onShowFilterControlsInput}}
+  />
+  <label for='show-filter-controls-checkbox'>Show filter controls</label>
 </div>
 
 {{#if this.showFilterControls}}
@@ -27,7 +28,7 @@
   <div>
     Ladder's filters:
     {{#each @manager.ladderFilterDisplays as |display|}}
-      <span class="applied-filter">{{display}}</span>
+      <span class='applied-filter'>{{display}}</span>
     {{else}}
       (None)
     {{/each}}
@@ -38,6 +39,7 @@
     @appliedFilterObjs={{@manager.extraFilterObjs}}
     @appliedFiltersString={{@extraFiltersString}}
     @updateAppliedFiltersString={{@manager.updateExtraFiltersString}}
-    @controllerGetFilterOptions={{@manager.getFilterOptions}} />
+    @controllerGetFilterOptions={{@manager.getFilterOptions}}
+  />
 
 {{/if}}

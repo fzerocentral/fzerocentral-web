@@ -2,7 +2,7 @@
 
 {{#if @model.filterGroups}}
 
-  <table class="filter-groups">
+  <table class='filter-groups'>
     <thead>
       <tr>
         <th>Name</th>
@@ -16,7 +16,7 @@
       {{#each @model.filterGroups as |fg|}}
         <tr>
           <td>
-            <LinkTo @route="filter-groups.show" @model={{fg.id}}>
+            <LinkTo @route='filter-groups.show' @model={{fg.id}}>
               {{fg.name}}
             </LinkTo>
           </td>
