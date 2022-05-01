@@ -5,6 +5,11 @@ import { setFormError } from '../../utils/forms';
 // Extends record-new.
 export default class RecordsShowController extends ChartsRecordNewController {
   @action
+  updateDateValue(value) {
+    this.dateAchieved = value;
+  }
+
+  @action
   saveRecordEdits() {
     let record = this.model.record;
 

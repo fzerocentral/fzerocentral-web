@@ -22,9 +22,9 @@
     Choosable Filters:
     <FilterList
       @filters={{this.choosableFilters}}
-      @updatePageNumber={{action this.updateChoosablePage}}
-      @updateSearchText={{action this.updateChoosableSearchText}}
-      @updateSelectedFilterId={{action this.updateSelectedFilterId}}
+      @updatePageNumber={{this.updateChoosablePage}}
+      @updateSearchText={{this.updateChoosableSearchText}}
+      @updateSelectedFilterId={{this.updateSelectedFilterId}}
     />
   </div>
 
@@ -33,9 +33,9 @@
       Implied Filters:
       <FilterList
         @filters={{this.impliedFilters}}
-        @updatePageNumber={{action this.updateImpliedPage}}
-        @updateSearchText={{action this.updateImpliedSearchText}}
-        @updateSelectedFilterId={{action this.updateSelectedFilterId}}
+        @updatePageNumber={{this.updateImpliedPage}}
+        @updateSearchText={{this.updateImpliedSearchText}}
+        @updateSelectedFilterId={{this.updateSelectedFilterId}}
       />
     </div>
   {{/if}}
@@ -93,7 +93,7 @@
                   <button
                     type='button'
                     class='show-filter-detail-button'
-                    {{action this.updateSelectedFilterId implyingFilter.id}}
+                    {{on 'click' (fn this.updateSelectedFilterId implyingFilter.id)}}
                   >
                     {{implyingFilter.name}}
                   </button>
@@ -101,7 +101,7 @@
                 <PageNavigation
                   @pageResults={{this.implications}}
                   @pageNumber={{this.implicationsPage}}
-                  @updatePageNumber={{action this.updateImplicationsPage}}
+                  @updatePageNumber={{this.updateImplicationsPage}}
                 />
               {{/if}}
             </div>
@@ -118,7 +118,7 @@
                   <button
                     type='button'
                     class='show-filter-detail-button'
-                    {{action this.updateSelectedFilterId impliedFilter.id}}
+                    {{on 'click' (fn this.updateSelectedFilterId impliedFilter.id)}}
                   >
                     {{impliedFilter.name}}
                   </button>
@@ -126,7 +126,7 @@
                 <PageNavigation
                   @pageResults={{this.implications}}
                   @pageNumber={{this.implicationsPage}}
-                  @updatePageNumber={{action this.updateImplicationsPage}}
+                  @updatePageNumber={{this.updateImplicationsPage}}
                 />
               {{/if}}
             </div>

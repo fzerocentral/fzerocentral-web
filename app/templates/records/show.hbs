@@ -16,7 +16,7 @@
     <label>Date achieved</label>
     <DateField
       @initialDateValue={{@model.record.dateAchieved}}
-      @updateDateValue={{action (mut this.dateAchieved)}}
+      @updateDateValue={{this.updateDateValue}}
     />
   </div>
 
@@ -28,6 +28,6 @@
 
   <div class='error-message'></div>
 
-  <div><button type='button' {{action 'saveRecordEdits'}}>Save edits</button></div>
+  <div><button type='button' {{on 'click' this.saveRecordEdits}}>Save edits</button></div>
 
 </form>

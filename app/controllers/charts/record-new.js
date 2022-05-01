@@ -29,6 +29,11 @@ export default class ChartsRecordNewController extends Controller {
   }
 
   @action
+  updateDateValue(value) {
+    this.dateAchieved = value;
+  }
+
+  @action
   submitRecord() {
     let chart = this.model.chart;
 
