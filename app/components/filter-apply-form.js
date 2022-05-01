@@ -1,6 +1,5 @@
 import { A } from '@ember/array';
 import { action } from '@ember/object';
-import { PromiseArray } from '@ember-data/store';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { getFormField } from '../utils/forms';
@@ -83,11 +82,9 @@ export default class FilterApplyFormComponent extends Component {
   @action
   getFilterOptions(searchText) {
     if (!this.selectedFilterGroup) {
-      // PromiseArray that resolves to empty array
-      return PromiseArray.create({
-        promise: new Promise((resolve) => {
-          resolve(A([]));
-        }),
+      // Promise that resolves to empty array
+      return new Promise((resolve) => {
+        resolve(A([]));
       });
     }
 

@@ -1,22 +1,11 @@
-import { PromiseArray, PromiseObject } from '@ember-data/store';
 import Service from '@ember/service';
 
-/* API calls that don't fit Ember Data's constraints. */
+/* API calls that don't use Ember Data. */
 export default class NonEmberDataApiService extends Service {
-  fetchArrayResults(url) {
-    return PromiseArray.create({
-      promise: fetch(url)
-        .then((response) => response.json())
-        .then((responseJson) => responseJson.data),
-    });
-  }
-
-  fetchObjectResults(url) {
-    return PromiseObject.create({
-      promise: fetch(url)
-        .then((response) => response.json())
-        .then((responseJson) => responseJson.data),
-    });
+  fetchResults(url) {
+    return fetch(url)
+      .then((response) => response.json())
+      .then((responseJson) => responseJson.data);
   }
 
   postPatchDelete(url, data, method) {
@@ -64,7 +53,7 @@ export default class NonEmberDataApiService extends Service {
 
   getChartHierarchy(chartGroupId) {
     let url = `/chart_groups/${chartGroupId}/hierarchy/`;
-    return this.fetchArrayResults(url);
+    return this.fetchResults(url);
   }
 
   getChartRanking(chartId, ladderId, appliedFiltersString) {
@@ -76,7 +65,7 @@ export default class NonEmberDataApiService extends Service {
         ['page[size]', 1000],
       ])
     );
-    return this.fetchArrayResults(rankingUrl);
+    return this.fetchResults(rankingUrl);
   }
 
   getChartOtherRecords(chartId, ladderId, appliedFiltersString) {
@@ -88,7 +77,7 @@ export default class NonEmberDataApiService extends Service {
         ['page[size]', 1000],
       ])
     );
-    return this.fetchObjectResults(url);
+    return this.fetchResults(url);
   }
 
   getChartTopRecordHistory(chartId, ladderId, appliedFiltersString) {
@@ -101,7 +90,7 @@ export default class NonEmberDataApiService extends Service {
         ['page[size]', 100],
       ])
     );
-    return this.fetchArrayResults(historyUrl);
+    return this.fetchResults(historyUrl);
   }
 
   getChartPlayerHistory(chartId, playerId, ladderId, appliedFiltersString) {
@@ -114,12 +103,12 @@ export default class NonEmberDataApiService extends Service {
         ['page[size]', 100],
       ])
     );
-    return this.fetchArrayResults(historyUrl);
+    return this.fetchResults(historyUrl);
   }
 
   getLadderRanking(ladderId) {
     let rankingUrl = `/ladders/${ladderId}/ranking/`;
-    return this.fetchArrayResults(rankingUrl);
+    return this.fetchResults(rankingUrl);
   }
 
   /*

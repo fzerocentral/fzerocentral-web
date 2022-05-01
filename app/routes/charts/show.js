@@ -141,11 +141,15 @@ export default class ChartsShowRoute extends Route {
     let modelParams = this.paramsFor(this.routeName);
 
     if (resolvedModel.chart.chartGroup.get('showChartsTogether')) {
-      controller.otherRecords = this.nonEmberDataApi.getChartOtherRecords(
-        currentChart.id,
-        modelParams.ladderId,
-        modelParams.appliedFiltersString
-      );
+      this.nonEmberDataApi
+        .getChartOtherRecords(
+          currentChart.id,
+          modelParams.ladderId,
+          modelParams.appliedFiltersString
+        )
+        .then((results) => {
+          controller.otherRecords = results;
+        });
     }
 
     // Controls component

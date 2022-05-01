@@ -11,8 +11,10 @@ export default class LaddersChartsController extends Controller {
 
   @action
   updateChartHierarchy() {
-    this.chartHierarchy = this.nonEmberDataApi.getChartHierarchy(
-      this.chartGroupId
-    );
+    this.nonEmberDataApi
+      .getChartHierarchy(this.chartGroupId)
+      .then((results) => {
+        this.chartHierarchy = results;
+      });
   }
 }
