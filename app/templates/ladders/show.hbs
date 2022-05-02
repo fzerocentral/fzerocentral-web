@@ -24,7 +24,7 @@
       <th>Last active</th>
       <th>Avg finish</th>
       <th>SR/PR</th>
-      {{#each firstEntry.totals as |totalHash|}}
+      {{#each this.firstEntry.totals as |totalHash|}}
         <th>{{get totalHash 'name'}}</th>
       {{/each}}
     </tr>

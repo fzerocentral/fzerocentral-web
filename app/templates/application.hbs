@@ -2,7 +2,7 @@
 
 <div class='container'>
 
-  <!-- This imagemap applies to the F-ZEROCENTRAL logo on the header image. -->
+  {{! This imagemap applies to the F-ZEROCENTRAL logo on the header image. }}
   <map name='fzerotop-map'>
     <area
       shape='rect'
@@ -14,7 +14,7 @@
 
   <div id='fzc-header'>
 
-    <!-- Header image on left (logo + MV ships) -->
+    {{! Header image on left (logo + MV ships) }}
     <img
       class='logo-image'
       src='{{this.rootURL}}assets/images/header.png'
@@ -22,7 +22,7 @@
       usemap='#fzerotop-map'
     />
 
-    <!-- FZC Next site status -->
+    {{! FZC Next site status }}
     <div class='under-logo-text'>
       <h2>FZC Next</h2>
       {{#if this.devMode}}
@@ -32,7 +32,7 @@
       {{/if}}
     </div>
 
-    <!-- Game selector -->
+    {{! Game selector }}
     <div id='game-selector'>
       <img src='{{this.rootURL}}assets/images/game_selector/choose_game.gif' alt="Choose game">
       <div>
@@ -49,7 +49,7 @@
             <img
               src='{{this.rootURL}}assets/images/game_selector/unselected_{{game}}.gif'
               alt='{{game}}'
-              style='filter: saturate(0%);'
+              class='unavailable-game'
             />
           {{/if}}
         {{/each}}

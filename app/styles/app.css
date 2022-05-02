@@ -127,6 +127,9 @@ div#game-selector {
 div#game-selector > div {
   display: flex;
 }
+div#game-selector img.unavailable-game {
+  filter: saturate(0%); /* Monochrome */
+}
 
 /* Footer */
 
@@ -151,6 +154,15 @@ footer menu div {
 
 div#home-page-column-container {
   display: flex;
+}
+div#home-page-column-container .left-column {
+  flex: 1 0 240px;
+}
+div#home-page-column-container .middle-column {
+  flex: 1 0 500px;
+}
+div#home-page-column-container .right-column {
+  flex: 1 0 250px;
 }
 
 div.home-page-box {
