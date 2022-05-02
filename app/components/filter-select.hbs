@@ -3,12 +3,16 @@
   {{! Search-enabled version }}
   <span hidden={{unless @controlInstance.searchEnabled 'hidden'}}>
 
-    <label for='{{@baseFieldId}}-text'>{{@label}}</label>
+    {{! Some usages will pass label, some will pass ariaLabelledBy }}
+    {{#if @label}}
+      <label for='{{@baseFieldId}}-text'>{{@label}}</label>
+    {{/if}}
     <input
       type='text'
       list='{{@baseFieldId}}-datalist'
       name='{{baseFieldName}}-text'
       id='{{@baseFieldId}}-text'
+      aria-labelledby={{@ariaLabelledBy}}
       placeholder='Enter text to search'
       {{on 'input' @controlInstance.onTextInput}}
     />
@@ -24,10 +28,13 @@
   {{! Plain dropdown version }}
   <span hidden={{if @controlInstance.searchEnabled 'hidden'}}>
 
-    <label for='{{@baseFieldId}}-select'>{{@label}}</label>
+    {{#if @label}}
+      <label for='{{@baseFieldId}}-select'>{{@label}}</label>
+    {{/if}}
     <select
       name='{{baseFieldName}}-select'
       id='{{@baseFieldId}}-select'
+      aria-labelledby={{@ariaLabelledBy}}
     ></select>
 
   </span>

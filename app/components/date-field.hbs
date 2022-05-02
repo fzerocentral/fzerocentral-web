@@ -1,5 +1,6 @@
 {{! For now, this is just a simple string field. Could be made into a more human-friendly date widget later. }}
 <input
+  id={{@fieldId}}
   type='text'
   value={{this.initialDateInputText}}
   {{on 'change' this.onchange}}

@@ -1,6 +1,6 @@
 <form id='switch-ladder-form'>
-  Change ladder:
-  <select name='ladder' {{on 'change' @manager.switchLadder}}>
+  <label for='ladder-select'>Change ladder:</label>
+  <select name='ladder' id='ladder-select' {{on 'change' @manager.switchLadder}}>
     {{#each @manager.ladderOptions as |ladder|}}
       <option
         value='{{ladder.id}}'

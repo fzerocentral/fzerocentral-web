@@ -13,8 +13,9 @@
 </ul>
 
 <div>
-  Search:
+  <label for={{@searchFieldId}}>Search:</label>
   <input
+    id={{@searchFieldId}}
     type='text'
     name='filter-search'
     {{on 'input' this.onSearchTextChange}}

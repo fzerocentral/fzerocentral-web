@@ -1,8 +1,13 @@
 <form id='filter-apply-form'>
-  Add filter:
+  {{! Using aria-labelledby instead of <label> to apply a single accessibility name to multiple elements. }}
+  <span id='add-filter-label'>Add filter:</span>
 
   {{! Choice of filter group }}
-  <select name='filter-group' {{on 'change' this.updateSelectedFilterGroup}}>
+  <select
+    name='filter-group'
+    {{on 'change' this.updateSelectedFilterGroup}}
+    aria-labelledby='add-filter-label'
+  >
     <option value=''> ----- </option>
     {{#each @filterGroups as |filterGroup|}}
       <option value='{{filterGroup.id}}'>
@@ -12,7 +17,7 @@
   </select>
 
   {{! Choice of is, is not, <=, >= }}
-  <select name='modifier'>
+  <select name='modifier' aria-labelledby='add-filter-label'>
     {{#each this.modifierOptions as |modifierOption|}}
       <option value='{{modifierOption.code}}'>
         {{modifierOption.display}}
@@ -23,7 +28,7 @@
   {{! Choice of filter from the filter group }}
   <FilterSelect
     @baseFieldId='filter'
-    @label=''
+    @ariaLabelledBy='add-filter-label'
     @controlInstance={{this.filterSelect}}
   />
 

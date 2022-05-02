@@ -33,8 +33,11 @@
   </div>
 
   <div>
-    <label>Date achieved</label>
-    <DateField @updateDateValue={{this.updateDateValue}} />
+    <label for='date-achieved'>Date achieved</label>
+    <DateField
+      @fieldId='date-achieved'
+      @updateDateValue={{this.updateDateValue}}
+    />
   </div>
 
   <RecordFiltersEdit

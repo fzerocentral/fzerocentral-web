@@ -107,6 +107,14 @@
 
       <form id='chart-navigation-form'>
 
+        <label for='chart-select'>
+          {{#if this.chartGroup.showChartsTogether}}
+            Change group:
+          {{else}}
+            Change chart:
+          {{/if}}
+        </label>
+
         {{#if this.chartNavigationPrevious}}
           {{! Ember transition is slower (about 2x?) than a regular link and breaks the chart dropdown. }}
           <BasicLink
@@ -119,7 +127,7 @@
           </BasicLink>
         {{/if}}
 
-        <select name='chart' {{on 'change' this.goToChart}}>
+        <select name='chart' id='chart-select' {{on 'change' this.goToChart}}>
           {{#each this.chartNavigationChoices as |navChoice|}}
             <option
               value='{{navChoice.chart.id}}'

@@ -21,6 +21,7 @@
   <div class='filter-list choosable-filter-list'>
     Choosable Filters:
     <FilterList
+      @searchFieldId='choosable-filter-search'
       @filters={{this.choosableFilters}}
       @updatePageNumber={{this.updateChoosablePage}}
       @updateSearchText={{this.updateChoosableSearchText}}
@@ -32,6 +33,7 @@
     <div class='filter-list implied-filter-list'>
       Implied Filters:
       <FilterList
+        @searchFieldId='implied-filter-search'
         @filters={{this.impliedFilters}}
         @updatePageNumber={{this.updateImpliedPage}}
         @updateSearchText={{this.updateImpliedSearchText}}

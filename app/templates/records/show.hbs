@@ -13,8 +13,9 @@
   <div>Value: {{@model.record.value}}</div>
 
   <div>
-    <label>Date achieved</label>
+    <label for='date-achieved'>Date achieved</label>
     <DateField
+      @fieldId='date-achieved'
       @initialDateValue={{@model.record.dateAchieved}}
       @updateDateValue={{this.updateDateValue}}
     />
