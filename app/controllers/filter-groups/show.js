@@ -40,21 +40,29 @@ export default class FilterGroupsShowController extends Controller {
   }
 
   updateChoosableFilters() {
-    this.choosableFilters = this.store.query('filter', {
-      filter_group_id: this.model.filterGroup.id,
-      name_search: this.choosableFiltersNameSearch,
-      'page[number]': this.choosableFiltersPage,
-      usage_type: 'choosable',
-    });
+    this.store
+      .query('filter', {
+        filter_group_id: this.model.filterGroup.id,
+        name_search: this.choosableFiltersNameSearch,
+        'page[number]': this.choosableFiltersPage,
+        usage_type: 'choosable',
+      })
+      .then((results) => {
+        this.choosableFilters = results;
+      });
   }
 
   updateImpliedFilters() {
-    this.impliedFilters = this.store.query('filter', {
-      filter_group_id: this.model.filterGroup.id,
-      name_search: this.impliedFiltersNameSearch,
-      'page[number]': this.impliedFiltersPage,
-      usage_type: 'implied',
-    });
+    this.store
+      .query('filter', {
+        filter_group_id: this.model.filterGroup.id,
+        name_search: this.impliedFiltersNameSearch,
+        'page[number]': this.impliedFiltersPage,
+        usage_type: 'implied',
+      })
+      .then((results) => {
+        this.impliedFilters = results;
+      });
   }
 
   @action
@@ -88,17 +96,22 @@ export default class FilterGroupsShowController extends Controller {
   }
 
   updateImplications() {
+    let promise;
     if (this.selectedFilter.get('usageType') === 'choosable') {
-      this.implications = this.store.query('filter', {
+      promise = this.store.query('filter', {
         implied_by_filter_id: this.selectedFilterId,
         'page[number]': this.implicationsPage,
       });
     } else {
-      this.implications = this.store.query('filter', {
+      promise = this.store.query('filter', {
         implies_filter_id: this.selectedFilterId,
         'page[number]': this.implicationsPage,
       });
     }
+
+    promise.then((results) => {
+      this.implications = results;
+    });
   }
 
   updateSelectedFilterRecordCount() {
