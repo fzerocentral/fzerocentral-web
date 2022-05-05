@@ -12,7 +12,6 @@ export default class ChartsRecordNewController extends Controller {
 
   @tracked dateAchieved;
   @tracked filterSelects = {};
-  @tracked selectedFiltersByGroup = {};
   formId = 'record-form';
 
   get form() {

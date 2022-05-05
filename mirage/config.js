@@ -24,10 +24,17 @@ export default function () {
     this.del('/posts/:id');
   */
 
+  this.get('/charts', (schema /* request */) => {
+    return schema.charts.all();
+  });
+
   this.get('/charts/:id', (schema, request) => {
     return schema.charts.find(request.params.id);
   });
 
+  this.get('/charts/:id/other_records', (/* schema, request */) => {
+    return [];
+  });
   this.get('/charts/:id/ranking', (/* schema, request */) => {
     return [];
   });
@@ -74,16 +81,7 @@ export default function () {
   });
 
   this.get('/filter_groups', (schema, request) => {
-    if (
-      Object.prototype.hasOwnProperty.call(request.queryParams, 'chart_type_id')
-    ) {
-      // FGs linked to a particular chart type
-      return schema.filterGroups.where({
-        chartTypeId: request.queryParams.chart_type_id,
-      });
-    } else if (
-      Object.prototype.hasOwnProperty.call(request.queryParams, 'game_id')
-    ) {
+    if (Object.prototype.hasOwnProperty.call(request.queryParams, 'game_id')) {
       // FGs of a particular game
       return schema.filterGroups.where({ gameId: request.queryParams.game_id });
     } else {

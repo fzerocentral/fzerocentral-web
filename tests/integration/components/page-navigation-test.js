@@ -4,9 +4,7 @@ import { click, render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 function createPageResults(metaPagination) {
-  return new Promise((resolve) => {
-    resolve({ meta: { pagination: metaPagination } });
-  });
+  return { meta: { pagination: metaPagination } };
 }
 
 function normalizeHTMLTextContent(text) {
@@ -22,6 +20,9 @@ module('Integration | Component | page-navigation', function (hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
     this.set('pageNumber', null);
+    this.set('updatePageNumber', (value) => {
+      this.set('pageNumber', value);
+    });
   });
 
   test('should render nothing with zero results', async function (assert) {
@@ -36,8 +37,8 @@ module('Integration | Component | page-navigation', function (hooks) {
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}}
-        @updatePageNumber={{action (mut pageNumber)}} />
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}} />
     `);
 
     assert.equal(this.element.textContent.trim(), '', 'Should render nothing');
@@ -55,8 +56,8 @@ module('Integration | Component | page-navigation', function (hooks) {
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}}
-        @updatePageNumber={{action (mut pageNumber)}} />
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}} />
     `);
 
     assert.equal(this.element.textContent.trim(), '', 'Should render nothing');
@@ -74,8 +75,8 @@ module('Integration | Component | page-navigation', function (hooks) {
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}}
-        @updatePageNumber={{action (mut pageNumber)}} />
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}} />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -88,7 +89,7 @@ module('Integration | Component | page-navigation', function (hooks) {
     let resultsCountDiv = this.element.querySelector('div.page-results-counts');
     assert.equal(
       resultsCountDiv.textContent.trim(),
-      '1-10 of 12',
+      '12 results',
       'Results count display should be correct'
     );
   });
@@ -105,8 +106,8 @@ module('Integration | Component | page-navigation', function (hooks) {
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}}
-        @updatePageNumber={{action (mut pageNumber)}} />
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}} />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -114,13 +115,6 @@ module('Integration | Component | page-navigation', function (hooks) {
       normalizeHTMLTextContent(pageLinksDiv.textContent),
       'Page 1 2',
       'Page link text should be as expected'
-    );
-
-    let resultsCountDiv = this.element.querySelector('div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(),
-      '11-12 of 12',
-      'Results count display should be correct'
     );
   });
 
@@ -136,8 +130,8 @@ module('Integration | Component | page-navigation', function (hooks) {
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}}
-        @updatePageNumber={{action (mut pageNumber)}} />
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}} />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -145,13 +139,6 @@ module('Integration | Component | page-navigation', function (hooks) {
       normalizeHTMLTextContent(pageLinksDiv.textContent),
       'Page 1 2 3',
       'Page link text should be as expected'
-    );
-
-    let resultsCountDiv = this.element.querySelector('div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(),
-      '1-10 of 30',
-      'Results count display should be correct'
     );
   });
 
@@ -167,8 +154,8 @@ module('Integration | Component | page-navigation', function (hooks) {
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}}
-        @updatePageNumber={{action (mut pageNumber)}} />
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}} />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -176,13 +163,6 @@ module('Integration | Component | page-navigation', function (hooks) {
       normalizeHTMLTextContent(pageLinksDiv.textContent),
       'Page 1 2 3',
       'Page link text should be as expected'
-    );
-
-    let resultsCountDiv = this.element.querySelector('div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(),
-      '11-20 of 30',
-      'Results count display should be correct'
     );
   });
 
@@ -198,8 +178,8 @@ module('Integration | Component | page-navigation', function (hooks) {
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}}
-        @updatePageNumber={{action (mut pageNumber)}} />
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}} />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -207,13 +187,6 @@ module('Integration | Component | page-navigation', function (hooks) {
       normalizeHTMLTextContent(pageLinksDiv.textContent),
       'Page 1 2 3',
       'Page link text should be as expected'
-    );
-
-    let resultsCountDiv = this.element.querySelector('div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(),
-      '21-30 of 30',
-      'Results count display should be correct'
     );
   });
 
@@ -229,8 +202,8 @@ module('Integration | Component | page-navigation', function (hooks) {
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}}
-        @updatePageNumber={{action (mut pageNumber)}} />
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}} />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -238,13 +211,6 @@ module('Integration | Component | page-navigation', function (hooks) {
       normalizeHTMLTextContent(pageLinksDiv.textContent),
       'Page 1 2 ... 10',
       'Page link text should be as expected'
-    );
-
-    let resultsCountDiv = this.element.querySelector('div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(),
-      '1-10 of 95',
-      'Results count display should be correct'
     );
   });
 
@@ -260,8 +226,8 @@ module('Integration | Component | page-navigation', function (hooks) {
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}}
-        @updatePageNumber={{action (mut pageNumber)}} />
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}} />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -269,13 +235,6 @@ module('Integration | Component | page-navigation', function (hooks) {
       normalizeHTMLTextContent(pageLinksDiv.textContent),
       'Page 1 ... 4 5 6 ... 10',
       'Page link text should be as expected'
-    );
-
-    let resultsCountDiv = this.element.querySelector('div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(),
-      '41-50 of 95',
-      'Results count display should be correct'
     );
   });
 
@@ -291,8 +250,8 @@ module('Integration | Component | page-navigation', function (hooks) {
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}}
-        @updatePageNumber={{action (mut pageNumber)}} />
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}} />
     `);
 
     let pageLinksDiv = this.element.querySelector('div.page-links');
@@ -300,13 +259,6 @@ module('Integration | Component | page-navigation', function (hooks) {
       normalizeHTMLTextContent(pageLinksDiv.textContent),
       'Page 1 ... 9 10',
       'Page link text should be as expected'
-    );
-
-    let resultsCountDiv = this.element.querySelector('div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(),
-      '91-95 of 95',
-      'Results count display should be correct'
     );
   });
 
@@ -322,8 +274,8 @@ module('Integration | Component | page-navigation', function (hooks) {
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}}
-        @updatePageNumber={{action (mut pageNumber)}} />
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}} />
     `);
 
     // There should be page buttons to pages 2 and 10. Click the first one.
@@ -344,8 +296,8 @@ module('Integration | Component | page-navigation', function (hooks) {
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}}
-        @updatePageNumber={{action (mut pageNumber)}} />
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}} />
     `);
 
     // There should be page buttons to pages 1, 3, and 10. Click the last one.
@@ -370,8 +322,8 @@ module('Integration | Component | page-navigation', function (hooks) {
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}}
-        @updatePageNumber={{action (mut pageNumber)}} />
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}} />
     `);
 
     // There should be page buttons to pages 1 and 9. Click the second one.
@@ -392,8 +344,8 @@ module('Integration | Component | page-navigation', function (hooks) {
 
     await render(hbs`
       <PageNavigation
-        @pageResults={{pageResults}}
-        @updatePageNumber={{action (mut pageNumber)}} />
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}} />
     `);
 
     // There should be page buttons to pages 1, 8, and 10. Click the first one.

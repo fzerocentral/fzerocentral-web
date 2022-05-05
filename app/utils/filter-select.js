@@ -97,7 +97,7 @@ export class FilterSelectControl {
   }
 
   initializeOptions() {
-    this.updateOptions().then((filters) => {
+    return this.updateOptions().then((filters) => {
       // Set searchEnabled based on number of filters available.
       if (filters.meta) {
         this.searchEnabled = filters.meta.pagination.pages > 1;

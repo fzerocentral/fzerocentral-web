@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
 import { visit } from '@ember/test-helpers';
-import { createModelInstance } from 'fzerocentral-web/tests/helpers/model-helpers';
+import { createModelInstance } from '../../../utils/models';
 
 module('Unit | Route | games/chart-types', function (hooks) {
   setupTest(hooks);

@@ -2,8 +2,8 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { currentURL, visit } from '@ember/test-helpers';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
-import { createModelInstance } from 'fzerocentral-web/tests/helpers/model-helpers';
-import { getURLSearchParamsHash } from 'fzerocentral-web/tests/helpers/route-helpers';
+import { createModelInstance } from '../../../utils/models';
+import { getURLSearchParamsHash } from '../../../utils/routes';
 
 function collapseWhitespace(text) {
   // Collapse consecutive whitespace characters into a single space. Trim
@@ -174,7 +174,7 @@ module('Unit | Route | games/filter-groups', function (hooks) {
   });
 
   test('should have the correct filter group details', async function (assert) {
-    assert.expect(1);
+    assert.expect(5 * 4 + 1);
 
     await visit(`/games/${this.game.id}/filter-groups`);
 

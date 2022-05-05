@@ -3,13 +3,14 @@ import { setupTest } from 'ember-qunit';
 import fetchMock from 'fetch-mock';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
 import { click, visit } from '@ember/test-helpers';
-import { createModelInstance } from 'fzerocentral-web/tests/helpers/model-helpers';
+import { createModelInstance } from '../../../utils/models';
 
 module('Unit | Route | charts/player-history', function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
     this.server = startMirage();
+    this.router = this.owner.lookup('service:router');
     this.store = this.owner.lookup('service:store');
 
     this.player = createModelInstance(this.server, 'player', {
@@ -50,11 +51,25 @@ module('Unit | Route | charts/player-history', function (hooks) {
       chartGroup: chartGroup,
     });
 
-    this.apiPath = `/charts/${this.chart.id}/record_history/`;
+    this.ladder = createModelInstance(this.server, 'ladder', {
+      name: 'Ladder 1',
+      game: game,
+    });
+
+    this.apiExpectedPath = `/charts/${this.chart.id}/record_history/`;
     this.apiExpectedParams = {
       player_id: this.player.id,
-      'page[size]': '50',
+      ladder_id: this.ladder.id,
+      'page[size]': '100',
     };
+    this.routeUrl = this.router.urlFor(
+      'charts.player-history',
+      this.chart.id,
+      this.player.id,
+      {
+        queryParams: { ladderId: this.ladder.id },
+      }
+    );
   });
 
   hooks.afterEach(function () {
@@ -73,14 +88,14 @@ module('Unit | Route | charts/player-history', function (hooks) {
     // called with the expected URL and params.
     let called = false;
     fetchMock.get(
-      { url: 'path:' + this.apiPath, query: this.apiExpectedParams },
+      { url: 'path:' + this.apiExpectedPath, query: this.apiExpectedParams },
       () => {
         called = true;
         return { data: [] };
       }
     );
 
-    await visit(`/charts/${this.chart.id}/players/${this.player.id}/history`);
+    await visit(this.routeUrl);
 
     assert.ok(
       called,
@@ -91,7 +106,7 @@ module('Unit | Route | charts/player-history', function (hooks) {
   test('records table should list record details', async function (assert) {
     // Mock window.fetch() to get a particular result from the API call.
     fetchMock.get(
-      { url: 'path:' + this.apiPath, query: this.apiExpectedParams },
+      { url: 'path:' + this.apiExpectedPath, query: this.apiExpectedParams },
       () => {
         return {
           data: [
@@ -110,9 +125,9 @@ module('Unit | Route | charts/player-history', function (hooks) {
       }
     );
 
-    await visit(`/charts/${this.chart.id}/players/${this.player.id}/history`);
+    await visit(this.routeUrl);
 
-    let rows = this.element.querySelectorAll('table.records-table tr');
+    let rows = this.element.querySelectorAll('table.scoreboard tr');
     let [valueCell, dateCell] = rows[1].querySelectorAll('td');
     assert.equal(
       valueCell.textContent.trim(),
@@ -138,9 +153,9 @@ module('Unit | Route | charts/player-history', function (hooks) {
   });
 
   test('records table should have one column per shown filter group', async function (assert) {
-    await visit(`/charts/${this.chart.id}/players/${this.player.id}/history`);
+    await visit(this.routeUrl);
 
-    let firstRow = this.element.querySelectorAll('table.records-table tr')[0];
+    let firstRow = this.element.querySelectorAll('table.scoreboard tr')[0];
     let tableColumnHeaders = Array.from(firstRow.querySelectorAll('th')).map(
       (th) => th.textContent.trim()
     );
@@ -148,13 +163,13 @@ module('Unit | Route | charts/player-history', function (hooks) {
     assert.deepEqual(
       tableColumnHeaders,
       expectedTableHeaders,
-      'Column headers are as expected with only default filter groups shown'
+      'Column headers should be as expected with only default filter groups shown'
     );
 
     // Check
-    await click('input[name="showAllFilterGroups"]');
+    await click('input[name="show-all-filter-groups"]');
 
-    firstRow = this.element.querySelectorAll('table.records-table tr')[0];
+    firstRow = this.element.querySelectorAll('table.scoreboard tr')[0];
     tableColumnHeaders = Array.from(firstRow.querySelectorAll('th')).map((th) =>
       th.textContent.trim()
     );
@@ -162,13 +177,13 @@ module('Unit | Route | charts/player-history', function (hooks) {
     assert.deepEqual(
       tableColumnHeaders,
       expectedTableHeaders,
-      'Column headers are as expected with all filter groups shown'
+      'Column headers should be as expected with all filter groups shown'
     );
 
     // Uncheck
-    await click('input[name="showAllFilterGroups"]');
+    await click('input[name="show-all-filter-groups"]');
 
-    firstRow = this.element.querySelectorAll('table.records-table tr')[0];
+    firstRow = this.element.querySelectorAll('table.scoreboard tr')[0];
     tableColumnHeaders = Array.from(firstRow.querySelectorAll('th')).map((th) =>
       th.textContent.trim()
     );
@@ -176,7 +191,7 @@ module('Unit | Route | charts/player-history', function (hooks) {
     assert.deepEqual(
       tableColumnHeaders,
       expectedTableHeaders,
-      'Column headers are as expected with only default filter groups shown'
+      'Column headers should be as expected with only default filter groups shown'
     );
   });
 });

@@ -42,12 +42,11 @@
 
   <RecordFiltersEdit
     @filterGroups={{@model.filterGroups}}
-    @selectedFilters={{this.selectedFiltersByGroup}}
     @filterSelectControlInstances={{this.filterSelects}}
   />
 
   <div class='error-message'></div>
 
-  <div><button type='button' {{on 'click' this.submitRecord}}>Submit record</button></div>
+  <div><button type='button' class='submit' {{on 'click' this.submitRecord}}>Submit record</button></div>
 
 </form>

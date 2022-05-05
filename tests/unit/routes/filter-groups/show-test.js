@@ -1,10 +1,8 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { run } from '@ember/runloop';
 import { click, currentURL, fillIn, visit } from '@ember/test-helpers';
-import { selectChoose } from 'ember-power-select/test-support';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
-import { createModelInstance } from 'fzerocentral-web/tests/helpers/model-helpers';
+import { createModelInstance } from '../../../utils/models';
 
 function getFiltersListItemByName(rootElement, name, type = 'choosable') {
   let filtersList;
@@ -80,7 +78,7 @@ module('Unit | Route | filter-groups/show', function (hooks) {
   });
 
   test('lists the chart types that use the filter group', async function (assert) {
-    assert.expect(1);
+    assert.expect(2);
 
     // Reconfigure this Mirage endpoint specifically for this test.
     this.server.pretender.get('/chart_types/', (request) => {
@@ -159,80 +157,6 @@ module('Unit | Route | filter-groups/show', function (hooks) {
     );
   });
 
-  test('can create a new filter', async function (assert) {
-    await visit(`/filter-groups/${this.filterGroup.id}`);
-
-    let form = this.element.querySelector('.filter-create-form');
-    let nameInput = form.querySelector('input[name="name"]');
-    fillIn(nameInput, 'Golden Fox');
-    // We won't test the usage type's default value, since that's API logic,
-    // not Ember logic.
-    let typeSelect = form.querySelector(
-      'div.type-field > .ember-power-select-trigger'
-    );
-    await selectChoose(typeSelect, 'implied');
-    let createButton = form.querySelector('.create-button');
-    await click(createButton);
-
-    // Filter should be created.
-    let filters = run(() => this.store.findAll('filter'));
-    let newFilter = filters.find((filter) => {
-      return filter.get('name') === 'Golden Fox';
-    });
-    assert.ok(newFilter, 'Expected filter was created');
-    assert.equal(
-      newFilter.get('filterGroup').get('id'),
-      this.filterGroup.id,
-      'New filter has the correct filter group'
-    );
-    assert.equal(
-      newFilter.get('usageType'),
-      'implied',
-      'New filter has the correct usage type'
-    );
-
-    // Filter should be on the list (list should have been refreshed)
-    assert.ok(
-      getFiltersListItemByName(this.element, 'Golden Fox', 'implied'),
-      'New filter is on the list'
-    );
-  });
-
-  test('can create a new numeric filter', async function (assert) {
-    await visit(`/filter-groups/${this.numericFilterGroup.id}`);
-
-    let form = this.element.querySelector('.filter-create-form');
-    let nameInput = form.querySelector('input[name="name"]');
-    fillIn(nameInput, '65%');
-    let valueInput = form.querySelector('input[name="numeric-value"]');
-    fillIn(valueInput, '65');
-    let createButton = form.querySelector('.create-button');
-    await click(createButton);
-
-    // Filter should be created.
-    let filters = run(() => this.store.findAll('filter'));
-    let newFilter = filters.find((filter) => {
-      return filter.get('name') === '65%';
-    });
-    assert.ok(newFilter, 'Expected filter was created');
-    assert.equal(
-      newFilter.get('filterGroup').get('id'),
-      this.numericFilterGroup.id,
-      'New filter has the correct filter group'
-    );
-    assert.equal(
-      newFilter.get('numericValue'),
-      65,
-      'New filter has the correct numeric value'
-    );
-
-    // Filter should be on the list (list should have been refreshed)
-    assert.ok(
-      getFiltersListItemByName(this.element, '65%'),
-      'New filter is on the list'
-    );
-  });
-
   test('filter buttons change the selected filter', async function (assert) {
     createFilter(this, 'Blue Falcon', 'choosable');
 
@@ -268,7 +192,7 @@ module('Unit | Route | filter-groups/show', function (hooks) {
 
     await visit(`/filter-groups/${this.filterGroup.id}`);
 
-    await fillIn('div.choosable-filter-list .search-input', 'star');
+    await fillIn('#choosable-filter-search', 'star');
 
     // Check that the filters updated accordingly. We're not focusing on the
     // nuances of the search logic, but we do want to make sure the update
@@ -294,7 +218,7 @@ module('Unit | Route | filter-groups/show', function (hooks) {
 
     await visit(`/filter-groups/${this.filterGroup.id}`);
 
-    await fillIn('div.implied-filter-list .search-input', 'boost');
+    await fillIn('#implied-filter-search', 'boost');
 
     // Check that the filters updated accordingly.
     assert.ok(
@@ -311,88 +235,47 @@ module('Unit | Route | filter-groups/show', function (hooks) {
     );
   });
 
-  test('choosable filters list page buttons should work', async function (assert) {
-    // TODO: Upgrade QUnit, then make this test and the 'implied' version use test.each(), which has been added in QUnit 2.16.
-    let filterType = 'choosable';
+  test.each(
+    'filters list page buttons should work',
+    ['choosable', 'implied'],
+    async function (assert, filterType) {
+      // Mirage should be specifying a page size of 10, so create 11 filters to
+      // get multiple pages.
+      for (let n = 1; n <= 11; n++) {
+        // Filter 01, Filter 02, ..., Filter 11
+        let filterNumber = n.toString().padStart(2, '0');
+        createFilter(this, `Filter ${filterNumber}`, filterType);
+      }
 
-    // Mirage should be specifying a page size of 10, so create 11 filters to
-    // get multiple pages.
-    for (let n = 1; n <= 11; n++) {
-      // Filter 01, Filter 02, ..., Filter 11
-      let filterNumber = n.toString().padStart(2, '0');
-      createFilter(this, `Filter ${filterNumber}`, filterType);
+      await visit(`/filter-groups/${this.filterGroup.id}`);
+
+      assert.ok(
+        getFiltersListItemByName(this.element, 'Filter 01', filterType),
+        'Page 1 should have filter 1'
+      );
+      assert.notOk(
+        getFiltersListItemByName(this.element, 'Filter 11', filterType),
+        'Page 1 should not have filter 11'
+      );
+
+      let buttons = this.element.querySelectorAll(
+        `div.${filterType}-filter-list div.page-links button`
+      );
+
+      // First page-button should go to the next page, 2
+      let nextPageButton = buttons[0];
+      await click(nextPageButton);
+
+      // Check that the filters updated accordingly. We want to make sure the
+      // update propagation goes all the way to the filter list getting updated.
+      assert.notOk(
+        getFiltersListItemByName(this.element, 'Filter 01', filterType),
+        'Page 2 should not have filter 1'
+      );
+      assert.ok(
+        getFiltersListItemByName(this.element, 'Filter 11', filterType),
+        'Page 2 should have filter 11'
+      );
     }
-
-    await visit(`/filter-groups/${this.filterGroup.id}`);
-
-    assert.ok(
-      getFiltersListItemByName(this.element, 'Filter 01', filterType),
-      'Page 1 should have filter 1'
-    );
-    assert.notOk(
-      getFiltersListItemByName(this.element, 'Filter 11', filterType),
-      'Page 1 should not have filter 11'
-    );
-
-    let buttons = this.element.querySelectorAll(
-      `div.${filterType}-filter-list div.page-links button`
-    );
-
-    // First page-button should go to the next page, 2
-    let nextPageButton = buttons[0];
-    await click(nextPageButton);
-
-    // Check that the filters updated accordingly. We want to make sure the
-    // update propagation goes all the way to the filter list getting updated.
-    assert.notOk(
-      getFiltersListItemByName(this.element, 'Filter 01', filterType),
-      'Page 2 should not have filter 1'
-    );
-    assert.ok(
-      getFiltersListItemByName(this.element, 'Filter 11', filterType),
-      'Page 2 should have filter 11'
-    );
-  });
-
-  test('implied filters list page buttons should work', async function (assert) {
-    let filterType = 'implied';
-
-    // Mirage should be specifying a page size of 10, so create 11 filters to
-    // get multiple pages.
-    for (let n = 1; n <= 11; n++) {
-      // Filter 01, Filter 02, ..., Filter 11
-      let filterNumber = n.toString().padStart(2, '0');
-      createFilter(this, `Filter ${filterNumber}`, filterType);
-    }
-
-    await visit(`/filter-groups/${this.filterGroup.id}`);
-
-    assert.ok(
-      getFiltersListItemByName(this.element, 'Filter 01', filterType),
-      'Page 1 should have filter 1'
-    );
-    assert.notOk(
-      getFiltersListItemByName(this.element, 'Filter 11', filterType),
-      'Page 1 should not have filter 11'
-    );
-
-    let buttons = this.element.querySelectorAll(
-      `div.${filterType}-filter-list div.page-links button`
-    );
-
-    // First page-button should go to the next page, 2
-    let nextPageButton = buttons[0];
-    await click(nextPageButton);
-
-    // Check that the filters updated accordingly. We want to make sure the
-    // update propagation goes all the way to the filter list getting updated.
-    assert.notOk(
-      getFiltersListItemByName(this.element, 'Filter 01', filterType),
-      'Page 2 should not have filter 1'
-    );
-    assert.ok(
-      getFiltersListItemByName(this.element, 'Filter 11', filterType),
-      'Page 2 should have filter 11'
-    );
-  });
+  );
 });

@@ -1,10 +1,12 @@
 import { module, test } from 'qunit';
+import sinon from 'sinon';
 import { setupTest } from 'ember-qunit';
-import { fillIn, visit } from '@ember/test-helpers';
+import { click, visit } from '@ember/test-helpers';
+import fetchMock from 'fetch-mock';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
-import { createModelInstance } from 'fzerocentral-web/tests/helpers/model-helpers';
+import { createModelInstance } from '../../../utils/models';
 
-module('Unit | Route | games/ladders', function (hooks) {
+module('Unit | Route | games/ladders-manage', function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
@@ -38,19 +40,21 @@ module('Unit | Route | games/ladders', function (hooks) {
 
   hooks.afterEach(function () {
     this.server.shutdown();
+    // Restore fetch() to its native implementation.
+    fetchMock.reset();
   });
 
   test('it exists', function (assert) {
-    let route = this.owner.lookup('route:games/ladders');
+    let route = this.owner.lookup('route:games/ladders-manage');
     assert.ok(route);
   });
 
-  test('ladders are grouped by kind', async function (assert) {
-    await visit(`/games/${this.game.id}/ladders`);
+  test('ladders should be grouped by kind', async function (assert) {
+    await visit(`/games/${this.game.id}/ladders-manage`);
 
     let getLadderNameFromRow = function (row) {
       let cells = row.querySelectorAll('td');
-      let anchor = cells[1].querySelector('a');
+      let anchor = cells[0].querySelector('a');
       return anchor.textContent.trim();
     };
 
@@ -59,39 +63,47 @@ module('Unit | Route | games/ladders', function (hooks) {
     let mainLadderRows = this.element.querySelectorAll(
       'div.main-ladders table.ladders > tbody > tr'
     );
-    assert.equal(mainLadderRows.length, 1);
-    assert.equal(getLadderNameFromRow(mainLadderRows[0]), 'Main ladder');
+    assert.equal(mainLadderRows.length, 1, 'Should show 1 main ladder');
+    assert.equal(
+      getLadderNameFromRow(mainLadderRows[0]),
+      'Main ladder',
+      'Main ladder name should be as expected'
+    );
 
     // Side ladder table should only have side ladders from this game.
     let sideLadderRows = this.element.querySelectorAll(
       'div.side-ladders table.ladders > tbody > tr'
     );
-    assert.equal(sideLadderRows.length, 1);
-    assert.equal(getLadderNameFromRow(sideLadderRows[0]), 'Side ladder');
+    assert.equal(sideLadderRows.length, 1, 'Should show 1 side ladder');
+    assert.equal(
+      getLadderNameFromRow(sideLadderRows[0]),
+      'Side ladder',
+      'Side ladder name should be as expected'
+    );
   });
 
-  test('can change ladder order', async function (assert) {
-    await visit(`/games/${this.game.id}/ladders`);
+  test('should delete a ladder', async function (assert) {
+    assert.expect(1);
 
-    let getMainLadderOrderField = function (thisTest) {
-      let mainLadderRows = thisTest.element.querySelectorAll(
-        'div.main-ladders table.ladders > tbody > tr'
-      );
-      return mainLadderRows[0].querySelector('.order-input');
-    };
+    // Automatically confirm any window confirmations.
+    let confirmFalseStub = sinon.stub(window, 'confirm');
+    confirmFalseStub.returns(true);
 
-    await fillIn(getMainLadderOrderField(this), '4');
+    await visit(`/games/${this.game.id}/ladders-manage`);
 
-    this.mainLadder.reload();
-    assert.equal(
-      this.mainLadder.orderInGameAndKind,
-      4,
-      'New value should be saved in the model'
+    fetchMock.delete(
+      { url: `path:/ladders/${this.mainLadder.id}/` },
+      (url, options) => {
+        assert.equal(
+          JSON.parse(options.body).data,
+          null,
+          'DELETE data should be as expected'
+        );
+        return Response(null, { status: 204 });
+      }
     );
-    assert.equal(
-      getMainLadderOrderField(this).value,
-      '4',
-      'Route should be refreshed, thus showing the new value'
-    );
+
+    // Delete ladder.
+    await click('div.main-ladders table.ladders button');
   });
 });

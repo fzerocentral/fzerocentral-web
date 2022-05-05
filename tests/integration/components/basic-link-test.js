@@ -7,20 +7,11 @@ module('Integration | Component | basic-link', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function (assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
+    await render(hbs`<BasicLink
+                       @route='charts.show'
+                       @model='1' />`);
 
-    await render(hbs`<BasicLink />`);
-
-    assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      <BasicLink>
-        template block text
-      </BasicLink>
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    let html = this.element.innerHTML;
+    assert.ok(html.length > 0, 'Should render something');
   });
 });
