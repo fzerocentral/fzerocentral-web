@@ -1,29 +1,33 @@
 <h1>
   Edit record for:
-  <LinkTo @route="charts.show" @model={{@model.record.chart.id}}>
-    {{@model.record.chart.chartGroup.name}} - {{@model.record.chart.name}}
+  <LinkTo @route='charts.show' @model={{@model.record.chart.id}}>
+    {{@model.record.chart.chartGroup.name}}
+    -
+    {{@model.record.chart.name}}
   </LinkTo>
 </h1>
 
-<form id="record-form">
+<form id='record-form'>
 
   <div>Player: {{@model.record.player.username}}</div>
   <div>Value: {{@model.record.value}}</div>
 
   <div>
-    <label>Date achieved</label>
+    <label for='date-achieved'>Date achieved</label>
     <DateField
+      @fieldId='date-achieved'
       @initialDateValue={{@model.record.dateAchieved}}
-      @updateDateValue={{action (mut this.dateAchieved)}} />
+      @updateDateValue={{this.updateDateValue}}
+    />
   </div>
 
   <RecordFiltersEdit
     @filterGroups={{@model.filterGroups}}
-    @selectedFilters={{this.selectedFiltersByGroup}}
-    @filterSelectControlInstances={{this.filterSelects}} />
+    @filterSelectControlInstances={{this.filterSelects}}
+  />
 
-  <div class="error-message"></div>
+  <div class='error-message'></div>
 
-  <div><button type="button" {{action "saveRecordEdits"}}>Save edits</button></div>
+  <div><button type='button' {{on 'click' this.saveRecordEdits}}>Save edits</button></div>
 
 </form>

@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(environment) {
+module.exports = function (environment) {
   let ENV = {
     modulePrefix: 'fzerocentral-web',
     environment,
@@ -13,14 +13,14 @@ module.exports = function(environment) {
       },
       EXTEND_PROTOTYPES: {
         // Prevent Ember Data from overriding Date.parse.
-        Date: false
-      }
+        Date: false,
+      },
     },
 
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
-    }
+    },
   };
 
   if (environment === 'development') {
@@ -46,7 +46,7 @@ module.exports = function(environment) {
     // requests.
     // https://github.com/samselikoff/ember-cli-mirage/issues/1200
     ENV['ember-cli-mirage'] = {
-      trackRequests: true
+      trackRequests: true,
     };
 
     // keep test console output quieter

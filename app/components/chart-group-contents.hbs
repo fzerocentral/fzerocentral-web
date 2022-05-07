@@ -5,15 +5,17 @@
   {{#if @item.show_charts_together}}
     {{! Link to first chart in group, with column option set to other charts }}
     <LinkTo
-        @route="charts.show" @model={{get (get @item.items 0) "chart_id"}}
-        @query={{hash ladderId=@ladder.id columns="other-charts"}}>
+      @route='charts.show'
+      @model={{get (get @item.items 0) 'chart_id'}}
+      @query={{hash ladderId=@ladder.id columns='other-charts'}}
+    >
       {{@item.name}}
     </LinkTo>
   {{else}}
     {{@item.name}}
   {{/if}}
 
-  <ul class={{if @item.show_charts_together "horizontal-charts-list"}}>
+  <ul class={{if @item.show_charts_together 'horizontal-charts-list'}}>
     {{#each @item.items as |subItem|}}
       <li>
         <ChartGroupContents @item={{subItem}} @ladder={{@ladder}} />
@@ -26,8 +28,10 @@
   {{! Chart }}
 
   <LinkTo
-      @route="charts.show" @model={{@item.chart_id}}
-      @query={{hash ladderId=@ladder.id}}>
+    @route='charts.show'
+    @model={{@item.chart_id}}
+    @query={{hash ladderId=@ladder.id}}
+  >
     {{@item.name}}
   </LinkTo>
 

@@ -1,17 +1,15 @@
 import { A } from '@ember/array';
 import { action } from '@ember/object';
-import DS from 'ember-data';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { getFormField } from "../utils/forms";
-import { FilterSelectControl } from "./filter-select";
+import { getFormField } from '../utils/forms';
+import { FilterSelectControl } from '../utils/filter-select';
 import {
   addFilterSpecItem,
   filterSpecStrToDisplays,
   Modifier,
   removeFilterSpecItem,
-} from "../utils/filter-specs";
-
+} from '../utils/filter-specs';
 
 export default class FilterApplyFormComponent extends Component {
   @tracked selectedFilterGroup = null;
@@ -20,8 +18,11 @@ export default class FilterApplyFormComponent extends Component {
     super(...args);
 
     this.filterSelect = new FilterSelectControl(
-      this.formId, 'filter', this.getFilterOptions,
-      {hasEmptyOption: true});
+      this.formId,
+      'filter',
+      this.getFilterOptions,
+      { hasEmptyOption: true }
+    );
   }
 
   get formId() {
@@ -40,10 +41,11 @@ export default class FilterApplyFormComponent extends Component {
     // Set selected filter group and filter options.
     if (newSelectedFilterGroupId === '') {
       this.selectedFilterGroup = null;
-    }
-    else {
+    } else {
       this.selectedFilterGroup = this.args.filterGroups.findBy(
-        'id', newSelectedFilterGroupId);
+        'id',
+        newSelectedFilterGroupId
+      );
     }
     this.filterSelect.initializeOptions();
   }
@@ -58,10 +60,12 @@ export default class FilterApplyFormComponent extends Component {
 
     if (group.get('kind') === 'numeric') {
       return [
-        Modifier.Equal, Modifier.NotEqual,
-        Modifier.GreaterOrEqual, Modifier.LessOrEqual];
-    }
-    else {
+        Modifier.Equal,
+        Modifier.NotEqual,
+        Modifier.GreaterOrEqual,
+        Modifier.LessOrEqual,
+      ];
+    } else {
       return [Modifier.Equal, Modifier.NotEqual];
     }
   }
@@ -78,16 +82,16 @@ export default class FilterApplyFormComponent extends Component {
   @action
   getFilterOptions(searchText) {
     if (!this.selectedFilterGroup) {
-      // PromiseArray that resolves to empty array
-      return DS.PromiseArray.create({
-        promise: new Promise((resolve) => {
-          resolve(A([]));
-        })
+      // Promise that resolves to empty array
+      return new Promise((resolve) => {
+        resolve(A([]));
       });
     }
 
     return this.args.controllerGetFilterOptions(
-      this.selectedFilterGroup.id, searchText);
+      this.selectedFilterGroup.id,
+      searchText
+    );
   }
 
   @action
@@ -95,8 +99,8 @@ export default class FilterApplyFormComponent extends Component {
     let newStr = addFilterSpecItem(
       this.args.appliedFiltersString,
       this.filterSelect.selectedFilterId,
-      this.selectedModifier,
-    )
+      this.selectedModifier
+    );
     this.args.updateAppliedFiltersString(newStr);
   }
 
@@ -108,6 +112,8 @@ export default class FilterApplyFormComponent extends Component {
 
   get addedFilterDisplays() {
     return filterSpecStrToDisplays(
-      this.args.appliedFiltersString, this.args.appliedFilterObjs);
+      this.args.appliedFiltersString,
+      this.args.appliedFilterObjs
+    );
   }
 }

@@ -2,25 +2,36 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import { LadderAndFilterControlsManager } from '../../../components/ladder-and-filter-controls';
 
-module('Integration | Component | ladder-and-filter-controls', function(hooks) {
+let moduleName = 'Integration | Component | ladder-and-filter-controls';
+module(moduleName, function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
+  hooks.beforeEach(function () {
+    this.set('appliedFiltersString', null);
+    this.set(
+      'manager',
+      new LadderAndFilterControlsManager(
+        null,
+        [],
+        [],
+        () => {},
+        [],
+        [],
+        () => {},
+        () => {}
+      )
+    );
+  });
 
-    await render(hbs`<LadderAndFilterControls />`);
-
-    assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
+  test('should render', async function (assert) {
     await render(hbs`
-      <LadderAndFilterControls>
-        template block text
-      </LadderAndFilterControls>
-    `);
+      <LadderAndFilterControls
+        @extraFiltersString={{this.appliedFiltersString}}
+        @manager={{this.manager}} />`);
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    let html = this.element.innerHTML;
+    assert.ok(html.length > 0, 'Should render something');
   });
 });

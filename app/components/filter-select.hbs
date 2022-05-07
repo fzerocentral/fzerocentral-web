@@ -1,28 +1,41 @@
-{{#let @controlInstance.baseFieldName as |baseFieldName| }}
+{{#let @controlInstance.baseFieldName as |baseFieldName|}}
 
   {{! Search-enabled version }}
-  <span hidden={{if (not @controlInstance.searchEnabled) "hidden"}}>
+  <span hidden={{unless @controlInstance.searchEnabled 'hidden'}}>
 
-    <label for="{{@baseFieldId}}-text">{{@label}}</label>
-    <input type="text"
-        list="{{@baseFieldId}}-datalist"
-        name="{{baseFieldName}}-text"
-        id="{{@baseFieldId}}-text"
-        placeholder="Enter text to search"
-        {{on "input" @controlInstance.onTextInput}} >
-    <datalist id="{{@baseFieldId}}-datalist"></datalist>
-    <input type="hidden"
-        name="{{baseFieldName}}-hidden"
-        id="{{@baseFieldId}}-hidden">
+    {{! Some usages will pass label, some will pass ariaLabelledBy }}
+    {{#if @label}}
+      <label for='{{@baseFieldId}}-text'>{{@label}}</label>
+    {{/if}}
+    <input
+      type='text'
+      list='{{@baseFieldId}}-datalist'
+      name='{{baseFieldName}}-text'
+      id='{{@baseFieldId}}-text'
+      aria-labelledby={{@ariaLabelledBy}}
+      placeholder='Enter text to search'
+      {{on 'input' @controlInstance.onTextInput}}
+    />
+    <datalist id='{{@baseFieldId}}-datalist'></datalist>
+    <input
+      type='hidden'
+      name='{{baseFieldName}}-hidden'
+      id='{{@baseFieldId}}-hidden'
+    />
 
   </span>
 
   {{! Plain dropdown version }}
-  <span hidden={{if @controlInstance.searchEnabled "hidden"}}>
+  <span hidden={{if @controlInstance.searchEnabled 'hidden'}}>
 
-    <label for="{{@baseFieldId}}-select">{{@label}}</label>
-    <select name="{{baseFieldName}}-select"
-        id="{{@baseFieldId}}-select"></select>
+    {{#if @label}}
+      <label for='{{@baseFieldId}}-select'>{{@label}}</label>
+    {{/if}}
+    <select
+      name='{{baseFieldName}}-select'
+      id='{{@baseFieldId}}-select'
+      aria-labelledby={{@ariaLabelledBy}}
+    ></select>
 
   </span>
 

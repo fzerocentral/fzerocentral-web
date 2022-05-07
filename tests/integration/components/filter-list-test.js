@@ -2,17 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { click, fillIn, render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
-import { createModelInstance }
-  from 'fzerocentral-web/tests/helpers/model-helpers';
-
-
-function createFilter(server, name, group, type='choosable', value=null) {
-  return createModelInstance(
-    server, 'filter',
-    {name: name, filterGroup: group, usageType: type, numericValue: value});
-}
-
+import { DummyModel } from '../../utils/models';
 
 function getFiltersListItemByName(rootElement, name) {
   let filtersList = rootElement.querySelector('ul');
@@ -24,79 +14,65 @@ function getFiltersListItemByName(rootElement, name) {
   });
 }
 
-
-module('Integration | Component | filter-list', function(hooks) {
+module('Integration | Component | filter-list', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach( function() {
-    this.server = startMirage();
-    this.store = this.owner.lookup('service:store');
+  hooks.beforeEach(function () {
+    let g = new DummyModel({ id: '1', name: 'G', kind: 'select' });
+    this.f1 = new DummyModel({ id: '1', name: 'F1', filterGroup: g });
+    this.f2 = new DummyModel({ id: '2', name: 'F2', filterGroup: g });
+    this.f3 = new DummyModel({ id: '3', name: 'F3', filterGroup: g });
+    this.f4 = new DummyModel({ id: '4', name: 'F4', filterGroup: g });
 
-    this.machineGroup = createModelInstance(
-      this.server, 'filterGroup',
-      {name: "Machine", kind: 'select'});
-    this.gsg4Filter = createFilter(
-      this.server, "Gallant Star-G4", this.machineGroup);
-    this.qcg4Filter = createFilter(
-      this.server, "Quick Cannon-G4", this.machineGroup);
-    this.titang4Filter = createFilter(
-      this.server, "Titan -G4 booster", this.machineGroup, 'implied');
-    this.bCustomBoosterFilter = createFilter(
-      this.server, "B custom booster", this.machineGroup, 'implied');
-
-    this.allFilters = [
-      this.gsg4Filter, this.qcg4Filter, this.titang4Filter,
-      this.bCustomBoosterFilter];
-
-    this.set(
-      'updatePageNumber',
-      (pageNumber) => this.set('pageNumber', pageNumber));
-    this.set(
-      'updateSearchText',
-      (inputElement) => this.set('searchText', inputElement.target.value));
-    this.set(
-      'updateSelectedFilterId',
-      (id) => this.set('selectedFilterId', id));
+    this.set('updatePageNumber', (pageNumber) =>
+      this.set('pageNumber', pageNumber)
+    );
+    this.set('updateSearchText', (newText) => this.set('searchText', newText));
+    this.set('updateSelectedFilterId', (id) =>
+      this.set('selectedFilterId', id)
+    );
   });
 
-  hooks.afterEach( function() {
-    this.server.shutdown();
-  });
-
-
-  test('should list the given filters', async function(assert) {
-    let filters = [this.gsg4Filter, this.titang4Filter];
-    filters.meta = {pagination: {count: 2}};
+  test('should list the given filters', async function (assert) {
+    let filters = [this.f1, this.f2];
+    filters.meta = { pagination: { count: 2 } };
     this.set('filters', filters);
+
     await render(hbs`
       <FilterList
-        @filters={{filters}}
-        @updatePageNumber={{updatePageNumber}}
-        @updateSearchText={{updateSearchText}}
-        @updateSelectedFilterId={{updateSelectedFilterId}} />
+        @searchFieldId='search'
+        @filters={{this.filters}}
+        @updatePageNumber={{this.updatePageNumber}}
+        @updateSearchText={{this.updateSearchText}}
+        @updateSelectedFilterId={{this.updateSelectedFilterId}} />
     `);
 
     assert.ok(
-      getFiltersListItemByName(this.element, "Gallant Star-G4"),
-      "Gallant Star-G4 should be on the list");
+      getFiltersListItemByName(this.element, 'F1'),
+      'F1 should be on the list'
+    );
     assert.ok(
-      getFiltersListItemByName(this.element, "Titan -G4 booster"),
-      "Titan -G4 booster should be on the list");
+      getFiltersListItemByName(this.element, 'F2'),
+      'F2 should be on the list'
+    );
     assert.notOk(
-      getFiltersListItemByName(this.element, "Quick Cannon-G4"),
-      "Quick Cannon-G4 should not be on the list");
+      getFiltersListItemByName(this.element, 'F3'),
+      'F3 should not be on the list'
+    );
   });
 
-  test('should update pageNumber when page button is clicked', async function(assert) {
-    let filters = [this.gsg4Filter, this.titang4Filter];
-    filters.meta = {pagination: {count: 22, pages: 3, page: 1}};
+  test('should update pageNumber when page button is clicked', async function (assert) {
+    let filters = [this.f1, this.f2];
+    filters.meta = { pagination: { pages: 3, page: 1 } };
     this.set('filters', filters);
+
     await render(hbs`
       <FilterList
-        @filters={{filters}}
-        @updatePageNumber={{updatePageNumber}}
-        @updateSearchText={{updateSearchText}}
-        @updateSelectedFilterId={{updateSelectedFilterId}} />
+        @searchFieldId='search'
+        @filters={{this.filters}}
+        @updatePageNumber={{this.updatePageNumber}}
+        @updateSearchText={{this.updateSearchText}}
+        @updateSelectedFilterId={{this.updateSelectedFilterId}} />
     `);
 
     let buttons = this.element.querySelectorAll('div.page-links button');
@@ -104,44 +80,49 @@ module('Integration | Component | filter-list', function(hooks) {
     // First page-button should go to the next page, 2
     let nextPageButton = buttons[0];
     await click(nextPageButton);
-    assert.equal(2, this.get('pageNumber'), "pageNumber should be updated");
+    assert.equal(this.pageNumber, 2, 'pageNumber should be updated');
   });
 
-  test('should update searchText when search field is filled', async function(assert) {
-    let filters = this.allFilters;
-    filters.meta = {pagination: {count: 4}};
+  test('should update searchText when search field is filled', async function (assert) {
+    let filters = [this.f1, this.f2, this.f3, this.f4];
+    filters.meta = { pagination: { count: 4 } };
     this.set('filters', filters);
+
     await render(hbs`
       <FilterList
-        @filters={{filters}}
-        @updatePageNumber={{updatePageNumber}}
-        @updateSearchText={{updateSearchText}}
-        @updateSelectedFilterId={{updateSelectedFilterId}} />
+        @searchFieldId='search'
+        @filters={{this.filters}}
+        @updatePageNumber={{this.updatePageNumber}}
+        @updateSearchText={{this.updateSearchText}}
+        @updateSelectedFilterId={{this.updateSelectedFilterId}} />
     `);
 
-    await fillIn('.search-input', 'star');
-    assert.equal(this.get('searchText'), 'star', "searchText should be updated");
+    await fillIn('#search', 'star');
+    assert.equal(this.searchText, 'star', 'searchText should be updated');
   });
 
-  test('should update selectedFilterId when clicking a list button', async function(assert) {
-    let filters = this.allFilters;
-    filters.meta = {pagination: {count: 4}};
+  test('should update selectedFilterId when clicking a list button', async function (assert) {
+    let filters = [this.f1, this.f2, this.f3, this.f4];
+    filters.meta = { pagination: { count: 4 } };
     this.set('filters', filters);
+
     await render(hbs`
       <FilterList
-        @filters={{filters}}
-        @updatePageNumber={{updatePageNumber}}
-        @updateSearchText={{updateSearchText}}
-        @updateSelectedFilterId={{updateSelectedFilterId}} />
+        @searchFieldId='search'
+        @filters={{this.filters}}
+        @updatePageNumber={{this.updatePageNumber}}
+        @updateSearchText={{this.updateSearchText}}
+        @updateSelectedFilterId={{this.updateSelectedFilterId}} />
     `);
 
-    let gsg4ListItem = getFiltersListItemByName(
-      this.element, "Gallant Star-G4");
-    let button = gsg4ListItem.querySelector('button');
+    let f1ListItem = getFiltersListItemByName(this.element, 'F1');
+    let button = f1ListItem.querySelector('button');
     await click(button);
 
     assert.equal(
-      this.get('selectedFilterId'), this.gsg4Filter.id,
-      "selectedFilterId should be updated");
+      this.selectedFilterId,
+      '1',
+      'selectedFilterId should be updated'
+    );
   });
 });

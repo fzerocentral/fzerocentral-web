@@ -3,16 +3,15 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import config from '../../config/environment';
-import { getFormValue } from "../../utils/forms";
-
+import { getFormValue } from '../../utils/forms';
 
 export default class ChartsShowController extends Controller {
   queryParams = [
     'ladderId',
     // On the Ember side this is `appliedFiltersString`; going out to the API
     // side we'll use `filters`.
-    {appliedFiltersString: 'filters'},
-    {columnOption: 'columns'},
+    { appliedFiltersString: 'filters' },
+    { columnOption: 'columns' },
   ];
   @tracked ladderId = null;
   @tracked appliedFiltersString = null;
@@ -40,8 +39,7 @@ export default class ChartsShowController extends Controller {
   get shownFilterGroups() {
     if (this.showAllFilterGroups) {
       return this.model.filterGroups;
-    }
-    else {
+    } else {
       return this.model.filterGroups.filterBy('showByDefault', true);
     }
   }
@@ -51,7 +49,7 @@ export default class ChartsShowController extends Controller {
     return this.store.query('filter', {
       filter_group_id: filterGroupId,
       name_search: searchText,
-    })
+    });
   }
 
   get chartGroup() {
@@ -68,13 +66,13 @@ export default class ChartsShowController extends Controller {
       ladderId: this.ladderId,
       filters: this.appliedFiltersString,
       columns: this.columnOption,
-    }
+    };
   }
   get historyLinkQueryParams() {
     return {
       ladderId: this.ladderId,
       filters: this.appliedFiltersString,
-    }
+    };
   }
 
   get destinationChartId() {
@@ -88,10 +86,10 @@ export default class ChartsShowController extends Controller {
     // transitionTo(). Couldn't figure out how to fix that, so using
     // window.location instead.
     window.location.assign(
-      this.router.urlFor(
-        'charts.show', this.destinationChartId,
-        {queryParams: this.chartLinkQueryParams},
-      ));
+      this.router.urlFor('charts.show', this.destinationChartId, {
+        queryParams: this.chartLinkQueryParams,
+      })
+    );
   }
 
   @action

@@ -9,7 +9,7 @@ export default class DateFieldComponent extends Component {
   // Date -> String
   dateToStr(date) {
     if (date === null) {
-      return "";
+      return '';
     }
     return moment(date).format();
   }
@@ -26,16 +26,18 @@ export default class DateFieldComponent extends Component {
   onchange(event) {
     let dateInputText = event.target.value;
     // String -> Date
-    let momentDate = moment(
-      dateInputText,
-      ['YYYY-MM-DD', 'YYYY-MM-DDTHH:mm', 'YYYY-MM-DDTHH:mm:ss',
-       'YYYY-MM-DDTHH:mmZ', 'YYYY-MM-DDTHH:mm:ssZ']);
+    let momentDate = moment(dateInputText, [
+      'YYYY-MM-DD',
+      'YYYY-MM-DDTHH:mm',
+      'YYYY-MM-DDTHH:mm:ss',
+      'YYYY-MM-DDTHH:mmZ',
+      'YYYY-MM-DDTHH:mm:ssZ',
+    ]);
 
     if (momentDate.isValid()) {
       this.dateValue = momentDate.toDate();
       this.args.updateDateValue(this.dateValue);
-    }
-    else {
+    } else {
       // Simply do not update the date value. Maybe can think of more helpful
       // behavior here later.
     }

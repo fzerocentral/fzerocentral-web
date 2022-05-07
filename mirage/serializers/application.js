@@ -19,12 +19,14 @@ export default JSONAPISerializer.extend({
           page: pageNumber,
           pages: Math.max(Math.ceil(count / perPage), 1),
           count: count,
-        }
+        },
       };
       jsonPayload.data = jsonPayload.data.slice(
-        perPage*(pageNumber-1), perPage*pageNumber);
+        perPage * (pageNumber - 1),
+        perPage * pageNumber
+      );
     }
 
     return jsonPayload;
-  }
+  },
 });

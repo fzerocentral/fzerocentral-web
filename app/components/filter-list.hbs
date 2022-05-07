@@ -1,7 +1,11 @@
 <ul>
   {{#each @filters as |filter|}}
     <li>
-      <button type="button" class="show-filter-detail-button" {{on "click" (fn @updateSelectedFilterId filter.id)}}>
+      <button
+        type='button'
+        class='show-filter-detail-button'
+        {{on 'click' (fn @updateSelectedFilterId filter.id)}}
+      >
         {{filter.name}}
       </button>
     </li>
@@ -9,11 +13,16 @@
 </ul>
 
 <div>
-  Search:
-  <input type="text" name="filter-search"
-      {{on "input" this.onSearchTextChange}} />
+  <label for={{@searchFieldId}}>Search:</label>
+  <input
+    id={{@searchFieldId}}
+    type='text'
+    name='filter-search'
+    {{on 'input' this.onSearchTextChange}}
+  />
 </div>
 
 <PageNavigation
   @pageResults={{@filters}}
-  @updatePageNumber={{@updatePageNumber}} />
+  @updatePageNumber={{@updatePageNumber}}
+/>

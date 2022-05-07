@@ -7,10 +7,10 @@ export default class GameFilterGroupsRoute extends Route {
 
   model(params) {
     return RSVP.hash({
-      filterGroups: this.store.query(
-        'filter-group', {game_id: params.game_id}),
-      game: this.store.findRecord(
-        'game', params.game_id),
+      filterGroups: this.store.query('filter-group', {
+        game_id: params.game_id,
+      }),
+      game: this.store.findRecord('game', params.game_id),
     });
   }
 }

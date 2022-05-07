@@ -1,6 +1,6 @@
 import { helper } from '@ember/component/helper';
 
-export function not([arg]/*, hash*/) {
+export function not([arg] /*, hash*/) {
   return !arg;
 }
 

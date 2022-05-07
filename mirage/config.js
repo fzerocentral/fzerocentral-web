@@ -1,8 +1,6 @@
 import { Response } from 'ember-cli-mirage';
 
-
-export default function() {
-
+export default function () {
   // These comments are here to help you get started. Feel free to delete them.
 
   /*
@@ -26,26 +24,37 @@ export default function() {
     this.del('/posts/:id');
   */
 
+  this.get('/charts', (schema /* request */) => {
+    return schema.charts.all();
+  });
+
   this.get('/charts/:id', (schema, request) => {
     return schema.charts.find(request.params.id);
   });
 
+  this.get('/charts/:id/other_records', (/* schema, request */) => {
+    return [];
+  });
   this.get('/charts/:id/ranking', (/* schema, request */) => {
     return [];
   });
   this.get('/charts/:id/record_history', (/* schema, request */) => {
     return [];
   });
-  this.get('/charts/:chart_id/players/:player_id/history', (/* schema, request */) => {
-    return [];
-  });
+  this.get(
+    '/charts/:chart_id/players/:player_id/history',
+    (/* schema, request */) => {
+      return [];
+    }
+  );
 
   this.get('/chart_groups', (schema, request) => {
     let chartGroups = schema.chartGroups.all();
 
     if (request.queryParams.game_id) {
       chartGroups = chartGroups.filter(
-        chartGroup => chartGroup.gameId === request.queryParams.game_id);
+        (chartGroup) => chartGroup.gameId === request.queryParams.game_id
+      );
     }
 
     return chartGroups;
@@ -60,7 +69,8 @@ export default function() {
 
     if (Object.prototype.hasOwnProperty.call(request.queryParams, 'game_id')) {
       chartTypes = chartTypes.filter(
-        chartType => chartType.gameId === request.queryParams.game_id);
+        (chartType) => chartType.gameId === request.queryParams.game_id
+      );
     }
 
     return chartTypes;
@@ -71,17 +81,10 @@ export default function() {
   });
 
   this.get('/filter_groups', (schema, request) => {
-    if (Object.prototype.hasOwnProperty.call(request.queryParams, 'chart_type_id')) {
-      // FGs linked to a particular chart type
-      return schema.filterGroups.where(
-        {chartTypeId: request.queryParams.chart_type_id});
-    }
-    else if (Object.prototype.hasOwnProperty.call(request.queryParams, 'game_id')) {
+    if (Object.prototype.hasOwnProperty.call(request.queryParams, 'game_id')) {
       // FGs of a particular game
-      return schema.filterGroups.where(
-        {gameId: request.queryParams.game_id});
-    }
-    else {
+      return schema.filterGroups.where({ gameId: request.queryParams.game_id });
+    } else {
       // All FGs
       return schema.filterGroups.all();
     }
@@ -95,8 +98,11 @@ export default function() {
     let description = data.attributes.description;
     let showByDefault = data.attributes.showByDefault || false;
     return schema.filterGroups.create({
-      name: name, kind: kind,
-      description: description, showByDefault: showByDefault});
+      name: name,
+      kind: kind,
+      description: description,
+      showByDefault: showByDefault,
+    });
   });
 
   this.get('/filter_groups/:id', (schema, request) => {
@@ -110,7 +116,12 @@ export default function() {
 
   this.get('/filter_implication_links', (schema, request) => {
     let links = null;
-    if (Object.prototype.hasOwnProperty.call(request.queryParams, 'filter_group_id')) {
+    if (
+      Object.prototype.hasOwnProperty.call(
+        request.queryParams,
+        'filter_group_id'
+      )
+    ) {
       // FILs of a particular FG
       let allLinks = schema.filterImplicationLinks.all();
       links = schema.filterImplicationLinks.none();
@@ -120,16 +131,14 @@ export default function() {
           links.add(link);
         }
       });
-    }
-    else {
+    } else {
       // All objects
       links = schema.filterImplicationLinks.all();
     }
 
     // Partial implementation of pagination. The results aren't actually
     // paginated, but the Per-Page and Total headers are given.
-    return new Response(
-      200, {'Per-Page': 20, 'Total': links.length}, links);
+    return new Response(200, { 'Per-Page': 20, Total: links.length }, links);
   });
 
   this.post('/filter_implication_links', (schema, request) => {
@@ -138,7 +147,9 @@ export default function() {
     let implyingFilterId = data.relationships['implying-filter'].data.id;
     let impliedFilterId = data.relationships['implied-filter'].data.id;
     let link = schema.filterImplicationLinks.create({
-      implyingFilterId: implyingFilterId, impliedFilterId: impliedFilterId});
+      implyingFilterId: implyingFilterId,
+      impliedFilterId: impliedFilterId,
+    });
     return link;
   });
 
@@ -148,7 +159,12 @@ export default function() {
   });
 
   this.get('/filter_implications', (schema, request) => {
-    if (Object.prototype.hasOwnProperty.call(request.queryParams, 'implying_filter_id')) {
+    if (
+      Object.prototype.hasOwnProperty.call(
+        request.queryParams,
+        'implying_filter_id'
+      )
+    ) {
       // FILs of a particular FG
       let allImplications = schema.filterImplications.all();
       let implications = schema.filterImplications.none();
@@ -159,8 +175,7 @@ export default function() {
         }
       });
       return implications;
-    }
-    else {
+    } else {
       // All objects
       return schema.filterImplications.all();
     }
@@ -171,30 +186,40 @@ export default function() {
 
     if (request.queryParams.filter_group_id) {
       filters = filters.filter(
-        f => f.filterGroup.id === request.queryParams.filter_group_id);
+        (f) => f.filterGroup.id === request.queryParams.filter_group_id
+      );
     }
     if (request.queryParams.usage_type) {
       filters = filters.filter(
-        f => f.usageType === request.queryParams.usage_type);
+        (f) => f.usageType === request.queryParams.usage_type
+      );
     }
     if (request.queryParams.name_search) {
       // Filters which have the name_search value as a substring of their name
       filters = filters.filter(
-        f => f.name.toLowerCase().indexOf(request.queryParams.name_search.toLowerCase()) !== -1);
+        (f) =>
+          f.name
+            .toLowerCase()
+            .indexOf(request.queryParams.name_search.toLowerCase()) !== -1
+      );
     }
     if (request.queryParams.implied_by_filter_id) {
       // Filters which have the specified filter id in its incoming implications
       let implied_by_filter = schema.filters.find(
-        request.queryParams.implied_by_filter_id);
-      filters = filters.filter(
-        f => f.incomingFilterImplications.includes(implied_by_filter));
+        request.queryParams.implied_by_filter_id
+      );
+      filters = filters.filter((f) =>
+        f.incomingFilterImplications.includes(implied_by_filter)
+      );
     }
     if (request.queryParams.implies_filter_id) {
       // Filters which have the specified filter id in its outgoing implications
       let implies_filter = schema.filters.find(
-        request.queryParams.implies_filter_id);
-      filters = filters.filter(
-        f => f.outgoingFilterImplications.includes(implies_filter));
+        request.queryParams.implies_filter_id
+      );
+      filters = filters.filter((f) =>
+        f.outgoingFilterImplications.includes(implies_filter)
+      );
     }
 
     // Sort by filter name, ascending
@@ -215,11 +240,12 @@ export default function() {
 
     if (Object.prototype.hasOwnProperty.call(data.attributes, 'usage-type')) {
       args.usageType = data.attributes['usage-type'];
-    }
-    else {
+    } else {
       args.usageType = 'choosable';
     }
-    if (Object.prototype.hasOwnProperty.call(data.attributes, 'numeric-value')) {
+    if (
+      Object.prototype.hasOwnProperty.call(data.attributes, 'numeric-value')
+    ) {
       args.numericValue = data.attributes['numeric-value'];
     }
 
@@ -232,7 +258,9 @@ export default function() {
     let data = requestJSON.data;
     let args = {};
     args.name = data.attributes.name;
-    if (Object.prototype.hasOwnProperty.call(data.attributes, 'numeric-value')) {
+    if (
+      Object.prototype.hasOwnProperty.call(data.attributes, 'numeric-value')
+    ) {
       args.numericValue = data.attributes['numeric-value'];
     }
     let filter = schema.filters.find(request.params.id);
@@ -249,27 +277,33 @@ export default function() {
     return schema.filters.find(request.params.id);
   });
 
-  this.post('/filters/:id/relationships/outgoing_filter_implications', (schema, request) => {
-    let requestJSON = JSON.parse(request.requestBody);
-    let filter = schema.filters.find(request.params.id);
-    let implications = filter.outgoingFilterImplications;
-    requestJSON.data.forEach(f => {
-      implications.add(schema.filters.find(f.id));
-    });
-    filter.update('outgoingFilterImplications', implications);
-    return filter;
-  });
+  this.post(
+    '/filters/:id/relationships/outgoing_filter_implications',
+    (schema, request) => {
+      let requestJSON = JSON.parse(request.requestBody);
+      let filter = schema.filters.find(request.params.id);
+      let implications = filter.outgoingFilterImplications;
+      requestJSON.data.forEach((f) => {
+        implications.add(schema.filters.find(f.id));
+      });
+      filter.update('outgoingFilterImplications', implications);
+      return filter;
+    }
+  );
 
-  this.delete('/filters/:id/relationships/outgoing_filter_implications', (schema, request) => {
-    let requestJSON = JSON.parse(request.requestBody);
-    let filter = schema.filters.find(request.params.id);
-    let implications = filter.outgoingFilterImplications;
-    requestJSON.data.forEach(f => {
-      implications.remove(schema.filters.find(f.id));
-    });
-    filter.update('outgoingFilterImplications', implications);
-    return filter;
-  });
+  this.delete(
+    '/filters/:id/relationships/outgoing_filter_implications',
+    (schema, request) => {
+      let requestJSON = JSON.parse(request.requestBody);
+      let filter = schema.filters.find(request.params.id);
+      let implications = filter.outgoingFilterImplications;
+      requestJSON.data.forEach((f) => {
+        implications.remove(schema.filters.find(f.id));
+      });
+      filter.update('outgoingFilterImplications', implications);
+      return filter;
+    }
+  );
 
   this.get('/games', (schema) => {
     return schema.games.all();
@@ -284,11 +318,13 @@ export default function() {
 
     if (request.queryParams.game_id) {
       ladders = ladders.filter(
-        ladder => ladder.gameId === request.queryParams.game_id);
+        (ladder) => ladder.gameId === request.queryParams.game_id
+      );
     }
     if (request.queryParams.kind) {
       ladders = ladders.filter(
-        ladder => ladder.kind === request.queryParams.kind);
+        (ladder) => ladder.kind === request.queryParams.kind
+      );
     }
 
     return ladders;
@@ -304,9 +340,9 @@ export default function() {
       filterSpec: data.attributes['filter-spec'],
       orderInGameAndKind: data.attributes['order-in-game-and-kind'],
       chartGroup: schema.chartGroups.find(
-        data.relationships['chart-group'].data.id),
-      game: schema.games.find(
-        data.relationships.game.data.id),
+        data.relationships['chart-group'].data.id
+      ),
+      game: schema.games.find(data.relationships.game.data.id),
     });
   });
 
@@ -326,12 +362,18 @@ export default function() {
     if (Object.prototype.hasOwnProperty.call(data.attributes, 'filter-spec')) {
       args['filterSpec'] = data.attributes['filter-spec'];
     }
-    if (Object.prototype.hasOwnProperty.call(data.attributes, 'order-in-game-and-kind')) {
+    if (
+      Object.prototype.hasOwnProperty.call(
+        data.attributes,
+        'order-in-game-and-kind'
+      )
+    ) {
       args['orderInGameAndKind'] = data.attributes['order-in-game-and-kind'];
     }
     if (data.relationships['chart-group'].data) {
       args['chartGroup'] = schema.chartGroups.find(
-        data.relationships['chart-group'].data.id);
+        data.relationships['chart-group'].data.id
+      );
     }
 
     let ladder = schema.ladders.find(request.params.id);
@@ -360,15 +402,19 @@ export default function() {
         let orderAscending = chart.chartType.order_ascending;
 
         if (orderAscending === true) {
-          sortFunc = ((a, b) => { return a.value - b.value; });
+          sortFunc = (a, b) => {
+            return a.value - b.value;
+          };
+        } else {
+          sortFunc = (a, b) => {
+            return b.value - a.value;
+          };
         }
-        else {
-          sortFunc = ((a, b) => { return b.value - a.value; });
-        }
-      }
-      else if (sortMethod === 'date_achieved') {
+      } else if (sortMethod === 'date_achieved') {
         // Latest date first
-        sortFunc = ((a, b) => { return b.dateAchieved - a.dateAchieved; });
+        sortFunc = (a, b) => {
+          return b.dateAchieved - a.dateAchieved;
+        };
       }
       records = records.sort(sortFunc);
 
@@ -377,8 +423,7 @@ export default function() {
       records.models.forEach((record, index) => {
         record.attrs.rank = index + 1;
       });
-    }
-    else {
+    } else {
       records = schema.records.all();
     }
 
@@ -388,8 +433,7 @@ export default function() {
       let formatSpec = record.chart.chartType.format_spec;
       if (formatSpec === '[{"suffix": "m"}]') {
         record.attrs.valueDisplay = record.attrs.value + 'm';
-      }
-      else {
+      } else {
         record.attrs.valueDisplay = record.attrs.value;
       }
     });
@@ -405,7 +449,11 @@ export default function() {
     let chart = schema.charts.find(data.relationships.chart.data.id);
     let player = schema.players.find(data.relationships.player.data.id);
     let record = schema.records.create({
-      value: value, dateAchieved: dateAchieved, chart: chart, player: player});
+      value: value,
+      dateAchieved: dateAchieved,
+      chart: chart,
+      player: player,
+    });
     return record;
   });
 

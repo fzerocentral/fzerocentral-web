@@ -1,10 +1,9 @@
 export const Modifier = {
-  Equal: {code: '', display: '=', shortDisplay: ''},
-  NotEqual: {code: 'n', display: 'NOT', shortDisplay: 'NOT'},
-  GreaterOrEqual: {code: 'ge', display: '>=', shortDisplay: '>='},
-  LessOrEqual: {code: 'le', display: '<=', shortDisplay: '<='},
+  Equal: { code: '', display: '=', shortDisplay: '' },
+  NotEqual: { code: 'n', display: 'NOT', shortDisplay: 'NOT' },
+  GreaterOrEqual: { code: 'ge', display: '>=', shortDisplay: '>=' },
+  LessOrEqual: { code: 'le', display: '<=', shortDisplay: '<=' },
 };
-
 
 function modifierFromStr(str) {
   for (let item of Object.values(Modifier)) {
@@ -14,7 +13,6 @@ function modifierFromStr(str) {
   }
   return null;
 }
-
 
 function specItemFromString(specItemStr) {
   let regexMatch = /([0-9]+)([a-zA-Z]*)/.exec(specItemStr);
@@ -29,25 +27,27 @@ function specItemFromString(specItemStr) {
   };
 }
 
-
 function specItemToString(specItem) {
   return `${specItem.filterId}${specItem.modifier.code}`;
 }
 
-
 function specItemToDisplay(specItem, filterInstances) {
-  if (specItem === null) {return '';}
+  if (specItem === null) {
+    return '';
+  }
 
   let filterObj = filterInstances.find(
-    f => f.get('id') === specItem.filterId);
+    (f) => f.get('id') === specItem.filterId
+  );
   // Perhaps a property update still has to happen.
-  if (!filterObj) {return '';}
+  if (!filterObj) {
+    return '';
+  }
 
   let filterName = filterObj.get('name');
   let filterGroupName = filterObj.get('filterGroup').get('name');
   return `${filterGroupName}: ${specItem.modifier.shortDisplay} ${filterName}`;
 }
-
 
 export function filterSpecStrToItems(specStr) {
   if (specStr === null || specStr === '') {
@@ -57,7 +57,6 @@ export function filterSpecStrToItems(specStr) {
   let specItemStrs = specStr.split('-');
   return specItemStrs.map(specItemFromString);
 }
-
 
 function filterSpecItemsToStr(specItems) {
   let specItemStrs = specItems.map(specItemToString);
@@ -72,7 +71,6 @@ function filterSpecItemsToStr(specItems) {
   return specItemStrs.join('-');
 }
 
-
 export function addFilterSpecItem(specStr, filterId, modifierStr) {
   let specItems = filterSpecStrToItems(specStr);
   specItems.push({
@@ -82,14 +80,12 @@ export function addFilterSpecItem(specStr, filterId, modifierStr) {
   return filterSpecItemsToStr(specItems);
 }
 
-
 export function removeFilterSpecItem(specStr, index) {
   let specItems = filterSpecStrToItems(specStr);
   // Remove 1 element at the specified index.
   specItems.splice(index, 1);
   return filterSpecItemsToStr(specItems);
 }
-
 
 export function filterSpecStrToDisplays(specStr, filterInstances) {
   let specItems = filterSpecStrToItems(specStr);

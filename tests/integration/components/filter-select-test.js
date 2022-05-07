@@ -1,116 +1,78 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
-import { run } from "@ember/runloop";
-import { clearSelected, selectChoose } from 'ember-power-select/test-support';
+import { render, select } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
-import { assertPowerSelectCurrentTextEqual, assertPowerSelectOptionsEqual }
-  from 'fzerocentral-web/tests/helpers/power-select-helpers';
+import { FilterSelectControl } from '../../../utils/filter-select';
+import { assertSelectOptionsEqual } from '../../utils/html';
+import { DummyModel } from '../../utils/models';
 
-module('Integration | Component | filter-select', function(hooks) {
+module('Integration | Component | filter-select', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach( function() {
-    this.server = startMirage();
+  hooks.beforeEach(function () {
+    let g = new DummyModel({ id: '1', name: 'G', kind: 'select' });
+    let f1 = new DummyModel({ id: '1', name: 'F1', filterGroup: g });
+    let f2 = new DummyModel({ id: '2', name: 'F2', filterGroup: g });
 
-    let store = this.owner.lookup('service:store');
-
-    this.groupA = server.create('filterGroup', {name: 'Group A'});
-    this.filterA1 = server.create('filter', {name: 'Filter A1', filterGroup: this.groupA});
-    server.create('filter', {name: 'Filter A2', filterGroup: this.groupA});
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
-    this.set('filterGroup', run(
-      () => store.findRecord('filterGroup', this.groupA.id)));
-    this.set('filter', null);
-    this.set('onAnyFilterChange', (filter) => {
-      this.set('filter', filter);
-    });
+    function getFilterOptions() {
+      return new Promise((resolve) => {
+        resolve([f1, f2]);
+      });
+    }
+    this.set(
+      'controlInstance',
+      new FilterSelectControl('test-form', 'filter', getFilterOptions)
+    );
   });
 
-  hooks.afterEach( function() {
-    this.server.shutdown();
-  });
-
-  test('should tolerate null filterGroup', async function(assert) {
-    this.set('filterGroup', null);
-
-    // Use `onAnyFilterChange` when onAnyFilterChange is a property.
-    // Use `'onAnyFilterChange'` when onAnyFilterChange is defined in
-    // a component's `actions`.
-    await render(hbs`
-      <FilterSelect
-        @filterGroup={{filterGroup}}
-        @selected={{filter}}
-        @onFilterChange={{this.onAnyFilterChange}} />
-    `);
-
-    let select = this.element.querySelector('.ember-power-select-trigger');
-    await assertPowerSelectOptionsEqual(
-      assert, select, ["Type to search"],
-      "Choices should be empty");
-
-    assert.equal(this.get('params'), null, "params should be null");
-  });
-
-  test('initializes selection to placeholder text', async function(assert) {
+  test('should have expected options', async function (assert) {
+    assert.expect(1);
 
     await render(hbs`
-      <FilterSelect
-        @filterGroup={{filterGroup}}
-        @selected={{filter}}
-        @onFilterChange={{this.onAnyFilterChange}} />
+      <form id='test-form'>
+        <FilterSelect
+          @baseFieldId='filter'
+          @label='G'
+          @controlInstance={{this.controlInstance}} />
+      </form>
     `);
+    await this.controlInstance.initializeOptions();
 
-    let select = this.element.querySelector('.ember-power-select-trigger');
-    assertPowerSelectCurrentTextEqual(
-      assert, select, "Not selected",
-      "Should be initialized to placeholder text");
+    let selectElement = this.element.querySelector('select');
+    assertSelectOptionsEqual(
+      assert,
+      selectElement,
+      [
+        ['1', 'F1'],
+        ['2', 'F2'],
+      ],
+      'Options should be as expected'
+    );
   });
 
-  test('can change filter', async function(assert) {
-
+  test('should change filter', async function (assert) {
     await render(hbs`
-      <FilterSelect
-        @filterGroup={{filterGroup}}
-        @selected={{filter}}
-        @onFilterChange={{this.onAnyFilterChange}} />
+      <form id='test-form'>
+        <FilterSelect
+          @baseFieldId='filter'
+          @label='G'
+          @controlInstance={{this.controlInstance}} />
+      </form>
     `);
+    await this.controlInstance.initializeOptions();
 
-    await selectChoose(`.ember-power-select-trigger`, "Filter A1");
+    let selectElement = this.element.querySelector('select');
+    await select(selectElement, '1');
 
-    // Test parent callback's result.
-    assert.equal(this.get('filter').get('name'), "Filter A1");
-    assert.equal(this.get('filter').get('id'), this.filterA1.id);
-
-    // Test text.
-    let select = this.element.querySelector('.ember-power-select-trigger');
-    assertPowerSelectCurrentTextEqual(
-      assert, select, "Filter A1",
-      "Should have selected Filter A1");
-  });
-
-  test('can clear selection', async function(assert) {
-
-    await render(hbs`
-      <FilterSelect
-        @filterGroup={{filterGroup}}
-        @selected={{filter}}
-        @onFilterChange={{this.onAnyFilterChange}} />
-    `);
-
-    await selectChoose(`.ember-power-select-trigger`, "Filter A1");
-    await clearSelected(`.ember-power-select-trigger`);
-
-    // Test parent callback's result.
-    assert.equal(this.get('filter'), null);
-
-    // Test text.
-    let select = this.element.querySelector('.ember-power-select-trigger');
-    assertPowerSelectCurrentTextEqual(
-      assert, select, "Not selected",
-      "Selection should be cleared");
+    assert.equal(
+      selectElement.value,
+      '1',
+      'Dropdown should have the right filter'
+    );
+    assert.equal(
+      this.controlInstance.selectedFilterId,
+      '1',
+      'Control instance should have the right filter'
+    );
   });
 });

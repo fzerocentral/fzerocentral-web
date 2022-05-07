@@ -1,18 +1,20 @@
 <h1>
   Submit record for:
-  <LinkTo @route="charts.show" @model={{@model.chart.id}}>
-    {{@model.chart.chartGroup.name}} - {{@model.chart.name}}
+  <LinkTo @route='charts.show' @model={{@model.chart.id}}>
+    {{@model.chart.chartGroup.name}}
+    -
+    {{@model.chart.name}}
   </LinkTo>
 </h1>
 
-<form id="record-form">
+<form id='record-form'>
 
   <div>
-    <label for="player-select">Player</label>
-    <select name="player" id="player-select">
-      <option value=""> ----- </option>
+    <label for='player-select'>Player</label>
+    <select name='player' id='player-select'>
+      <option value=''> ----- </option>
       {{#each @model.players as |player|}}
-        <option value="{{player.id}}">
+        <option value='{{player.id}}'>
           {{player.username}}
         </option>
       {{/each}}
@@ -20,26 +22,31 @@
   </div>
 
   <div>
-    <label for="value-field">Value</label>
+    <label for='value-field'>Value</label>
     {{! For now, this is just a simple integer field which doesn't take the chart type's record format into account. }}
     <input
-      type="number" name="value"
-      id="value-field" placeholder="Example: 123" />
+      type='number'
+      name='value'
+      id='value-field'
+      placeholder='Example: 123'
+    />
   </div>
 
   <div>
-    <label>Date achieved</label>
+    <label for='date-achieved'>Date achieved</label>
     <DateField
-      @updateDateValue={{action (mut this.dateAchieved)}} />
+      @fieldId='date-achieved'
+      @updateDateValue={{this.updateDateValue}}
+    />
   </div>
 
   <RecordFiltersEdit
     @filterGroups={{@model.filterGroups}}
-    @selectedFilters={{this.selectedFiltersByGroup}}
-    @filterSelectControlInstances={{this.filterSelects}} />
+    @filterSelectControlInstances={{this.filterSelects}}
+  />
 
-  <div class="error-message"></div>
+  <div class='error-message'></div>
 
-  <div><button type="button" {{action "submitRecord"}}>Submit record</button></div>
+  <div><button type='button' class='submit' {{on 'click' this.submitRecord}}>Submit record</button></div>
 
 </form>

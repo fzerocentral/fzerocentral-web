@@ -1,119 +1,105 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { A } from '@ember/array';
-import { render } from '@ember/test-helpers';
-import { run } from "@ember/runloop";
-import { clearSelected, selectChoose } from 'ember-power-select/test-support';
+import { render, select } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
-import { createModelInstance }
-  from 'fzerocentral-web/tests/helpers/model-helpers';
+import { DummyModel } from '../../utils/models';
+import { FilterSelectControl } from '../../../utils/filter-select';
+import { assertSelectOptionsEqual } from '../../utils/html';
 
-
-function createFilter(server, name, group, type='choosable', value=null) {
-  return createModelInstance(
-    server, 'filter',
-    {name: name, filterGroup: group, usageType: type, numericValue: value});
-}
-
-
-module('Integration | Component | record-filters-edit', function(hooks) {
+module('Integration | Component | record-filters-edit', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach( function() {
-    this.server = startMirage();
+  hooks.beforeEach(function () {
+    let g1 = new DummyModel({ id: '1', name: 'G1' });
+    let g2 = new DummyModel({ id: '2', name: 'G2' });
+    this.f1 = new DummyModel({ id: '1', name: 'F1', filterGroup: g1 });
+    let f2 = new DummyModel({ id: '2', name: 'F2', filterGroup: g1 });
+    let f3 = new DummyModel({ id: '3', name: 'F3', filterGroup: g2 });
+    this.f4 = new DummyModel({ id: '4', name: 'F4', filterGroup: g2 });
 
-    let store = this.owner.lookup('service:store');
-
-    this.groupA = server.create('filterGroup', {name: 'Group A'});
-    this.filterA1 = createFilter(this.server, "Filter A1", this.groupA);
-    server.create('filter', {name: 'Filter A2', filterGroup: this.groupA});
-    this.groupB = server.create('filterGroup', {name: 'Group B'});
-    server.create('filter', {name: 'Filter B1', filterGroup: this.groupB});
-    this.filterB2 = createFilter(this.server, "Filter B2", this.groupB);
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
-    this.set('filterGroups', run(() => store.findAll('filterGroup')));
-    this.set('filters', A([]));
+    this.set('filterGroups', [g1, g2]);
+    let filterSelects = {
+      1: new FilterSelectControl('test-form', 'filter-1', () => {
+        return new Promise((resolve) => {
+          resolve([this.f1, f2]);
+        });
+      }),
+      2: new FilterSelectControl('test-form', 'filter-2', () => {
+        return new Promise((resolve) => {
+          resolve([f3, this.f4]);
+        });
+      }),
+    };
+    this.set('filterSelects', filterSelects);
   });
 
-  hooks.afterEach( function() {
-    this.server.shutdown();
-  });
+  test('should set filter options', async function (assert) {
+    assert.expect(2);
 
-  test('initializes filters to not-selected', async function(assert) {
     await render(hbs`
-      <RecordFiltersEdit @filterGroups={{filterGroups}} @filters={{filters}} />
+      <form id='test-form'>
+        <RecordFiltersEdit
+          @filterGroups={{this.filterGroups}}
+          @filterSelectControlInstances={{this.filterSelects}} />
+      </form>
     `);
+    await this.filterSelects['1'].initializeOptions();
+    await this.filterSelects['2'].initializeOptions();
 
-    // Test `filters` value
-    assert.deepEqual(this.get('filters').length, 0);
+    let selectElements = [
+      this.element.querySelector('#filter-1-select'),
+      this.element.querySelector('#filter-2-select'),
+    ];
 
-    // Test the text of each select box.
-    // The first span within `.ember-power-select-trigger` should contain
-    // either the placeholder text or the selection text, while not containing
-    // the little x which lets you clear the selection.
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Not selected");
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupB.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Not selected");
+    assertSelectOptionsEqual(
+      assert,
+      selectElements[0],
+      [
+        ['1', 'F1'],
+        ['2', 'F2'],
+      ],
+      "First group's options should be as expected"
+    );
+
+    assertSelectOptionsEqual(
+      assert,
+      selectElements[1],
+      [
+        ['3', 'F3'],
+        ['4', 'F4'],
+      ],
+      "Second group's options should be as expected"
+    );
   });
 
-  test('can choose a filter for one group while leaving the other blank', async function(assert) {
+  test('should be able to choose filters for each group', async function (assert) {
     await render(hbs`
-      <RecordFiltersEdit @filterGroups={{filterGroups}} @filters={{filters}} />
+      <form id='test-form'>
+        <RecordFiltersEdit
+          @filterGroups={{this.filterGroups}}
+          @filterSelectControlInstances={{this.filterSelects}} />
+      </form>
     `);
+    await this.filterSelects['1'].initializeOptions();
+    await this.filterSelects['2'].initializeOptions();
 
-    // Pick one filter
-    await selectChoose(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger`, "Filter A1");
+    let selectElements = [
+      this.element.querySelector('#filter-1-select'),
+      this.element.querySelector('#filter-2-select'),
+    ];
 
-    // Test `filters` value
-    assert.deepEqual(this.get('filters').length, 1);
-    assert.deepEqual(this.get('filters').objectAt(0).id, this.filterA1.id);
+    await select(selectElements[0], '1');
+    assert.equal(
+      this.filterSelects['1'].selectedFilterId,
+      '1',
+      'First filter selection should update state'
+    );
 
-    // Test the text of each select box
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Filter A1");
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupB.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Not selected");
-  });
-
-  test('can choose filters in both groups', async function(assert) {
-    await render(hbs`
-      <RecordFiltersEdit @filterGroups={{filterGroups}} @filters={{filters}} />
-    `);
-
-    // Pick both filters
-    await selectChoose(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger`, "Filter A1");
-    await selectChoose(`div.filter-group-${this.groupB.id}-select .ember-power-select-trigger`, "Filter B2");
-
-    // Test `filters` value
-    assert.deepEqual(this.get('filters').length, 2);
-    assert.deepEqual(this.get('filters').objectAt(0).id, this.filterA1.id);
-    assert.deepEqual(this.get('filters').objectAt(1).id, this.filterB2.id);
-
-    // Test the text of each select box
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Filter A1");
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupB.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Filter B2");
-  });
-
-  test('can clear a selected filter', async function(assert) {
-    await render(hbs`
-      <RecordFiltersEdit @filterGroups={{filterGroups}} @filters={{filters}} />
-    `);
-
-    // Pick a filter
-    await selectChoose(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger`, "Filter A1");
-
-    // Test `filters` value
-    assert.deepEqual(this.get('filters').length, 1);
-    assert.deepEqual(this.get('filters').objectAt(0).id, this.filterA1.id);
-    // Test text
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Filter A1");
-
-    // Clear the selection
-    await clearSelected(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger`);
-
-    // Test `filters` value
-    assert.deepEqual(this.get('filters').length, 0);
-    // Test text
-    assert.equal(this.element.querySelector(`div.filter-group-${this.groupA.id}-select .ember-power-select-trigger > span:first-child`).textContent.trim(), "Not selected");
+    await select(selectElements[1], '4');
+    assert.equal(
+      this.filterSelects['2'].selectedFilterId,
+      '4',
+      'Second filter selection should update state'
+    );
   });
 });

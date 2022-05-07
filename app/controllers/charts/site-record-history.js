@@ -2,12 +2,8 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
-
 export default class ChartsTopRecordHistoryController extends Controller {
-  queryParams = [
-    'ladderId',
-    {appliedFiltersString: 'filters'},
-  ];
+  queryParams = ['ladderId', { appliedFiltersString: 'filters' }];
   @tracked ladderId = null;
   @tracked appliedFiltersString = null;
 
@@ -22,8 +18,7 @@ export default class ChartsTopRecordHistoryController extends Controller {
   get shownFilterGroups() {
     if (this.showAllFilterGroups) {
       return this.model.filterGroups;
-    }
-    else {
+    } else {
       return this.model.filterGroups.filterBy('showByDefault', true);
     }
   }
@@ -32,7 +27,7 @@ export default class ChartsTopRecordHistoryController extends Controller {
     return {
       ladderId: this.ladderId,
       filters: this.appliedFiltersString,
-    }
+    };
   }
 
   @action
@@ -40,7 +35,7 @@ export default class ChartsTopRecordHistoryController extends Controller {
     return this.store.query('filter', {
       filter_group_id: filterGroupId,
       name_search: searchText,
-    })
+    });
   }
 
   @action

@@ -1,16 +1,19 @@
 <h1>{{@model.filter.name}} - Delete an outgoing implication</h1>
 
-<form id="delete-implication-form">
+<form id='delete-implication-form'>
   <div>
     <FilterSelect
-      @baseFieldId="target-filter"
-      @label=""
-      @controlInstance={{this.filterSelect}} />
+      @baseFieldId='target-filter'
+      @label='Delete implication to:'
+      @controlInstance={{this.filterSelect}}
+    />
   </div>
 
-  <div class="error-message"></div>
+  <div class='error-message'></div>
 
   <div>
-    <button type="button" {{action "deleteImplication"}}> Delete implication </button>
+    <button type='button' {{on 'click' this.deleteImplication}}>
+      Delete implication
+    </button>
   </div>
 </form>

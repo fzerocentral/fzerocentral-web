@@ -1,29 +1,34 @@
-{{page-title "Site record history"}}
+{{page-title 'Site record history'}}
 
-<div class="general-content-box">
+<div class='general-content-box'>
 
   <LinkTo
-      @route="charts.show" @model={{@model.chart.id}}
-      @query={{this.chartLinkQueryParams}} >
+    @route='charts.show'
+    @model={{@model.chart.id}}
+    @query={{this.chartLinkQueryParams}}
+  >
     <h2>{{@model.chart.chartGroup.name}} - {{@model.chart.name}}</h2>
   </LinkTo>
   <h1>Site record history</h1>
 
   <LadderAndFilterControls
-      @extraFiltersString={{this.appliedFiltersString}}
-      @manager={{this.ladderAndFilterControls}} />
+    @extraFiltersString={{this.appliedFiltersString}}
+    @manager={{this.ladderAndFilterControls}}
+  />
 
   <div>
     <input
-        type="checkbox" name="show-all-filter-groups"
-        id="show-all-filter-groups-checkbox"
-        {{on "change" this.updateShowAllFilterGroups}} />
-    <label for="show-all-filter-groups-checkbox">Show all filter groups</label>
+      type='checkbox'
+      name='show-all-filter-groups'
+      id='show-all-filter-groups-checkbox'
+      {{on 'change' this.updateShowAllFilterGroups}}
+    />
+    <label for='show-all-filter-groups-checkbox'>Show all filter groups</label>
   </div>
 
 </div>
 
-<table class="scoreboard">
+<table class='scoreboard'>
   <thead>
     <tr>
       <th>Player</th>
@@ -40,11 +45,11 @@
       <tr>
         <td>{{record.player_username}}</td>
         <td>{{record.value_display}}</td>
-        <td>{{moment-format record.date_achieved "YYYY-MM-DD HH:mm"}}</td>
+        <td>{{moment-format record.date_achieved 'YYYY-MM-DD HH:mm'}}</td>
 
         {{#each this.shownFilterGroups as |filterGroup|}}
           <td>
-            {{get (find-filter-of-group record.filters filterGroup.id) "name"}}
+            {{get (find-filter-of-group record.filters filterGroup.id) 'name'}}
           </td>
         {{/each}}
       </tr>

@@ -1,21 +1,18 @@
 import { action } from '@ember/object';
-import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { getFormField } from "../utils/forms";
-
-
-export default class FilterSelectComponent extends Component {}
-
+import { getFormField } from './forms';
 
 /* For some reason, it felt easier to write component-related functionality
  in a separate class from the component itself. */
 export class FilterSelectControl {
-
   @tracked searchEnabled;
 
   constructor(
-      formId, baseFieldName, getOptions,
-      {hasEmptyOption = false, initialFilter = null} = {}) {
+    formId,
+    baseFieldName,
+    getOptions,
+    { hasEmptyOption = false, initialFilter = null } = {}
+  ) {
     this.formId = formId;
     this.baseFieldName = baseFieldName;
     this.getOptions = getOptions;
@@ -37,8 +34,7 @@ export class FilterSelectControl {
   get mainField() {
     if (this.searchEnabled) {
       return this.hiddenField;
-    }
-    else {
+    } else {
       return this.selectField;
     }
   }
@@ -55,8 +51,9 @@ export class FilterSelectControl {
    * @param {string} searchText
    * @returns {Promise}
    */
-  getOptions(searchText) {    // eslint-disable-line no-unused-vars
-    throw "Not implemented";
+  getOptions() {
+    // eslint-disable-line no-unused-vars
+    throw 'Not implemented';
   }
 
   updateOptions() {
@@ -96,21 +93,20 @@ export class FilterSelectControl {
       });
 
       return filters;
-    })
+    });
   }
 
   initializeOptions() {
-    this.updateOptions().then((filters) => {
+    return this.updateOptions().then((filters) => {
       // Set searchEnabled based on number of filters available.
       if (filters.meta) {
         this.searchEnabled = filters.meta.pagination.pages > 1;
-      }
-      else {
+      } else {
         this.searchEnabled = false;
       }
       // Set the initial value (defaults to null or undefined).
       this.setFilter(this.initialFilter);
-    })
+    });
   }
 
   @action
@@ -120,13 +116,13 @@ export class FilterSelectControl {
       // Look through the filter options to find a filter with a name that
       // matches the text field.
       let matchingFilter = filters.find(
-        (filter) => filter.name === this.textField.value);
+        (filter) => filter.name === this.textField.value
+      );
 
       if (matchingFilter) {
         // Assign that matching filter's ID to the real (hidden) field.
         this.mainField.value = matchingFilter.id;
-      }
-      else {
+      } else {
         this.mainField.value = null;
       }
     });

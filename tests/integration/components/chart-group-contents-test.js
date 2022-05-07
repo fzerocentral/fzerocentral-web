@@ -3,15 +3,21 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | chart-group-contents', function(hooks) {
+module('Integration | Component | chart-group-contents', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
+  test('it renders', async function (assert) {
+    this.set('item', {
+      chart_group_id: '1',
+      name: 'G1',
+    });
+    this.set('ladder', { id: '1' });
 
-    await render(hbs`<ChartGroupContents />`);
+    await render(hbs`<ChartGroupContents
+                       @item={{this.item}}
+                       @ladder={{this.ladder}} />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    let html = this.element.innerHTML;
+    assert.ok(html.length > 0, 'Should render something');
   });
 });
