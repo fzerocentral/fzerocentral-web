@@ -1,7 +1,6 @@
 import { helper } from '@ember/component/helper';
 
-export function findFilterOfGroup(params) {
-  let [filters, filterGroupId] = params;
+export function findFilterOfGroup([filters, filterGroupId]) {
   return filters.find((f) => {
     return f.filter_group_id.toString() === filterGroupId;
   });

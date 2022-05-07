@@ -6,8 +6,7 @@ import { helper } from '@ember/component/helper';
  * - An error string.
  * Returns an appropriate error string.
  */
-export function errorDisplay(params) {
-  let [error] = params;
+export function errorDisplay([error]) {
   if (error === null) {
     return null;
   }
