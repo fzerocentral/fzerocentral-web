@@ -130,37 +130,17 @@ module('Unit | Route | charts/site-record-history', function (hooks) {
 
     let rows = this.element.querySelectorAll('table.scoreboard tr');
     let [playerCell, valueCell, dateCell] = rows[1].querySelectorAll('td');
-    assert.equal(
-      playerCell.textContent.trim(),
-      'Player B',
-      'Player should be as expected'
-    );
-    assert.equal(
-      valueCell.textContent.trim(),
-      '70m',
-      'Value should be as expected'
-    );
-    assert.equal(
-      dateCell.textContent.trim(),
-      '2003-01-01 00:00',
-      'Date should be as expected'
-    );
+    assert.dom(playerCell).hasText('Player B', 'Player should be as expected');
+    assert.dom(valueCell).hasText('70m', 'Value should be as expected');
+    assert
+      .dom(dateCell)
+      .hasText('2003-01-01 00:00', 'Date should be as expected');
     [playerCell, valueCell, dateCell] = rows[2].querySelectorAll('td');
-    assert.equal(
-      playerCell.textContent.trim(),
-      'Player A',
-      'Player should be as expected'
-    );
-    assert.equal(
-      valueCell.textContent.trim(),
-      '60m',
-      'Value should be as expected'
-    );
-    assert.equal(
-      dateCell.textContent.trim(),
-      '2002-01-01 00:00',
-      'Date should be as expected'
-    );
+    assert.dom(playerCell).hasText('Player A', 'Player should be as expected');
+    assert.dom(valueCell).hasText('60m', 'Value should be as expected');
+    assert
+      .dom(dateCell)
+      .hasText('2002-01-01 00:00', 'Date should be as expected');
   });
 
   test('records table should have one column per shown filter group', async function (assert) {

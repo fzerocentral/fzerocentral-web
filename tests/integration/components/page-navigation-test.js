@@ -41,7 +41,7 @@ module('Integration | Component | page-navigation', function (hooks) {
         @updatePageNumber={{this.updatePageNumber}} />
     `);
 
-    assert.equal(this.element.textContent.trim(), '', 'Should render nothing');
+    assert.dom(this.element).hasText('', 'Should render nothing');
   });
 
   test('should render nothing with only one page', async function (assert) {
@@ -60,7 +60,7 @@ module('Integration | Component | page-navigation', function (hooks) {
         @updatePageNumber={{this.updatePageNumber}} />
     `);
 
-    assert.equal(this.element.textContent.trim(), '', 'Should render nothing');
+    assert.dom(this.element).hasText('', 'Should render nothing');
   });
 
   test('should render page 1 of 2 properly', async function (assert) {
@@ -87,11 +87,9 @@ module('Integration | Component | page-navigation', function (hooks) {
     );
 
     let resultsCountDiv = this.element.querySelector('div.page-results-counts');
-    assert.equal(
-      resultsCountDiv.textContent.trim(),
-      '12 results',
-      'Results count display should be correct'
-    );
+    assert
+      .dom(resultsCountDiv)
+      .hasText('12 results', 'Results count display should be correct');
   });
 
   test('should render page 2 of 2 properly', async function (assert) {
