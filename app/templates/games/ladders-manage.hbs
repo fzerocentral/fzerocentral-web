@@ -1,5 +1,5 @@
 <h1>
-  <LinkTo @route='games.show' @model={{@model.game.id}}>
+  <LinkTo @route='games.show' @model={{@model.game.shortCode}}>
     {{@model.game.name}}
   </LinkTo>
   - Manage Ladders
@@ -33,6 +33,6 @@
 
 <div class='error-message' id='ladder-delete-error'></div>
 
-<LinkTo @route='games.ladder-new' @model={{@model.game.id}}>
+<LinkTo @route='games.ladder-new' @model={{@model.game.shortCode}}>
   Create ladder
 </LinkTo>

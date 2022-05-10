@@ -8,11 +8,11 @@ export default class Router extends EmberRouter {
 
 Router.map(function () {
   this.route('games', function () {
-    this.route('show', { path: '/:game_id' });
-    this.route('chart-types', { path: '/:game_id/chart-types' });
-    this.route('filter-groups', { path: '/:game_id/filter-groups' });
-    this.route('ladder-new', { path: '/:game_id/ladder-new' });
-    this.route('ladders-manage', { path: '/:game_id/ladders-manage' });
+    this.route('show', { path: '/:game_code' });
+    this.route('chart-types', { path: '/:game_code/chart-types' });
+    this.route('filter-groups', { path: '/:game_code/filter-groups' });
+    this.route('ladder-new', { path: '/:game_code/ladder-new' });
+    this.route('ladders-manage', { path: '/:game_code/ladders-manage' });
   });
 
   this.route('charts', function () {

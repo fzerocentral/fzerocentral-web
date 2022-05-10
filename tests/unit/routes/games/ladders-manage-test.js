@@ -13,9 +13,9 @@ module('Unit | Route | games/ladders-manage', function (hooks) {
     this.server = startMirage();
     this.store = this.owner.lookup('service:store');
 
-    this.game = createModelInstance(this.server, 'game', { name: 'Game 1' });
-    this.otherGame = createModelInstance(this.server, 'game', {
-      name: 'Other Game',
+    this.game = createModelInstance(this.server, 'game', {
+      name: 'Game 1',
+      shortCode: 'g1',
     });
 
     this.mainLadder = createModelInstance(this.server, 'ladder', {
@@ -29,12 +29,6 @@ module('Unit | Route | games/ladders-manage', function (hooks) {
       kind: 'side',
       orderInGameAndKind: 1,
       name: 'Side ladder',
-    });
-    createModelInstance(this.server, 'ladder', {
-      game: this.otherGame,
-      kind: 'main',
-      orderInGameAndKind: 1,
-      name: 'Other game ladder',
     });
   });
 
@@ -50,7 +44,41 @@ module('Unit | Route | games/ladders-manage', function (hooks) {
   });
 
   test('ladders should be grouped by kind', async function (assert) {
-    await visit(`/games/${this.game.id}/ladders-manage`);
+    // 2 server.pretender, 4 after
+    assert.expect(2 + 4);
+
+    this.server.pretender.get('/ladders/', (request) => {
+      assert.equal(
+        request.queryParams.game_code,
+        this.game.shortCode,
+        'Ladders endpoint should be called with game short code param'
+      );
+
+      let ladderId;
+      let ladderName;
+      if (request.queryParams.kind === 'main') {
+        ladderId = '1';
+        ladderName = 'Main ladder';
+      } else if (request.queryParams.kind === 'side') {
+        ladderId = '2';
+        ladderName = 'Side ladder';
+      }
+
+      let body = {
+        data: [
+          {
+            type: 'ladders',
+            id: ladderId,
+            attributes: {
+              name: ladderName,
+            },
+          },
+        ],
+      };
+      return [200, {}, JSON.stringify(body)];
+    });
+
+    await visit(`/games/${this.game.shortCode}/ladders-manage`);
 
     let getLadderNameFromRow = function (row) {
       let cells = row.querySelectorAll('td');
@@ -89,7 +117,7 @@ module('Unit | Route | games/ladders-manage', function (hooks) {
     let confirmFalseStub = sinon.stub(window, 'confirm');
     confirmFalseStub.returns(true);
 
-    await visit(`/games/${this.game.id}/ladders-manage`);
+    await visit(`/games/${this.game.shortCode}/ladders-manage`);
 
     fetchMock.delete(
       { url: `path:/ladders/${this.mainLadder.id}/` },

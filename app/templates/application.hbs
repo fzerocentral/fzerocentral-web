@@ -36,22 +36,20 @@
     <div id='game-selector'>
       <img src='{{this.rootURL}}assets/images/game_selector/choose_game.gif' alt="Choose game">
       <div>
-        {{#each (array 'climax' 'gpl' 'mv' 'x' 'gx' 'snes') as |game|}}
-          {{#if (eq game 'gx')}}
-            {{! Hardcoded ID for now... ideally we'd be able to get games by a short name (like 'gx') instead of a number ID later. }}
-            <LinkTo @route='games.show' @model='1'>
-              <img
-                src='{{this.rootURL}}assets/images/game_selector/unselected_{{game}}.gif'
-                alt='{{game}}'
-              />
-            </LinkTo>
-          {{else}}
+        {{#each (array 'gx' 'mv') as |game|}}
+          <LinkTo @route='games.show' @model={{game}}>
             <img
               src='{{this.rootURL}}assets/images/game_selector/unselected_{{game}}.gif'
               alt='{{game}}'
-              class='unavailable-game'
             />
-          {{/if}}
+          </LinkTo>
+        {{/each}}
+        {{#each (array 'climax' 'gpl' 'x' 'snes') as |game|}}
+          <img
+            src='{{this.rootURL}}assets/images/game_selector/unselected_{{game}}.gif'
+            alt='{{game}}'
+            class='unavailable-game'
+          />
         {{/each}}
       </div>
     </div>

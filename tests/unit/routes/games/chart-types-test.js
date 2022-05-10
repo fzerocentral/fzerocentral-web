@@ -11,22 +11,9 @@ module('Unit | Route | games/chart-types', function (hooks) {
     this.server = startMirage();
     this.store = this.owner.lookup('service:store');
 
-    this.game = createModelInstance(this.server, 'game', { name: 'Game 1' });
-    let otherGame = createModelInstance(this.server, 'game', {
-      name: 'Other Game',
-    });
-
-    createModelInstance(this.server, 'chart-type', {
-      game: this.game,
-      name: 'Chart Type 1',
-    });
-    createModelInstance(this.server, 'chart-type', {
-      game: this.game,
-      name: 'Chart Type 2',
-    });
-    createModelInstance(this.server, 'chart-type', {
-      game: otherGame,
-      name: 'Other Chart Type',
+    this.game = createModelInstance(this.server, 'game', {
+      name: 'Game 1',
+      shortCode: 'g1',
     });
   });
 
@@ -40,11 +27,46 @@ module('Unit | Route | games/chart-types', function (hooks) {
   });
 
   test('lists chart types for the game', async function (assert) {
-    await visit(`/games/${this.game.id}/chart-types`);
+    assert.expect(3);
 
-    // Shouldn't contain the other game's chart type
-    assert.notStrictEqual(this.element.innerHTML.indexOf('Chart Type 1'), -1);
-    assert.notStrictEqual(this.element.innerHTML.indexOf('Chart Type 2'), -1);
-    assert.strictEqual(this.element.innerHTML.indexOf('Other Chart Type'), -1);
+    this.server.pretender.get('/chart_types/', (request) => {
+      assert.deepEqual(
+        request.queryParams,
+        { game_code: this.game.shortCode },
+        'Chart types endpoint should be called with expected params'
+      );
+      let body = {
+        data: [
+          {
+            type: 'chart-types',
+            id: '1',
+            attributes: {
+              name: 'Chart Type 1',
+            },
+          },
+          {
+            type: 'chart-types',
+            id: '2',
+            attributes: {
+              name: 'Chart Type 2',
+            },
+          },
+        ],
+      };
+      return [200, {}, JSON.stringify(body)];
+    });
+
+    await visit(`/games/${this.game.shortCode}/chart-types`);
+
+    assert.notStrictEqual(
+      this.element.innerHTML.indexOf('Chart Type 1'),
+      -1,
+      'Page should have Chart Type 1'
+    );
+    assert.notStrictEqual(
+      this.element.innerHTML.indexOf('Chart Type 2'),
+      -1,
+      'Page should have Chart Type 2'
+    );
   });
 });

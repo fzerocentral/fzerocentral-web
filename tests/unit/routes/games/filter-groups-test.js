@@ -73,57 +73,9 @@ module('Unit | Route | games/filter-groups', function (hooks) {
     this.server = startMirage();
     this.store = this.owner.lookup('service:store');
 
-    this.game = createModelInstance(this.server, 'game', { name: 'Game 1' });
-    this.otherGame = createModelInstance(this.server, 'game', {
-      name: 'Other',
-    });
-    this.chartType1 = createModelInstance(this.server, 'chart-type', {
-      name: 'Type 1',
-      format_spec: '[{"suffix": "m"}]',
-      order_ascending: true,
-      game: this.game,
-    });
-    this.chartType2 = createModelInstance(this.server, 'chart-type', {
-      name: 'Type 2',
-      format_spec: '[{"suffix": "pts"}]',
-      order_ascending: true,
-      game: this.game,
-    });
-    this.otherChartType = createModelInstance(this.server, 'chart-type', {
-      name: 'Other Type',
-      format_spec: '[{"suffix": "km"}]',
-      order_ascending: true,
-      game: this.otherGame,
-    });
-
-    this.filterGroupA = createModelInstance(this.server, 'filter-group', {
-      name: 'Group A',
-      kind: 'select',
-      showByDefault: true,
-      game: this.game,
-      orderInGame: 1,
-    });
-    this.filterGroupB = createModelInstance(this.server, 'filter-group', {
-      name: 'Group B',
-      kind: 'select',
-      showByDefault: true,
-      game: this.game,
-      orderInGame: 2,
-    });
-    this.filterGroupC = createModelInstance(this.server, 'filter-group', {
-      name: 'Group C',
-      kind: 'select',
-      showByDefault: false,
-      // Different game
-      game: this.otherGame,
-      orderInGame: 3,
-    });
-    this.filterGroupD = createModelInstance(this.server, 'filter-group', {
-      name: 'Group D',
-      kind: 'select',
-      showByDefault: false,
-      game: this.game,
-      orderInGame: 4,
+    this.game = createModelInstance(this.server, 'game', {
+      name: 'Game 1',
+      shortCode: 'g1',
     });
   });
 
@@ -137,23 +89,23 @@ module('Unit | Route | games/filter-groups', function (hooks) {
   });
 
   test('can be visited', async function (assert) {
-    await visit(`/games/${this.game.id}/filter-groups`);
+    await visit(`/games/${this.game.shortCode}/filter-groups`);
     assert.equal(
       currentURL(),
-      `/games/${this.game.id}/filter-groups`,
+      `/games/${this.game.shortCode}/filter-groups`,
       'URL is correct'
     );
   });
 
   test('should make the expected API request for filter groups', async function (assert) {
-    await visit(`/games/${this.game.id}/filter-groups`);
+    await visit(`/games/${this.game.shortCode}/filter-groups`);
 
     let gameFGsRequest = this.server.pretender.handledRequests.find(
       (request) => {
         let params = getURLSearchParamsHash(request.url);
         return (
           request.url.startsWith('/filter_groups/?') &&
-          Object.prototype.hasOwnProperty.call(params, 'game_id') &&
+          Object.prototype.hasOwnProperty.call(params, 'game_code') &&
           request.method === 'GET'
         );
       }
@@ -164,7 +116,7 @@ module('Unit | Route | games/filter-groups', function (hooks) {
     );
     let actualParams = getURLSearchParamsHash(gameFGsRequest.url);
     let expectedParams = {
-      game_id: this.game.id,
+      game_code: this.game.shortCode,
     };
     assert.deepEqual(
       actualParams,
@@ -174,33 +126,50 @@ module('Unit | Route | games/filter-groups', function (hooks) {
   });
 
   test('should have the correct filter group details', async function (assert) {
-    assert.expect(5 * 4 + 1);
+    assert.expect(4 * 4 + 1);
 
-    await visit(`/games/${this.game.id}/filter-groups`);
+    this.server.pretender.get('/filter_groups/', (request) => {
+      assert.deepEqual(
+        request.queryParams,
+        { game_code: this.game.shortCode },
+        'Filter groups endpoint should be called with expected params'
+      );
+      let body = {
+        data: [
+          {
+            type: 'filter-groups',
+            id: '1',
+            attributes: {
+              name: 'Group A',
+              kind: 'select',
+              'show-by-default': true,
+              'order-in-game': 1,
+            },
+          },
+          {
+            type: 'filter-groups',
+            id: '2',
+            attributes: {
+              name: 'Group B',
+              kind: 'select',
+              'show-by-default': false,
+              'order-in-game': 2,
+            },
+          },
+        ],
+      };
+      return [200, {}, JSON.stringify(body)];
+    });
+
+    await visit(`/games/${this.game.shortCode}/filter-groups`);
 
     assertTableContents(
       assert,
       this.element.querySelector('table.filter-groups'),
       [
         ['Name', 'Kind', 'Show by default on rankings?', 'Description'],
-        [
-          `<a href="/filter-groups/${this.filterGroupA.id}"> Group A </a>`,
-          'select',
-          'true',
-          '',
-        ],
-        [
-          `<a href="/filter-groups/${this.filterGroupB.id}"> Group B </a>`,
-          'select',
-          'true',
-          '',
-        ],
-        [
-          `<a href="/filter-groups/${this.filterGroupD.id}"> Group D </a>`,
-          'select',
-          'false',
-          '',
-        ],
+        [`<a href="/filter-groups/1"> Group A </a>`, 'select', 'true', ''],
+        [`<a href="/filter-groups/2"> Group B </a>`, 'select', 'false', ''],
       ]
     );
   });
