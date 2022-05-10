@@ -59,17 +59,17 @@
 
     <ul>
       <li>
-        <LinkTo @route='games.chart-types' @model={{@model.game.id}}>
+        <LinkTo @route='games.chart-types' @model={{@model.game.shortCode}}>
           Chart types admin
         </LinkTo>
       </li>
       <li>
-        <LinkTo @route='games.filter-groups' @model={{@model.game.id}}>
+        <LinkTo @route='games.filter-groups' @model={{@model.game.shortCode}}>
           Filter groups admin
         </LinkTo>
       </li>
       <li>
-        <LinkTo @route='games.ladders-manage' @model={{@model.game.id}}>
+        <LinkTo @route='games.ladders-manage' @model={{@model.game.shortCode}}>
           Ladders admin
         </LinkTo>
       </li>

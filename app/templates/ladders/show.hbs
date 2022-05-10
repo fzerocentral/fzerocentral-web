@@ -1,7 +1,7 @@
 {{page-title (concat @model.ladder.name ' ladder: Home')}}
 
 <div class='general-content-box'>
-  <LinkTo @route='games.show' @model={{@model.ladder.game.id}}>
+  <LinkTo @route='games.show' @model={{@model.ladder.game.shortCode}}>
     <h2>{{@model.ladder.game.name}}</h2>
   </LinkTo>
   <h1>{{@model.ladder.name}} Ladder</h1>
