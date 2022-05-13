@@ -6,7 +6,7 @@ import fetchMock from 'fetch-mock';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
 import { createModelInstance } from '../../../utils/models';
 
-module('Unit | Route | games/ladders-manage', function (hooks) {
+module('Unit | Route | games/ladders', function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
@@ -39,7 +39,7 @@ module('Unit | Route | games/ladders-manage', function (hooks) {
   });
 
   test('it exists', function (assert) {
-    let route = this.owner.lookup('route:games/ladders-manage');
+    let route = this.owner.lookup('route:games/ladders');
     assert.ok(route);
   });
 
@@ -78,7 +78,7 @@ module('Unit | Route | games/ladders-manage', function (hooks) {
       return [200, {}, JSON.stringify(body)];
     });
 
-    await visit(`/games/${this.game.shortCode}/ladders-manage`);
+    await visit(`/games/${this.game.shortCode}/ladders`);
 
     let getLadderNameFromRow = function (row) {
       let cells = row.querySelectorAll('td');
@@ -119,7 +119,7 @@ module('Unit | Route | games/ladders-manage', function (hooks) {
     let confirmFalseStub = sinon.stub(window, 'confirm');
     confirmFalseStub.returns(true);
 
-    await visit(`/games/${this.game.shortCode}/ladders-manage`);
+    await visit(`/games/${this.game.shortCode}/ladders`);
 
     fetchMock.delete(
       { url: `path:/ladders/${this.mainLadder.id}/` },

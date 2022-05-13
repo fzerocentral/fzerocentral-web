@@ -4,7 +4,7 @@ import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { DummyModel } from '../../utils/models';
 
-module('Integration | Component | ladders-manage-category', function (hooks) {
+module('Integration | Component | ladder-category', function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -24,7 +24,7 @@ module('Integration | Component | ladders-manage-category', function (hooks) {
   test('ladder details should render as expected', async function (assert) {
     assert.expect(4);
 
-    await render(hbs`<LaddersManageCategory
+    await render(hbs`<LadderCategory
                        @ladders={{this.ladders}}
                        @deleteLadder={{this.deleteLadder}} />`);
 

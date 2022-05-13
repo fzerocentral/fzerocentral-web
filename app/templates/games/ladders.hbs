@@ -13,7 +13,7 @@
 
   <div class='main-ladders'>
     {{#if @model.mainLadders}}
-      <LaddersManageCategory
+      <LadderCategory
         @ladders={{@model.mainLadders}}
         @deleteLadder={{this.deleteLadder}}
         @canDelete={{this.devMode}}
@@ -27,7 +27,7 @@
 
   <div class='side-ladders'>
     {{#if @model.sideLadders}}
-      <LaddersManageCategory
+      <LadderCategory
         @ladders={{@model.sideLadders}}
         @deleteLadder={{this.deleteLadder}}
         @canDelete={{this.devMode}}

@@ -3,7 +3,7 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import config from '../../config/environment';
 
-export default class GamesLaddersManageController extends Controller {
+export default class GamesLaddersController extends Controller {
   @service nonEmberDataApi;
 
   devMode = config.APP.devMode;

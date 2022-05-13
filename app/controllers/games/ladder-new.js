@@ -36,7 +36,7 @@ export default class GamesLadderNewController extends Controller {
 
         // Success.
         this.target.transitionTo(
-          'games.ladders-manage',
+          'games.ladders',
           this.model.game.shortCode
         );
       })
