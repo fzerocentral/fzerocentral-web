@@ -130,8 +130,8 @@ module('Unit | Route | games/ladder-new', function (hooks) {
     // TODO: Gets error `this is undefined` when trying to create the ladder; don't know why.
     // assert.equal(
     //   currentURL(),
-    //   `/games/${this.game.shortCode}/ladders-manage`,
-    //   'Should redirect to ladder manage page after ladder creation'
+    //   `/games/${this.game.shortCode}/ladders`,
+    //   'Should redirect to ladders page after ladder creation'
     // );
   });
 });

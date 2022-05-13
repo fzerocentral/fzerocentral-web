@@ -37,14 +37,9 @@
 
 <div>
   Added filters:
-  {{#each this.addedFilterDisplays as |addedFilterDisplay index|}}
-    <span class='applied-filter'>{{addedFilterDisplay}}</span>
-    <button
-      type='button'
-      class='applied-filter-remove-button'
-      {{on 'click' (fn this.removeFilter index)}}
-    >
-      x
-    </button>
-  {{/each}}
+  <FilterSpecDisplay
+    @filterSpec={{@appliedFiltersString}}
+    @filterObjs={{@appliedFilterObjs}}
+    @removeFilter={{this.removeFilter}}
+  />
 </div>

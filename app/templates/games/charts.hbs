@@ -1,0 +1,54 @@
+{{page-title (concat @model.game.name ' :: Charts')}}
+
+<div class='general-content-box'>
+  <h1>{{@model.game.name}} » Charts</h1>
+</div>
+
+<div class='general-content-box'>
+  <h2>Charts and chart groups</h2>
+
+  <p>These are defined in a hierarchy. Each chart has a chart type, and may have chart tag(s). If "Show charts together?" is activated for a chart group, that group can display rankings for each of its charts side by side.</p>
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>Chart group / Chart</th>
+        <th>Show charts together?</th>
+        <th>Chart type</th>
+        <th>Chart tags</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each @model.chartHierarchy as |item|}}
+        <ChartGroupDetails @item={{item}} @prefix='' />
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+<div class='general-content-box'>
+  <h2>Chart tags</h2>
+
+  <p>These are used for grouping charts together for purposes of defining total times/scores, and for defining ladder ranking formulas. The primary chart type determines how the chart tag's total is displayed and ordered (ascending or descending).</p>
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Total name</th>
+        <th>Primary chart type</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each @model.chartTags as |chartTag|}}
+        <tr>
+          <td>{{chartTag.name}}</td>
+          <td>{{chartTag.totalName}}</td>
+          <td>{{chartTag.primaryChartType.name}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

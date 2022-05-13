@@ -1,0 +1,48 @@
+<table class='data-table ladders'>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Chart group</th>
+      <th>Filter spec</th>
+      <th>Chart tags</th>
+      {{#if @canDelete}}
+        <th></th>
+      {{/if}}
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each @ladders as |ladder|}}
+      <tr>
+        <td>
+          <LinkTo @route='ladders.show' @model={{ladder.id}}>
+            {{ladder.name}}
+          </LinkTo>
+        </td>
+        <td>
+          {{ladder.chartGroup.name}}
+        </td>
+        <td>
+          <FilterSpecDisplay
+            @filterSpec={{ladder.filterSpec}}
+            @filterObjs={{@ladderFilterObjs}}
+          />
+        </td>
+        <td>
+          <ul>
+            {{#each ladder.ladderChartTags as |ladderChartTag|}}
+              <li>{{ladderChartTag.chartTag.name}}: weight = {{ladderChartTag.weight}}</li>
+            {{/each}}
+          </ul>
+        </td>
+        {{#if @canDelete}}
+          <td>
+            <button type='button' {{on 'click' (fn @deleteLadder ladder.id)}}>
+              Delete
+            </button>
+          </td>
+        {{/if}}
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

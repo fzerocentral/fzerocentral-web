@@ -128,7 +128,7 @@ module('Unit | Route | charts/site-record-history', function (hooks) {
 
     await visit(this.routeUrl);
 
-    let rows = this.element.querySelectorAll('table.scoreboard tr');
+    let rows = this.element.querySelectorAll('table.data-table tr');
     let [playerCell, valueCell, dateCell] = rows[1].querySelectorAll('td');
     assert.dom(playerCell).hasText('Player B', 'Player should be as expected');
     assert.dom(valueCell).hasText('70m', 'Value should be as expected');
@@ -146,7 +146,7 @@ module('Unit | Route | charts/site-record-history', function (hooks) {
   test('records table should have one column per shown filter group', async function (assert) {
     await visit(this.routeUrl);
 
-    let firstRow = this.element.querySelectorAll('table.scoreboard tr')[0];
+    let firstRow = this.element.querySelectorAll('table.data-table tr')[0];
     let tableColumnHeaders = Array.from(firstRow.querySelectorAll('th')).map(
       (th) => th.textContent.trim()
     );
@@ -160,7 +160,7 @@ module('Unit | Route | charts/site-record-history', function (hooks) {
     // Check
     await click('input[name="show-all-filter-groups"]');
 
-    firstRow = this.element.querySelectorAll('table.scoreboard tr')[0];
+    firstRow = this.element.querySelectorAll('table.data-table tr')[0];
     tableColumnHeaders = Array.from(firstRow.querySelectorAll('th')).map((th) =>
       th.textContent.trim()
     );
@@ -174,7 +174,7 @@ module('Unit | Route | charts/site-record-history', function (hooks) {
     // Uncheck
     await click('input[name="show-all-filter-groups"]');
 
-    firstRow = this.element.querySelectorAll('table.scoreboard tr')[0];
+    firstRow = this.element.querySelectorAll('table.data-table tr')[0];
     tableColumnHeaders = Array.from(firstRow.querySelectorAll('th')).map((th) =>
       th.textContent.trim()
     );

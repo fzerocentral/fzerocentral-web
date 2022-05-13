@@ -1,11 +1,10 @@
-{{page-title (concat @model.game.name ': Home')}}
+{{page-title (concat @model.game.name ' :: Home')}}
 
 <div class='general-content-box'>
   <h1>{{@model.game.name}}</h1>
 </div>
 
-{{! This piggybacks off the scoreboard table style for now, but this will likely change when we add more info for each ladder (leaders, active players, your times). }}
-<table class='scoreboard'>
+<table class='data-table'>
   <tbody>
     <tr>
       <th colspan='3'>Main Ladders</th>
@@ -53,26 +52,29 @@
   </tbody>
 </table>
 
-{{#if this.devMode}}
-  <div class='general-content-box'>
-    <h2>Admin</h2>
+<div class='general-content-box'>
+  <h2>Site parameters for {{@model.game.name}}</h2>
 
-    <ul>
-      <li>
-        <LinkTo @route='games.chart-types' @model={{@model.game.shortCode}}>
-          Chart types admin
-        </LinkTo>
-      </li>
-      <li>
-        <LinkTo @route='games.filter-groups' @model={{@model.game.shortCode}}>
-          Filter groups admin
-        </LinkTo>
-      </li>
-      <li>
-        <LinkTo @route='games.ladders-manage' @model={{@model.game.shortCode}}>
-          Ladders admin
-        </LinkTo>
-      </li>
-    </ul>
-  </div>
-{{/if}}
+  <ul>
+    <li>
+      <LinkTo @route='games.charts' @model={{@model.game.shortCode}}>
+        Charts
+      </LinkTo>
+    </li>
+    <li>
+      <LinkTo @route='games.chart-types' @model={{@model.game.shortCode}}>
+        Chart types
+      </LinkTo>
+    </li>
+    <li>
+      <LinkTo @route='games.filter-groups' @model={{@model.game.shortCode}}>
+        Filter groups
+      </LinkTo>
+    </li>
+    <li>
+      <LinkTo @route='games.ladders' @model={{@model.game.shortCode}}>
+        Ladders
+      </LinkTo>
+    </li>
+  </ul>
+</div>

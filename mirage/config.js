@@ -64,6 +64,10 @@ export default function () {
     return schema.chartGroups.find(request.params.id);
   });
 
+  this.get('/chart_tags', (schema /* request */) => {
+    return schema.chartTags.all();
+  });
+
   this.get('/chart_types', (schema, request) => {
     let chartTypes = schema.chartTypes.all();
 

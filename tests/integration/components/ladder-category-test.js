@@ -4,7 +4,7 @@ import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { DummyModel } from '../../utils/models';
 
-module('Integration | Component | ladders-manage-category', function (hooks) {
+module('Integration | Component | ladder-category', function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -13,19 +13,21 @@ module('Integration | Component | ladders-manage-category', function (hooks) {
     // eslint-disable-next-line ember/no-private-routing-service
     this.owner.lookup('router:main').setupRouter();
 
-    let L1 = new DummyModel({ id: '1', name: 'L1' });
-    let L2 = new DummyModel({ id: '2', name: 'L2' });
+    let L1 = new DummyModel({ id: '1', name: 'L1', filterSpec: '' });
+    let L2 = new DummyModel({ id: '2', name: 'L2', filterSpec: '' });
 
     // Set template property
     this.set('ladders', [L1, L2]);
+    this.set('ladderFilterObjs', []);
     this.set('deleteLadder', () => {});
   });
 
   test('ladder details should render as expected', async function (assert) {
     assert.expect(4);
 
-    await render(hbs`<LaddersManageCategory
+    await render(hbs`<LadderCategory
                        @ladders={{this.ladders}}
+                       @ladderFilterObjs={{this.ladderFilterObjs}}
                        @deleteLadder={{this.deleteLadder}} />`);
 
     let ladderRows = this.element.querySelectorAll(

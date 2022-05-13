@@ -8,15 +8,14 @@
 
   <div class='small-section'>
     Ladder filters:
-    {{#each this.ladderFilterDisplays as |display|}}
-      <span class='applied-filter'>{{display}}</span>
-    {{else}}
-      (None)
-    {{/each}}
+    <FilterSpecDisplay
+      @filterSpec={{@model.ladder.filterSpec}}
+      @filterObjs={{@model.ladderFilterObjs}}
+    />
   </div>
 </div>
 
-<table class='scoreboard'>
+<table class='data-table'>
   <thead>
     <tr>
       <th>Rank</th>
