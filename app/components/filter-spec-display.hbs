@@ -1,0 +1,15 @@
+{{#each this.ladderFilterDisplays as |display index|}}
+  <span class='applied-filter'>{{display}}</span>
+
+  {{#if @removeFilter}}
+    <button
+      type='button'
+      class='applied-filter-remove-button'
+      {{on 'click' (fn @removeFilter index)}}
+    >
+      x
+    </button>
+  {{/if}}
+{{else}}
+  (None)
+{{/each}}

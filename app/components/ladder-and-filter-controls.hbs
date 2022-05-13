@@ -27,11 +27,10 @@
 
   <div>
     Ladder's filters:
-    {{#each @manager.ladderFilterDisplays as |display|}}
-      <span class='applied-filter'>{{display}}</span>
-    {{else}}
-      (None)
-    {{/each}}
+    <FilterSpecDisplay
+      @filterSpec={{@manager.ladder.filterSpec}}
+      @filterObjs={{@manager.ladderFilterObjs}}
+    />
   </div>
 
   <FilterApplyForm

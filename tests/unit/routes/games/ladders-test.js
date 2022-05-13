@@ -23,12 +23,14 @@ module('Unit | Route | games/ladders', function (hooks) {
       kind: 'main',
       orderInGameAndKind: 1,
       name: 'Main ladder',
+      filterSpec: '',
     });
     createModelInstance(this.server, 'ladder', {
       game: this.game,
       kind: 'side',
       orderInGameAndKind: 1,
       name: 'Side ladder',
+      filterSpec: '',
     });
   });
 
@@ -71,6 +73,7 @@ module('Unit | Route | games/ladders', function (hooks) {
             id: ladderId,
             attributes: {
               name: ladderName,
+              'filter-spec': '',
             },
           },
         ],

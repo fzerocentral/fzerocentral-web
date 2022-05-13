@@ -6,7 +6,6 @@ import { getFormField } from '../utils/forms';
 import { FilterSelectControl } from '../utils/filter-select';
 import {
   addFilterSpecItem,
-  filterSpecStrToDisplays,
   Modifier,
   removeFilterSpecItem,
 } from '../utils/filter-specs';
@@ -108,12 +107,5 @@ export default class FilterApplyFormComponent extends Component {
   removeFilter(index) {
     let newStr = removeFilterSpecItem(this.args.appliedFiltersString, index);
     this.args.updateAppliedFiltersString(newStr);
-  }
-
-  get addedFilterDisplays() {
-    return filterSpecStrToDisplays(
-      this.args.appliedFiltersString,
-      this.args.appliedFilterObjs
-    );
   }
 }

@@ -23,7 +23,10 @@
           {{ladder.chartGroup.name}}
         </td>
         <td>
-          {{ladder.filterSpec}}
+          <FilterSpecDisplay
+            @filterSpec={{ladder.filterSpec}}
+            @filterObjs={{@ladderFilterObjs}}
+          />
         </td>
         <td>
           <ul>

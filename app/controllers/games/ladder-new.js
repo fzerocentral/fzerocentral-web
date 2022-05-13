@@ -35,10 +35,7 @@ export default class GamesLadderNewController extends Controller {
         }
 
         // Success.
-        this.target.transitionTo(
-          'games.ladders',
-          this.model.game.shortCode
-        );
+        this.target.transitionTo('games.ladders', this.model.game.shortCode);
       })
       .catch((error) => {
         setFormError(this.form, error.message);

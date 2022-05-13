@@ -13,11 +13,12 @@ module('Integration | Component | ladder-category', function (hooks) {
     // eslint-disable-next-line ember/no-private-routing-service
     this.owner.lookup('router:main').setupRouter();
 
-    let L1 = new DummyModel({ id: '1', name: 'L1' });
-    let L2 = new DummyModel({ id: '2', name: 'L2' });
+    let L1 = new DummyModel({ id: '1', name: 'L1', filterSpec: '' });
+    let L2 = new DummyModel({ id: '2', name: 'L2', filterSpec: '' });
 
     // Set template property
     this.set('ladders', [L1, L2]);
+    this.set('ladderFilterObjs', []);
     this.set('deleteLadder', () => {});
   });
 
@@ -26,6 +27,7 @@ module('Integration | Component | ladder-category', function (hooks) {
 
     await render(hbs`<LadderCategory
                        @ladders={{this.ladders}}
+                       @ladderFilterObjs={{this.ladderFilterObjs}}
                        @deleteLadder={{this.deleteLadder}} />`);
 
     let ladderRows = this.element.querySelectorAll(

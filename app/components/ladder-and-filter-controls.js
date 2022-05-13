@@ -1,7 +1,6 @@
 import { action } from '@ember/object';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { filterSpecStrToDisplays } from '../utils/filter-specs';
 
 export default class LadderAndFilterControlsComponent extends Component {
   // Show filter controls initially if there are any extra filters.
@@ -39,12 +38,5 @@ export class LadderAndFilterControlsManager {
   switchLadder(event) {
     let destinationLadderId = event.target.value;
     this.updateLadderId(destinationLadderId);
-  }
-
-  get ladderFilterDisplays() {
-    return filterSpecStrToDisplays(
-      this.ladder.filterSpec,
-      this.ladderFilterObjs
-    );
   }
 }
