@@ -1,4 +1,6 @@
-/* General */
+/*
+General
+ */
 
 * {
   margin: 0;
@@ -79,7 +81,9 @@ hr.short {
   max-width: 200px;
 }
 
-/* Site header */
+/*
+Site header
+ */
 
 div#fzc-header {
   display: flex;
@@ -131,7 +135,9 @@ div#game-selector img.unavailable-game {
   filter: saturate(0%); /* Monochrome */
 }
 
-/* Footer */
+/*
+Footer
+ */
 
 footer {
   margin-top: 100px;
@@ -150,7 +156,9 @@ footer menu div {
   text-decoration: none;
 }
 
-/* Home page */
+/*
+Home page
+ */
 
 div#home-page-column-container {
   display: flex;
@@ -204,7 +212,10 @@ div.home-page-box-body.links {
   line-height: 2em;
 }
 
-/* Chart navigation */
+/*
+Chart navigation
+ */
+
 ul.horizontal-charts-list {
   display: flex;
   list-style: none;
@@ -221,7 +232,9 @@ ul.horizontal-charts-list.inline {
   padding: 0;
 }
 
-/* Tables for data: records, rankings, etc. */
+/*
+Tables for data: records, rankings, etc.
+ */
 
 .data-table {
   margin: 10px 0;
@@ -302,6 +315,10 @@ span.non-personal-best-explainer {
   color: hsl(0, 0%, 53%);
 }
 
+/*
+Filter UI
+ */
+
 span.applied-filter {
   background-color: hsl(270, 50%, 85%);
   border-radius: 3px;
@@ -309,7 +326,9 @@ span.applied-filter {
   margin: 0 5px;
 }
 
-/* Site parameters: Charts */
+/*
+Site parameters: Charts
+ */
 
 span.chart-tag {
   border-left: 2px solid gray;
@@ -320,7 +339,9 @@ span.chart-tag:first-child {
   padding-left: 0;
 }
 
-/* Site parameters: Filter groups */
+/*
+Site parameters: Filter groups
+ */
 
 div.filter-section {
   display: flex;
