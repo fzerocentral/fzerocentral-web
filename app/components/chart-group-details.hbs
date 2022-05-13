@@ -1,0 +1,31 @@
+{{#if @item.chartGroup}}
+
+  {{! Chart group }}
+
+  <tr>
+    <td>{{concat @prefix @item.chartGroup.name}}</td>
+    <td>{{@item.chartGroup.showChartsTogether}}</td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  {{#each @item.children as |childItem|}}
+    <ChartGroupDetails @item={{childItem}} @prefix={{concat @prefix '__'}} />
+  {{/each}}
+
+{{else}}
+
+  {{! Chart }}
+
+  <tr>
+    <td>{{concat @prefix @item.chart.name}}</td>
+    <td></td>
+    <td>{{@item.chart.chartType.name}}</td>
+    <td>
+      {{#each @item.chart.chartTags as |chartTag|}}
+        <span class='chart-tag'>{{chartTag.name}}</span>
+      {{/each}}
+    </td>
+  </tr>
+
+{{/if}}

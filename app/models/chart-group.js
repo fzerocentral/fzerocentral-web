@@ -2,6 +2,7 @@ import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 
 export default class ChartGroupModel extends Model {
   @attr('string') name;
+  @attr('number') orderInParent;
   @attr('boolean') showChartsTogether;
 
   @belongsTo('game') game;

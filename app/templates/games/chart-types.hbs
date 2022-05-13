@@ -1,65 +1,79 @@
-<h1>{{@model.game.name}} - Chart types</h1>
+{{page-title (concat @model.game.name ' :: Chart types')}}
 
-{{#if @model.chartTypes}}
+<div class='general-content-box'>
+  <h1>{{@model.game.name}} » Chart types</h1>
+</div>
 
-  <table class='chart-types'>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Format spec</th>
-        <th>Order ascending?</th>
-      </tr>
-    </thead>
+<div class='general-content-box'>
+  {{#if @model.chartTypes}}
 
-    <tbody>
-      {{#each @model.chartTypes as |ct|}}
+    <h2>Chart types</h2>
+
+    <p>Each chart is assigned a chart type. The chart type's format spec determines how record times/scores are formatted. The order field determines whether the lowest or the highest time/score wins.</p>
+
+    <table class='data-table chart-types'>
+      <thead>
         <tr>
-          <td>
-            {{ct.name}}
-          </td>
-          <td>
-            {{ct.formatSpec}}
-          </td>
-          <td>
-            {{ct.orderAscending}}
-          </td>
+          <th>Name</th>
+          <th>Format spec</th>
+          <th>Order ascending?</th>
         </tr>
-      {{/each}}
-    </tbody>
-  </table>
+      </thead>
 
-  <table class='chart-type-filter-group-links'>
-    <thead>
-      <tr>
-        <th></th>
-        {{#each @model.filterGroups as |fg|}}
-          <th>
-            {{fg.name}}
-          </th>
-        {{/each}}
-      </tr>
-    </thead>
-
-    <tbody>
-      {{#each @model.chartTypes as |ct|}}
-        <tr>
-          <td>
-            {{ct.name}}
-          </td>
-          {{#each @model.filterGroups as |fg|}}
+      <tbody>
+        {{#each @model.chartTypes as |ct|}}
+          <tr>
             <td>
-              {{#if (model-in-array fg ct.filterGroups)}}
-                ●
-              {{/if}}
+              {{ct.name}}
             </td>
+            <td>
+              {{ct.formatSpec}}
+            </td>
+            <td>
+              {{ct.orderAscending}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    <h2>Chart type/filter group links</h2>
+
+    <p>This shows which filter groups apply to which chart types. This determines which filter groups will appear when viewing rankings for a chart, submitting a record for a chart, etc.</p>
+
+    <table class='data-table chart-type-filter-group-links'>
+      <thead>
+        <tr>
+          <th></th>
+          {{#each @model.filterGroups as |fg|}}
+            <th>
+              {{fg.name}}
+            </th>
           {{/each}}
         </tr>
-      {{/each}}
-    </tbody>
-  </table>
+      </thead>
 
-{{else}}
+      <tbody>
+        {{#each @model.chartTypes as |ct|}}
+          <tr>
+            <td>
+              {{ct.name}}
+            </td>
+            {{#each @model.filterGroups as |fg|}}
+              <td>
+                {{#if (model-in-array fg ct.filterGroups)}}
+                  ●
+                {{/if}}
+              </td>
+            {{/each}}
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
 
-  (No chart types yet)
+  {{else}}
 
-{{/if}}
+    (No chart types yet)
+
+  {{/if}}
+</div>

@@ -1,10 +1,13 @@
-<table class='ladders'>
+<table class='data-table ladders'>
   <thead>
     <tr>
       <th>Name</th>
-      <th>Filter spec</th>
       <th>Chart group</th>
-      <th></th>
+      <th>Filter spec</th>
+      <th>Chart tags</th>
+      {{#if @canDelete}}
+        <th></th>
+      {{/if}}
     </tr>
   </thead>
 
@@ -17,16 +20,25 @@
           </LinkTo>
         </td>
         <td>
-          {{ladder.filterSpec}}
-        </td>
-        <td>
           {{ladder.chartGroup.name}}
         </td>
         <td>
-          <button type='button' {{on 'click' (fn @deleteLadder ladder.id)}}>
-            Delete
-          </button>
+          {{ladder.filterSpec}}
         </td>
+        <td>
+          <ul>
+            {{#each ladder.ladderChartTags as |ladderChartTag|}}
+              <li>{{ladderChartTag.chartTag.name}}: weight = {{ladderChartTag.weight}}</li>
+            {{/each}}
+          </ul>
+        </td>
+        {{#if @canDelete}}
+          <td>
+            <button type='button' {{on 'click' (fn @deleteLadder ladder.id)}}>
+              Delete
+            </button>
+          </td>
+        {{/if}}
       </tr>
     {{/each}}
   </tbody>

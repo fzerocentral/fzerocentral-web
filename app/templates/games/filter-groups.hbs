@@ -1,41 +1,49 @@
-<h1>{{@model.game.name}} - Filter groups</h1>
+{{page-title (concat @model.game.name ' :: Filter groups')}}
 
-{{#if @model.filterGroups}}
+<div class='general-content-box'>
+  <h1>{{@model.game.name}} » Filter groups</h1>
+</div>
 
-  <table class='filter-groups'>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Kind</th>
-        <th>Show by default on rankings?</th>
-        <th>Description</th>
-      </tr>
-    </thead>
+<div class='general-content-box'>
+  {{#if @model.filterGroups}}
 
-    <tbody>
-      {{#each @model.filterGroups as |fg|}}
+    <p>Click a filter group's name to see details on the group's filters.</p>
+
+    <table class='data-table filter-groups'>
+      <thead>
         <tr>
-          <td>
-            <LinkTo @route='filter-groups.show' @model={{fg.id}}>
-              {{fg.name}}
-            </LinkTo>
-          </td>
-          <td>
-            {{fg.kind}}
-          </td>
-          <td>
-            {{fg.showByDefault}}
-          </td>
-          <td>
-            {{fg.description}}
-          </td>
+          <th>Name</th>
+          <th>Kind</th>
+          <th>Show by default on rankings?</th>
+          <th>Description</th>
         </tr>
-      {{/each}}
-    </tbody>
-  </table>
+      </thead>
 
-{{else}}
+      <tbody>
+        {{#each @model.filterGroups as |fg|}}
+          <tr>
+            <td>
+              <LinkTo @route='filter-groups.show' @model={{fg.id}}>
+                {{fg.name}}
+              </LinkTo>
+            </td>
+            <td>
+              {{fg.kind}}
+            </td>
+            <td>
+              {{fg.showByDefault}}
+            </td>
+            <td>
+              {{fg.description}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
 
-  (No filter groups yet)
+  {{else}}
 
-{{/if}}
+    (No filter groups yet)
+
+  {{/if}}
+</div>

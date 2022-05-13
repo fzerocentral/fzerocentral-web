@@ -1,162 +1,175 @@
-<h1>{{@model.filterGroup.name}} (filter group)</h1>
+{{page-title (concat 'Filter groups :: ' @model.filterGroup.name)}}
 
-<div>Kind: {{@model.filterGroup.kind}}</div>
+<div class='general-content-box'>
+  <h2>{{@model.filterGroup.game.name}} » Filter groups</h2>
+  <h1>{{@model.filterGroup.name}}</h1>
 
-<div>Description: {{@model.filterGroup.description}}</div>
+  <div>Kind: {{@model.filterGroup.kind}}</div>
 
-<div>
-  Used by these chart types:
-  <ul class='chart-type-list'>
-    {{#each @model.chartTypes as |chartType|}}
-      <li>
-        {{chartType.name}}
-      </li>
-    {{/each}}
-  </ul>
+  <div>Description: {{@model.filterGroup.description}}</div>
+
+  <div>
+    Used by these chart types:
+    <ul class='chart-type-list'>
+      {{#each @model.chartTypes as |chartType|}}
+        <li>
+          {{chartType.name}}
+        </li>
+      {{/each}}
+    </ul>
+  </div>
 </div>
 
-<hr />
-
-<div class='filter-section'>
-  <div class='filter-list choosable-filter-list'>
-    Choosable Filters:
-    <FilterList
-      @searchFieldId='choosable-filter-search'
-      @filters={{this.choosableFilters}}
-      @updatePageNumber={{this.updateChoosablePage}}
-      @updateSearchText={{this.updateChoosableSearchText}}
-      @updateSelectedFilterId={{this.updateSelectedFilterId}}
-    />
-  </div>
-
-  {{#if (eq @model.filterGroup.kind 'select')}}
-    <div class='filter-list implied-filter-list'>
-      Implied Filters:
+<div class='general-content-box'>
+  <div class='filter-section'>
+    <div class='filter-list choosable-filter-list'>
+      Choosable Filters:
       <FilterList
-        @searchFieldId='implied-filter-search'
-        @filters={{this.impliedFilters}}
-        @updatePageNumber={{this.updateImpliedPage}}
-        @updateSearchText={{this.updateImpliedSearchText}}
+        @searchFieldId='choosable-filter-search'
+        @filters={{this.choosableFilters}}
+        @updatePageNumber={{this.updateChoosablePage}}
+        @updateSearchText={{this.updateChoosableSearchText}}
         @updateSelectedFilterId={{this.updateSelectedFilterId}}
       />
     </div>
-  {{/if}}
 
-  <div class='filter-detail-section'>
-    {{#if this.selectedFilterId}}
-      {{#let this.selectedFilter as |filter|}}
+    {{#if (eq @model.filterGroup.kind 'select')}}
+      <div class='filter-list implied-filter-list'>
+        Implied Filters:
+        <FilterList
+          @searchFieldId='implied-filter-search'
+          @filters={{this.impliedFilters}}
+          @updatePageNumber={{this.updateImpliedPage}}
+          @updateSearchText={{this.updateImpliedSearchText}}
+          @updateSelectedFilterId={{this.updateSelectedFilterId}}
+        />
+      </div>
+    {{/if}}
 
-        <div class='filter-basic-fields'>
-          <h2>{{filter.name}}</h2>
-          {{#if (eq filter.filterGroup.kind 'select')}}
-            <div>
-              Type:
-              {{filter.usageType}}
-            </div>
-          {{/if}}
-          {{#if (eq filter.filterGroup.kind 'numeric')}}
-            <div>
-              Numeric value:
-              {{filter.numericValue}}
-            </div>
-          {{/if}}
+    <div class='filter-detail-section'>
+      {{#if this.selectedFilterId}}
+        {{#let this.selectedFilter as |filter|}}
 
-          <div>
-            <LinkTo @route='filters.edit' @model={{filter.id}}>Edit details</LinkTo>
+          <div class='filter-basic-fields'>
+            <h2>{{filter.name}}</h2>
+            {{#if (eq filter.filterGroup.kind 'select')}}
+              <div>
+                Type:
+                {{filter.usageType}}
+              </div>
+            {{/if}}
+            {{#if (eq filter.filterGroup.kind 'numeric')}}
+              <div>
+                Numeric value:
+                {{filter.numericValue}}
+              </div>
+            {{/if}}
+
+            {{#if this.devMode}}
+              <div>
+                <LinkTo @route='filters.edit' @model={{filter.id}}>Edit details</LinkTo>
+              </div>
+            {{/if}}
           </div>
-        </div>
-
-        {{#if (eq filter.usageType 'choosable')}}
-          <div class='record-count'>Used by {{this.recordCount}} records</div>
-        {{else}}
-          <div class='record-count'>Applies to
-            {{this.recordCount}}
-            records</div>
-        {{/if}}
-
-        <div class='error-message' id='filter-delete-error'></div>
-        <div>
-          <button type='button' {{on 'click' this.deleteFilter}}>
-            Delete this filter
-          </button>
-        </div>
-
-        {{#if (eq filter.filterGroup.kind 'select')}}
-          <hr />
-
-          {{#if (eq filter.usageType 'implied')}}
-            <div class='implications-list'>
-              <h3>Implied by</h3>
-
-              {{#if (eq this.implications.length 0)}}
-                (None)
-              {{else}}
-                {{#each this.implications as |implyingFilter|}}
-                  <button
-                    type='button'
-                    class='show-filter-detail-button'
-                    {{on 'click' (fn this.updateSelectedFilterId implyingFilter.id)}}
-                  >
-                    {{implyingFilter.name}}
-                  </button>
-                {{/each}}
-                <PageNavigation
-                  @pageResults={{this.implications}}
-                  @pageNumber={{this.implicationsPage}}
-                  @updatePageNumber={{this.updateImplicationsPage}}
-                />
-              {{/if}}
-            </div>
-          {{/if}}
 
           {{#if (eq filter.usageType 'choosable')}}
-            <div class='implications-list'>
-              <h3>Implies</h3>
+            <div class='record-count'>Used by {{this.recordCount}} records</div>
+          {{else}}
+            <div class='record-count'>Applies to
+              {{this.recordCount}}
+              records</div>
+          {{/if}}
 
-              {{#if (eq this.implications.length 0)}}
-                (None)
-              {{else}}
-                {{#each this.implications as |impliedFilter|}}
-                  <button
-                    type='button'
-                    class='show-filter-detail-button'
-                    {{on 'click' (fn this.updateSelectedFilterId impliedFilter.id)}}
-                  >
-                    {{impliedFilter.name}}
-                  </button>
-                {{/each}}
-                <PageNavigation
-                  @pageResults={{this.implications}}
-                  @pageNumber={{this.implicationsPage}}
-                  @updatePageNumber={{this.updateImplicationsPage}}
-                />
-              {{/if}}
-            </div>
-
+          {{#if this.devMode}}
+            <div class='error-message' id='filter-delete-error'></div>
             <div>
-              <LinkTo @route='filters.add-implication' @model={{filter.id}}>Add
-                an outgoing implication</LinkTo>
-            </div>
-
-            <div>
-              <LinkTo
-                @route='filters.delete-implication'
-                @model={{filter.id}}
-              >Delete an outgoing implication</LinkTo>
+              <button type='button' {{on 'click' this.deleteFilter}}>
+                Delete this filter
+              </button>
             </div>
           {{/if}}
 
-        {{/if}}
-        {{! filterGroup.kind == select }}
+          {{#if (eq filter.filterGroup.kind 'select')}}
+            <hr />
 
-      {{/let}}
-    {{/if}}
+            {{#if (eq filter.usageType 'implied')}}
+              <div class='implications-list'>
+                <h3>Implied by</h3>
+
+                {{#if (eq this.implications.length 0)}}
+                  (None)
+                {{else}}
+                  {{#each this.implications as |implyingFilter|}}
+                    <button
+                      type='button'
+                      class='show-filter-detail-button'
+                      {{on 'click' (fn this.updateSelectedFilterId implyingFilter.id)}}
+                    >
+                      {{implyingFilter.name}}
+                    </button>
+                  {{/each}}
+                  <PageNavigation
+                    @pageResults={{this.implications}}
+                    @pageNumber={{this.implicationsPage}}
+                    @updatePageNumber={{this.updateImplicationsPage}}
+                  />
+                {{/if}}
+              </div>
+            {{/if}}
+
+            {{#if (eq filter.usageType 'choosable')}}
+              <div class='implications-list'>
+                <h3>Implies</h3>
+
+                {{#if (eq this.implications.length 0)}}
+                  (None)
+                {{else}}
+                  {{#each this.implications as |impliedFilter|}}
+                    <button
+                      type='button'
+                      class='show-filter-detail-button'
+                      {{on 'click' (fn this.updateSelectedFilterId impliedFilter.id)}}
+                    >
+                      {{impliedFilter.name}}
+                    </button>
+                  {{/each}}
+                  <PageNavigation
+                    @pageResults={{this.implications}}
+                    @pageNumber={{this.implicationsPage}}
+                    @updatePageNumber={{this.updateImplicationsPage}}
+                  />
+                {{/if}}
+              </div>
+
+              {{#if this.devMode}}
+                <div>
+                  <LinkTo @route='filters.add-implication' @model={{filter.id}}>Add
+                    an outgoing implication</LinkTo>
+                </div>
+
+                <div>
+                  <LinkTo
+                    @route='filters.delete-implication'
+                    @model={{filter.id}}
+                  >Delete an outgoing implication</LinkTo>
+                </div>
+              {{/if}}
+            {{/if}}
+
+          {{/if}}
+          {{! filterGroup.kind == select }}
+
+        {{/let}}
+      {{/if}}
+    </div>
   </div>
+
+  {{#if this.devMode}}
+    <div class='general-content-box'>
+      <LinkTo
+        @route='filter-groups.filter-new'
+        @model={{@model.filterGroup.id}}
+      >Create new filter</LinkTo>
+    </div>
+  {{/if}}
 </div>
-
-<hr />
-
-<LinkTo
-  @route='filter-groups.filter-new'
-  @model={{@model.filterGroup.id}}
->Create new filter</LinkTo>

@@ -36,6 +36,7 @@ export default class ChartsShowRoute extends Route {
 
       ladderCharts: this.store.query('chart', {
         ladder_id: params.ladderId,
+        fields: 'name,chart_group',
         // Include some chart group details to avoid extra queries.
         include: 'chart_group',
         'page[size]': 1000,

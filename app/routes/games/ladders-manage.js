@@ -9,14 +9,20 @@ export default class GamesLaddersRoute extends Route {
 
   model(params) {
     return RSVP.hash({
+      chartTags: this.store.query('chart-tag', {
+        game_code: params.game_code,
+        fields: 'id,name',
+      }),
       game: getGameByShortCode(this.store, params.game_code),
       mainLadders: this.store.query('ladder', {
         game_code: params.game_code,
         kind: 'main',
+        include: 'chart_group,ladder_chart_tags',
       }),
       sideLadders: this.store.query('ladder', {
         game_code: params.game_code,
         kind: 'side',
+        include: 'chart_group,ladder_chart_tags',
       }),
     });
   }

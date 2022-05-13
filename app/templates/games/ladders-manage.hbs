@@ -1,38 +1,47 @@
-<h1>
-  <LinkTo @route='games.show' @model={{@model.game.shortCode}}>
-    {{@model.game.name}}
-  </LinkTo>
-  - Manage Ladders
-</h1>
+{{page-title (concat @model.game.name ' :: Ladders')}}
 
-<h2>Main ladders</h2>
-
-<div class='main-ladders'>
-  {{#if @model.mainLadders}}
-    <LaddersManageCategory
-      @ladders={{@model.mainLadders}}
-      @deleteLadder={{this.deleteLadder}}
-    />
-  {{else}}
-    (No main ladders)
-  {{/if}}
+<div class='general-content-box'>
+  <h1>{{@model.game.name}} » Ladders</h1>
 </div>
 
-<h2>Side ladders</h2>
+<div class='general-content-box'>
+  <p>A ladder is a way of defining rankings for a chart group.</p>
 
-<div class='side-ladders'>
-  {{#if @model.sideLadders}}
-    <LaddersManageCategory
-      @ladders={{@model.sideLadders}}
-      @deleteLadder={{this.deleteLadder}}
-    />
-  {{else}}
-    (No side ladders)
+  <p>The chart tags field determines two things. First, it determines which totals columns are shown on the ladder's ranking page. Second, it defines how each chart is weighted in the ladder's AF and SRPR calculations. Weights range from 0 (no weight) to 1 (highest possible weight).</p>
+
+  <h2>Main ladders</h2>
+
+  <div class='main-ladders'>
+    {{#if @model.mainLadders}}
+      <LaddersManageCategory
+        @ladders={{@model.mainLadders}}
+        @deleteLadder={{this.deleteLadder}}
+        @canDelete={{this.devMode}}
+      />
+    {{else}}
+      (No main ladders)
+    {{/if}}
+  </div>
+
+  <h2>Side ladders</h2>
+
+  <div class='side-ladders'>
+    {{#if @model.sideLadders}}
+      <LaddersManageCategory
+        @ladders={{@model.sideLadders}}
+        @deleteLadder={{this.deleteLadder}}
+        @canDelete={{this.devMode}}
+      />
+    {{else}}
+      (No side ladders)
+    {{/if}}
+  </div>
+
+  <div class='error-message' id='ladder-delete-error'></div>
+
+  {{#if this.devMode}}
+    <LinkTo @route='games.ladder-new' @model={{@model.game.shortCode}}>
+      Create ladder
+    </LinkTo>
   {{/if}}
 </div>
-
-<div class='error-message' id='ladder-delete-error'></div>
-
-<LinkTo @route='games.ladder-new' @model={{@model.game.shortCode}}>
-  Create ladder
-</LinkTo>

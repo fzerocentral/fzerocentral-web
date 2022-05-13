@@ -12,7 +12,9 @@ export default class FilterGroupsShowRoute extends Route {
       }),
       filterGroup: this.store.findRecord(
         'filter-group',
-        params.filter_group_id
+        params.filter_group_id,
+        // Include game details to avoid extra queries.
+        { include: 'game' }
       ),
     });
   }
