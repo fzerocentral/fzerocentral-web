@@ -1,102 +1,54 @@
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { getFormField } from './forms';
 
 /* For some reason, it felt easier to write component-related functionality
  in a separate class from the component itself. */
 export class FilterSelectControl {
-  @tracked searchEnabled;
+  @tracked options = [];
+  @tracked searchEnabled = false;
+  @tracked searchTerm = '';
+  @tracked selectedFilterId = null;
 
   constructor(
-    formId,
     baseFieldName,
     getOptions,
     { hasEmptyOption = false, initialFilter = null } = {}
   ) {
-    this.formId = formId;
     this.baseFieldName = baseFieldName;
     this.getOptions = getOptions;
     this.hasEmptyOption = hasEmptyOption;
     this.initialFilter = initialFilter;
-
-    this.searchEnabled = false;
-  }
-
-  get form() {
-    return document.getElementById(this.formId);
-  }
-  get hiddenField() {
-    return getFormField(this.form, `${this.baseFieldName}-hidden`);
-  }
-  get selectField() {
-    return getFormField(this.form, `${this.baseFieldName}-select`);
-  }
-  get mainField() {
-    if (this.searchEnabled) {
-      return this.hiddenField;
-    } else {
-      return this.selectField;
-    }
-  }
-  get textField() {
-    return getFormField(this.form, `${this.baseFieldName}-text`);
-  }
-  get selectedFilterId() {
-    return this.mainField.value;
-  }
-
-  /**
-   * Gets the filter options as an Ember-Data Promise. Implemented function
-   * should be passed into this class's constructor.
-   * @param {string} searchText
-   * @returns {Promise}
-   */
-  getOptions() {
-    // eslint-disable-line no-unused-vars
-    throw 'Not implemented';
   }
 
   updateOptions() {
-    let searchText = '';
-    if (this.searchEnabled) {
-      searchText = this.textField.value;
-    }
-
-    let getOptionsPromise = this.getOptions(searchText);
+    let getOptionsPromise = this.getOptions(this.searchTerm);
 
     return getOptionsPromise.then((filters) => {
-      // Update DOM (sorry, Ember purists)
+      let options = [];
 
-      // Fill the datalist options, for the searchEnabled case
-      let datalist = this.textField.list;
-      datalist.replaceChildren();
-      filters.forEach((filter) => {
-        let option = document.createElement('option');
-        option.setAttribute('value', filter.name);
-        datalist.appendChild(option);
-      });
-
-      // Fill the select options, for the non-search case
-      let select = this.selectField;
-      select.replaceChildren();
-      if (this.hasEmptyOption) {
-        let option = document.createElement('option');
-        option.setAttribute('value', '');
-        option.textContent = '-----';
-        select.appendChild(option);
+      if (!this.searchEnabled && this.hasEmptyOption) {
+        options.push({ value: '', display: '-----' });
       }
+
       filters.forEach((filter) => {
-        let option = document.createElement('option');
-        option.setAttribute('value', filter.id);
-        option.textContent = filter.name;
-        select.appendChild(option);
+        options.push({ value: filter.id, display: filter.name });
       });
+
+      this.options = options;
 
       return filters;
     });
   }
 
   initializeOptions() {
+    if (this.initialFilter) {
+      this.searchTerm = this.initialFilter.name;
+      this.selectedFilterId = this.initialFilter.id;
+    } else {
+      this.searchTerm = '';
+      this.selectedFilterId = null;
+    }
+
     return this.updateOptions().then((filters) => {
       // Set searchEnabled based on number of filters available.
       if (filters.meta) {
@@ -104,46 +56,32 @@ export class FilterSelectControl {
       } else {
         this.searchEnabled = false;
       }
-      // Set the initial value (defaults to null or undefined).
-      this.setFilter(this.initialFilter);
     });
   }
 
   @action
-  onTextInput() {
+  onSelect(event) {
+    this.selectedFilterId = event.target.value;
+  }
+
+  @action
+  onSearchInput(event) {
+    this.searchTerm = event.target.value;
+
     // Update options, then update the hidden field value
     this.updateOptions().then((filters) => {
       // Look through the filter options to find a filter with a name that
-      // matches the text field.
+      // matches the search field.
       let matchingFilter = filters.find(
-        (filter) => filter.name === this.textField.value
+        (filter) => filter.name === this.searchTerm
       );
 
       if (matchingFilter) {
         // Assign that matching filter's ID to the real (hidden) field.
-        this.mainField.value = matchingFilter.id;
+        this.selectedFilterId = matchingFilter.id;
       } else {
-        this.mainField.value = null;
+        this.selectedFilterId = null;
       }
     });
-  }
-
-  setFilter(filter) {
-    if (!filter) {
-      this.clearFilter();
-      return;
-    }
-
-    if (this.searchEnabled) {
-      this.textField.value = filter.name;
-    }
-    this.mainField.value = filter.id;
-  }
-
-  clearFilter() {
-    if (this.searchEnabled) {
-      this.textField.value = '';
-    }
-    this.mainField.value = '';
   }
 }

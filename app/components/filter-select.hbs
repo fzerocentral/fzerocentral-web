@@ -1,42 +1,49 @@
 {{#let @controlInstance.baseFieldName as |baseFieldName|}}
 
-  {{! Search-enabled version }}
-  <span hidden={{unless @controlInstance.searchEnabled 'hidden'}}>
+  {{#if @controlInstance.searchEnabled}}
+
+    {{! Search-enabled version }}
 
     {{! Some usages will pass label, some will pass ariaLabelledBy }}
     {{#if @label}}
-      <label for='{{@baseFieldId}}-text'>{{@label}}</label>
+      <label for='{{baseFieldName}}-search'>{{@label}}</label>
     {{/if}}
     <input
       type='text'
-      list='{{@baseFieldId}}-datalist'
-      name='{{baseFieldName}}-text'
-      id='{{@baseFieldId}}-text'
+      list='{{baseFieldName}}-datalist'
+      id='{{baseFieldName}}-search'
       aria-labelledby={{@ariaLabelledBy}}
       placeholder='Enter text to search'
-      {{on 'input' @controlInstance.onTextInput}}
+      {{on 'input' @controlInstance.onSearchInput}}
+      {{! When searchTerm is set, update the element value }}
+      {{prop value=@controlInstance.searchTerm}}
     />
-    <datalist id='{{@baseFieldId}}-datalist'></datalist>
-    <input
-      type='hidden'
-      name='{{baseFieldName}}-hidden'
-      id='{{@baseFieldId}}-hidden'
-    />
+    <datalist id='{{baseFieldName}}-datalist'>
+      {{! Don't use |option| here: https://github.com/emberjs/ember.js/issues/19334 }}
+      {{#each @controlInstance.options as |opt|}}
+        <option value={{opt.display}} />
+      {{/each}}
+    </datalist>
 
-  </span>
+  {{else}}
 
-  {{! Plain dropdown version }}
-  <span hidden={{if @controlInstance.searchEnabled 'hidden'}}>
+    {{! Plain dropdown version }}
 
     {{#if @label}}
-      <label for='{{@baseFieldId}}-select'>{{@label}}</label>
+      <label for='{{baseFieldName}}-select'>{{@label}}</label>
     {{/if}}
     <select
-      name='{{baseFieldName}}-select'
-      id='{{@baseFieldId}}-select'
+      id='{{baseFieldName}}-select'
       aria-labelledby={{@ariaLabelledBy}}
-    ></select>
+      {{on 'input' @controlInstance.onSelect}}
+      {{! When selectedFilterId is set, update the element value }}
+      {{prop value=@controlInstance.selectedFilterId}}
+    >
+      {{#each @controlInstance.options as |opt|}}
+        <option value={{opt.value}}> {{opt.display}} </option>
+      {{/each}}
+    </select>
 
-  </span>
+  {{/if}}
 
 {{/let}}

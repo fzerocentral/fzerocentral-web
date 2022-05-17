@@ -21,7 +21,7 @@ module('Integration | Component | filter-select', function (hooks) {
     }
     this.set(
       'controlInstance',
-      new FilterSelectControl('test-form', 'filter', getFilterOptions)
+      new FilterSelectControl('filter', getFilterOptions)
     );
   });
 
@@ -31,7 +31,6 @@ module('Integration | Component | filter-select', function (hooks) {
     await render(hbs`
       <form id='test-form'>
         <FilterSelect
-          @baseFieldId='filter'
           @label='G'
           @controlInstance={{this.controlInstance}} />
       </form>
@@ -54,7 +53,6 @@ module('Integration | Component | filter-select', function (hooks) {
     await render(hbs`
       <form id='test-form'>
         <FilterSelect
-          @baseFieldId='filter'
           @label='G'
           @controlInstance={{this.controlInstance}} />
       </form>

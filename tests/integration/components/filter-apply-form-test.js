@@ -14,7 +14,7 @@ function getModifierSelect(rootElement) {
 }
 
 function getFilterSelect(rootElement) {
-  return rootElement.querySelector('select[name="filter-select"]');
+  return rootElement.querySelector('#filter-select');
 }
 
 module('Integration | Component | filter-apply-form', function (hooks) {

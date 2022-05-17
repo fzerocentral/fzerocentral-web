@@ -17,7 +17,6 @@ export default class FiltersAddImplicationController extends Controller {
     super(...args);
 
     this.filterSelect = new FilterSelectControl(
-      this.formId,
       'filter',
       this.getTargetOptions
     );

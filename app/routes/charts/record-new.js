@@ -31,7 +31,6 @@ export default class ChartsRecordNewRoute extends Route {
       }
 
       let filterSelect = new FilterSelectControl(
-        controller.formId,
         `filter-${filterGroup.id}`,
         // Partial-apply filterGroup.id to this action method.
         controller.getFilterOptionsForGroup.bind(null, filterGroup.id),
