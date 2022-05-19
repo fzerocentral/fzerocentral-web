@@ -14,9 +14,6 @@ ember-cli-mirage
 Mock API server for testing.
 https://www.ember-cli-mirage.com/docs/getting-started/upgrade-guide
 
-ember-cli-tutorial-style
-Styling for the official Ember-CLI tutorial.
-
 ember-sinon-qunit
 ember-window-mock
 Testing window.confirm() functionality and similar.

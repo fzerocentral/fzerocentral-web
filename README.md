@@ -2,8 +2,6 @@
 
 Website frontend for the (upcoming) F-Zero Central website. Uses Ember.js.
 
-This project used the [ember-cli 3.1.0 tutorial](https://guides.emberjs.com/v3.1.0/tutorial/ember-cli/) as a starting point.
-
 ## Prerequisites
 
 You will need the following things properly installed on your computer.

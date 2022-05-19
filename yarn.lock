@@ -6412,13 +6412,6 @@ ember-cli-test-loader@^3.0.0:
   dependencies:
     ember-cli-babel "^7.13.2"
 
-ember-cli-tutorial-style@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/ember-cli-tutorial-style/-/ember-cli-tutorial-style-3.1.0.tgz#744cb854021d657afac83cc4d44e6e024a18fb15"
-  integrity sha512-+pq8okBwuYS1EIh20u+2yZroFa3MjnqxZXcK1qN4MWD/3QhDt1RBh53Y6KoGqI/5H4Y+UUpbKMoi1/LN2bW/kQ==
-  dependencies:
-    ember-cli-babel "^6.6.0"
-
 ember-cli-typescript@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/ember-cli-typescript/-/ember-cli-typescript-3.0.0.tgz#3b838d1ce9e4d22a98e68da22ceac6dc0cfd9bfc"
