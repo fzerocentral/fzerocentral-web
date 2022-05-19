@@ -10,17 +10,17 @@ export default class ChartsTopRecordHistoryRoute extends Route {
 
   queryParams = {
     // Re-run the model hook if these query params change.
-    appliedFiltersString: { refreshModel: true },
+    extraFiltersString: { refreshModel: true },
     ladderId: { refreshModel: true },
   };
 
   model(params) {
-    let items = filterSpecStrToItems(params.appliedFiltersString);
-    let appliedFilterIds = items.map((item) => item.filterId);
+    let items = filterSpecStrToItems(params.extraFiltersString);
+    let extraFilterIds = items.map((item) => item.filterId);
 
     return RSVP.hash({
-      appliedFilterObjs: this.store.query('filter', {
-        filter_ids: appliedFilterIds.join(','),
+      extraFilterObjs: this.store.query('filter', {
+        filter_ids: extraFilterIds.join(','),
       }),
       chart: this.store.findRecord('chart', params.chart_id),
       chartLadders: this.store.query('ladder', { chart_id: params.chart_id }),
@@ -35,7 +35,7 @@ export default class ChartsTopRecordHistoryRoute extends Route {
       records: this.nonEmberDataApi.getChartTopRecordHistory(
         params.chart_id,
         params.ladderId,
-        params.appliedFiltersString
+        params.extraFiltersString
       ),
     });
   }
@@ -51,8 +51,8 @@ export default class ChartsTopRecordHistoryRoute extends Route {
       resolvedModel.chartLadders,
       controller.updateLadderId,
       resolvedModel.filterGroups,
-      resolvedModel.appliedFilterObjs,
-      controller.updateAppliedFiltersString
+      resolvedModel.extraFilterObjs,
+      controller.updateExtraFiltersString
     );
   }
 }

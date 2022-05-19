@@ -3,9 +3,9 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 export default class ChartsTopRecordHistoryController extends Controller {
-  queryParams = ['ladderId', { appliedFiltersString: 'filters' }];
+  queryParams = ['ladderId', { extraFiltersString: 'filters' }];
   @tracked ladderId = null;
-  @tracked appliedFiltersString = null;
+  @tracked extraFiltersString = null;
 
   @tracked ladderAndFilterControls;
   @tracked showAllFilterGroups = false;
@@ -26,7 +26,7 @@ export default class ChartsTopRecordHistoryController extends Controller {
   get chartLinkQueryParams() {
     return {
       ladderId: this.ladderId,
-      filters: this.appliedFiltersString,
+      filters: this.extraFiltersString,
     };
   }
 
@@ -36,7 +36,7 @@ export default class ChartsTopRecordHistoryController extends Controller {
   }
 
   @action
-  updateAppliedFiltersString(newString) {
-    this.appliedFiltersString = newString;
+  updateExtraFiltersString(newString) {
+    this.extraFiltersString = newString;
   }
 }

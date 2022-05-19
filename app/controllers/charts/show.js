@@ -8,13 +8,13 @@ import { getFormValue } from '../../utils/forms';
 export default class ChartsShowController extends Controller {
   queryParams = [
     'ladderId',
-    // On the Ember side this is `appliedFiltersString`; going out to the API
+    // On the Ember side this is `extraFiltersString`; going out to the API
     // side we'll use `filters`.
-    { appliedFiltersString: 'filters' },
+    { extraFiltersString: 'filters' },
     { columnOption: 'columns' },
   ];
   @tracked ladderId = null;
-  @tracked appliedFiltersString = null;
+  @tracked extraFiltersString = null;
   @tracked columnOption = 'filter-groups';
 
   @service router;
@@ -56,14 +56,14 @@ export default class ChartsShowController extends Controller {
   get chartLinkQueryParams() {
     return {
       ladderId: this.ladderId,
-      filters: this.appliedFiltersString,
+      filters: this.extraFiltersString,
       columns: this.columnOption,
     };
   }
   get historyLinkQueryParams() {
     return {
       ladderId: this.ladderId,
-      filters: this.appliedFiltersString,
+      filters: this.extraFiltersString,
     };
   }
 
@@ -90,7 +90,7 @@ export default class ChartsShowController extends Controller {
   }
 
   @action
-  updateAppliedFiltersString(newString) {
-    this.appliedFiltersString = newString;
+  updateExtraFiltersString(newString) {
+    this.extraFiltersString = newString;
   }
 }

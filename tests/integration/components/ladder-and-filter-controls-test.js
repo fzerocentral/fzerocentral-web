@@ -9,7 +9,7 @@ module(moduleName, function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.set('appliedFiltersString', null);
+    this.set('extraFiltersString', null);
     this.set(
       'manager',
       new LadderAndFilterControlsManager(
@@ -28,7 +28,7 @@ module(moduleName, function (hooks) {
   test('should render', async function (assert) {
     await render(hbs`
       <LadderAndFilterControls
-        @extraFiltersString={{this.appliedFiltersString}}
+        @extraFiltersString={{this.extraFiltersString}}
         @manager={{this.manager}} />`);
 
     let html = this.element.innerHTML;
