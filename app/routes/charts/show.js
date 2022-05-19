@@ -124,7 +124,7 @@ export default class ChartsShowRoute extends Route {
       controller.chartNavigationChoices = ladderCharts.map((chart) => {
         return {
           chart: chart,
-          display: `${chart.chartGroup.get('name')} - ${chart.name}`,
+          display: `${chart.chartGroup.get('name')} » ${chart.name}`,
         };
       });
       if (currentChartIndex > 0) {
