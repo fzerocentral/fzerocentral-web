@@ -127,12 +127,14 @@
           </BasicLink>
         {{/if}}
 
-        <select name='chart' id='chart-select' {{on 'change' this.goToChart}}>
+        <select
+          name='chart'
+          id='chart-select'
+          {{on 'change' this.goToChart}}
+          {{prop value=@model.chart.id}}
+        >
           {{#each this.chartNavigationChoices as |navChoice|}}
-            <option
-              value='{{navChoice.chart.id}}'
-              selected={{if (eq navChoice.chart.id @model.chart.id) 'selected'}}
-            >
+            <option value='{{navChoice.chart.id}}'>
               {{navChoice.display}}
             </option>
           {{/each}}
