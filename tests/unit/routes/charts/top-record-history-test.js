@@ -5,7 +5,7 @@ import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
 import { click, visit } from '@ember/test-helpers';
 import { createModelInstance } from '../../../utils/models';
 
-module('Unit | Route | charts/site-record-history', function (hooks) {
+module('Unit | Route | charts/top-record-history', function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
@@ -63,7 +63,7 @@ module('Unit | Route | charts/site-record-history', function (hooks) {
       'page[size]': '100',
     };
     this.routeUrl = this.router.urlFor(
-      'charts.site-record-history',
+      'charts.top-record-history',
       this.chart.id,
       {
         queryParams: { ladderId: this.ladder.id },
@@ -78,7 +78,7 @@ module('Unit | Route | charts/site-record-history', function (hooks) {
   });
 
   test('it exists', function (assert) {
-    let route = this.owner.lookup('route:charts/site-record-history');
+    let route = this.owner.lookup('route:charts/top-record-history');
     assert.ok(route);
   });
 
