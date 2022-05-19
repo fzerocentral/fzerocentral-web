@@ -10,7 +10,7 @@ export default class ChartsRecordNewController extends Controller {
 
   @tracked model;
 
-  @tracked dateAchieved;
+  @tracked dateAchieved = null;
   @tracked filterSelects = {};
   formId = 'record-form';
 

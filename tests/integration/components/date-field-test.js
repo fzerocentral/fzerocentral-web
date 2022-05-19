@@ -24,7 +24,7 @@ module('Integration | Component | date-field', function (hooks) {
     await render(
       hbs`<DateField
             @fieldId='date-achieved'
-            @initialDateValue={{this.dateValue}} />`
+            @dateValue={{this.dateValue}} />`
     );
 
     let dateDisplay = this.element.textContent.trim();
@@ -37,11 +37,12 @@ module('Integration | Component | date-field', function (hooks) {
 
   test('filling the field should update the date display', async function (assert) {
     this.set('updateDateValue', (value) => {
-      this.dateValue = value;
+      this.set('dateValue', value);
     });
     await render(
       hbs`<DateField
             @fieldId='date-achieved'
+            @dateValue={{this.dateValue}}
             @updateDateValue={{this.updateDateValue}} />`
     );
 
@@ -53,7 +54,7 @@ module('Integration | Component | date-field', function (hooks) {
     assert.ok(
       // Exact display depends on client timezone.
       dateDisplay.startsWith('2003-07-2'),
-      'Should show an initial value (not checking exact display)'
+      'Should show an updated value (not checking exact display)'
     );
   });
 });

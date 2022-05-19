@@ -57,7 +57,7 @@
             {{record.value_display}}
           {{/if}}
         </td>
-        <td>{{moment-format record.date_achieved 'YYYY-MM-DD HH:mm'}}</td>
+        <td>{{date-display record.date_achieved 'datetime'}}</td>
 
         {{#each this.shownFilterGroups as |filterGroup|}}
           <td>

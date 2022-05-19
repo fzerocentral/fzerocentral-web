@@ -6,25 +6,16 @@ devDependencies
 
 The focus here is on packages that aren't in a default Ember-CLI app. Default packages can be seen here: https://github.com/ember-cli/ember-new-output/blob/master/package.json
 
+dayjs
+Date/time library.
+https://github.com/iamkun/dayjs/blob/dev/CHANGELOG.md
+
 ember-cli-mirage
 Mock API server for testing.
 https://www.ember-cli-mirage.com/docs/getting-started/upgrade-guide
 
 ember-cli-tutorial-style
 Styling for the official Ember-CLI tutorial.
-
-ember-moment
-ember-cli-moment-shim
-moment
-Date/time library.
-https://github.com/stefanpenner/ember-moment/blob/master/CHANGELOG.md
-https://github.com/jasonmit/ember-cli-moment-shim/releases
-https://github.com/moment/moment/blob/develop/CHANGELOG.md
-
-ember-page-title
-Set <title> content for each individual route, via a {{page-title}} template helper. Officially recommended, as seen here:
-https://guides.emberjs.com/v4.3.0/accessibility/page-template-considerations/
-https://github.com/ember-cli/ember-page-title/blob/master/addon/CHANGELOG.md
 
 ember-sinon-qunit
 ember-window-mock
@@ -40,10 +31,3 @@ Without this, Handlebars doesn't give a way to use boolean logic in templates ot
 engines
 
 ember-cli-update should take care of updating this.
-
-
-
-resolutions
-
-whatwg-fetch: See https://github.com/ember-cli/ember-fetch/issues/547
-This line can probably be removed once ember is updated to a version that has ember-fetch 8.0.2 or later.
