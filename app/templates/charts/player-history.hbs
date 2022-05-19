@@ -1,14 +1,15 @@
 {{page-title (concat @model.player.username "'s record history")}}
 
 <div class='general-content-box'>
-
-  <LinkTo
-    @route='charts.show'
-    @model={{@model.chart.id}}
-    @query={{this.chartLinkQueryParams}}
-  >
-    <h2>{{@model.chart.chartGroup.name}} » {{@model.chart.name}}</h2>
-  </LinkTo>
+  <h2>
+    <LinkTo
+      @route='charts.show'
+      @model={{@model.chart.id}}
+      @query={{this.chartLinkQueryParams}}
+    >
+      {{@model.chart.chartGroup.name}} » {{@model.chart.name}}
+    </LinkTo>
+  </h2>
   <h1>{{@model.player.username}}'s record history</h1>
 
   <LadderAndFilterControls

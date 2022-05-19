@@ -1,9 +1,11 @@
 {{page-title (concat @model.ladder.name ' ladder :: Rankings')}}
 
 <div class='general-content-box'>
-  <LinkTo @route='games.show' @model={{@model.ladder.game.shortCode}}>
-    <h2>{{@model.ladder.game.name}}</h2>
-  </LinkTo>
+  <h2>
+    <LinkTo @route='games.show' @model={{@model.ladder.game.shortCode}}>
+      {{@model.ladder.game.name}}
+    </LinkTo>
+  </h2>
   <h1>{{@model.ladder.name}} Ladder</h1>
 
   <div class='small-section'>
