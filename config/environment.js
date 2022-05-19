@@ -42,13 +42,6 @@ module.exports = function (environment) {
     // Testem prefers this...
     ENV.locationType = 'none';
 
-    // Track requests made during tests, so we can make assertions on those
-    // requests.
-    // https://github.com/samselikoff/ember-cli-mirage/issues/1200
-    ENV['ember-cli-mirage'] = {
-      trackRequests: true,
-    };
-
     // keep test console output quieter
     ENV.APP.LOG_ACTIVE_GENERATION = false;
     ENV.APP.LOG_VIEW_LOOKUPS = false;

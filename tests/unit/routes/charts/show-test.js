@@ -115,7 +115,14 @@ module('Unit | Route | charts/show', function (hooks) {
     );
   });
 
-  // Skip: this seems to intermittently get 'No fallback response defined for GET to /charts/1/other_records'
+  // Skip:
+  // - trackRequests option doesn't seem to work anymore, getting the error
+  // `You cannot modify Pretender's request tracking once the server is created`
+  // if it's set to true. Should assert the request some other way, perhaps by
+  // rewriting the handler with `this.server.get(...)` and using assert within
+  // that rewritten handler.
+  // - this seems to intermittently get 'No fallback response defined for GET to
+  // /charts/1/other_records'
   test.skip('should make the expected API request for filter groups', async function (assert) {
     await visit(this.routeUrl);
 
