@@ -2,10 +2,10 @@
 <input
   id={{@fieldId}}
   type='text'
-  value={{this.initialDateInputText}}
+  value={{date-display @dateValue 'timezone'}}
   {{on 'change' this.onchange}}
   size='30'
-  placeholder='Examples: 2018-10-16, 2018-10-16T16:27, 2018-10-16T16:27:02-07:00'
+  placeholder='Examples: 2018-10-16, 2018-10-16 16:27, 2018-10-16 16:27-07:00'
 />
 {{! This displays the currently-set date string. }}
-{{this.dateDisplay}}
+{{date-display @dateValue 'timezone'}}

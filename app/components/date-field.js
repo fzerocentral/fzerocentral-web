@@ -1,42 +1,20 @@
 import { action } from '@ember/object';
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default class DateFieldComponent extends Component {
-  @tracked dateValue = this.args.initialDateValue || null;
-
-  // Date -> String
-  dateToStr(date) {
-    if (date === null) {
-      return '';
-    }
-    return moment(date).format();
-  }
-
-  get dateDisplay() {
-    return this.dateToStr(this.dateValue);
-  }
-
-  get initialDateInputText() {
-    return this.dateToStr(this.args.initialDateValue || null);
-  }
-
   @action
   onchange(event) {
     let dateInputText = event.target.value;
     // String -> Date
-    let momentDate = moment(dateInputText, [
+    let dateFromInput = dayjs(dateInputText, [
       'YYYY-MM-DD',
-      'YYYY-MM-DDTHH:mm',
-      'YYYY-MM-DDTHH:mm:ss',
-      'YYYY-MM-DDTHH:mmZ',
-      'YYYY-MM-DDTHH:mm:ssZ',
+      'YYYY-MM-DD HH:mm',
+      'YYYY-MM-DD HH:mmZ',
     ]);
 
-    if (momentDate.isValid()) {
-      this.dateValue = momentDate.toDate();
-      this.args.updateDateValue(this.dateValue);
+    if (dateFromInput.isValid()) {
+      this.args.updateDateValue(dateFromInput.toDate());
     } else {
       // Simply do not update the date value. Maybe can think of more helpful
       // behavior here later.
