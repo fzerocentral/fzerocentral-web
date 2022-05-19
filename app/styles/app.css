@@ -16,6 +16,9 @@ body {
 p {
   margin-bottom: 15px;
 }
+a {
+  font-size: inherit;
+}
 a:link,
 a:active,
 a:visited {

@@ -162,7 +162,7 @@ module('Unit | Route | charts/show', function (hooks) {
     await click('#show-filter-controls-checkbox');
     await select('select[name="filter-group"]', this.machineFG.id);
     await select('select[name="modifier"]', '');
-    await select('select[name="filter-select"]', this.blueFalconFilter.id);
+    await select('#filter-select', this.blueFalconFilter.id);
     await click('#filter-apply-form button');
 
     let expectedUrl = this.router.urlFor('charts.show', this.chart.id, {

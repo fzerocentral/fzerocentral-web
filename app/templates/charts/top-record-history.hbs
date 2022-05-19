@@ -1,18 +1,19 @@
-{{page-title 'Site record history'}}
+{{page-title 'Top record history'}}
 
 <div class='general-content-box'>
-
-  <LinkTo
-    @route='charts.show'
-    @model={{@model.chart.id}}
-    @query={{this.chartLinkQueryParams}}
-  >
-    <h2>{{@model.chart.chartGroup.name}} - {{@model.chart.name}}</h2>
-  </LinkTo>
-  <h1>Site record history</h1>
+  <h2>
+    <LinkTo
+      @route='charts.show'
+      @model={{@model.chart.id}}
+      @query={{this.chartLinkQueryParams}}
+    >
+      {{@model.chart.chartGroup.name}} » {{@model.chart.name}}
+    </LinkTo>
+  </h2>
+  <h1>Top record history</h1>
 
   <LadderAndFilterControls
-    @extraFiltersString={{this.appliedFiltersString}}
+    @extraFiltersString={{this.extraFiltersString}}
     @manager={{this.ladderAndFilterControls}}
   />
 

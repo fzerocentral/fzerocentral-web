@@ -56,50 +56,50 @@ export default class NonEmberDataApiService extends Service {
     return this.fetchResults(url);
   }
 
-  getChartRanking(chartId, ladderId, appliedFiltersString) {
+  getChartRanking(chartId, ladderId, extraFiltersString) {
     let rankingUrl = this.urlWithQueryParams(
       `/charts/${chartId}/ranking/`,
       new Map([
         ['ladder_id', ladderId],
-        ['filters', appliedFiltersString],
+        ['filters', extraFiltersString],
         ['page[size]', 1000],
       ])
     );
     return this.fetchResults(rankingUrl);
   }
 
-  getChartOtherRecords(chartId, ladderId, appliedFiltersString) {
+  getChartOtherRecords(chartId, ladderId, extraFiltersString) {
     let url = this.urlWithQueryParams(
       `/charts/${chartId}/other_records/`,
       new Map([
         ['ladder_id', ladderId],
-        ['filters', appliedFiltersString],
+        ['filters', extraFiltersString],
         ['page[size]', 1000],
       ])
     );
     return this.fetchResults(url);
   }
 
-  getChartTopRecordHistory(chartId, ladderId, appliedFiltersString) {
+  getChartTopRecordHistory(chartId, ladderId, extraFiltersString) {
     let historyUrl = this.urlWithQueryParams(
       `/charts/${chartId}/record_history/`,
       new Map([
         ['improvements', 'filter'],
         ['ladder_id', ladderId],
-        ['filters', appliedFiltersString],
+        ['filters', extraFiltersString],
         ['page[size]', 100],
       ])
     );
     return this.fetchResults(historyUrl);
   }
 
-  getChartPlayerHistory(chartId, playerId, ladderId, appliedFiltersString) {
+  getChartPlayerHistory(chartId, playerId, ladderId, extraFiltersString) {
     let historyUrl = this.urlWithQueryParams(
       `/charts/${chartId}/record_history/`,
       new Map([
         ['player_id', playerId],
         ['ladder_id', ladderId],
-        ['filters', appliedFiltersString],
+        ['filters', extraFiltersString],
         ['page[size]', 100],
       ])
     );

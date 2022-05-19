@@ -1,16 +1,16 @@
-{{page-title (concat this.chartGroup.name ' - ' @model.chart.name)}}
+{{page-title (concat this.chartGroup.name ' :: ' @model.chart.name)}}
 
 <div class='general-content-box'>
 
-  <h2>{{@model.ladder.game.name}} - {{@model.ladder.name}}</h2>
-  <h1>{{this.chartGroup.name}} - {{@model.chart.name}}</h1>
+  <h2>{{@model.ladder.game.name}} » {{@model.ladder.name}}</h2>
+  <h1>{{this.chartGroup.name}} » {{@model.chart.name}}</h1>
 
   <div class='equal-two-column-container'>
 
     <div id='filter-and-column-controls'>
 
       <LadderAndFilterControls
-        @extraFiltersString={{this.appliedFiltersString}}
+        @extraFiltersString={{this.extraFiltersString}}
         @manager={{this.ladderAndFilterControls}}
       />
 
@@ -65,11 +65,11 @@
 
       <div>
         <LinkTo
-          @route='charts.site-record-history'
+          @route='charts.top-record-history'
           @model={{@model.chart.id}}
           @query={{this.historyLinkQueryParams}}
         >
-          View site record history
+          View top record history
         </LinkTo>
       </div>
 
@@ -127,12 +127,14 @@
           </BasicLink>
         {{/if}}
 
-        <select name='chart' id='chart-select' {{on 'change' this.goToChart}}>
+        <select
+          name='chart'
+          id='chart-select'
+          {{on 'change' this.goToChart}}
+          {{prop value=@model.chart.id}}
+        >
           {{#each this.chartNavigationChoices as |navChoice|}}
-            <option
-              value='{{navChoice.chart.id}}'
-              selected={{if (eq navChoice.chart.id @model.chart.id) 'selected'}}
-            >
+            <option value='{{navChoice.chart.id}}'>
               {{navChoice.display}}
             </option>
           {{/each}}

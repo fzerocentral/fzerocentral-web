@@ -1,11 +1,11 @@
-<h1>{{@model.filter.name}} - Add an outgoing implication</h1>
+<h1>{{@model.filter.name}} » Add an outgoing implication</h1>
 
 <form id='add-implication-form'>
   <div>
     <FilterSelect
-      @baseFieldId='target-filter'
+      @baseFieldName='filter'
       @label='Add implication to:'
-      @controlInstance={{this.filterSelect}}
+      @control={{this.filterSelect}}
     />
   </div>
 

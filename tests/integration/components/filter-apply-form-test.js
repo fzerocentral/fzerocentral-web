@@ -1,9 +1,9 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { click, render, select } from '@ember/test-helpers';
+import { setupMirage } from 'ember-cli-mirage/test-support';
 import hbs from 'htmlbars-inline-precompile';
 import { assertSelectOptionsEqual } from '../../utils/html';
-import { DummyModel } from '../../utils/models';
 
 function getFilterGroupSelect(rootElement) {
   return rootElement.querySelector('select[name="filter-group"]');
@@ -14,38 +14,44 @@ function getModifierSelect(rootElement) {
 }
 
 function getFilterSelect(rootElement) {
-  return rootElement.querySelector('select[name="filter-select"]');
+  return rootElement.querySelector('#filter-select');
 }
 
 module('Integration | Component | filter-apply-form', function (hooks) {
   setupRenderingTest(hooks);
+  setupMirage(hooks);
 
-  hooks.beforeEach(function () {
-    let g1 = new DummyModel({ id: '1', name: 'G1', kind: 'select' });
-    let g2 = new DummyModel({ id: '2', name: 'G2', kind: 'numeric' });
-    let f1 = new DummyModel({ id: '1', name: 'F1', filterGroup: g1 });
-    let f2 = new DummyModel({ id: '2', name: 'F2', filterGroup: g1 });
-    let f3 = new DummyModel({ id: '3', name: 'F3', filterGroup: g2 });
-    let f4 = new DummyModel({ id: '4', name: 'F4', filterGroup: g2 });
+  hooks.beforeEach(async function () {
+    let createFG = (args) => this.server.create('filter-group', args);
+    let createF = (args) => this.server.create('filter', args);
+    let g1 = createFG({ id: '1', name: 'G1', kind: 'select' });
+    let g2 = createFG({ id: '2', name: 'G2', kind: 'numeric' });
+    createF({ id: '1', name: 'F1', filterGroup: g1 });
+    createF({ id: '2', name: 'F2', filterGroup: g1 });
+    createF({ id: '3', name: 'F3', filterGroup: g2 });
+    createF({ id: '4', name: 'F4', filterGroup: g2 });
 
-    this.set('filterGroups', [g1, g2]);
+    let store = this.owner.lookup('service:store');
+
+    this.set('filterGroups', await store.findAll('filter-group'));
     // In this component test, we don't have query params which bubble up
     // to a route to subsequently update appliedFilterObjs. So we have to
     // manually set it here. We just set it to all possible filters.
     // If we wanted to test that appliedFilterObjs was being updated
     // properly, that'd have to be done in a route or controller test.
-    this.set('appliedFilterObjs', [f1, f2, f3, f4]);
+    this.set('appliedFilterObjs', await store.findAll('filter'));
     this.set('appliedFiltersString', null);
     this.set('getFilterOptions', (groupId) => {
-      return new Promise((resolve) => {
-        if (groupId === '1') {
-          resolve([f1, f2]);
-        }
-        resolve([f3, f4]);
-      });
+      return store.query('filter', { filter_group_id: groupId });
     });
     this.set('updateAppliedFiltersString', (newStr) => {
       this.set('appliedFiltersString', newStr);
+    });
+
+    this.server.get('/filters', (schema, request) => {
+      return schema.filters.where({
+        filterGroupId: request.queryParams.filter_group_id,
+      });
     });
   });
 
@@ -82,8 +88,7 @@ module('Integration | Component | filter-apply-form', function (hooks) {
     await render(
       hbs`<FilterApplyForm
             @filterGroups={{this.filterGroups}}
-            @appliedFiltersString={{this.appliedFiltersString}}
-            @controllerGetFilterOptions={{this.getFilterOptions}} />`
+            @appliedFiltersString={{this.appliedFiltersString}} />`
     );
 
     let filterGroupSelect = getFilterGroupSelect(this.element);
@@ -131,8 +136,7 @@ module('Integration | Component | filter-apply-form', function (hooks) {
     await render(
       hbs`<FilterApplyForm
             @filterGroups={{this.filterGroups}}
-            @appliedFiltersString={{this.appliedFiltersString}}
-            @controllerGetFilterOptions={{this.getFilterOptions}} />`
+            @appliedFiltersString={{this.appliedFiltersString}} />`
     );
 
     let filterGroupSelect = getFilterGroupSelect(this.element);
@@ -160,8 +164,7 @@ module('Integration | Component | filter-apply-form', function (hooks) {
     await render(
       hbs`<FilterApplyForm
             @filterGroups={{this.filterGroups}}
-            @appliedFiltersString={{this.appliedFiltersString}}
-            @controllerGetFilterOptions={{this.getFilterOptions}} />`
+            @appliedFiltersString={{this.appliedFiltersString}} />`
     );
 
     let filterGroupSelect = getFilterGroupSelect(this.element);
@@ -204,7 +207,6 @@ module('Integration | Component | filter-apply-form', function (hooks) {
             @filterGroups={{this.filterGroups}}
             @appliedFilterObjs={{this.appliedFilterObjs}}
             @appliedFiltersString={{this.appliedFiltersString}}
-            @controllerGetFilterOptions={{this.getFilterOptions}}
             @updateAppliedFiltersString={{this.updateAppliedFiltersString}} />`
     );
 
@@ -249,7 +251,6 @@ module('Integration | Component | filter-apply-form', function (hooks) {
             @filterGroups={{this.filterGroups}}
             @appliedFilterObjs={{this.appliedFilterObjs}}
             @appliedFiltersString={{this.appliedFiltersString}}
-            @controllerGetFilterOptions={{this.getFilterOptions}}
             @updateAppliedFiltersString={{this.updateAppliedFiltersString}} />`
     );
 
@@ -277,7 +278,6 @@ module('Integration | Component | filter-apply-form', function (hooks) {
             @filterGroups={{this.filterGroups}}
             @appliedFilterObjs={{this.appliedFilterObjs}}
             @appliedFiltersString={{this.appliedFiltersString}}
-            @controllerGetFilterOptions={{this.getFilterOptions}}
             @updateAppliedFiltersString={{this.updateAppliedFiltersString}} />`
     );
 

@@ -4,9 +4,9 @@ import { tracked } from '@glimmer/tracking';
 import config from '../../config/environment';
 
 export default class ChartsPlayerHistoryController extends Controller {
-  queryParams = ['ladderId', { appliedFiltersString: 'filters' }];
+  queryParams = ['ladderId', { extraFiltersString: 'filters' }];
   @tracked ladderId = null;
-  @tracked appliedFiltersString = null;
+  @tracked extraFiltersString = null;
 
   devMode = config.APP.devMode;
 
@@ -29,16 +29,8 @@ export default class ChartsPlayerHistoryController extends Controller {
   get chartLinkQueryParams() {
     return {
       ladderId: this.ladderId,
-      filters: this.appliedFiltersString,
+      filters: this.extraFiltersString,
     };
-  }
-
-  @action
-  getFilterOptions(filterGroupId, searchText) {
-    return this.store.query('filter', {
-      filter_group_id: filterGroupId,
-      name_search: searchText,
-    });
   }
 
   @action
@@ -47,7 +39,7 @@ export default class ChartsPlayerHistoryController extends Controller {
   }
 
   @action
-  updateAppliedFiltersString(newString) {
-    this.appliedFiltersString = newString;
+  updateExtraFiltersString(newString) {
+    this.extraFiltersString = newString;
   }
 }
