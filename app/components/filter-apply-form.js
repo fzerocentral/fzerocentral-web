@@ -92,6 +92,10 @@ export default class FilterApplyFormComponent extends Component {
 
   @action
   addFilter() {
+    if (!this.filterSelect.selectedFilterId) {
+      window.alert('No filter has been selected yet.');
+      return;
+    }
     let newStr = addFilterSpecItem(
       this.args.appliedFiltersString,
       this.filterSelect.selectedFilterId,
