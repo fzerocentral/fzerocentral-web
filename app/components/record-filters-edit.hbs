@@ -1,8 +1,10 @@
 {{#each @filterGroups as |filterGroup|}}
   <div>
     <FilterSelect
+      @baseFieldName={{concat 'filter-' filterGroup.id}}
       @label={{filterGroup.name}}
-      @controlInstance={{get @filterSelectControlInstances filterGroup.id}}
+      @hasEmptyOption={{true}}
+      @control={{get @filterSelectControlInstances filterGroup.id}}
     />
   </div>
 {{/each}}

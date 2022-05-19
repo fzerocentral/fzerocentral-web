@@ -5,7 +5,7 @@
   {{! Choice of filter group }}
   <select
     name='filter-group'
-    {{on 'change' this.updateSelectedFilterGroup}}
+    {{on 'change' this.onFilterGroupChange}}
     aria-labelledby='add-filter-label'
   >
     <option value=''> ----- </option>
@@ -27,8 +27,10 @@
 
   {{! Choice of filter from the filter group }}
   <FilterSelect
+    @baseFieldName='filter'
     @ariaLabelledBy='add-filter-label'
-    @controlInstance={{this.filterSelect}}
+    @hasEmptyOption={{true}}
+    @control={{this.filterSelect}}
   />
 
   <button type='button' {{on 'click' this.addFilter}}>Add</button>

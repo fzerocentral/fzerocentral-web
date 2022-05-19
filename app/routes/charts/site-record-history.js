@@ -52,7 +52,6 @@ export default class ChartsTopRecordHistoryRoute extends Route {
       controller.updateLadderId,
       resolvedModel.filterGroups,
       resolvedModel.appliedFilterObjs,
-      controller.getFilterOptions,
       controller.updateAppliedFiltersString
     );
   }

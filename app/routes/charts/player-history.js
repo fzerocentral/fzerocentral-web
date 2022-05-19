@@ -54,7 +54,6 @@ export default class ChartsPlayerHistoryRoute extends Route {
       controller.updateLadderId,
       resolvedModel.filterGroups,
       resolvedModel.appliedFilterObjs,
-      controller.getFilterOptions,
       controller.updateAppliedFiltersString
     );
   }

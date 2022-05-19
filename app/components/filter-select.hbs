@@ -1,49 +1,48 @@
-{{#let @controlInstance.baseFieldName as |baseFieldName|}}
+{{#if @control.searchEnabled}}
 
-  {{#if @controlInstance.searchEnabled}}
+  {{! Search-enabled version }}
 
-    {{! Search-enabled version }}
-
-    {{! Some usages will pass label, some will pass ariaLabelledBy }}
-    {{#if @label}}
-      <label for='{{baseFieldName}}-search'>{{@label}}</label>
-    {{/if}}
-    <input
-      type='text'
-      list='{{baseFieldName}}-datalist'
-      id='{{baseFieldName}}-search'
-      aria-labelledby={{@ariaLabelledBy}}
-      placeholder='Enter text to search'
-      {{on 'input' @controlInstance.onSearchInput}}
-      {{! When searchTerm is set, update the element value }}
-      {{prop value=@controlInstance.searchTerm}}
-    />
-    <datalist id='{{baseFieldName}}-datalist'>
-      {{! Don't use |option| here: https://github.com/emberjs/ember.js/issues/19334 }}
-      {{#each @controlInstance.options as |opt|}}
-        <option value={{opt.display}} />
-      {{/each}}
-    </datalist>
-
-  {{else}}
-
-    {{! Plain dropdown version }}
-
-    {{#if @label}}
-      <label for='{{baseFieldName}}-select'>{{@label}}</label>
-    {{/if}}
-    <select
-      id='{{baseFieldName}}-select'
-      aria-labelledby={{@ariaLabelledBy}}
-      {{on 'input' @controlInstance.onSelect}}
-      {{! When selectedFilterId is set, update the element value }}
-      {{prop value=@controlInstance.selectedFilterId}}
-    >
-      {{#each @controlInstance.options as |opt|}}
-        <option value={{opt.value}}> {{opt.display}} </option>
-      {{/each}}
-    </select>
-
+  {{! Some usages will pass label, some will pass ariaLabelledBy }}
+  {{#if @label}}
+    <label for='{{@baseFieldName}}-search'>{{@label}}</label>
   {{/if}}
+  <input
+    type='text'
+    list='{{@baseFieldName}}-datalist'
+    id='{{@baseFieldName}}-search'
+    aria-labelledby={{@ariaLabelledBy}}
+    placeholder='Enter text to search'
+    {{on 'input' @control.onSearchInput}}
+    {{! When searchText is set, update the element value }}
+    {{prop value=@control.searchText}}
+  />
+  <datalist id='{{@baseFieldName}}-datalist'>
+    {{! Don't use |option| here: https://github.com/emberjs/ember.js/issues/19334 }}
+    {{#each @control.options as |opt|}}
+      <option value={{opt.name}} />
+    {{/each}}
+  </datalist>
 
-{{/let}}
+{{else}}
+
+  {{! Plain dropdown version }}
+
+  {{#if @label}}
+    <label for='{{@baseFieldName}}-select'>{{@label}}</label>
+  {{/if}}
+  <select
+    id='{{@baseFieldName}}-select'
+    aria-labelledby={{@ariaLabelledBy}}
+    {{on 'input' @control.onSelect}}
+    {{! When selectedFilterId is set, update the element value }}
+    {{prop value=@control.selectedFilterId}}
+  >
+    {{#if @hasEmptyOption}}
+      <option value=''> ----- </option>
+    {{/if}}
+    {{#each @control.options as |opt|}}
+      <option value={{opt.id}}> {{opt.name}} </option>
+    {{/each}}
+  </select>
+
+{{/if}}

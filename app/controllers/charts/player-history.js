@@ -34,14 +34,6 @@ export default class ChartsPlayerHistoryController extends Controller {
   }
 
   @action
-  getFilterOptions(filterGroupId, searchText) {
-    return this.store.query('filter', {
-      filter_group_id: filterGroupId,
-      name_search: searchText,
-    });
-  }
-
-  @action
   updateLadderId(newId) {
     this.ladderId = newId;
   }

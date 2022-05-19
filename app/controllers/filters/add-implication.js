@@ -16,10 +16,7 @@ export default class FiltersAddImplicationController extends Controller {
   constructor(...args) {
     super(...args);
 
-    this.filterSelect = new FilterSelectControl(
-      'filter',
-      this.getTargetOptions
-    );
+    this.filterSelect = new FilterSelectControl(this.getTargetOptions);
   }
 
   get filterGroup() {
@@ -52,6 +49,12 @@ export default class FiltersAddImplicationController extends Controller {
         }
         targetOptions.pushObject(iFilter);
       });
+      // Since we dropped the meta attribute, use another way to indicate
+      // whether there are multiple pages.
+      // This is inexact because we're checking the page count of the
+      // original request, and reporting whether there are multiple pages
+      // on the filtered result. But it's good enough for this purpose.
+      targetOptions.hasMultiplePages = iFilters.meta.pagination.pages > 1;
       return targetOptions;
     });
   }

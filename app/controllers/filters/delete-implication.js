@@ -15,10 +15,7 @@ export default class FiltersDeleteImplicationController extends Controller {
   constructor(...args) {
     super(...args);
 
-    this.filterSelect = new FilterSelectControl(
-      'filter',
-      this.getTargetOptions
-    );
+    this.filterSelect = new FilterSelectControl(this.getTargetOptions);
   }
 
   get filterGroup() {

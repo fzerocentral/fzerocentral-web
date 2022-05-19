@@ -19,12 +19,12 @@ module('Integration | Component | record-filters-edit', function (hooks) {
 
     this.set('filterGroups', [g1, g2]);
     let filterSelects = {
-      1: new FilterSelectControl('filter-1', () => {
+      1: new FilterSelectControl(() => {
         return new Promise((resolve) => {
           resolve([this.f1, f2]);
         });
       }),
-      2: new FilterSelectControl('filter-2', () => {
+      2: new FilterSelectControl(() => {
         return new Promise((resolve) => {
           resolve([f3, this.f4]);
         });

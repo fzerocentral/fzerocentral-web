@@ -20,7 +20,6 @@ export class LadderAndFilterControlsManager {
     updateLadderId,
     filterGroups,
     extraFilterObjs,
-    getFilterOptions,
     updateExtraFiltersString
   ) {
     this.ladder = ladder;
@@ -30,7 +29,6 @@ export class LadderAndFilterControlsManager {
 
     this.filterGroups = filterGroups;
     this.extraFilterObjs = extraFilterObjs;
-    this.getFilterOptions = getFilterOptions;
     this.updateExtraFiltersString = updateExtraFiltersString;
   }
 

@@ -1,60 +1,43 @@
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
-/* For some reason, it felt easier to write component-related functionality
- in a separate class from the component itself. */
+/* Control layer for the filter-select component. */
 export class FilterSelectControl {
   @tracked options = [];
   @tracked searchEnabled = false;
-  @tracked searchTerm = '';
+  @tracked searchText = '';
   @tracked selectedFilterId = null;
 
-  constructor(
-    baseFieldName,
-    getOptions,
-    { hasEmptyOption = false, initialFilter = null } = {}
-  ) {
-    this.baseFieldName = baseFieldName;
+  constructor(getOptions, { initialFilter = null } = {}) {
     this.getOptions = getOptions;
-    this.hasEmptyOption = hasEmptyOption;
     this.initialFilter = initialFilter;
   }
 
   updateOptions() {
-    let getOptionsPromise = this.getOptions(this.searchTerm);
-
-    return getOptionsPromise.then((filters) => {
-      let options = [];
-
-      if (!this.searchEnabled && this.hasEmptyOption) {
-        options.push({ value: '', display: '-----' });
-      }
-
-      filters.forEach((filter) => {
-        options.push({ value: filter.id, display: filter.name });
-      });
-
-      this.options = options;
-
+    return this.getOptions(this.searchText).then((filters) => {
+      this.options = filters;
       return filters;
     });
   }
 
   initializeOptions() {
     if (this.initialFilter) {
-      this.searchTerm = this.initialFilter.name;
+      this.searchText = this.initialFilter.name;
       this.selectedFilterId = this.initialFilter.id;
     } else {
-      this.searchTerm = '';
+      this.searchText = '';
       this.selectedFilterId = null;
     }
 
     return this.updateOptions().then((filters) => {
-      // Set searchEnabled based on number of filters available.
+      // Set searchEnabled based on whether there are multiple pages of results.
+      // Can infer multiple pages in two ways. Either the meta info shows
+      // multiple pages, or there is a hasMultiplePages property set on
+      // the results with value true.
       if (filters.meta) {
         this.searchEnabled = filters.meta.pagination.pages > 1;
       } else {
-        this.searchEnabled = false;
+        this.searchEnabled = filters.hasMultiplePages === true;
       }
     });
   }
@@ -66,18 +49,16 @@ export class FilterSelectControl {
 
   @action
   onSearchInput(event) {
-    this.searchTerm = event.target.value;
+    this.searchText = event.target.value;
 
-    // Update options, then update the hidden field value
     this.updateOptions().then((filters) => {
       // Look through the filter options to find a filter with a name that
       // matches the search field.
       let matchingFilter = filters.find(
-        (filter) => filter.name === this.searchTerm
+        (filter) => filter.name === this.searchText
       );
 
       if (matchingFilter) {
-        // Assign that matching filter's ID to the real (hidden) field.
         this.selectedFilterId = matchingFilter.id;
       } else {
         this.selectedFilterId = null;

@@ -19,10 +19,7 @@ module('Integration | Component | filter-select', function (hooks) {
         resolve([f1, f2]);
       });
     }
-    this.set(
-      'controlInstance',
-      new FilterSelectControl('filter', getFilterOptions)
-    );
+    this.set('controlInstance', new FilterSelectControl(getFilterOptions));
   });
 
   test('should have expected options', async function (assert) {
@@ -31,8 +28,9 @@ module('Integration | Component | filter-select', function (hooks) {
     await render(hbs`
       <form id='test-form'>
         <FilterSelect
+          @baseFieldName='filter'
           @label='G'
-          @controlInstance={{this.controlInstance}} />
+          @control={{this.controlInstance}} />
       </form>
     `);
     await this.controlInstance.initializeOptions();
@@ -53,8 +51,9 @@ module('Integration | Component | filter-select', function (hooks) {
     await render(hbs`
       <form id='test-form'>
         <FilterSelect
+          @baseFieldName='filter'
           @label='G'
-          @controlInstance={{this.controlInstance}} />
+          @control={{this.controlInstance}} />
       </form>
     `);
     await this.controlInstance.initializeOptions();
