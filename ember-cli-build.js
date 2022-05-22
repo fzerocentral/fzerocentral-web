@@ -5,6 +5,13 @@ const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
     // Add options here
+    fingerprint: {
+      exclude: [
+        // These images have their paths built dynamically in templates, which
+        // breaks Ember's ability to add fingerprints to the img src attributes.
+        '/images/game_selector/unselected',
+      ],
+    },
   });
 
   // Use `app.import` to add additional libraries to the generated
