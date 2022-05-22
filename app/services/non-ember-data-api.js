@@ -1,15 +1,23 @@
 import Service from '@ember/service';
+import ENV from '../config/environment';
 
 /* API calls that don't use Ember Data. */
 export default class NonEmberDataApiService extends Service {
+  apiUrl(url) {
+    if (ENV.APP.apiNamespace) {
+      return `/${ENV.APP.apiNamespace}${url}`;
+    }
+    return url;
+  }
+
   fetchResults(url) {
-    return fetch(url)
+    return fetch(this.apiUrl(url))
       .then((response) => response.json())
       .then((responseJson) => responseJson.data);
   }
 
   postPatchDelete(url, data, method) {
-    return fetch(url, {
+    return fetch(this.apiUrl(url), {
       method: method,
       headers: {
         'Content-Type': 'application/vnd.api+json',

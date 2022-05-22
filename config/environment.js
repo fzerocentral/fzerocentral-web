@@ -24,7 +24,7 @@ module.exports = function (environment) {
   };
 
   if (environment === 'development') {
-    // FZC custom setting: The JSONAPIAdapter's namespace.
+    // FZC custom setting: The API namespace.
     // For dev environments it's easiest to run the API with no namespace,
     // i.e. at localhost:<port> instead of localhost:<port>/<namespace>.
     ENV.APP.apiNamespace = null;
@@ -51,7 +51,9 @@ module.exports = function (environment) {
   }
 
   if (environment === 'production') {
-    // FZC custom setting: The JSONAPIAdapter's namespace.
+    // Serve the app here instead of at the root of the domain.
+    ENV.rootURL = '/next/';
+    // FZC custom setting: The API namespace.
     ENV.APP.apiNamespace = 'api';
     // FZC custom setting: Developer mode.
     ENV.APP.devMode = false;
