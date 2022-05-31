@@ -51,8 +51,6 @@ module.exports = function (environment) {
   }
 
   if (environment === 'production') {
-    // Serve the app here instead of at the root of the domain.
-    ENV.rootURL = '/next/';
     // FZC custom setting: The API namespace.
     ENV.APP.apiNamespace = 'api';
     // FZC custom setting: Developer mode.
