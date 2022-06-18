@@ -25,7 +25,8 @@
       <tr>
         <td>
           <LinkTo @route='old-forum.view-topic' @query={{hash t=topic.id}}>
-            {{topic.title}}
+            {{! 3 curly braces means it's unescaped }}
+            {{{topic.title}}}
           </LinkTo>
         </td>
       </tr>
