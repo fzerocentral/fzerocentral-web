@@ -85,11 +85,6 @@ module('Integration | Component | page-navigation', function (hooks) {
       'Page 1 2',
       'Page link text should be as expected'
     );
-
-    let resultsCountDiv = this.element.querySelector('div.page-results-counts');
-    assert
-      .dom(resultsCountDiv)
-      .hasText('12 results', 'Results count display should be correct');
   });
 
   test('should render page 2 of 2 properly', async function (assert) {
@@ -350,5 +345,49 @@ module('Integration | Component | page-navigation', function (hooks) {
     let buttons = this.element.querySelectorAll('button');
     await click(buttons[0]);
     assert.equal(this.pageNumber, 1, 'Should have changed to the correct page');
+  });
+
+  test('should render results count display', async function (assert) {
+    this.set(
+      'pageResults',
+      createPageResults({
+        count: 12,
+        pages: 2,
+        page: 1,
+      })
+    );
+
+    await render(hbs`
+      <PageNavigation
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}}
+        @resultsNoun='results' />
+    `);
+
+    let resultsCountDiv = this.element.querySelector('div.page-results-counts');
+    assert
+      .dom(resultsCountDiv)
+      .hasText('12 results', 'Results count display should be correct');
+  });
+
+  test('should not render results count display', async function (assert) {
+    this.set(
+      'pageResults',
+      createPageResults({
+        count: 12,
+        pages: 2,
+        page: 1,
+      })
+    );
+
+    // No resultsNoun
+    await render(hbs`
+      <PageNavigation
+        @pageResults={{this.pageResults}}
+        @updatePageNumber={{this.updatePageNumber}} />
+    `);
+
+    let resultsCountDiv = this.element.querySelector('div.page-results-counts');
+    assert.notOk(resultsCountDiv, 'Should not have results count display');
   });
 });

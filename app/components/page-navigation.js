@@ -1,10 +1,6 @@
 import Component from '@glimmer/component';
 
 export default class PageNavigationComponent extends Component {
-  get resultsNoun() {
-    return this.args.resultsNoun ?? 'results';
-  }
-
   get meta() {
     if (!this.args.pageResults) {
       return null;

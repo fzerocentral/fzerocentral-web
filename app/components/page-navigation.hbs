@@ -35,7 +35,9 @@
     {{/if}}
   </div>
 
-  <div class='page-results-counts'>
-    {{this.meta.count}} {{this.resultsNoun}}
-  </div>
+  {{#if @resultsNoun}}
+    <div class='page-results-counts'>
+      {{this.meta.count}} {{@resultsNoun}}
+    </div>
+  {{/if}}
 {{/if}}
