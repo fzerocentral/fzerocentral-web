@@ -22,14 +22,19 @@
       usemap='#fzerotop-map'
     />
 
-    {{! FZC Next site status }}
-    <div class='under-logo-text'>
+    {{! FZC Next subtitle }}
+    <div class='under-logo-subtitle'>
       <h2>FZC Next</h2>
       {{#if this.devMode}}
         <h2>Development mode</h2>
       {{else}}
         <h2>Demo version</h2>
       {{/if}}
+    </div>
+
+    {{! Links }}
+    <div class='under-logo-links'>
+      <LinkTo @route='old-forum.index'>» Forum Archive</LinkTo>
     </div>
 
     {{! Game selector }}

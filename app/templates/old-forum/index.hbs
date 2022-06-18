@@ -1,0 +1,29 @@
+{{page-title "Forum Archive - Index"}}
+
+<div class='general-content-box forum-archive-menu'>
+  <h1>Forum Archive</h1>
+
+  <p>This is a read-only archive of the old FZC forum.</p>
+
+  <p>These forum posts are saved in a format which is difficult to automatically port to a newer, more secure forum system. So, whenever we set up a fully-functional forum again, we'll probably start fresh; and any posts that people want to transfer over would have to be recreated manually.</p>
+</div>
+
+<table class='forum-archive-menu forums'>
+  <tbody>
+    {{#each @model.categories as |category|}}
+      <tr>
+        <th>{{category.title}}</th>
+      </tr>
+      {{#each category.forums as |forum|}}
+        <tr>
+          <td>
+            <LinkTo @route='old-forum.view-forum' @query={{hash f=forum.id}}>
+              {{forum.name}}
+            </LinkTo>
+            <div>{{forum.description}}</div>
+          </td>
+        </tr>
+      {{/each}}
+    {{/each}}
+  </tbody>
+</table>

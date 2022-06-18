@@ -52,4 +52,9 @@ Router.map(function () {
   this.route('records', function () {
     this.route('show', { path: '/:record_id' });
   });
+
+  this.route('old-forum', function () {
+    this.route('view-topic');
+    this.route('view-forum');
+  });
 });

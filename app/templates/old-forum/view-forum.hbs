@@ -1,0 +1,43 @@
+{{page-title (concat "View forum - " @model.forum.name)}}
+
+<div class='general-content-box forum-archive-menu'>
+  <h1>
+    <LinkTo @route='old-forum.index'>Forum Archive</LinkTo>
+    » {{@model.forum.name}}
+  </h1>
+</div>
+
+<div class='forum-archive-menu'>
+  <PageNavigation
+    @pageResults={{@model.topics}}
+    @updatePageNumber={{this.updatePageNumber}}
+    @resultsNoun='topics'
+  />
+</div>
+
+<table class='forum-archive-menu topics'>
+  <thead>
+    <tr>
+      <th>Topic</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each @model.topics as |topic|}}
+      <tr>
+        <td>
+          <LinkTo @route='old-forum.view-topic' @query={{hash t=topic.id}}>
+            {{topic.title}}
+          </LinkTo>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<div class='forum-archive-menu'>
+  <PageNavigation
+    @pageResults={{@model.topics}}
+    @updatePageNumber={{this.updatePageNumber}}
+    @resultsNoun='topics'
+  />
+</div>
