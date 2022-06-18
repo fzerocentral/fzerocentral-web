@@ -447,7 +447,7 @@ h2.topic-title {
   grid-template-areas: 'poster-info post-header'
                        'poster-info post-text';
   grid-template-rows: 0fr 1fr;
-  grid-template-columns: 150px 1fr;
+  grid-template-columns: 200px 1fr;
 
   background-color: hsl(0, 0%, 95%);
   margin: 5px 0;
