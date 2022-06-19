@@ -67,7 +67,7 @@
 
   <footer>
 
-    <menu>
+    <div>
       <div>
         <a href='{{this.indexUrl}}'>F-Zero Central Home</a>
       </div>
@@ -102,7 +102,13 @@
           />
         </a>
       </div>
-    </menu>
+    </div>
+
+    <div class='spacer'></div>
+
+    <div class='current-time'>
+      Current time: {{date-display 'now' 'datetime'}}
+    </div>
 
   </footer>
 

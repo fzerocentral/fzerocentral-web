@@ -163,12 +163,17 @@ Footer
 
 footer {
   margin-top: 100px;
-  padding: 20px 60px;
+  padding: 40px 60px;
   background-color: hsl(240, 50%, 80%);
   display: flex;
+
+  color: hsl(0, 0%, 30%);
 }
-footer menu div {
-  line-height: 1.8;
+footer .spacer {
+  flex-grow: 1;
+}
+footer .current-time {
+  align-self: flex-end;
 }
 #social-icons {
   margin-top: 20px;

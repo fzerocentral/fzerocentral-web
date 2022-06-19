@@ -8,6 +8,10 @@ export default helper(function dateDisplay(positional /*, named*/) {
     return '';
   }
 
+  if (date === 'now') {
+    date = new Date();
+  }
+
   if (displayType === 'datetime') {
     return dayjs(date).format('YYYY-MM-DD HH:mm');
   } else if (displayType === 'timezone') {
