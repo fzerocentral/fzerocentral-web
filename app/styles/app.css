@@ -465,6 +465,13 @@ h2.topic-title {
   background-color: hsl(0, 0%, 90%);
   padding: 10px;
 }
+.poster-info .poster-name {
+  font-weight: bold;
+}
+.poster-info .poster-title {
+  font-size: x-small;
+  font-weight: bold;
+}
 .post-header {
   grid-area: post-header;
   background-color: hsl(220, 50%, 30%);

@@ -21,7 +21,12 @@
 {{#each @model.posts as |post postIndex|}}
   <div class='post-container'>
     <div class='poster-info'>
-      <strong>{{post.poster.username}}</strong>
+      {{#if post.poster}}
+        <div class='poster-name'>{{post.poster.username}}</div>
+      {{else}}
+        <div class='poster-name'>{{post.username}}</div>
+        <div class='poster-title'>Guest</div>
+      {{/if}}
     </div>
     <div class='post-header'>
       {{! 3 curly braces means it's unescaped }}
