@@ -24,6 +24,12 @@
     {{#each @model.topics as |topic|}}
       <tr>
         <td>
+          <img
+            src='{{image-dir}}forum_old/topic_icons/{{topic.icon}}.gif'
+            alt='Topic status: {{topic.icon}}'
+            title='Topic status: {{topic.icon}}'
+          />
+          {{topic.titlePrefix}}
           <LinkTo @route='old-forum.view-topic' @query={{hash t=topic.id}}>
             {{! 3 curly braces means it's unescaped }}
             {{{topic.title}}}
