@@ -6,10 +6,10 @@ General
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-size: small;
 }
 body {
   font-family: 'Verdana', Arial, Helvetica, sans-serif;
+  font-size: small;
   background-color: hsl(240, 56%, 31%);
   margin: 5px;
 }
@@ -34,7 +34,8 @@ ul {
 }
 
 h1,
-h2 {
+h2,
+h3 {
   font-weight: bold;
   font-family: 'Verdana', Arial, Helvetica, sans-serif;
   line-height: 1.5;
@@ -110,19 +111,37 @@ div#fzc-header > img.logo-image {
   padding-right: 30px;
 }
 
-/* Text below logo */
-div.under-logo-text {
+/* Site subtitle below logo */
+div.under-logo-subtitle {
   position: absolute;
-  left: 220px;
-  top: 65px;
-  width: 180px;
-  text-align: center;
+  left: 12px;
+  top: 36px;
 }
-div.under-logo-text > h2 {
-  text-shadow: 1px 5px 2px black;
-  font-size: 16px;
-  line-height: 1.8;
-  color: hsl(0, 0%, 86%);
+div.under-logo-subtitle > h2 {
+  /* Text border */
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+
+  font-size: 18px;
+  color: hsl(0, 0%, 95%);
+}
+
+/* Links under logo */
+div.under-logo-links {
+  position: absolute;
+  left: 235px;
+  top: 43px;
+
+  width: 165px;
+  height: 100px;
+  background-color: hsla(0, 0%, 100%, 8%);
+  padding: 7px;
+}
+div.under-logo-links a {
+  color: hsl(205, 25%, 60%);
+  font-weight: bold;
+}
+div.under-logo-links a:hover {
+  color: hsl(205, 20%, 80%);
 }
 
 /* Game selector */
@@ -144,12 +163,17 @@ Footer
 
 footer {
   margin-top: 100px;
-  padding: 20px 60px;
+  padding: 40px 60px;
   background-color: hsl(240, 50%, 80%);
   display: flex;
+
+  color: hsl(0, 0%, 30%);
 }
-footer menu div {
-  line-height: 1.8;
+footer .spacer {
+  flex-grow: 1;
+}
+footer .current-time {
+  align-self: flex-end;
 }
 #social-icons {
   margin-top: 20px;
@@ -359,4 +383,116 @@ div.filter-section > div.filter-list {
 div.filter-section > div.filter-detail-section {
   flex-basis: 540px;
   flex-grow: 3;
+}
+
+/*
+Forum archive
+ */
+
+.forum-archive-menu {
+  color: hsl(0, 0%, 80%);
+}
+.forum-archive-menu a {
+  color: hsl(205, 25%, 60%);
+}
+.forum-archive-menu a:hover {
+  color: hsl(205, 20%, 80%);
+}
+.general-content-box.forum-archive-menu {
+  background-color: hsl(0, 0%, 20%);
+}
+
+table.forum-archive-menu {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 8px 0;
+}
+table.forum-archive-menu th {
+  background: linear-gradient(
+    hsl(240, 13%, 67%) 0%,
+    hsl(240, 20%, 50%) 25%,
+    white 100%
+  );
+  box-shadow:
+    inset 0 0 0 1px white,
+    inset 0 0 0 2px black;
+  color: black;
+}
+table.forum-archive-menu.forums a {
+  font-size: larger;
+}
+table.forum-archive-menu.forums th {
+  padding: 8px 0;
+}
+table.forum-archive-menu.forums td {
+  padding: 15px;
+}
+table.forum-archive-menu.topics th {
+  padding: 2px 0;
+}
+table.forum-archive-menu.topics td {
+  padding: 4px;
+}
+
+/* Body rows with alternating colors */
+table.forum-archive-menu tr:nth-child(2n + 1) td {
+  background-color: hsl(0, 0%, 22%);
+}
+table.forum-archive-menu tr:nth-child(2n) td {
+  background-color: hsl(0, 0%, 20%);
+}
+
+h2.topic-title {
+  /* Word-wrapping titles don't look very good with center align */
+  text-align: left;
+}
+
+.post-container {
+  display: grid;
+  grid-template-areas: 'poster-info post-header'
+                       'poster-info post-text';
+  grid-template-rows: 0fr 1fr;
+  grid-template-columns: 200px 1fr;
+
+  background-color: hsl(0, 0%, 95%);
+  margin: 5px 0;
+}
+.post-container > div {
+  border: 1px solid gray;
+}
+.poster-info {
+  grid-area: poster-info;
+  background-color: hsl(0, 0%, 90%);
+  padding: 10px;
+}
+.poster-info .poster-name {
+  font-weight: bold;
+}
+.poster-info .poster-title {
+  font-size: x-small;
+  font-weight: bold;
+}
+.post-header {
+  grid-area: post-header;
+  background-color: hsl(220, 50%, 30%);
+  color: hsl(0, 0%, 80%);
+  font-size: x-small;
+  font-weight: bold;
+  padding: 7px;
+
+  display: flex;
+}
+.post-header span.subject {
+  flex-grow: 1;
+}
+.post-header span.time {
+  width: 120px;
+}
+.post-header span.number {
+  width: 40px;
+}
+.post-text {
+  grid-area: post-text;
+  background-color: hsl(0, 0%, 90%);
+  padding: 10px;
 }

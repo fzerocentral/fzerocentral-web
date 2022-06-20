@@ -1,0 +1,50 @@
+{{page-title (concat "View topic - " @model.topic.title)}}
+
+<div class='general-content-box forum-archive-menu'>
+  <h3>
+    <LinkTo @route='old-forum.index'>Forum Archive</LinkTo>
+    »
+    <LinkTo @route='old-forum.view-forum' @query={{hash f=@model.topic.forum.id}}>
+      {{@model.topic.forum.name}}
+    </LinkTo>
+  </h3>
+  <h2 class='topic-title'>{{@model.topic.title}}</h2>
+</div>
+
+<div class='forum-archive-menu'>
+  <PageNavigation
+    @pageResults={{@model.posts}}
+    @updatePageNumber={{this.updatePageNumber}}
+  />
+</div>
+
+{{#each @model.posts as |post postIndex|}}
+  <div class='post-container'>
+    <div class='poster-info'>
+      {{#if post.poster}}
+        <div class='poster-name'>{{post.poster.username}}</div>
+      {{else}}
+        <div class='poster-name'>{{post.username}}</div>
+        <div class='poster-title'>Guest</div>
+      {{/if}}
+    </div>
+    <div class='post-header'>
+      {{! 3 curly braces means it's unescaped }}
+      <span class='subject'>{{{post.subject}}}</span>
+      <span class='time'>{{date-display post.time 'datetime'}}</span>
+      {{! TODO: Provide link which auto-scrolls to this post w/URL fragment }}
+      <span class='number'>#{{get this.topicPostNumbers postIndex}}</span>
+    </div>
+    <div class='post-text'>
+      {{! 3 curly braces means it's unescaped }}
+      {{{post.text}}}
+    </div>
+  </div>
+{{/each}}
+
+<div class='forum-archive-menu'>
+  <PageNavigation
+    @pageResults={{@model.posts}}
+    @updatePageNumber={{this.updatePageNumber}}
+  />
+</div>

@@ -9,6 +9,7 @@ module.exports = function (defaults) {
       exclude: [
         // These images have their paths built dynamically in templates, which
         // breaks Ember's ability to add fingerprints to the img src attributes.
+        '/images/forum_old/topic_icons',
         '/images/game_selector/unselected',
       ],
     },
