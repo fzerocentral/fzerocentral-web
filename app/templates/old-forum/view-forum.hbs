@@ -18,6 +18,8 @@
   <thead>
     <tr>
       <th>Topic</th>
+      <th>Author</th>
+      <th>Last post</th>
     </tr>
   </thead>
   <tbody>
@@ -34,6 +36,13 @@
             {{! 3 curly braces means it's unescaped }}
             {{{topic.title}}}
           </LinkTo>
+        </td>
+        <td>
+          {{topic.firstPost.posterName}}
+        </td>
+        <td>
+          {{date-display topic.lastPost.time 'datetime'}}
+          - {{topic.lastPost.posterName}}
         </td>
       </tr>
     {{/each}}

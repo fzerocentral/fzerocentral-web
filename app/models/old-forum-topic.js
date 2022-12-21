@@ -8,6 +8,8 @@ export default class OldForumTopicModel extends Model {
   @attr('number') importance;
 
   @belongsTo('old-forum-forum') forum;
+  @belongsTo('old-forum-post') firstPost;
+  @belongsTo('old-forum-post') lastPost;
   @hasMany('old-forum-post') posts;
 
   STATUS_OPTIONS = {
