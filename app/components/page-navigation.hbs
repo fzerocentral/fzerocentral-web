@@ -6,25 +6,25 @@
       <button type='button' {{on 'click' (fn @updatePageNumber 1)}}> 1 </button>
     {{/if}}
 
-    {{#if this.hasGapBetweenFirstAndPrevPage}}
+    {{#if this.hasGapBetweenFirstAndPrevPages}}
       ...
     {{/if}}
 
-    {{#if this.shouldShowPrevPageLink}}
-      <button type='button' {{on 'click' (fn @updatePageNumber this.prevPage)}}>
-        {{this.prevPage}}
+    {{#each this.prevPages as |page|}}
+      <button type='button' {{on 'click' (fn @updatePageNumber page)}}>
+        {{page}}
       </button>
-    {{/if}}
+    {{/each}}
 
     {{this.meta.page}}
 
-    {{#if this.shouldShowNextPageLink}}
-      <button type='button' {{on 'click' (fn @updatePageNumber this.nextPage)}}>
-        {{this.nextPage}}
+    {{#each this.nextPages as |page|}}
+      <button type='button' {{on 'click' (fn @updatePageNumber page)}}>
+        {{page}}
       </button>
-    {{/if}}
+    {{/each}}
 
-    {{#if this.hasGapBetweenLastAndNextPage}}
+    {{#if this.hasGapBetweenLastAndNextPages}}
       ...
     {{/if}}
 
