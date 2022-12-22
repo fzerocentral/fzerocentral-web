@@ -1,5 +1,4 @@
 import Controller from '@ember/controller';
-import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import OldForumTopicModel from '../../models/old-forum-topic';
 
@@ -21,12 +20,5 @@ export default class OldForumViewTopicController extends Controller {
       postNumbers.push(offset + n);
     }
     return postNumbers;
-  }
-
-  @action
-  updatePageNumber(pageNumber) {
-    this.page = pageNumber;
-    // Scroll to top of page, where the first post is
-    window.scrollTo(0, 0);
   }
 }

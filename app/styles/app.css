@@ -394,6 +394,10 @@ Forum archive
 }
 .forum-archive-menu a {
   color: hsl(205, 25%, 60%);
+
+  /* Don't include whitespace in the link text
+     (noticeable when you hover over and the underline is visible) */
+  display: inline-block;
 }
 .forum-archive-menu a:hover {
   color: hsl(205, 20%, 80%);

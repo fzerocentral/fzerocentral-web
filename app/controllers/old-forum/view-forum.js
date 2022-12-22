@@ -1,5 +1,4 @@
 import Controller from '@ember/controller';
-import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 export default class OldForumViewForumController extends Controller {
@@ -10,11 +9,4 @@ export default class OldForumViewForumController extends Controller {
   ];
   @tracked forumId = null;
   @tracked page = 1;
-
-  @action
-  updatePageNumber(pageNumber) {
-    this.page = pageNumber;
-    // Scroll to top of page, where the first topic is
-    window.scrollTo(0, 0);
-  }
 }
