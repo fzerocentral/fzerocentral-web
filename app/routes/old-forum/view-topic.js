@@ -1,6 +1,7 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
+import OldForumTopicModel from '../../models/old-forum-topic';
 
 export default class OldForumViewTopicRoute extends Route {
   @service router;
@@ -21,6 +22,7 @@ export default class OldForumViewTopicRoute extends Route {
         posts: this.store.query('old-forum-post', {
           topic_id: topicId,
           'page[number]': page,
+          'page[size]': OldForumTopicModel.POSTS_PER_PAGE,
           include: 'poster',
         }),
         topic: this.store.findRecord('old-forum-topic', topicId, {
@@ -52,8 +54,7 @@ export default class OldForumViewTopicRoute extends Route {
       })
       .then((previousPosts) => {
         let postNumber = previousPosts.meta.pagination.count + 1;
-        let POSTS_PER_PAGE = 20;
-        page = Math.ceil(postNumber / POSTS_PER_PAGE);
+        page = Math.ceil(postNumber / OldForumTopicModel.POSTS_PER_PAGE);
 
         // Rewrite the query params to use topicId and page instead.
         this.router.transitionTo({

@@ -6,6 +6,7 @@ export default class OldForumTopicModel extends Model {
   @attr('boolean') isNews;
   @attr('number') status;
   @attr('number') importance;
+  @attr('number') postCount;
 
   @belongsTo('old-forum-forum') forum;
   @belongsTo('old-forum-post') firstPost;
@@ -23,6 +24,12 @@ export default class OldForumTopicModel extends Model {
     ANNOUNCEMENT: 2,
   };
 
+  static POSTS_PER_PAGE = 20;
+
+  get hasMultiplePages() {
+    return this.pageCount > 1;
+  }
+
   get icon() {
     if (this.importance === this.IMPORTANCE_OPTIONS.ANNOUNCEMENT) {
       return 'announcement';
@@ -32,6 +39,14 @@ export default class OldForumTopicModel extends Model {
       return 'locked';
     }
     return 'normal';
+  }
+
+  get pageCount() {
+    return Math.ceil(this.postCount / OldForumTopicModel.POSTS_PER_PAGE);
+  }
+
+  get replyCount() {
+    return this.postCount - 1;
   }
 
   get titlePrefix() {

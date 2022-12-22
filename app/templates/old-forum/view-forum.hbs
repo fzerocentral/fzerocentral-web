@@ -18,6 +18,7 @@
   <thead>
     <tr>
       <th>Topic</th>
+      <th>Replies</th>
       <th>Author</th>
       <th>Last post</th>
     </tr>
@@ -31,11 +32,22 @@
             alt='Topic status: {{topic.icon}}'
             title='Topic status: {{topic.icon}}'
           />
+
           {{topic.titlePrefix}}
+
           <LinkTo @route='old-forum.view-topic' @query={{hash t=topic.id}}>
             {{! 3 curly braces means it's unescaped }}
             {{{topic.title}}}
           </LinkTo>
+
+          {{#if topic.hasMultiplePages}}
+            [ Page:
+            <OldForum::ViewForum::TopicPageLinks @topic={{topic}} />
+            ]
+          {{/if}}
+        </td>
+        <td>
+          {{topic.replyCount}}
         </td>
         <td>
           {{topic.firstPost.posterName}}

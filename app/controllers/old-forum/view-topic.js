@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import OldForumTopicModel from '../../models/old-forum-topic';
 
 export default class OldForumViewTopicController extends Controller {
   queryParams = [
@@ -12,12 +13,11 @@ export default class OldForumViewTopicController extends Controller {
   @tracked topicId = null;
   @tracked postId = null;
   @tracked page = 1;
-  POSTS_PER_PAGE = 20;
 
   get topicPostNumbers() {
-    let offset = (this.page - 1) * this.POSTS_PER_PAGE;
+    let offset = (this.page - 1) * OldForumTopicModel.POSTS_PER_PAGE;
     let postNumbers = [];
-    for (let n = 1; n <= this.POSTS_PER_PAGE; n++) {
+    for (let n = 1; n <= OldForumTopicModel.POSTS_PER_PAGE; n++) {
       postNumbers.push(offset + n);
     }
     return postNumbers;
