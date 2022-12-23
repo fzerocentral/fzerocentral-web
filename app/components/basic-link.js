@@ -2,8 +2,8 @@ import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
 
 /* Link without a custom click action, meaning it's a basic HTML link and
-   doesn't use Ember transitions. This can help when transitions seem to make
-   load times slower or run into buggy behavior. */
+   doesn't use Ember transitions. This can help when transitions seem to cause
+   slower loading or buggy behavior, or when URL fragments are desired. */
 export default class LinkComponent extends Component {
   @service router;
 
@@ -20,6 +20,12 @@ export default class LinkComponent extends Component {
       });
     }
 
-    return this.router.urlFor(...args);
+    let url = this.router.urlFor(...args);
+
+    if (this.args.fragment) {
+      url = `${url}#${this.args.fragment}`;
+    }
+
+    return url;
   }
 }
