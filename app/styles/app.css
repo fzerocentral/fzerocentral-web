@@ -467,6 +467,7 @@ h2.topic-title {
 .poster-info {
   grid-area: poster-info;
   background-color: hsl(0, 0%, 90%);
+  text-align: center;
   padding: 10px;
 }
 .poster-info .poster-name {
@@ -474,7 +475,7 @@ h2.topic-title {
 }
 .poster-info .poster-title {
   font-size: x-small;
-  font-weight: bold;
+  margin-top: 5px;
 }
 .post-header {
   grid-area: post-header;

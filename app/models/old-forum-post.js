@@ -1,4 +1,5 @@
 import Model, { attr, belongsTo } from '@ember-data/model';
+import OldForumUserModel from './old-forum-user';
 
 export default class OldForumPostModel extends Model {
   @attr('string') subject;
@@ -21,6 +22,12 @@ export default class OldForumPostModel extends Model {
 
   get posterTitle() {
     if (this.poster.get('id')) {
+      if (this.poster.get('level') === OldForumUserModel.LEVEL_OPTIONS.ADMIN) {
+        return 'Admin';
+      }
+      if (this.poster.get('level') === OldForumUserModel.LEVEL_OPTIONS.MOD) {
+        return 'Mod';
+      }
       return '';
     }
     // Null poster
