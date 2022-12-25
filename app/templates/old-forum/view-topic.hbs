@@ -32,7 +32,11 @@
 
 {{#each @model.posts as |post postIndex|}}
   {{! URL fragment target. Uses the fragment-target modifier. }}
-  <a name="{{post.id}}" {{fragment-target}} />
+  <a
+    {{! template-lint-disable link-href-attributes }}
+    name='{{post.id}}'
+    {{fragment-target}}
+   />
 
   <div class='post-container'>
 

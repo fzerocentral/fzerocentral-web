@@ -1,3 +1,9 @@
+{{!--
+We conditionally use label or aria-labelledby, but lint can't tell the
+difference and raises an error about multiple labels.
+--}}
+{{! template-lint-disable require-input-label }}
+
 {{#if @control.searchEnabled}}
 
   {{! Search-enabled version }}
