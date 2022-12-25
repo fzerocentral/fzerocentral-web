@@ -56,6 +56,12 @@
     <div class='post-text'>
       {{! 3 curly braces means it's unescaped }}
       {{{post.text}}}
+
+      {{#if post.editTime}}
+        <div class='edit-time'>
+          Last edited: {{date-display post.editTime 'datetime'}}
+        </div>
+      {{/if}}
     </div>
   </div>
 {{/each}}

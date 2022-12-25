@@ -500,6 +500,11 @@ h2.topic-title {
   background-color: hsl(0, 0%, 90%);
   padding: 10px;
 }
+.post-text div.edit-time {
+  font-style: italic;
+  font-size: smaller;
+  margin-top: 30px;
+}
 table.quote_table td.quote_name {
   padding: 3px;
   font-weight: bold;

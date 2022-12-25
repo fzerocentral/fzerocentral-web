@@ -4,6 +4,7 @@ export default class OldForumPostModel extends Model {
   @attr('string') subject;
   @attr('string') text;
   @attr('date') time;
+  @attr('date') editTime;
   // For guest posts
   @attr('string') username;
 
