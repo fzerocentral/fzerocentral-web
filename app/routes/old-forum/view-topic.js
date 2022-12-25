@@ -38,11 +38,11 @@ export default class OldForumViewTopicRoute extends Route {
     let topicId = params.topicId;
     let page = params.page;
 
-    let topicPromise = this.store.findRecord('old-forum-topic', topicId, {
-      include: 'forum,poll',
-    });
-
     if (topicId) {
+      let topicPromise = this.store.findRecord('old-forum-topic', topicId, {
+        include: 'forum,poll',
+      });
+
       return RSVP.hash({
         posts: this.store.query('old-forum-post', {
           topic_id: topicId,
