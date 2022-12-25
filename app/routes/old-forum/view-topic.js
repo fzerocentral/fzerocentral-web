@@ -106,4 +106,13 @@ export default class OldForumViewTopicRoute extends Route {
       });
     });
   }
+
+  resetController(controller, isExiting /*, transition */) {
+    if (isExiting) {
+      // If you go to page 3 of topic A, use the browser back-button
+      // to go back to the topic list, then click topic B, it should
+      // start on page 1 (not 3) of topic B.
+      controller.set('page', 1);
+    }
+  }
 }
