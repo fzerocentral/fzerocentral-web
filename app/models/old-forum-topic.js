@@ -9,6 +9,7 @@ export default class OldForumTopicModel extends Model {
   @attr('number') postCount;
 
   @belongsTo('old-forum-forum') forum;
+  @belongsTo('old-forum-poll') poll;
   @belongsTo('old-forum-post') firstPost;
   @belongsTo('old-forum-post') lastPost;
   @hasMany('old-forum-post') posts;

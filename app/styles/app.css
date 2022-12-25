@@ -510,3 +510,10 @@ table.quote_table td.quote_message {
   border: black 1px solid;
   background-color: hsl(240, 30%, 90%);
 }
+.poll-container {
+  text-align: center;
+  background-color: hsl(240, 30%, 90%);
+  padding: 10px;
+  border: 1px solid black;
+  margin: 5px 0;
+}

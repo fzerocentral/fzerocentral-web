@@ -17,6 +17,19 @@
   />
 </div>
 
+{{#if @model.topic.hasPoll}}
+  <div class='poll-container'>
+    {{! 3 curly braces means it's unescaped }}
+    <h3>Poll: {{{@model.topic.poll.title}}}</h3>
+
+    {{#each @model.pollOptions as |pollOption|}}
+      <div>
+        {{{pollOption.text}}} - {{pollOption.voteCount}} vote(s)
+      </div>
+    {{/each}}
+  </div>
+{{/if}}
+
 {{#each @model.posts as |post postIndex|}}
   {{! URL fragment target. Uses the fragment-target modifier. }}
   <a name="{{post.id}}" {{fragment-target}} />

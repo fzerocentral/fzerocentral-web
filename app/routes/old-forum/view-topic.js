@@ -1,3 +1,4 @@
+import { A } from '@ember/array';
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
@@ -37,6 +38,10 @@ export default class OldForumViewTopicRoute extends Route {
     let topicId = params.topicId;
     let page = params.page;
 
+    let topicPromise = this.store.findRecord('old-forum-topic', topicId, {
+      include: 'forum,poll',
+    });
+
     if (topicId) {
       return RSVP.hash({
         posts: this.store.query('old-forum-post', {
@@ -45,9 +50,9 @@ export default class OldForumViewTopicRoute extends Route {
           'page[size]': OldForumTopicModel.POSTS_PER_PAGE,
           include: 'poster',
         }),
-        topic: this.store.findRecord('old-forum-topic', topicId, {
-          include: 'forum',
-        }),
+        topic: topicPromise,
+
+        pollOptions: this.getPollOptions(topicPromise),
       });
     }
 
@@ -86,5 +91,19 @@ export default class OldForumViewTopicRoute extends Route {
         let baseUrl = window.location.pathname;
         window.location = `${baseUrl}?${searchParams}#${params.postId}`;
       });
+  }
+
+  getPollOptions(topicPromise) {
+    return topicPromise.then((topic) => {
+      if (!topic.hasPoll) {
+        // Promise that resolves to empty array
+        return new Promise((resolve) => {
+          resolve(A([]));
+        });
+      }
+      return this.store.query('old-forum-poll-option', {
+        poll_id: topic.poll.get('id'),
+      });
+    });
   }
 }
