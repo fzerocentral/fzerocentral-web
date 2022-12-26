@@ -7,12 +7,6 @@ function createPageResults(metaPagination) {
   return { meta: { pagination: metaPagination } };
 }
 
-function normalizeHTMLTextContent(text) {
-  // Collapse consecutive whitespace characters into a single space. Trim
-  // leading/trailing spaces from the result.
-  return text.replace(/\s+/g, ' ').trim();
-}
-
 module('Integration | Component | page-navigation', function (hooks) {
   setupRenderingTest(hooks);
 
@@ -79,12 +73,9 @@ module('Integration | Component | page-navigation', function (hooks) {
         @updatePageNumber={{this.updatePageNumber}} />
     `);
 
-    let pageLinksDiv = this.element.querySelector('div.page-links');
-    assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent),
-      'Page 1 2',
-      'Page link text should be as expected'
-    );
+    assert
+      .dom('div.page-links')
+      .hasText('Page 1 2', 'Page link text should be as expected');
   });
 
   test('should render page 2 of 2 properly', async function (assert) {
@@ -103,12 +94,9 @@ module('Integration | Component | page-navigation', function (hooks) {
         @updatePageNumber={{this.updatePageNumber}} />
     `);
 
-    let pageLinksDiv = this.element.querySelector('div.page-links');
-    assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent),
-      'Page 1 2',
-      'Page link text should be as expected'
-    );
+    assert
+      .dom('div.page-links')
+      .hasText('Page 1 2', 'Page link text should be as expected');
   });
 
   test('should render page 1 of 3 properly', async function (assert) {
@@ -127,12 +115,9 @@ module('Integration | Component | page-navigation', function (hooks) {
         @updatePageNumber={{this.updatePageNumber}} />
     `);
 
-    let pageLinksDiv = this.element.querySelector('div.page-links');
-    assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent),
-      'Page 1 2 3',
-      'Page link text should be as expected'
-    );
+    assert
+      .dom('div.page-links')
+      .hasText('Page 1 2 3', 'Page link text should be as expected');
   });
 
   test('should render page 2 of 3 properly', async function (assert) {
@@ -151,12 +136,9 @@ module('Integration | Component | page-navigation', function (hooks) {
         @updatePageNumber={{this.updatePageNumber}} />
     `);
 
-    let pageLinksDiv = this.element.querySelector('div.page-links');
-    assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent),
-      'Page 1 2 3',
-      'Page link text should be as expected'
-    );
+    assert
+      .dom('div.page-links')
+      .hasText('Page 1 2 3', 'Page link text should be as expected');
   });
 
   test('should render page 3 of 3 properly', async function (assert) {
@@ -175,12 +157,9 @@ module('Integration | Component | page-navigation', function (hooks) {
         @updatePageNumber={{this.updatePageNumber}} />
     `);
 
-    let pageLinksDiv = this.element.querySelector('div.page-links');
-    assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent),
-      'Page 1 2 3',
-      'Page link text should be as expected'
-    );
+    assert
+      .dom('div.page-links')
+      .hasText('Page 1 2 3', 'Page link text should be as expected');
   });
 
   test('should render the first page of many properly', async function (assert) {
@@ -199,12 +178,9 @@ module('Integration | Component | page-navigation', function (hooks) {
         @updatePageNumber={{this.updatePageNumber}} />
     `);
 
-    let pageLinksDiv = this.element.querySelector('div.page-links');
-    assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent),
-      'Page 1 2 ... 10',
-      'Page link text should be as expected'
-    );
+    assert
+      .dom('div.page-links')
+      .hasText('Page 1 2 3 4 ... 10', 'Page link text should be as expected');
   });
 
   test('should render a middle page of many properly', async function (assert) {
@@ -223,12 +199,12 @@ module('Integration | Component | page-navigation', function (hooks) {
         @updatePageNumber={{this.updatePageNumber}} />
     `);
 
-    let pageLinksDiv = this.element.querySelector('div.page-links');
-    assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent),
-      'Page 1 ... 4 5 6 ... 10',
-      'Page link text should be as expected'
-    );
+    assert
+      .dom('div.page-links')
+      .hasText(
+        'Page 1 2 3 4 5 6 7 8 ... 10',
+        'Page link text should be as expected'
+      );
   });
 
   test('should render the last page of many properly', async function (assert) {
@@ -247,12 +223,9 @@ module('Integration | Component | page-navigation', function (hooks) {
         @updatePageNumber={{this.updatePageNumber}} />
     `);
 
-    let pageLinksDiv = this.element.querySelector('div.page-links');
-    assert.equal(
-      normalizeHTMLTextContent(pageLinksDiv.textContent),
-      'Page 1 ... 9 10',
-      'Page link text should be as expected'
-    );
+    assert
+      .dom('div.page-links')
+      .hasText('Page 1 ... 7 8 9 10', 'Page link text should be as expected');
   });
 
   test('next page button should switch to the correct page', async function (assert) {
@@ -271,7 +244,7 @@ module('Integration | Component | page-navigation', function (hooks) {
         @updatePageNumber={{this.updatePageNumber}} />
     `);
 
-    // There should be page buttons to pages 2 and 10. Click the first one.
+    // Click the first page button, which should be for page 2.
     let buttons = this.element.querySelectorAll('button');
     await click(buttons[0]);
     assert.equal(this.pageNumber, 2, 'Should have changed to the correct page');
@@ -293,9 +266,9 @@ module('Integration | Component | page-navigation', function (hooks) {
         @updatePageNumber={{this.updatePageNumber}} />
     `);
 
-    // There should be page buttons to pages 1, 3, and 10. Click the last one.
+    // Click the last page button, which should be for page 10.
     let buttons = this.element.querySelectorAll('button');
-    await click(buttons[2]);
+    await click(buttons[buttons.length - 1]);
     assert.equal(
       this.pageNumber,
       10,
@@ -319,9 +292,9 @@ module('Integration | Component | page-navigation', function (hooks) {
         @updatePageNumber={{this.updatePageNumber}} />
     `);
 
-    // There should be page buttons to pages 1 and 9. Click the second one.
+    // Click the last page button, which should be for page 9.
     let buttons = this.element.querySelectorAll('button');
-    await click(buttons[1]);
+    await click(buttons[buttons.length - 1]);
     assert.equal(this.pageNumber, 9, 'Should have changed to the correct page');
   });
 

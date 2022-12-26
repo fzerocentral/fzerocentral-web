@@ -15,7 +15,7 @@
       />
 
       {{#if this.chartGroup.showChartsTogether}}
-        <form id='column-option-form'>
+        <form id='column-option-form' aria-label='Column display options'>
           Columns to show:
           <input
             type='radio'
@@ -105,7 +105,7 @@
         </ul>
       {{/if}}
 
-      <form id='chart-navigation-form'>
+      <form id='chart-navigation-form' aria-label='Chart navigation'>
 
         <label for='chart-select'>
           {{#if this.chartGroup.showChartsTogether}}

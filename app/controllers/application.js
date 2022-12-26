@@ -8,5 +8,4 @@ export default class ApplicationController extends Controller {
 
   devMode = config.APP.devMode;
   indexUrl = this.router.urlFor('index');
-  rootURL = config.rootURL;
 }

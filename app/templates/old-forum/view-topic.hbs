@@ -8,36 +8,61 @@
       {{@model.topic.forum.name}}
     </LinkTo>
   </h3>
-  <h2 class='topic-title'>{{@model.topic.title}}</h2>
+  <h2 class='topic-title'>{{@model.topic.titleDisplay}}</h2>
 </div>
 
 <div class='forum-archive-menu'>
   <PageNavigation
     @pageResults={{@model.posts}}
-    @updatePageNumber={{this.updatePageNumber}}
   />
 </div>
 
+{{#if @model.topic.hasPoll}}
+  <div class='poll-container'>
+    <h3>Poll: {{@model.topic.poll.titleDisplay}}</h3>
+
+    {{#each @model.pollOptions as |pollOption|}}
+      <div>
+        {{pollOption.textDisplay}} - {{pollOption.voteCount}} vote(s)
+      </div>
+    {{/each}}
+  </div>
+{{/if}}
+
 {{#each @model.posts as |post postIndex|}}
+  {{! URL fragment target. Uses the fragment-target modifier. }}
+  <a
+    {{! template-lint-disable link-href-attributes }}
+    name='{{post.id}}'
+    {{fragment-target}}
+   />
+
   <div class='post-container'>
+
     <div class='poster-info'>
-      {{#if post.poster}}
-        <div class='poster-name'>{{post.poster.username}}</div>
-      {{else}}
-        <div class='poster-name'>{{post.username}}</div>
-        <div class='poster-title'>Guest</div>
-      {{/if}}
+      <div class='poster-name'>{{post.posterName}}</div>
+      <div class='poster-title'>{{post.posterTitle}}</div>
     </div>
+
     <div class='post-header'>
-      {{! 3 curly braces means it's unescaped }}
-      <span class='subject'>{{{post.subject}}}</span>
+      <span class='subject'>{{post.subjectDisplay}}</span>
+
       <span class='time'>{{date-display post.time 'datetime'}}</span>
-      {{! TODO: Provide link which auto-scrolls to this post w/URL fragment }}
-      <span class='number'>#{{get this.topicPostNumbers postIndex}}</span>
+
+      {{! Link which auto-scrolls to this post w/URL fragment }}
+      <a href='#{{post.id}}'>
+        <span class='number'>#{{get this.topicPostNumbers postIndex}}</span>
+      </a>
     </div>
+
     <div class='post-text'>
-      {{! 3 curly braces means it's unescaped }}
-      {{{post.text}}}
+      {{post.textDisplay}}
+
+      {{#if post.editTime}}
+        <div class='edit-time'>
+          Last edited: {{date-display post.editTime 'datetime'}}
+        </div>
+      {{/if}}
     </div>
   </div>
 {{/each}}
@@ -45,6 +70,5 @@
 <div class='forum-archive-menu'>
   <PageNavigation
     @pageResults={{@model.posts}}
-    @updatePageNumber={{this.updatePageNumber}}
   />
 </div>

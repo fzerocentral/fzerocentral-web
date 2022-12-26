@@ -3,35 +3,37 @@
     Page
 
     {{#if this.shouldShowFirstPageLink}}
-      <button type='button' {{on 'click' (fn @updatePageNumber 1)}}> 1 </button>
+      <PageNavigationOnePage
+        @page={{1}}
+        @updatePage={{@updatePageNumber}} />
     {{/if}}
 
-    {{#if this.hasGapBetweenFirstAndPrevPage}}
+    {{#if this.hasGapBetweenFirstAndPrevPages}}
       ...
     {{/if}}
 
-    {{#if this.shouldShowPrevPageLink}}
-      <button type='button' {{on 'click' (fn @updatePageNumber this.prevPage)}}>
-        {{this.prevPage}}
-      </button>
-    {{/if}}
+    {{#each this.prevPages as |page|}}
+      <PageNavigationOnePage
+        @page={{page}}
+        @updatePage={{@updatePageNumber}} />
+    {{/each}}
 
     {{this.meta.page}}
 
-    {{#if this.shouldShowNextPageLink}}
-      <button type='button' {{on 'click' (fn @updatePageNumber this.nextPage)}}>
-        {{this.nextPage}}
-      </button>
-    {{/if}}
+    {{#each this.nextPages as |page|}}
+      <PageNavigationOnePage
+        @page={{page}}
+        @updatePage={{@updatePageNumber}} />
+    {{/each}}
 
-    {{#if this.hasGapBetweenLastAndNextPage}}
+    {{#if this.hasGapBetweenLastAndNextPages}}
       ...
     {{/if}}
 
     {{#if this.shouldShowLastPageLink}}
-      <button type='button' {{on 'click' (fn @updatePageNumber this.lastPage)}}>
-        {{this.lastPage}}
-      </button>
+      <PageNavigationOnePage
+        @page={{this.lastPage}}
+        @updatePage={{@updatePageNumber}} />
     {{/if}}
   </div>
 

@@ -1,3 +1,4 @@
+import { htmlSafe } from '@ember/template';
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 
 export default class OldForumTopicModel extends Model {
@@ -6,8 +7,12 @@ export default class OldForumTopicModel extends Model {
   @attr('boolean') isNews;
   @attr('number') status;
   @attr('number') importance;
+  @attr('number') postCount;
 
   @belongsTo('old-forum-forum') forum;
+  @belongsTo('old-forum-poll') poll;
+  @belongsTo('old-forum-post') firstPost;
+  @belongsTo('old-forum-post') lastPost;
   @hasMany('old-forum-post') posts;
 
   STATUS_OPTIONS = {
@@ -21,7 +26,25 @@ export default class OldForumTopicModel extends Model {
     ANNOUNCEMENT: 2,
   };
 
-  get icon() {
+  static POSTS_PER_PAGE = 20;
+
+  get hasMultiplePages() {
+    return this.pageCount > 1;
+  }
+
+  get pageCount() {
+    return Math.ceil(this.postCount / OldForumTopicModel.POSTS_PER_PAGE);
+  }
+
+  get replyCount() {
+    return this.postCount - 1;
+  }
+
+  get statusIcon() {
+    return `forum_old/topic_icons/${this.statusText}.gif`;
+  }
+
+  get statusText() {
     if (this.importance === this.IMPORTANCE_OPTIONS.ANNOUNCEMENT) {
       return 'announcement';
     } else if (this.importance === this.IMPORTANCE_OPTIONS.STICKY) {
@@ -48,5 +71,9 @@ export default class OldForumTopicModel extends Model {
     }
 
     return prefix;
+  }
+
+  get titleDisplay() {
+    return htmlSafe(this.title);
   }
 }

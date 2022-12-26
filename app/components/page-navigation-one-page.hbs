@@ -1,0 +1,11 @@
+{{#if @updatePage}}
+  {{! Page-updating action was given, so use buttons }}
+  <button type='button' {{on 'click' (fn @updatePage @page)}}>
+    {{@page}}
+  </button>
+{{else}}
+  {{! Use links }}
+  <BasicLink @route={{this.routeName}} @query={{this.queryHash}}>
+    {{@page}}
+  </BasicLink>
+{{/if}}

@@ -1,0 +1,9 @@
+{{#each this.pageNumbers as |pageNumber|}}
+  <LinkTo @route='old-forum.view-topic' @query={{hash t=@topic.id page=pageNumber}}>
+    {{pageNumber}}
+  </LinkTo>
+
+  {{#if (and (eq pageNumber 1) this.hasEllipsis) }}
+    ...
+  {{/if}}
+{{/each}}

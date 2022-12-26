@@ -1,6 +1,10 @@
 import Component from '@glimmer/component';
 
 export default class PageNavigationComponent extends Component {
+  get prevNextMaxNumber() {
+    return this.args.prevNextMaxNumber || 3;
+  }
+
   get meta() {
     if (!this.args.pageResults) {
       return null;
@@ -8,18 +12,40 @@ export default class PageNavigationComponent extends Component {
     return this.args.pageResults.meta.pagination;
   }
 
-  get prevPage() {
+  get prevPages() {
     if (!this.meta) {
-      return null;
+      return [];
     }
-    return this.meta.page - 1;
+
+    let pages = [];
+    for (
+      let page = this.meta.page - this.prevNextMaxNumber;
+      page <= this.meta.page - 1;
+      page++
+    ) {
+      if (page > 1) {
+        pages.push(page);
+      }
+    }
+    return pages;
   }
 
-  get nextPage() {
+  get nextPages() {
     if (!this.meta) {
-      return null;
+      return [];
     }
-    return this.meta.page + 1;
+
+    let pages = [];
+    for (
+      let page = this.meta.page + 1;
+      page <= this.meta.page + this.prevNextMaxNumber;
+      page++
+    ) {
+      if (page < this.lastPage) {
+        pages.push(page);
+      }
+    }
+    return pages;
   }
 
   get lastPage() {
@@ -36,39 +62,27 @@ export default class PageNavigationComponent extends Component {
     return this.meta.page >= 2;
   }
 
-  get hasGapBetweenFirstAndPrevPage() {
-    if (!this.meta) {
+  get hasGapBetweenFirstAndPrevPages() {
+    let prevPages = this.prevPages;
+    if (prevPages.length === 0) {
       return false;
     }
-    return this.meta.page >= 4;
+    return prevPages[0] >= 3;
   }
 
-  get shouldShowPrevPageLink() {
-    if (!this.meta) {
+  get hasGapBetweenLastAndNextPages() {
+    let nextPages = this.nextPages;
+    if (nextPages.length === 0) {
       return false;
     }
-    return this.meta.page >= 3;
-  }
-
-  get shouldShowNextPageLink() {
-    if (!this.meta) {
-      return false;
-    }
-    return this.meta.page <= this.meta.pages - 2;
-  }
-
-  get hasGapBetweenLastAndNextPage() {
-    if (!this.meta) {
-      return false;
-    }
-    return this.meta.page <= this.meta.pages - 3;
+    return nextPages.at(-1) <= this.lastPage - 2;
   }
 
   get shouldShowLastPageLink() {
     if (!this.meta) {
       return false;
     }
-    return this.meta.page <= this.meta.pages - 1;
+    return this.meta.page <= this.lastPage - 1;
   }
 
   get hasMultiplePages() {

@@ -15,7 +15,7 @@ export default class OldForumViewForumRoute extends Route {
       topics: this.store.query('old-forum-topic', {
         forum_id: params.forumId,
         'page[number]': params.page,
-        // TODO: Include post count and last-post info?
+        include: 'first_post.poster,last_post,last_post.poster',
       }),
       forum: this.store.findRecord('old-forum-forum', params.forumId),
     });
