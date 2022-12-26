@@ -32,7 +32,19 @@ export default class OldForumTopicModel extends Model {
     return this.pageCount > 1;
   }
 
-  get icon() {
+  get pageCount() {
+    return Math.ceil(this.postCount / OldForumTopicModel.POSTS_PER_PAGE);
+  }
+
+  get replyCount() {
+    return this.postCount - 1;
+  }
+
+  get statusIcon() {
+    return `forum_old/topic_icons/${this.statusText}.gif`;
+  }
+
+  get statusText() {
     if (this.importance === this.IMPORTANCE_OPTIONS.ANNOUNCEMENT) {
       return 'announcement';
     } else if (this.importance === this.IMPORTANCE_OPTIONS.STICKY) {
@@ -41,14 +53,6 @@ export default class OldForumTopicModel extends Model {
       return 'locked';
     }
     return 'normal';
-  }
-
-  get pageCount() {
-    return Math.ceil(this.postCount / OldForumTopicModel.POSTS_PER_PAGE);
-  }
-
-  get replyCount() {
-    return this.postCount - 1;
   }
 
   get titlePrefix() {
