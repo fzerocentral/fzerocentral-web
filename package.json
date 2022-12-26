@@ -48,7 +48,7 @@
     "ember-modifier": "^3.2.7",
     "ember-page-title": "^7.0.0",
     "ember-prop-modifier": "^1.0.1",
-    "ember-qunit": "^5.1.5",
+    "ember-qunit": "^6.1.1",
     "ember-resolver": "^8.0.3",
     "ember-sinon-qunit": "^6.0.0",
     "ember-source": "~3.28.8",
