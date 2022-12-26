@@ -61,12 +61,12 @@ module('Integration | Component | filter-select', function (hooks) {
     let selectElement = this.element.querySelector('select');
     await select(selectElement, '1');
 
-    assert.equal(
+    assert.strictEqual(
       selectElement.value,
       '1',
       'Dropdown should have the right filter'
     );
-    assert.equal(
+    assert.strictEqual(
       this.controlInstance.selectedFilterId,
       '1',
       'Control instance should have the right filter'

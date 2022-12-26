@@ -128,7 +128,7 @@ module('Unit | Route | games/ladder-new', function (hooks) {
     // Submit form.
     await click('#create-ladder-form button');
     // TODO: Gets error `this is undefined` when trying to create the ladder; don't know why.
-    // assert.equal(
+    // assert.strictEqual(
     //   currentURL(),
     //   `/games/${this.game.shortCode}/ladders`,
     //   'Should redirect to ladders page after ladder creation'

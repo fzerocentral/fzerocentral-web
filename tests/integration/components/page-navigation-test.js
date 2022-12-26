@@ -247,7 +247,11 @@ module('Integration | Component | page-navigation', function (hooks) {
     // Click the first page button, which should be for page 2.
     let buttons = this.element.querySelectorAll('button');
     await click(buttons[0]);
-    assert.equal(this.pageNumber, 2, 'Should have changed to the correct page');
+    assert.strictEqual(
+      this.pageNumber,
+      2,
+      'Should have changed to the correct page'
+    );
   });
 
   test('last page button should switch to the correct page', async function (assert) {
@@ -269,7 +273,7 @@ module('Integration | Component | page-navigation', function (hooks) {
     // Click the last page button, which should be for page 10.
     let buttons = this.element.querySelectorAll('button');
     await click(buttons[buttons.length - 1]);
-    assert.equal(
+    assert.strictEqual(
       this.pageNumber,
       10,
       'Should have changed to the correct page'
@@ -295,7 +299,11 @@ module('Integration | Component | page-navigation', function (hooks) {
     // Click the last page button, which should be for page 9.
     let buttons = this.element.querySelectorAll('button');
     await click(buttons[buttons.length - 1]);
-    assert.equal(this.pageNumber, 9, 'Should have changed to the correct page');
+    assert.strictEqual(
+      this.pageNumber,
+      9,
+      'Should have changed to the correct page'
+    );
   });
 
   test('first page button should switch to the correct page', async function (assert) {
@@ -317,7 +325,11 @@ module('Integration | Component | page-navigation', function (hooks) {
     // There should be page buttons to pages 1, 8, and 10. Click the first one.
     let buttons = this.element.querySelectorAll('button');
     await click(buttons[0]);
-    assert.equal(this.pageNumber, 1, 'Should have changed to the correct page');
+    assert.strictEqual(
+      this.pageNumber,
+      1,
+      'Should have changed to the correct page'
+    );
   });
 
   test('should render results count display', async function (assert) {

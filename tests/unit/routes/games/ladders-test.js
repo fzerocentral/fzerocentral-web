@@ -50,7 +50,7 @@ module('Unit | Route | games/ladders', function (hooks) {
     assert.expect(2 + 4);
 
     this.server.pretender.get('/ladders/', (request) => {
-      assert.equal(
+      assert.strictEqual(
         request.queryParams.game_code,
         this.game.shortCode,
         'Ladders endpoint should be called with game short code param'
@@ -94,8 +94,8 @@ module('Unit | Route | games/ladders', function (hooks) {
     let mainLadderRows = this.element.querySelectorAll(
       'div.main-ladders table.ladders > tbody > tr'
     );
-    assert.equal(mainLadderRows.length, 1, 'Should show 1 main ladder');
-    assert.equal(
+    assert.strictEqual(mainLadderRows.length, 1, 'Should show 1 main ladder');
+    assert.strictEqual(
       getLadderNameFromRow(mainLadderRows[0]),
       'Main ladder',
       'Main ladder name should be as expected'
@@ -105,8 +105,8 @@ module('Unit | Route | games/ladders', function (hooks) {
     let sideLadderRows = this.element.querySelectorAll(
       'div.side-ladders table.ladders > tbody > tr'
     );
-    assert.equal(sideLadderRows.length, 1, 'Should show 1 side ladder');
-    assert.equal(
+    assert.strictEqual(sideLadderRows.length, 1, 'Should show 1 side ladder');
+    assert.strictEqual(
       getLadderNameFromRow(sideLadderRows[0]),
       'Side ladder',
       'Side ladder name should be as expected'
@@ -127,7 +127,7 @@ module('Unit | Route | games/ladders', function (hooks) {
     fetchMock.delete(
       { url: `path:/ladders/${this.mainLadder.id}/` },
       (url, options) => {
-        assert.equal(
+        assert.strictEqual(
           JSON.parse(options.body).data,
           null,
           'DELETE data should be as expected'

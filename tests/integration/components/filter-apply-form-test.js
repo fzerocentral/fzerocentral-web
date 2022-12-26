@@ -75,7 +75,7 @@ module('Integration | Component | filter-apply-form', function (hooks) {
       ],
       'Options should be as expected'
     );
-    assert.equal(
+    assert.strictEqual(
       filterGroupSelect.value,
       '',
       'Default selection should be as expected'
@@ -104,7 +104,7 @@ module('Integration | Component | filter-apply-form', function (hooks) {
       ],
       'Choice-based filter group: options should be as expected'
     );
-    assert.equal(
+    assert.strictEqual(
       modifierSelect.value,
       '',
       'Choice-based filter group: default selection should be as expected'
@@ -123,7 +123,7 @@ module('Integration | Component | filter-apply-form', function (hooks) {
       ],
       'Numeric filter group: options should be as expected'
     );
-    assert.equal(
+    assert.strictEqual(
       modifierSelect.value,
       '',
       'Numeric filter group: default selection should be as expected'
@@ -153,7 +153,7 @@ module('Integration | Component | filter-apply-form', function (hooks) {
       ],
       'Options should be as expected'
     );
-    assert.equal(
+    assert.strictEqual(
       filterSelect.value,
       '',
       'Default selection should be as expected'
@@ -175,12 +175,12 @@ module('Integration | Component | filter-apply-form', function (hooks) {
     await select(modifierSelect, 'le');
     await select(filterSelect, '3');
 
-    assert.equal(
+    assert.strictEqual(
       modifierSelect.value,
       'le',
       'Modifier should be set as expected'
     );
-    assert.equal(
+    assert.strictEqual(
       filterSelect.value,
       '3',
       'Filter selection should be set as expected'
@@ -189,12 +189,12 @@ module('Integration | Component | filter-apply-form', function (hooks) {
     // Change to a filter group where le doesn't apply, and 3 isn't a filter choice
     await select(filterGroupSelect, '1');
 
-    assert.equal(
+    assert.strictEqual(
       modifierSelect.value,
       '',
       'Modifier should be reset as expected'
     );
-    assert.equal(
+    assert.strictEqual(
       filterSelect.value,
       '',
       'Filter selection should be reset as expected'
@@ -218,25 +218,33 @@ module('Integration | Component | filter-apply-form', function (hooks) {
     await select(modifierSelect, '');
     await select(filterSelect, '1');
     await click('#filter-apply-form button');
-    assert.equal(this.appliedFiltersString, '1', 'Should work for =');
+    assert.strictEqual(this.appliedFiltersString, '1', 'Should work for =');
 
     await select(filterGroupSelect, '1');
     await select(modifierSelect, 'n');
     await select(filterSelect, '2');
     await click('#filter-apply-form button');
-    assert.equal(this.appliedFiltersString, '1-2n', 'Should work for NOT');
+    assert.strictEqual(
+      this.appliedFiltersString,
+      '1-2n',
+      'Should work for NOT'
+    );
 
     await select(filterGroupSelect, '2');
     await select(modifierSelect, 'ge');
     await select(filterSelect, '3');
     await click('#filter-apply-form button');
-    assert.equal(this.appliedFiltersString, '1-2n-3ge', 'Should work for >=');
+    assert.strictEqual(
+      this.appliedFiltersString,
+      '1-2n-3ge',
+      'Should work for >='
+    );
 
     await select(filterGroupSelect, '2');
     await select(modifierSelect, 'le');
     await select(filterSelect, '4');
     await click('#filter-apply-form button');
-    assert.equal(
+    assert.strictEqual(
       this.appliedFiltersString,
       '1-2n-3ge-4le',
       'Should work for <='
@@ -285,7 +293,7 @@ module('Integration | Component | filter-apply-form', function (hooks) {
       'button.applied-filter-remove-button'
     );
     await click(removeButtons[1]);
-    assert.equal(
+    assert.strictEqual(
       this.appliedFiltersString,
       '1-4le',
       'Should be properly updated after 1st removal'
@@ -295,7 +303,7 @@ module('Integration | Component | filter-apply-form', function (hooks) {
       'button.applied-filter-remove-button'
     );
     await click(removeButtons[0]);
-    assert.equal(
+    assert.strictEqual(
       this.appliedFiltersString,
       '4le',
       'Should be properly updated after 2nd removal'
@@ -305,7 +313,7 @@ module('Integration | Component | filter-apply-form', function (hooks) {
       'button.applied-filter-remove-button'
     );
     await click(removeButtons[0]);
-    assert.equal(
+    assert.strictEqual(
       this.appliedFiltersString,
       null,
       'Should be properly updated after 3rd removal'

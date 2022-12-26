@@ -39,8 +39,8 @@ module('Integration | Component | ladder-category', function (hooks) {
       let anchor = cells[0].querySelector('a');
       let name = anchor.textContent.trim();
       let href = anchor.getAttribute('href');
-      assert.equal(name, expectedName);
-      assert.equal(href, expectedHref);
+      assert.strictEqual(name, expectedName);
+      assert.strictEqual(href, expectedHref);
     };
 
     assertLadderDetails(ladderRows[0], 'L1', '/ladders/1');

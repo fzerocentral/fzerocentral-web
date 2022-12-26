@@ -33,7 +33,7 @@ function assertHTMLEqual(assert, element, expectedHTML, message) {
 
   let elementHTML = collapseWhitespace(basicElement.innerHTML);
   expectedHTML = collapseWhitespace(expectedHTML);
-  assert.equal(elementHTML, expectedHTML, message);
+  assert.strictEqual(elementHTML, expectedHTML, message);
 }
 
 function assertTableContents(assert, tableElement, expectedContents) {
@@ -52,14 +52,14 @@ function assertTableContents(assert, tableElement, expectedContents) {
       );
     }
 
-    assert.equal(
+    assert.strictEqual(
       cellElements.length,
       expectedRow.length,
       `Row ${rowIndex} should have the expected number of cells`
     );
   }
 
-  assert.equal(
+  assert.strictEqual(
     rowElements.length,
     expectedContents.length,
     `Table should have the expected number of rows`
@@ -90,7 +90,7 @@ module('Unit | Route | games/filter-groups', function (hooks) {
 
   test('can be visited', async function (assert) {
     await visit(`/games/${this.game.shortCode}/filter-groups`);
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       `/games/${this.game.shortCode}/filter-groups`,
       'URL is correct'
