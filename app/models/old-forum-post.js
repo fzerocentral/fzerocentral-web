@@ -1,3 +1,4 @@
+import { htmlSafe } from '@ember/template';
 import Model, { attr, belongsTo } from '@ember-data/model';
 import OldForumUserModel from './old-forum-user';
 
@@ -32,5 +33,13 @@ export default class OldForumPostModel extends Model {
     }
     // Null poster
     return 'Guest';
+  }
+
+  get subjectDisplay() {
+    return htmlSafe(this.subject);
+  }
+
+  get textDisplay() {
+    return htmlSafe(this.text);
   }
 }

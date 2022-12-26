@@ -35,8 +35,7 @@
           {{topic.titlePrefix}}
 
           <LinkTo @route='old-forum.view-topic' @query={{hash t=topic.id}}>
-            {{! 3 curly braces means it's unescaped }}
-            {{{topic.title}}}
+            {{topic.titleDisplay}}
           </LinkTo>
 
           {{#if topic.hasMultiplePages}}

@@ -1,3 +1,4 @@
+import { htmlSafe } from '@ember/template';
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 
 export default class OldForumTopicModel extends Model {
@@ -66,5 +67,9 @@ export default class OldForumTopicModel extends Model {
     }
 
     return prefix;
+  }
+
+  get titleDisplay() {
+    return htmlSafe(this.title);
   }
 }

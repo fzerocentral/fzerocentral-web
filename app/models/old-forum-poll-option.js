@@ -1,3 +1,4 @@
+import { htmlSafe } from '@ember/template';
 import Model, { attr, belongsTo } from '@ember-data/model';
 
 export default class OldForumPollOptionModel extends Model {
@@ -6,4 +7,8 @@ export default class OldForumPollOptionModel extends Model {
 
   @belongsTo('old-forum-poll') poll;
   @attr('number') optionNumber;
+
+  get textDisplay() {
+    return htmlSafe(this.text);
+  }
 }
