@@ -31,3 +31,8 @@ https://github.com/ef4/ember-auto-import/blob/main/docs/upgrade-guide-2.0.md#app
 engines
 
 ember-cli-update should take care of updating this.
+
+resolutions
+
+The global pin "@embroider/macros": "1.9.0" appears to be required to avoid a build error when on ember-data 4.8.x.
+https://github.com/miragejs/ember-cli-mirage/issues/2461
