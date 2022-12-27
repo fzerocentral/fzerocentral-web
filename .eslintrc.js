@@ -24,6 +24,16 @@ module.exports = {
   },
   rules: {
     'ember/no-controller-access-in-routes': 'off',
+    'prettier/prettier': [
+      'error',
+      {
+        // Only check for consistency of line separators in each file. This
+        // allows CRLF systems to have autocrlf on in their Git config for
+        // this repo. That, in turn, allows Ember codemods to work on CRLF
+        // systems (because the codemods actually apply CRLF on CRLF systems).
+        endOfLine: 'auto',
+      },
+    ],
   },
   overrides: [
     // node files
