@@ -9,7 +9,7 @@ module('Integration | Helper | date-display', function (hooks) {
   test('should render datetime format', async function (assert) {
     this.set('date', new Date('2003-07-25T00:00+00:00'));
 
-    await render(hbs`{{date-display date 'datetime'}}`);
+    await render(hbs`{{date-display this.date 'datetime'}}`);
 
     // Exact display depends on client timezone.
     let datetimeRegex = /2003-07-2\d \d\d:\d\d/;
@@ -27,7 +27,7 @@ module('Integration | Helper | date-display', function (hooks) {
   test('should render timezone format', async function (assert) {
     this.set('date', new Date('2003-07-25T00:00+00:00'));
 
-    await render(hbs`{{date-display date 'timezone'}}`);
+    await render(hbs`{{date-display this.date 'timezone'}}`);
 
     // Exact display depends on client timezone.
     let regex = /2003-07-2\d \d\d:\d\d[+-]\d\d:\d\d/;

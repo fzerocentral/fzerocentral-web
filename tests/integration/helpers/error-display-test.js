@@ -9,7 +9,7 @@ module('Integration | Helper | error-display', function (hooks) {
   test('null error should be tolerated', async function (assert) {
     this.set('error', null);
 
-    await render(hbs`{{error-display error}}`);
+    await render(hbs`{{error-display this.error}}`);
 
     assert.dom(this.element).hasText('');
   });
@@ -17,7 +17,7 @@ module('Integration | Helper | error-display', function (hooks) {
   test('string error should be rendered properly', async function (assert) {
     this.set('error', 'Error detail goes here');
 
-    await render(hbs`{{error-display error}}`);
+    await render(hbs`{{error-display this.error}}`);
 
     assert.dom(this.element).hasText('Error detail goes here');
   });
@@ -25,7 +25,7 @@ module('Integration | Helper | error-display', function (hooks) {
   test('error without source should be rendered properly', async function (assert) {
     this.set('error', { detail: 'Error detail goes here' });
 
-    await render(hbs`{{error-display error}}`);
+    await render(hbs`{{error-display this.error}}`);
 
     assert.dom(this.element).hasText('Error detail goes here');
   });
@@ -36,7 +36,7 @@ module('Integration | Helper | error-display', function (hooks) {
       detail: 'Error detail goes here',
     });
 
-    await render(hbs`{{error-display error}}`);
+    await render(hbs`{{error-display this.error}}`);
 
     assert.dom(this.element).hasText('Error detail goes here');
   });
@@ -47,7 +47,7 @@ module('Integration | Helper | error-display', function (hooks) {
       detail: 'is required',
     });
 
-    await render(hbs`{{error-display error}}`);
+    await render(hbs`{{error-display this.error}}`);
 
     assert.dom(this.element).hasText('Usage type is required');
   });

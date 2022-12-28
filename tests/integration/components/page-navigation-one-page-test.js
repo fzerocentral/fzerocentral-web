@@ -33,7 +33,7 @@ module('Integration | Component | page-navigation-one-page', function (hooks) {
     });
 
     await render(
-      hbs`<PageNavigationOnePage @page={{5}} @updatePage={{updatePage}} />`
+      hbs`<PageNavigationOnePage @page={{5}} @updatePage={{this.updatePage}} />`
     );
 
     assert.dom(this.element).hasText('5');
