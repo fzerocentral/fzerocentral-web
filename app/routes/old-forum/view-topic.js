@@ -1,6 +1,6 @@
 import { A } from '@ember/array';
 import Route from '@ember/routing/route';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import RSVP from 'rsvp';
 import OldForumTopicModel from '../../models/old-forum-topic';
 
