@@ -66,7 +66,11 @@ export default class OldForumViewTopicRoute extends Route {
     }
 
     return this.store
-      .findRecord('old-forum-post', params.postId)
+      .findRecord('old-forum-post', params.postId, {
+        // This seems like a totally unnecessary include,
+        // but it seems to be needed to even get the topic ID.
+        include: 'topic',
+      })
       .then((mainPost) => {
         topicId = mainPost.topic.get('id');
         return this.store.query('old-forum-post', {
