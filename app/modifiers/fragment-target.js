@@ -3,9 +3,11 @@ import { modifier } from 'ember-modifier';
 export default modifier(function fragmentTarget(
   element /*, positional, named*/
 ) {
-  let anchorName = element.getAttribute('name');
+  // 'Anchor' refers to the fragment's anchor element, not necessarily
+  // an <a> element.
+  let anchorId = element.id;
   let urlFragment = window.location.hash.split('#').at(-1);
-  if (anchorName === urlFragment) {
+  if (anchorId === urlFragment) {
     element.scrollIntoView();
   }
 });

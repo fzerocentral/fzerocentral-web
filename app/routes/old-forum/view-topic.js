@@ -93,7 +93,7 @@ export default class OldForumViewTopicRoute extends Route {
         searchParams.append('t', topicId);
         searchParams.append('page', page);
         let baseUrl = window.location.pathname;
-        window.location = `${baseUrl}?${searchParams}#${params.postId}`;
+        window.location = `${baseUrl}?${searchParams}#p${params.postId}`;
       });
   }
 
