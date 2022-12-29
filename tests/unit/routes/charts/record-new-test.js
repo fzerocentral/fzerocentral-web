@@ -1,7 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
-import { run } from '@ember/runloop';
 import { click, currentURL, fillIn, select, visit } from '@ember/test-helpers';
 import { createModelInstance } from '../../../utils/models';
 
@@ -84,7 +83,7 @@ module('Unit | Route | charts/record-new', function (hooks) {
 
   test('can be visited', async function (assert) {
     await visit(`/charts/${this.chart.id}/record-new`);
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       `/charts/${this.chart.id}/record-new`,
       'URL should be correct'
@@ -111,7 +110,7 @@ module('Unit | Route | charts/record-new', function (hooks) {
     // Submit form.
     await click('button.submit');
 
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       `/charts/${this.chart.id}`,
       'Should redirect to chart page'
@@ -119,24 +118,24 @@ module('Unit | Route | charts/record-new', function (hooks) {
 
     // Check that the record was indeed saved to the API database
     // with the expected values.
-    let records = run(() => this.store.findAll('record'));
+    let records = this.store.findAll('record');
     let record = records.objectAt(0);
 
-    assert.equal(
+    assert.strictEqual(
       record.get('chart').get('id'),
       this.chart.id,
       'Chart should be as expected'
     );
-    assert.equal(
+    assert.strictEqual(
       record.get('player').get('id'),
       this.player.id,
       'Player should be as expected'
     );
-    assert.equal(record.get('value'), 123, 'Value should be as expected');
+    assert.strictEqual(record.get('value'), 123, 'Value should be as expected');
 
     // The date was just the date of submission, and we don't know exactly
     // what that was, so we'll just check that it is a Date.
-    assert.equal(
+    assert.strictEqual(
       record.get('dateAchieved').constructor.name,
       'Date',
       'Date should be as expected'

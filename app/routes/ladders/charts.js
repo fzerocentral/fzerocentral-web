@@ -1,5 +1,5 @@
 import Route from '@ember/routing/route';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import RSVP from 'rsvp';
 
 export default class LaddersChartsRoute extends Route {
@@ -7,7 +7,11 @@ export default class LaddersChartsRoute extends Route {
 
   model(params) {
     return RSVP.hash({
-      ladder: this.store.findRecord('ladder', params.ladder_id),
+      ladder: this.store.findRecord('ladder', params.ladder_id, {
+        // This seems like a totally unnecessary include,
+        // but it seems to be needed to even get the chart group ID.
+        include: 'chart_group',
+      }),
     });
   }
 

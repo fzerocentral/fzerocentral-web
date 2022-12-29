@@ -80,7 +80,7 @@ module('Integration | Component | filter-list', function (hooks) {
     // First page-button should go to the next page, 2
     let nextPageButton = buttons[0];
     await click(nextPageButton);
-    assert.equal(this.pageNumber, 2, 'pageNumber should be updated');
+    assert.strictEqual(this.pageNumber, 2, 'pageNumber should be updated');
   });
 
   test('should update searchText when search field is filled', async function (assert) {
@@ -98,7 +98,7 @@ module('Integration | Component | filter-list', function (hooks) {
     `);
 
     await fillIn('#search', 'star');
-    assert.equal(this.searchText, 'star', 'searchText should be updated');
+    assert.strictEqual(this.searchText, 'star', 'searchText should be updated');
   });
 
   test('should update selectedFilterId when clicking a list button', async function (assert) {
@@ -119,7 +119,7 @@ module('Integration | Component | filter-list', function (hooks) {
     let button = f1ListItem.querySelector('button');
     await click(button);
 
-    assert.equal(
+    assert.strictEqual(
       this.selectedFilterId,
       '1',
       'selectedFilterId should be updated'

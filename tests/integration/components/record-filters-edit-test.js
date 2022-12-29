@@ -92,14 +92,14 @@ module('Integration | Component | record-filters-edit', function (hooks) {
     ];
 
     await select(selectElements[0], '1');
-    assert.equal(
+    assert.strictEqual(
       this.filterSelects['1'].selectedFilterId,
       '1',
       'First filter selection should update state'
     );
 
     await select(selectElements[1], '4');
-    assert.equal(
+    assert.strictEqual(
       this.filterSelects['2'].selectedFilterId,
       '4',
       'Second filter selection should update state'

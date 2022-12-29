@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import config from '../config/environment';
 
 /* This is the controller for templates/application.hbs. */

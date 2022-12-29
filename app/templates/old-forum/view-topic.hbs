@@ -31,11 +31,7 @@
 
 {{#each @model.posts as |post postIndex|}}
   {{! URL fragment target. Uses the fragment-target modifier. }}
-  <a
-    {{! template-lint-disable link-href-attributes }}
-    name='{{post.id}}'
-    {{fragment-target}}
-   />
+  <span id='p{{post.id}}' {{fragment-target}} />
 
   <div class='post-container'>
 
@@ -50,7 +46,7 @@
       <span class='time'>{{date-display post.time 'datetime'}}</span>
 
       {{! Link which auto-scrolls to this post w/URL fragment }}
-      <a href='#{{post.id}}'>
+      <a href='#p{{post.id}}'>
         <span class='number'>#{{get this.topicPostNumbers postIndex}}</span>
       </a>
     </div>

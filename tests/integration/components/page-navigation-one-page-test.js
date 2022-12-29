@@ -18,7 +18,7 @@ module('Integration | Component | page-navigation-one-page', function (hooks) {
     // Gets error `"element" is read-only` - what does that mean?
     await visit(`/`);
 
-    await render(hbs`<PageNavigationOnePage @page=5 />`);
+    await render(hbs`<PageNavigationOnePage @page={{5}} />`);
 
     assert.dom(this.element).hasText('5');
 
@@ -33,13 +33,13 @@ module('Integration | Component | page-navigation-one-page', function (hooks) {
     });
 
     await render(
-      hbs`<PageNavigationOnePage @page=5 @updatePage={{updatePage}} />`
+      hbs`<PageNavigationOnePage @page={{5}} @updatePage={{this.updatePage}} />`
     );
 
     assert.dom(this.element).hasText('5');
 
     await click('button');
 
-    assert.equal(this.page, 5, 'Page should be updated');
+    assert.strictEqual(this.page, 5, 'Page should be updated');
   });
 });

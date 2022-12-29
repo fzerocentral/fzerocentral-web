@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /* Link without a custom click action, meaning it's a basic HTML link and
    doesn't use Ember transitions. This can help when transitions seem to cause

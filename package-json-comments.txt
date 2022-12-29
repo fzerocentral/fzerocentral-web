@@ -22,8 +22,17 @@ ember-truth-helpers
 Without this, Handlebars doesn't give a way to use boolean logic in templates other than "if x" and "unless x". This package provides and, or, equals, etc.
 https://github.com/jmurphyau/ember-truth-helpers/blob/master/CHANGELOG.md
 
+webpack
+ember-auto-import 2.x requires a top-level dependency to webpack.
+https://github.com/ef4/ember-auto-import/blob/main/docs/upgrade-guide-2.0.md#apps-responsible-for-installing-webpack
+
 
 
 engines
 
 ember-cli-update should take care of updating this.
+
+resolutions
+
+The global pin "@embroider/macros": "1.9.0" appears to be required to avoid a build error when on ember-data 4.8.x.
+https://github.com/miragejs/ember-cli-mirage/issues/2461

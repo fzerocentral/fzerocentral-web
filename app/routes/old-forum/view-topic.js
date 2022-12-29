@@ -1,6 +1,6 @@
 import { A } from '@ember/array';
 import Route from '@ember/routing/route';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import RSVP from 'rsvp';
 import OldForumTopicModel from '../../models/old-forum-topic';
 
@@ -66,7 +66,11 @@ export default class OldForumViewTopicRoute extends Route {
     }
 
     return this.store
-      .findRecord('old-forum-post', params.postId)
+      .findRecord('old-forum-post', params.postId, {
+        // This seems like a totally unnecessary include,
+        // but it seems to be needed to even get the topic ID.
+        include: 'topic',
+      })
       .then((mainPost) => {
         topicId = mainPost.topic.get('id');
         return this.store.query('old-forum-post', {
@@ -89,7 +93,7 @@ export default class OldForumViewTopicRoute extends Route {
         searchParams.append('t', topicId);
         searchParams.append('page', page);
         let baseUrl = window.location.pathname;
-        window.location = `${baseUrl}?${searchParams}#${params.postId}`;
+        window.location = `${baseUrl}?${searchParams}#p${params.postId}`;
       });
   }
 

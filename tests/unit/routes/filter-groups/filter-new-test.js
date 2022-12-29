@@ -68,7 +68,7 @@ module('Unit | Route | filter-groups/filter-new', function (hooks) {
 
     await click('#create-filter-form button');
     // TODO: Gets error `this is undefined` when trying to create the filter; don't know why.
-    // assert.equal(
+    // assert.strictEqual(
     //   currentURL(),
     //   `/filter-groups/${filterGroup.id}`,
     //   'Should redirect to filter group page'
@@ -116,7 +116,7 @@ module('Unit | Route | filter-groups/filter-new', function (hooks) {
 
     await click('#create-filter-form button');
     // TODO: Gets error `this is undefined` when trying to create the filter; don't know why.
-    // assert.equal(
+    // assert.strictEqual(
     //   currentURL(),
     //   `/filter-groups/${filterGroup.id}`,
     //   'Should redirect to filter group page'

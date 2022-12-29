@@ -178,7 +178,7 @@ module('Unit | Route | charts/show', function (hooks) {
         filters: this.blueFalconFilter.id,
       },
     });
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       expectedUrl,
       'URL should change as expected after filter addition'
@@ -189,7 +189,7 @@ module('Unit | Route | charts/show', function (hooks) {
     );
     await click(removeButtons[0]);
 
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       this.routeUrl,
       'URL should change as expected after filter removal'

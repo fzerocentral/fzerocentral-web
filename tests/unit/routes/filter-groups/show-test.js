@@ -70,7 +70,7 @@ module('Unit | Route | filter-groups/show', function (hooks) {
 
   test('can be visited', async function (assert) {
     await visit(`/filter-groups/${this.filterGroup.id}`);
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       `/filter-groups/${this.filterGroup.id}`,
       'URL is correct'
@@ -178,7 +178,7 @@ module('Unit | Route | filter-groups/show', function (hooks) {
       'Filter detail section is filled out after clicking the filter button'
     );
     let filterDetailName = filterDetailNameElement.textContent.trim();
-    assert.equal(
+    assert.strictEqual(
       filterDetailName,
       'Blue Falcon',
       'Filter name display is as expected'
