@@ -1,7 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { startMirage } from 'fzerocentral-web/initializers/ember-cli-mirage';
-import { run } from '@ember/runloop';
 import { click, currentURL, fillIn, select, visit } from '@ember/test-helpers';
 import { createModelInstance } from '../../../utils/models';
 
@@ -119,7 +118,7 @@ module('Unit | Route | charts/record-new', function (hooks) {
 
     // Check that the record was indeed saved to the API database
     // with the expected values.
-    let records = run(() => this.store.findAll('record'));
+    let records = this.store.findAll('record');
     let record = records.objectAt(0);
 
     assert.strictEqual(
