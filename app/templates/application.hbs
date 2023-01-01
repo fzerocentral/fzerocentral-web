@@ -17,7 +17,7 @@
     {{! Header image on left (logo + MV ships) }}
     <img
       class='logo-image'
-      src='{{image-asset "header.png"}}'
+      src='{{asset "images/header.png"}}'
       alt='F-Zero Central'
       usemap='#fzerotop-map'
     />
@@ -39,19 +39,19 @@
 
     {{! Game selector }}
     <div id='game-selector'>
-      <img src='{{image-asset "game_selector/choose_game.gif"}}' alt="Choose game">
+      <img src='{{asset "images/game_selector/choose_game.gif"}}' alt="Choose game">
       <div>
         {{#each (array 'gx' 'mv') as |game|}}
           <LinkTo @route='games.show' @model={{game}}>
             <img
-              src='{{image-asset (concat "game_selector/unselected_" game ".gif")}}'
+              src='{{asset (concat "images/game_selector/unselected_" game ".gif")}}'
               alt='{{game}}'
             />
           </LinkTo>
         {{/each}}
         {{#each (array 'climax' 'gpl' 'x' 'snes') as |game|}}
           <img
-            src='{{image-asset (concat "game_selector/unselected_" game ".gif")}}'
+            src='{{asset (concat "images/game_selector/unselected_" game ".gif")}}'
             alt='{{game}}'
             class='unavailable-game'
           />
@@ -75,28 +75,28 @@
       <div id='social-icons'>
         <a href='https://twitter.com/fzerocentral'>
           <img
-            src='{{image-asset "social/twitter.png"}}'
+            src='{{asset "images/social/twitter.png"}}'
             alt='Twitter'
             title='Twitter'
           />
         </a>
         <a href='https://www.facebook.com/fzerocentral/'>
           <img
-            src='{{image-asset "social/facebook.png"}}'
+            src='{{asset "images/social/facebook.png"}}'
             alt='Facebook'
             title='Facebook'
           />
         </a>
         <a href='https://www.youtube.com/user/fzerocentralorg'>
           <img
-            src='{{image-asset "social/youtube.png"}}'
+            src='{{asset "images/social/youtube.png"}}'
             alt='YouTube'
             title='YouTube'
           />
         </a>
         <a href='https://www.twitch.tv/fzerocentral'>
           <img
-            src='{{image-asset "social/twitch.png"}}'
+            src='{{asset "images/social/twitch.png"}}'
             alt='Twitch'
             title='Twitch'
           />

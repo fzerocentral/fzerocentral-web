@@ -41,7 +41,7 @@ export default class OldForumTopicModel extends Model {
   }
 
   get statusIcon() {
-    return `forum_old/topic_icons/${this.statusText}.gif`;
+    return `images/forum_old/topic_icons/${this.statusText}.gif`;
   }
 
   get statusText() {
