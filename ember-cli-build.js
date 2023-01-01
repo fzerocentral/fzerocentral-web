@@ -6,12 +6,12 @@ module.exports = function (defaults) {
   const app = new EmberApp(defaults, {
     // Add options here
     fingerprint: {
-      exclude: [
-        // These images have their paths built dynamically in templates, which
-        // breaks Ember's ability to add fingerprints to the img src attributes.
-        '/images/forum_old/topic_icons',
-        '/images/game_selector/unselected',
-      ],
+      // Generate an assets/assetMap.json file, containing a mapping
+      // of the original asset name to the fingerprinted asset.
+      generateAssetMap: true,
+      // Make the asset map file fingerprinted, too, so the browser can't
+      // get stuck serving an old cached version.
+      fingerprintAssetMap: true,
     },
   });
 
