@@ -3,22 +3,22 @@ import { service } from '@ember/service';
 import RSVP from 'rsvp';
 
 export default class LaddersChartsRoute extends Route {
+  @service nonEmberDataApi;
   @service store;
 
   model(params) {
-    return RSVP.hash({
-      ladder: this.store.findRecord('ladder', params.ladder_id, {
-        // This seems like a totally unnecessary include,
-        // but it seems to be needed to even get the chart group ID.
-        include: 'chart_group',
-      }),
+    let ladderPromise = this.store.findRecord('ladder', params.ladder_id, {
+      // This seems like a totally unnecessary include,
+      // but it seems to be needed to even get the chart group ID.
+      include: 'chart_group',
     });
-  }
 
-  afterModel(resolvedModel /*, transition */) {
-    let controller = this.controllerFor(this.routeName);
-
-    controller.chartGroupId = resolvedModel.ladder.chartGroup.get('id');
-    controller.updateChartHierarchy();
+    return RSVP.hash({
+      chartHierarchy: ladderPromise.then((ladder) => {
+        let chartGroupId = ladder.chartGroup.get('id');
+        return this.nonEmberDataApi.getChartHierarchy(chartGroupId);
+      }),
+      ladder: ladderPromise,
+    });
   }
 }

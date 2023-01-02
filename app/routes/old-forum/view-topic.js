@@ -88,12 +88,14 @@ export default class OldForumViewTopicRoute extends Route {
         // Rewrite the URL to use topicId and page as query params, and
         // a fragment to jump to the specific post.
         // transitionTo() doesn't seem to respect the URL fragment, so we
-        // set window.location directly.
+        // manipulate window.location directly.
         let searchParams = new URLSearchParams();
         searchParams.append('t', topicId);
         searchParams.append('page', page);
         let baseUrl = window.location.pathname;
-        window.location = `${baseUrl}?${searchParams}#p${params.postId}`;
+        // replace() acts like a redirect, replacing the current browser
+        // history entry rather than creating a new one.
+        window.location.replace(`${baseUrl}?${searchParams}#p${params.postId}`);
       });
   }
 

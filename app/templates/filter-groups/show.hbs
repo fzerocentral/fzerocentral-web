@@ -53,7 +53,7 @@
         {{#let this.selectedFilter as |filter|}}
 
           <div class='filter-basic-fields'>
-            <h2>{{filter.name}}</h2>
+            <h2 class='filter-name'>{{filter.name}}</h2>
             {{#if (eq filter.filterGroup.kind 'select')}}
               <div>
                 Type:

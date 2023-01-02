@@ -7,7 +7,7 @@
 
 <div class='general-content-box'>
   <ul>
-    {{#each this.chartHierarchy as |item|}}
+    {{#each @model.chartHierarchy as |item|}}
       <li>
         <ChartGroupContents @item={{item}} @ladder={{@model.ladder}} />
       </li>

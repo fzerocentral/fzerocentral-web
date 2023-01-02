@@ -21,9 +21,10 @@
           </LinkTo>
         </td>
         <td>
-          <LinkTo @route='ladders.charts' @model={{ladder.id}}>
+          {{! LinkTo fails to get ladder -> chart group -> id here, if the root chart group hasn't been preloaded. }}
+          <BasicLink @route='ladders.charts' @model={{ladder.id}}>
             Charts
-          </LinkTo>
+          </BasicLink>
         </td>
       </tr>
     {{/each}}

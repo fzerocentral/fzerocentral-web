@@ -47,6 +47,13 @@ h2 {
   font-size: large;
 }
 
+button {
+  padding: 0 2px;
+}
+select {
+  padding: 0 2px;
+}
+
 div.body {
   background-color: hsl(240, 56%, 31%);
 }
@@ -383,6 +390,9 @@ div.filter-section > div.filter-list {
 div.filter-section > div.filter-detail-section {
   flex-basis: 540px;
   flex-grow: 3;
+}
+div.filter-section h2.filter-name {
+  text-align: left;
 }
 
 /*
