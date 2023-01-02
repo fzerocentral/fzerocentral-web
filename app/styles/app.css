@@ -391,6 +391,9 @@ div.filter-section > div.filter-detail-section {
   flex-basis: 540px;
   flex-grow: 3;
 }
+div.filter-section h2.filter-name {
+  text-align: left;
+}
 
 /*
 Forum archive
