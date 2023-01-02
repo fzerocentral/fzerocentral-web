@@ -47,6 +47,13 @@ h2 {
   font-size: large;
 }
 
+button {
+  padding: 0 2px;
+}
+select {
+  padding: 0 2px;
+}
+
 div.body {
   background-color: hsl(240, 56%, 31%);
 }
