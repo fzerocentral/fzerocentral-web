@@ -34,9 +34,10 @@
 
           {{topic.titlePrefix}}
 
-          <LinkTo @route='old-forum.view-topic' @query={{hash t=topic.id}}>
+          {{! LinkTo here makes poll results not filtered by poll ID, so use BasicLink. }}
+          <BasicLink @route='old-forum.view-topic' @query={{hash t=topic.id}}>
             {{topic.titleDisplay}}
-          </LinkTo>
+          </BasicLink>
 
           {{#if topic.hasMultiplePages}}
             [ Page:
